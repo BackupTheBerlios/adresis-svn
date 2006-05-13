@@ -64,17 +64,17 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	createModule("users", QStringList() << tr("login") << tr("name"));
 }
 
-void setupActions()
+void ADMainWindow::setupActions()
 {
 	
 }
 
-void setupMenu()
+void ADMainWindow::setupMenu()
 {
 	
 }
 
-void setupToolbar()
+void ADMainWindow::setupToolbar()
 {
 	
 }

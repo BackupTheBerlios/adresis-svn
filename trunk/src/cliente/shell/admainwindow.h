@@ -21,7 +21,7 @@
 #define ADMAINWINDOW_H
 
 #include <dmainwindow.h>
-
+#include <dactionmanager.h>
 /**
 	@author Jorge Cuadrado <kuadrosx@zi0n>
 */
