@@ -3,27 +3,34 @@
 # Subdir relative project main directory: ./src/cliente/shell
 # Target is an application:  ../../../bin/adclient.bin
 
-QT += xml 
 INSTALLS += target 
 target.path = /bin/ 
+HEADERS += admainwindow.h \
+           adcapplication.h \
+           adresis.h \
+           adconnector.h 
+SOURCES += admainwindow.cpp \
+           main_cliente.cpp \
+           adcapplication.cpp \
+           adresis.cpp \
+           adconnector.cpp 
+QT += xml network 
 KDEV_QTVER = 4 
-TARGETDEPS += ../../../src/dlib/dgui/libdgui.so \
-              ../../../src/dlib/dcore/libdcore.so \
-              ../../../src/cliente/lib/libadlib.a 
-LIBS += -ldgui \
-        -ldcore \
-        ../../../src/cliente/lib/libadlib.a 
-INCLUDEPATH += ../../../src/cliente/lib \
+TARGETDEPS += ../../../src/dlib/dcore/libdcore.so \
+              ../../../src/dlib/dgui/libdgui.so \
+              ../../../src/cliente/lib/libadlib.a \
+              ../../../src/cliente/network/libnetwork.a 
+LIBS += -ldcore \
+        -ldgui \
+        ../../../src/cliente/lib/libadlib.a \
+        ../../../src/cliente/network/libnetwork.a 
+INCLUDEPATH += ../../../src/cliente/network \
+               ../../../src/cliente/lib \
                ../../../src/dlib/dgui \
                ../../../src/dlib/dcore 
-QMAKE_LIBDIR = ../../../src/dlib/dgui \
-               ../../../src/dlib/dcore 
+QMAKE_LIBDIR = ../../../src/dlib/dcore \
+               ../../../src/dlib/dgui 
 TARGET = ../../../bin/adclient.bin 
 CONFIG += release \
           warn_on 
 TEMPLATE = app 
-HEADERS += admainwindow.h \
-           adcapplication.h 
-SOURCES += admainwindow.cpp \
-           main_cliente.cpp \
-           adcapplication.cpp 

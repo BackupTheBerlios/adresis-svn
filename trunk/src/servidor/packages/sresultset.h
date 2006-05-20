@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@gmail.com                                           	   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,69 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef SRESULTSET_H
+#define SRESULTSET_H
 
-#include "adresis.h"
+#include <qdom.h>
+#include <qstring.h>
+#include <qstringlist.h>
+
+#include <QVariant>
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+Esta clase es creada cuando se hace una consulta a la base de datos, el formato de la misma es el siguiente:
+
+<Results>
+ <Record>
+  <field name="columna01" value="valor01" />
+  <field name="columna02" value="valor02" />
+ </Record>
+ <Record>
+  <field name="columna11" value="valor11" />
+  <field name="columna12" value="valor12" />
+  <field name="columna13" value="valor12" />
+ </Record>
+</Results>
+
+
+@author David Cuadrado \<krawek@gmail.com\>
 */
-class ADMainWindow : public DMainWindow
+
+class SResultSet : public QDomDocument
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+    		/**
+    		 * Constructor
+    		 * @return 
+    		 */
+    		SResultSet();
+    		/**
+    		 * Destructor
+    		 * @return 
+    		 */
+    		~SResultSet();
+		/**
+		 * Pone los records
+		 * @param fields 
+		 * @param results 
+		 */
+		void setRecord(const QStringList &fields, const QStringList &results);
+		
+		/**
+		 * Pone los records
+		 * @param fields 
+		 * @param results 
+		 */
+		void setRecord(const QStringList &fields, const QList<QVariant> &results);
+		
+		QMap<QString, QStringList> map() const;
+		
+		bool isValid() const;
 		
 	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		QMap<QString, QStringList> m_map;
+
 };
 
 #endif

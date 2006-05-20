@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef CCONNECTIONDIALOG_H
+#define CCONNECTIONDIALOG_H
 
-#include "adresis.h"
+#include <dtabdialog.h>
+
+class QLineEdit;
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * Dialogo de conexion
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class CConnectionDialog : public DTabDialog
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		CConnectionDialog(QWidget *parent = 0);
+		~CConnectionDialog();
 		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
+		QString user() const;
+		QString password() const;
+		QString database() const;
+		QString server() const;
+		int port() const;
 		
 	private slots:
-		void showTipDialog();
-		void connectToHost();
+		void ok();
 		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+	private:
+		void setupUserPage();
+		void setupDBPage();
+		void loadSettings();
+		
+	private:
+		QLineEdit *m_user, *m_password, *m_database, *m_server, *m_port;
+
 };
 
 #endif

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,29 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef POSTGRESERRORHANDLER_H
+#define POSTGRESERRORHANDLER_H
 
-#include "adresis.h"
+#include "serrorpackage.h"
+#include <QSqlError>
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * Esta clase analiza los errores enviados por postgres y los traduce a un lenguaje que el usuario de la aplicación pueda entender.
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class PostgresErrorHandler
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		PostgresErrorHandler();
+		~PostgresErrorHandler();
 		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		/**
+		 * Recibe la cadena de error del servidor postgres y retorna un paquete de error que será enviado al usuario.
+		 * @param error 
+		 * @return 
+		 */
+		static SErrorPackage handle(const QSqlError &error);
 };
 
 #endif

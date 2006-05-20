@@ -38,7 +38,7 @@
 
 //adresisLib
 #include "adcmodulelist.h"
-
+#include "cconnectiondialog.h"
 
 ADMainWindow::ADMainWindow() : DMainWindow()
 {
@@ -46,8 +46,6 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	DCONFIG->beginGroup("TipOfDay");
 	
 
-	QFrame *container = new QFrame;
-	
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
 	dDebug() << DATA_DIR+"tips" << showTips;
 	if ( showTips )
@@ -59,9 +57,12 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	setupActions();
 	setupToolbar();
 	setupMenu();
+	m_adresis = new Adresis();
 	
+	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	
 	createModule("users", QStringList() << tr("login") << tr("name"));
+	connectToHost();
 }
 
 void ADMainWindow::setupActions()
@@ -78,7 +79,6 @@ void ADMainWindow::setupToolbar()
 {
 	
 }
-
 
 ADMainWindow::~ADMainWindow()
 {
@@ -98,5 +98,30 @@ void ADMainWindow::createModule(const QString& moduleName, const QStringList & t
 	toolWindow( DDockWindow::Left )->addWidget( moduleName, module);
 	
 }
+
+void ADMainWindow::connectToHost()
+{
+	CConnectionDialog connectionDialog;
+	if ( connectionDialog.exec() != QDialog::Rejected )
+	{
+		m_adresis->connectToHost(connectionDialog.server(), connectionDialog.port());
+		m_adresis->login(connectionDialog.user(), connectionDialog.password());
+	}
+}
+
+void ADMainWindow::showDialog(Msg::Type type, const QString& message)
+{
+	dDebug() << "showDialog";
+	QMessageBox::information ( 0 , "Message", message, 0);
+	switch(type)
+	{
+		default:
+		{
+			QMessageBox::information ( 0 , "Message", message, 0);
+		}
+	}
+	
+}
+
 
 

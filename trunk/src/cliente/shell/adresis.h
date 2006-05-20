@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
+#ifndef ADRESIS_H
+#define ADRESIS_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#include <QObject>
 
-#include "adresis.h"
+#include "adconnector.h"
+#include "global.h"
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+* @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class Adresis : public QObject
 {
 	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		Adresis(QObject * parent=0);
+		~Adresis();
 		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
 		
 	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		void connectToHost( const QString & hostName, quint16 port);
+		void login(const QString &user, const QString &passwd);
+		
+	signals:
+		void requestShowMessage(Msg::Type type, const QString& message );
+	
+	private:
+		ADConnector *m_connector;
 };
 
 #endif

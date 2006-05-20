@@ -3,11 +3,12 @@
 # Subdir relative project main directory: ./src/cliente
 # Target is a subdirs project 
 
-SUBDIRS += lib \
+SUBDIRS += theme \
+           lib \
+           network \
            modules \
-           shell \
-           theme 
-KDEV_QTVER = 3
+           shell 
+KDEV_QTVER = 4
 CONFIG += release \
 warn_on
 TEMPLATE = subdirs

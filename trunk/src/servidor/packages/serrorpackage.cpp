@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#include "serrorpackage.h"
 
-#include "adresis.h"
-/**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
-*/
-class ADMainWindow : public DMainWindow
+SErrorPackage::SErrorPackage(int id, const QString &msg) : QDomDocument()
 {
-	Q_OBJECT;
-	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
-		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
-};
+	QDomElement root = createElement("Error");
+	
+	QDomElement eid = createElement("Id");
+	eid.setAttribute( "value", id );
+	
+	root.appendChild(eid);
+	
+	QDomElement emsg = createElement("Message");
+	emsg.setAttribute( "value", msg);
+	
+	root.appendChild(emsg);
+	
+	appendChild(root);
+	
+}
 
-#endif
+
+SErrorPackage::~SErrorPackage()
+{
+}
+
+

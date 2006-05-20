@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado krawek@gmail.com                 *
+ *                         Jorge Cuadrado  kuadrosx@gmail.com              *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,45 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef ADCONNECTOR_H
+#define ADCONNECTOR_H
 
-#include "adresis.h"
+#include "adconnectorbase.h"
+
+#include <QStringList>
+#include <QXmlSimpleReader>
+
+#include "global.h"
+
+class ADPackageParser;
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * Maneja las conexiones al servidor, asi mismo tambien maneja los errores de conexion
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class ADConnector : public ADConnectorBase
 {
 	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
-		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
+		ADConnector(QObject * parent = 0);
+		~ADConnector();
+		void login(const QString &user, const QString &passwd);
 		
 	private slots:
-		void showTipDialog();
-		void connectToHost();
+		void readFromServer();
+		void handleError(QAbstractSocket::SocketError error);
 		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+	signals:
+// 		void readedModuleForms(const ModuleForms &);
+		void chatMessage(const QString &login, const QString &msg);
+		void message(Msg::Type t, const QString &message);
+		
+	private:
+		QXmlSimpleReader m_reader;
+		ADPackageParser *m_parser;
+		
+		QString m_readed;
 };
 
 #endif

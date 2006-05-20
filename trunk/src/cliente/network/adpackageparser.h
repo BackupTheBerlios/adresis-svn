@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,50 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef ADPACKAGEPARSER_H
+#define ADPACKAGEPARSER_H
 
-#include "adresis.h"
+#include <qxml.h>
+#include <QList>
+#include <QPair>
+
+#include "global.h"
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * @author Cuadros Cuadrado <krawek@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class ADPackageParser : public QXmlDefaultHandler
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		ADPackageParser();
+		~ADPackageParser();
+		
+		bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
+		
+		bool endElement( const QString& ns, const QString& localname, const QString& qname);
+		
+		bool characters ( const QString & ch );
+		
+		bool error ( const QXmlParseException & exception );
+		bool fatalError ( const QXmlParseException & exception );
+		
+		QString root() const;
+		
+		QList<XMLResults> results() const;
 		
 	private:
-		Adresis *m_adresis;
+		void reset();
 		
 	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
+		QString m_root, m_qname;
 		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
+		bool m_isParsing;
 		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		bool m_readChar;
+		
+		QList<XMLResults> m_valuesList;
+// 		QList<QPair<QString, QString> > m_resources; // ###: Es posible ponerlo en m_valuesList ?
 };
 
 #endif

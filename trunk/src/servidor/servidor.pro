@@ -3,7 +3,11 @@
 # Subdir relative project main directory: ./src/servidor
 # Target is a subdirs project 
 
-KDEV_QTVER = 3 
+SUBDIRS += packages \
+           network \
+           shell
+
+KDEV_QTVER = 3
 CONFIG += release \
-          warn_on 
-TEMPLATE = subdirs 
+warn_on
+TEMPLATE = subdirs

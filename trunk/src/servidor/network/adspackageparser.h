@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,56 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef ADSPACKAGEPARSER_H
+#define ADSPACKAGEPARSER_H
 
-#include "adresis.h"
+#include <qxml.h>
+#include <QMap>
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * Analizador de paquetes XML que el cliente envia al servidor, esta clase analiza utilizando <a href="http://www.saxproject.org">SAX2</a>.
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class ADSPackageParser : public QXmlDefaultHandler
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		ADSPackageParser();
+		~ADSPackageParser();
+		
+		bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
+		
+		bool endElement( const QString& ns, const QString& localname, const QString& qname);
+		
+		bool characters ( const QString & ch );
+		
+		bool error ( const QXmlParseException & exception );
+		bool fatalError ( const QXmlParseException & exception );
+		
+		/**
+		 * Retorna el elemento raiz del documento XML.
+		 * @return 
+		 */
+		QString root() const;
+		
+		/**
+		 * Retorna una mapa, donde cada tag es la llave que contiene valores.
+		 * @return 
+		 */
+		QMap<QString, QString> values() const;
+		
+		/**
+		 * Esta funcion restaura el analizador.
+		 */
+		void reset();
 		
 	private:
-		Adresis *m_adresis;
+		QString m_root, m_qname;
 		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
+		QMap<QString, QString> m_values;
 		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		bool m_isParsing;
+		bool m_readCharacters;
 };
 
 #endif

@@ -6,10 +6,15 @@
 INSTALLS += target 
 target.path = /lib/ 
 HEADERS += adcfirstrundialog.h \
-           adcmodulelist.h 
+           adcmodulelist.h \
+           global.h \
+           adconnectorbase.h \
+           cconnectiondialog.h 
 SOURCES += adcfirstrundialog.cpp \
-           adcmodulelist.cpp 
-QT += xml
+           adcmodulelist.cpp \
+           adconnectorbase.cpp \
+           cconnectiondialog.cpp 
+QT += xml network
 KDEV_QTVER = 4
 TARGETDEPS += ../../../src/dlib/dgui/libdgui.so \
 ../../../src/dlib/dcore/libdcore.so

@@ -6,9 +6,10 @@
 #include <ddebug.h>
 #include <dapplication.h>
 #include "admainwindow.h"
-
 #include "adcapplication.h"
 
+
+// #include "adresis.h"
 
 int main(int argc, char **argv)
 {
@@ -43,7 +44,10 @@ int main(int argc, char **argv)
 	dAppProp->setThemeDir(dAppProp->homeDir()+"/data/themes/default");
 	
 	ADMainWindow mainWindow;
+// 	Adresis adresis;
 	
+// 	adresis.connectToHost("localhost",  1400 );
+// 	adresis.login( "testuser", "pass");
 	mainWindow.showMaximized();
 	
 	return app.exec();

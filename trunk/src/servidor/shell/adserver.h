@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,51 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef ADSERVER_H
+#define ADSERVER_H
 
-#include "adresis.h"
+#include <QStringList>
+#include <QTcpServer>
+
+#include "adserverconnection.h"
+#include "sdatabase.h"
+
+#include "adsglobal.h"
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
-*/
-class ADMainWindow : public DMainWindow
+ * Esta es la clase controladora, esta clase representa el servidor.
+ * @author David Cuadrado <krawek@gmail.com>
+ */
+class ADServer : public QTcpServer
 {
 	Q_OBJECT;
+	
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		ADServer(QObject *parent = 0);
+		ADServer(ADS::ConnectionType type, const QString &host, QObject *parent = 0);
+		~ADServer();
+		void sendToAll(const QDomDocument &pkg);
 		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
+		bool openConnection(ADS::ConnectionType type, const QString &host);
 		
 	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		void sendToAll(const QString &msg);
+		void removeConnection(ADServerConnection *cnx);
+		void authenticate(ADServerConnection *cnx,const QString &login, const QString &password);
+		
+		void doOperation(ADServerConnection *cnx, const ADQuery *query);
+		
+	private:
+		void handle(const ADServerConnection *cnx);
+		
+		
+	protected:
+		void incomingConnection(int socketDescriptor);
+		
+	private:
+		QList<ADServerConnection *> m_connections;
+		ADS::ConnectionType m_type;
 };
 
 #endif

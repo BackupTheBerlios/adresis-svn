@@ -96,7 +96,7 @@
       <envvars/>
     </run>
     <general>
-      <activedir>src/cliente/theme</activedir>
+      <activedir>src</activedir>
     </general>
     <make>
       <abortonerror>true</abortonerror>

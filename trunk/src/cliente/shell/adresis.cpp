@@ -17,39 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
-
-#include <dmainwindow.h>
-#include <dactionmanager.h>
-
 #include "adresis.h"
-/**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
-*/
-class ADMainWindow : public DMainWindow
+#include <ddebug.h>
+Adresis::Adresis(QObject * parent)
+	: QObject(parent)
 {
-	Q_OBJECT;
-	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
-		
-	private:
-		Adresis *m_adresis;
-		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
-};
+	m_connector = new ADConnector(this);
+	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
+	DINIT;
+}
 
-#endif
+Adresis::~Adresis()
+{
+	DEND;
+}
+
+void Adresis::connectToHost( const QString & hostName, quint16 port)
+{
+	m_connector->connectToHost( hostName, port);
+}
+
+//slots
+void Adresis::login(const QString &user, const QString &passwd)
+{
+	m_connector->login(user, passwd);
+}
+
+

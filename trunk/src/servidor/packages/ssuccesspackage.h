@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by David Cuadrado                                  *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,39 +17,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADMAINWINDOW_H
-#define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
-#include <dactionmanager.h>
+#ifndef SSUCCESSPACKAGE_H
+#define SSUCCESSPACKAGE_H
 
-#include "adresis.h"
+#include <QDomDocument>
+
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class SSuccessPackage : public QDomDocument
 {
-	Q_OBJECT;
 	public:
-		ADMainWindow();
-		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		SSuccessPackage(const QString& msg);
+		~SSuccessPackage();
 		
 	private:
-		Adresis *m_adresis;
+		void addForm(QDomElement &module, int id, const QString &formPath);
 		
-	private:
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		
-	private slots:
-		void showTipDialog();
-		void connectToHost();
-		
-	public slots:
-		void showDialog(Msg::Type type, const QString& message);
+		void parseModule(QDomElement &element, QDomElement &module);
 };
 
 #endif

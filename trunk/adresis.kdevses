@@ -1,19 +1,34 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
 <!DOCTYPE KDevPrjSession>
 <KDevPrjSession>
- <DocsAndViews NumberOfDocuments="4" >
-  <Doc0 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/adresis/src/cliente/shell/admainwindow.h" >
-   <View0 line="38" Type="Source" />
+ <DocsAndViews NumberOfDocuments="9" >
+  <Doc0 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/lib/global.h" >
+   <View0 Type="Source" />
   </Doc0>
-  <Doc1 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/adresis/src/cliente/shell/admainwindow.cpp" >
-   <View0 line="57" Type="Source" />
+  <Doc1 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/adconnector.h" >
+   <View0 Type="Source" />
   </Doc1>
-  <Doc2 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/adresis/src/cliente/lib/adcmodulelist.h" >
-   <View0 line="37" Type="Source" />
+  <Doc2 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/admainwindow.h" >
+   <View0 Type="Source" />
   </Doc2>
-  <Doc3 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/adresis/src/cliente/lib/adcmodulelist.cpp" >
-   <View0 line="25" Type="Source" />
+  <Doc3 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/admainwindow.cpp" >
+   <View0 Type="Source" />
   </Doc3>
+  <Doc4 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/adconnector.cpp" >
+   <View0 Type="Source" />
+  </Doc4>
+  <Doc5 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/lib/adconnectorbase.h" >
+   <View0 Type="Source" />
+  </Doc5>
+  <Doc6 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/lib/adconnectorbase.cpp" >
+   <View0 Type="Source" />
+  </Doc6>
+  <Doc7 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/adresis.h" >
+   <View0 Type="Source" />
+  </Doc7>
+  <Doc8 NumberOfViews="1" URL="file:///home/kuadrosx/Proyectos/trunk/src/cliente/shell/adresis.cpp" >
+   <View0 line="25" Type="Source" />
+  </Doc8>
  </DocsAndViews>
  <pluginList>
   <kdevdebugger>
