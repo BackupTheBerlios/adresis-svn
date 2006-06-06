@@ -23,7 +23,7 @@
 #include <QHostInfo>
 
 #include "adserver.h"
-// #include "sdatabase.h"s
+#include "sdatabase.h"
 
 #include <dconfig.h>
 #include <ddebug.h>

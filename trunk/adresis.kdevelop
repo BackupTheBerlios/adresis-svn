@@ -96,7 +96,7 @@
       <envvars/>
     </run>
     <general>
-      <activedir>src</activedir>
+      <activedir>src/servidor/shell</activedir>
     </general>
     <make>
       <abortonerror>true</abortonerror>

@@ -1,11 +1,9 @@
 # Archivo generado por el gestor qmake de kdevelop. 
 # ------------------------------------------- 
-# Subdirectorio relativo al directorio principal del proyecto: .
+# Subdirectorio relativo al directorio principal del proyecto: ./3rdparty
 # Destiono es un subdirectorio de proyecto 
 
-SUBDIRS += src \
-           3rdparty 
-KDEV_QTVER = 4
+SUBDIRS += psql 
 CONFIG += release \
-warn_on
-TEMPLATE = subdirs
+          warn_on 
+TEMPLATE = subdirs 
