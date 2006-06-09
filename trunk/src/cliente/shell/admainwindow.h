@@ -34,10 +34,11 @@ class ADMainWindow : public DMainWindow
 		ADMainWindow();
 		~ADMainWindow();
 		void createModule(const QString& moduleName, const QStringList & titles);
-		DActionManager *m_actionManager;
+		
 		
 	private:
 		Adresis *m_adresis;
+		DActionManager *m_actionManager;
 		
 	private:
 		void setupActions();
