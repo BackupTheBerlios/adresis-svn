@@ -148,12 +148,10 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 	{
 		return;
 	}
-	
-	ADSelect select(QStringList() << "password", "dt_users" );
-	select.setWhere("login="+SQLSTR(login));
-	
+	dDebug() << "1";
+	ADSelect select(QStringList() << "passwduser", "aduser" );
+	select.setWhere("loginuser="+SQLSTR(login));
 	SResultSet rs = SDBM->execQuery(&select);
-	
 	if ( !rs.isValid() )
 	{
 		cnx->sendToClient( SErrorPackage(1, tr("Bad login") ) );
@@ -161,9 +159,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		
 		return;
 	}
-	
-	QString truePasswd = rs.map()["password"][0];
-	
+	QString truePasswd = rs.map()["passwduser"][0];
 	if ( truePasswd.isEmpty() || password != truePasswd )
 	{
 		cnx->sendToClient( SErrorPackage(3, tr("Bad password") ) );
@@ -172,9 +168,10 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 // 	else
 	{
 		cnx->setLogin(login);
-	
-		cnx->sendToClient( SSuccessPackage(tr("Welcome to the jungle")));
-		cnx->sendToClient( SResourcePackage() );
+		ADSelect user(QStringList() << "passwduser", "aduser");
+		
+		cnx->sendToClient( SSuccessPackage(tr("autenticado")));
+		cnx->sendToClient( SDBM->execQuery(&user) );
 	}
 }
 

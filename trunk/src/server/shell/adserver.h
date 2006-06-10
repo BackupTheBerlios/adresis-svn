@@ -42,19 +42,16 @@ class ADServer : public QTcpServer
 		ADServer(ADS::ConnectionType type, const QString &host, QObject *parent = 0);
 		~ADServer();
 		void sendToAll(const QDomDocument &pkg);
-		
 		bool openConnection(ADS::ConnectionType type, const QString &host);
 		
 	public slots:
 		void sendToAll(const QString &msg);
 		void removeConnection(ADServerConnection *cnx);
 		void authenticate(ADServerConnection *cnx,const QString &login, const QString &password);
-		
 		void doOperation(ADServerConnection *cnx, const ADQuery *query);
 		
 	private:
 		void handle(const ADServerConnection *cnx);
-		
 		
 	protected:
 		void incomingConnection(int socketDescriptor);
