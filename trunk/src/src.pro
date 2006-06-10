@@ -5,8 +5,8 @@
 
 SOURCES += adresis.cpp 
 SUBDIRS += dlib \
-           servidor \
-           cliente 
+           server \
+           client 
 KDEV_QTVER = 3
 TARGET = ../bin/adresis
 CONFIG += release \
