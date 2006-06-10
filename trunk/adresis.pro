@@ -3,8 +3,8 @@
 # Subdirectorio relativo al directorio principal del proyecto: .
 # Destiono es un subdirectorio de proyecto 
 
-SUBDIRS += 3rdparty \
-           src
+SUBDIRS += src \
+	   3rdparty
 KDEV_QTVER = 4
 CONFIG += release \
 warn_on

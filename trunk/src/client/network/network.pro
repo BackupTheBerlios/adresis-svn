@@ -1,14 +1,17 @@
 # Archivo generado por el gestor qmake de kdevelop. 
 # ------------------------------------------- 
-# Subdirectorio relativo al directorio principal del proyecto: ./src/cliente/network
+# Subdirectorio relativo al directorio principal del proyecto: ./src/client/network
 # Destiono es una biblioteca:  
 
-QT += xml 
+QT += xml network
 KDEV_QTVER = 4 
-TARGETDEPS += ../../../src/cliente/lib/libadlib.a 
-LIBS += ../../../src/cliente/lib/libadlib.a 
-INCLUDEPATH += ../../../src/cliente/lib \
+LIBS += -ldgui \
+        -ldcore \
+        ../../../src/client/lib/libadlib.a 
+INCLUDEPATH += ../../../src/client/lib \
                ../../../src/dlib/dgui \
+               ../../../src/dlib/dcore 
+QMAKE_LIBDIR = ../../../src/dlib/dgui \
                ../../../src/dlib/dcore 
 CONFIG += release \
           warn_on \

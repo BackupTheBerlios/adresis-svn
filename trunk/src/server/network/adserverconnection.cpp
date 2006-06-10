@@ -38,6 +38,7 @@ ADServerConnection::ADServerConnection(int socketDescriptor, QObject *parent) : 
 	
 	m_reader.setContentHandler(m_parser);
 	m_reader.setErrorHandler(m_parser);
+	
 }
 
 ADServerConnection::~ADServerConnection()
