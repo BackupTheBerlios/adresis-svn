@@ -3,15 +3,10 @@
 # Subdirectorio relativo al directorio principal del proyecto: ./src/server/shell
 # Destiono es una aplicaci??n: ../../../bin/adserver.bin
 
-QT += xml sql network
+QT += xml network sql
 KDEV_QTVER = 4 
 INSTALLS += target 
 target.path = /bin/ 
-TARGETDEPS += ../../../3rdparty/psql/libpsql.a \
-              ../../../src/dlib/dgui/libdgui.so \
-              ../../../src/dlib/dcore/libdcore.so \
-              ../../../src/server/network/libnetwork.a \
-              ../../../src/server/packages/libpackages.a 
 LIBS += -ldgui \
         -ldcore \
         ../../../src/server/network/libnetwork.a \

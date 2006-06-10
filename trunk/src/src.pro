@@ -3,7 +3,6 @@
 # Subdirectorio relativo al directorio principal del proyecto: ./src
 # Destiono es un subdirectorio de proyecto 
 
-SOURCES += adresis.cpp 
 SUBDIRS += dlib \
            server \
            client 

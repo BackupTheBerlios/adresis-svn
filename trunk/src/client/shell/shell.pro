@@ -3,16 +3,10 @@
 # Subdirectorio relativo al directorio principal del proyecto: ./src/client/shell
 # Destiono es una aplicaci??n: ../../../bin/adclient.bin
 
-QT += xml network
+QT += xml network 
 KDEV_QTVER = 4 
 INSTALLS += target 
 target.path = /bin/ 
-TARGETDEPS += ../../../src/dlib/dcore/libdcore.so \
-              ../../../src/dlib/dgui/libdgui.so \
-              ../../../src/server/network/libnetwork.a \
-              ../../../src/server/packages/libpackages.a \
-              ../../../src/client/network/libnetwork.a \
-              ../../../src/client/lib/libadlib.a 
 LIBS += -ldcore \
         -ldgui \
         ../../../src/client/network/libnetwork.a \

@@ -5,8 +5,6 @@
 
 QT += xml network 
 KDEV_QTVER = 4 
-TARGETDEPS += ../../../src/dlib/dgui/libdgui.so \
-              ../../../src/dlib/dcore/libdcore.so 
 LIBS += -ldgui \
         -ldcore 
 INCLUDEPATH += ../../../src/dlib/dgui \

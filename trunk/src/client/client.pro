@@ -6,7 +6,6 @@
 SUBDIRS += theme \
            lib \
            network \
-           modules \
            shell 
 KDEV_QTVER = 4
 CONFIG += release \
