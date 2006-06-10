@@ -32,7 +32,6 @@ class ADConnectPackage : public QDomDocument
 	public:
 		ADConnectPackage(const QString &login, const QString &passwd);
 		~ADConnectPackage();
-
 };
 
 #endif

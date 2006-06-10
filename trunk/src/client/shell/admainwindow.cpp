@@ -44,25 +44,23 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 {
 	setWindowTitle(tr("Adresis Client"));
 	DCONFIG->beginGroup("TipOfDay");
-	
-
-	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
-	dDebug() << DATA_DIR+"tips" << showTips;
-	if ( showTips )
-	{
-		showTipDialog();
-		QTimer::singleShot(0, this, SLOT(showTipDialog()));
-	}
-	m_actionManager = new DActionManager(this);
-	setupActions();
-	setupToolbar();
-	setupMenu();
 	m_adresis = new Adresis();
 	
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	
 	createModule("users", QStringList() << tr("login") << tr("name"));
 	connectToHost();
+
+	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
+	dDebug() << DATA_DIR+"tips" << showTips;
+	if ( showTips )
+	{
+		QTimer::singleShot(0, this, SLOT(showTipDialog()));
+	}
+	m_actionManager = new DActionManager(this);
+	setupActions();
+	setupToolbar();
+	setupMenu();
 }
 
 void ADMainWindow::setupActions()
@@ -94,7 +92,6 @@ void ADMainWindow::showTipDialog()
 void ADMainWindow::createModule(const QString& moduleName, const QStringList & titles)
 {
 	ADCModuleList *module = new ADCModuleList(moduleName, titles, this);
-	
 	toolWindow( DDockWindow::Left )->addWidget( moduleName, module);
 	
 }
@@ -111,8 +108,6 @@ void ADMainWindow::connectToHost()
 
 void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 {
-	dDebug() << "showDialog";
-	QMessageBox::information ( 0 , "Message", message, 0);
 	switch(type)
 	{
 		default:
@@ -120,7 +115,6 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 			QMessageBox::information ( 0 , "Message", message, 0);
 		}
 	}
-	
 }
 
 

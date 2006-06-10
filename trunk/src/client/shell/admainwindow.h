@@ -25,7 +25,7 @@
 
 #include "adresis.h"
 /**
- * @author Jorge Cuadrado <kuadrosx@zi0n>
+ * @author Jorge Cuadrado <kuadrosxx@gamail.com>
 */
 class ADMainWindow : public DMainWindow
 {
@@ -34,7 +34,6 @@ class ADMainWindow : public DMainWindow
 		ADMainWindow();
 		~ADMainWindow();
 		void createModule(const QString& moduleName, const QStringList & titles);
-		
 		
 	private:
 		Adresis *m_adresis;

@@ -9,8 +9,6 @@
 #include "adcapplication.h"
 
 
-// #include "adresis.h"
-
 int main(int argc, char **argv)
 {
 	ADCApplication app(argc, argv);
@@ -44,10 +42,7 @@ int main(int argc, char **argv)
 	dAppProp->setThemeDir(dAppProp->homeDir()+"/data/themes/default");
 	
 	ADMainWindow mainWindow;
-// 	Adresis adresis;
-	
-// 	adresis.connectToHost("localhost",  1400 );
-// 	adresis.login( "testuser", "pass");
+// 	mainWindow.show();
 	mainWindow.showMaximized();
 	
 	return app.exec();

@@ -74,11 +74,6 @@ void ADConnector::readFromServer()
 			QList<XMLResults> results = m_parser->results();
 			
 		}
-// 		else if(root == "Chat" )
-// 		{
-// 			XMLResults result = m_parser->results()[0];
-// 			emit chatMessage(result["login"], result["message"]);
-// 		}
 		else if ( root == "Error" )
 		{
 			XMLResults result = m_parser->results()[0];

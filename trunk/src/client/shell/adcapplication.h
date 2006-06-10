@@ -24,7 +24,7 @@
 #include <dapplication.h>
 
 /**
-	@author David Cuadrado <krawek@gmail.com>
+*	@author David Cuadrado <krawek@gmail.com>
 */
 class ADCApplication : public DApplication
 {
