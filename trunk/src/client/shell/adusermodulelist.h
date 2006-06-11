@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,41 +17,21 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADRESIS_H
-#define ADRESIS_H
-
-#include <QObject>
-
-#include "adconnector.h"
-#include "global.h"
-#include "aduser.h"
+#ifndef ADUSERMODULELIST_H
+#define ADUSERMODULELIST_H
 
 /**
-* @author Jorge Cuadrado <kuadrosxx@gmail.com>
+	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-class Adresis : public QObject
+#include<QList>
+#include"adcmodulelist.h"
+class ADUserModuleList : public ADCModuleList
 {
-	Q_OBJECT;
 	public:
-		Adresis(QObject * parent=0);
-		~Adresis();
+		ADUserModuleList(QWidget *parent=0);
+		~ADUserModuleList();
 		
-	public slots:
-		
-	public slots:
-		void connectToHost( const QString & hostName, quint16 port);
-		void login(const QString &user, const QString &passwd);
-		void autenticated(const XMLResults& values);
-		void getInfoModule(Logic::TypeModule module);
-		
-	signals:
-		void requestShowMessage(Msg::Type type, const QString& message );
-		void requestCreateModules();
-		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
-	private:
-		ADConnector *m_connector;
-		ADUser m_user;
-		
+		void fill( const QList<XMLResults>&results);
 };
 
 #endif

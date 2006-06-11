@@ -25,13 +25,19 @@
 */
 #include <QWidget>
 #include <QStringList>
+#include <QTreeWidget>
+#include "global.h"
 
 
 class ADCModuleList: public QWidget
 {
 	public:
 		ADCModuleList(const QString& moduleName, const QStringList& list, QWidget *parent );
-		~ADCModuleList();
+		virtual ~ADCModuleList();
+		virtual void fill( const QList<XMLResults>&results) = 0;
+		
+	protected:
+		QTreeWidget *m_pTree;
 };
 
 #endif

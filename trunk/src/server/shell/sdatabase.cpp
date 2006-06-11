@@ -70,6 +70,7 @@ SResultSet SDatabase::execRawQuery(const QString &sql)
 		for(int i = 0; i < query.record().count() ; i++)
 		{
 			values << query.value(i).toString();
+			dDebug() << "value" << query.value(i).toString();
 		}
 		
 		rs.setRecord( fields, values);

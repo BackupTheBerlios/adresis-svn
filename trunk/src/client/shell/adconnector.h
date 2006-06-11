@@ -53,6 +53,7 @@ class ADConnector : public ADConnectorBase
 		void chatMessage(const QString &login, const QString &msg);
 		void message(Msg::Type t, const QString &message);
 		void userAutenticated(const XMLResults&);
+		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
 		
 	private:
 		QXmlSimpleReader m_reader;

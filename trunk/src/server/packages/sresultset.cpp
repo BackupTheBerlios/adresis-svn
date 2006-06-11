@@ -65,6 +65,7 @@ void SResultSet::setRecord(const QStringList &fields, const QStringList &results
 		{
 			m_map[field] << results[counter];
 		}
+		counter++;
 	}
 	
 	documentElement().appendChild(recordElement);

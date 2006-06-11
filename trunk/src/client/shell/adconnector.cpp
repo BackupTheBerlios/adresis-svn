@@ -73,11 +73,28 @@ void ADConnector::readFromServer()
 		{
 			QList<XMLResults> results = m_parser->results();
 			Logic::TypeQuery type = m_querys.dequeue();
+#if 1
+			foreach(XMLResults r, results)
+			{
+				XMLResults::const_iterator it = r.begin();
+				while(it != r.end())
+				{
+					dDebug() << it.key() << " = " << it.value();
+					++it;
+				}
+			}
+#endif
+			SHOW_VAR(type);
 			switch(type)
 			{
 				case Logic::userAuthenticated:
 				{
 					emit userAutenticated(results[0]);
+					break;
+				}
+				case Logic::fillUserModule:
+				{
+					emit fillModule(Logic::users, results );
 					break;
 				}
 				default:

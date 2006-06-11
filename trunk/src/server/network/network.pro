@@ -3,7 +3,7 @@
 # Subdir relative project main directory: ./src/server/network
 # Target is a library:  
 
-QT += xml 
+QT += xml network 
 KDEV_QTVER = 4 
 LIBS += -ldgui \
         -ldcore \

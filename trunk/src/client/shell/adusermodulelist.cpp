@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                  *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,41 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADRESIS_H
-#define ADRESIS_H
+#include "adusermodulelist.h"
 
-#include <QObject>
-
-#include "adconnector.h"
-#include "global.h"
-#include "aduser.h"
-
-/**
-* @author Jorge Cuadrado <kuadrosxx@gmail.com>
-*/
-class Adresis : public QObject
+ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("Users", QStringList() << "login"<< "name", parent )
 {
-	Q_OBJECT;
-	public:
-		Adresis(QObject * parent=0);
-		~Adresis();
-		
-	public slots:
-		
-	public slots:
-		void connectToHost( const QString & hostName, quint16 port);
-		void login(const QString &user, const QString &passwd);
-		void autenticated(const XMLResults& values);
-		void getInfoModule(Logic::TypeModule module);
-		
-	signals:
-		void requestShowMessage(Msg::Type type, const QString& message );
-		void requestCreateModules();
-		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
-	private:
-		ADConnector *m_connector;
-		ADUser m_user;
-		
-};
+}
 
-#endif
+
+ADUserModuleList::~ADUserModuleList()
+{
+}
+
+void ADUserModuleList::fill( const QList<XMLResults>&results)
+{
+	QList<XMLResults>::const_iterator it= results.begin();
+	
+	while( it != results.end() )
+	{
+		
+		QString login = (*it)["loginuser"];
+		QString name = (*it)["nameuser"];
+		
+		QTreeWidgetItem *data = m_pTree->headerItem();
+		
+		QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+		item->setText(0, login);
+		item->setText(1, name);
+		++it;
+	}
+	
+	
+	
+}

@@ -3,7 +3,7 @@
 # Subdir relative project main directory: ./src/server/shell
 # Target is an application:  ../../../bin/adserver.bin
 
-QT +=  sql network xml 
+QT += network  sql xml 
 INSTALLS += target 
 target.path = /bin/ 
 KDEV_QTVER = 4 
@@ -14,12 +14,16 @@ LIBS += -ldgui \
         -ldcore \
         ../../../src/server/network/libnetwork.a \
         ../../../src/server/packages/libpackages.a \
-        ../../../3rdparty/psql/libpsql.a 
+        ../../../3rdparty/psql/libpsql.a \
+        -lpq 
 INCLUDEPATH += ../../../src/server/network \
                ../../../src/server/packages \
                ../../../src/dlib/dgui \
                ../../../src/dlib/dcore \
                ../../../3rdparty/psql 
+MOC_DIR = .moc 
+UI_DIR = .ui 
+OBJECTS_DIR = .obj 
 QMAKE_LIBDIR = ../../../src/dlib/dgui \
                ../../../src/dlib/dcore 
 TARGET = ../../../bin/adserver.bin 

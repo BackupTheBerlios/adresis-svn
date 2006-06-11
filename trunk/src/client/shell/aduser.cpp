@@ -80,12 +80,7 @@ ADUpdatePackage &ADUser::updatePackage() const
 
 void ADUser::setValues(XMLResults values)
 {
-	XMLResults::const_iterator it = values.begin();
-	while(it != values.end())
-	{
-		dDebug() << it.key() << " = " << it.value() ;
-		++it;
-	}
+	dDebug() << "here sss";
 	m_name = values["nameuser"];
 	m_code = values["codeuser"];
 	m_login = values["loginuser"];
@@ -94,15 +89,19 @@ void ADUser::setValues(XMLResults values)
 	QString strPermissions;
 	
 	strPermissions = values["permissionsuser"];
+	dDebug() << m_name <<m_code << m_login<<m_passwd<<strPermissions;
 	for(int i = 0; i < strPermissions.length (); i++)
 	{
 		strPermissions[i];
 		if(strPermissions[i] == '1')
 		{
+			
 			m_permissions.insert(Logic::TypeModule(i), true);
 		}
 		else
 		{
+			
+			dDebug() << "false";
 			m_permissions.insert(Logic::TypeModule(i), false);
 		}
 	}

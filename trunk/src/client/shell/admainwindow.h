@@ -23,6 +23,9 @@
 #include <dmainwindow.h>
 #include <dactionmanager.h>
 
+#include "adusermodulelist.h"
+
+#include <QMap>
 #include "adresis.h"
 /**
  * @author Jorge Cuadrado <kuadrosxx@gamail.com>
@@ -33,11 +36,12 @@ class ADMainWindow : public DMainWindow
 	public:
 		ADMainWindow();
 		~ADMainWindow();
-		void createModule(const QString& moduleName, const QStringList & titles);
+// 		ADCModuleList* createModule(const QString& moduleName, const QStringList & titles);
 		
 	private:
 		Adresis *m_adresis;
 		DActionManager *m_actionManager;
+		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
 		
 	private:
 		void setupActions();
@@ -48,8 +52,11 @@ class ADMainWindow : public DMainWindow
 		void showTipDialog();
 		void connectToHost();
 		
+		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
+		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
+		void createModules();
 };
 
 #endif

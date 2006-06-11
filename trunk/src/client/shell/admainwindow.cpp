@@ -37,7 +37,6 @@
 #include <QScrollArea>
 
 //adresisLib
-#include "adcmodulelist.h"
 #include "cconnectiondialog.h"
 
 ADMainWindow::ADMainWindow() : DMainWindow()
@@ -47,8 +46,11 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	m_adresis = new Adresis();
 	
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
+	connect(m_adresis, SIGNAL(requestCreateModules()), this, SLOT(createModules()));
+	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
 	
-	createModule("users", QStringList() << tr("login") << tr("name"));
+	
+// 	createModule("users", QStringList() << tr("login") << tr("name"));
 	connectToHost();
 
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
@@ -89,12 +91,12 @@ void ADMainWindow::showTipDialog()
 	m_tipDialog->show();
 }
 
-void ADMainWindow::createModule(const QString& moduleName, const QStringList & titles)
-{
-	ADCModuleList *module = new ADCModuleList(moduleName, titles, this);
-	toolWindow( DDockWindow::Left )->addWidget( moduleName, module);
-	
-}
+// ADCModuleList *ADMainWindow::createModule(const QString& moduleName, const QStringList & titles)
+// {
+// 	ADCModuleList *module = new ADCModuleList(moduleName, titles, this);
+// 	toolWindow( DDockWindow::Left )->addWidget( moduleName, module);
+// 	
+// }
 
 void ADMainWindow::connectToHost()
 {
@@ -117,5 +119,17 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 	}
 }
 
+void ADMainWindow::fillModule(Logic::TypeModule module, const QList<XMLResults>&results)
+{
+	m_modules[module]->fill(results);
+}
 
-
+//FIXME: crear todos los modulos
+void ADMainWindow::createModules()
+{
+// 	m_modules.insert( Logic::users, createModule(tr("Usuarios"), QStringList()<< tr("Login") << tr("Nombre") ));
+	ADUserModuleList *users = new ADUserModuleList();
+	m_modules.insert( Logic::users, users);
+	toolWindow( DDockWindow::Left )->addWidget( "Users", users);
+	m_adresis->getInfoModule( Logic::users );
+}

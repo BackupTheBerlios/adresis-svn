@@ -43,37 +43,38 @@ void ADPackageParser::reset()
 
 bool ADPackageParser::startElement( const QString& , const QString& , const QString& qname, const QXmlAttributes& atts)
 {
+// 	dDebug() << ((m_root == "Results")&& (qname == "field") )  << m_root << " "<<  qname << " name = " << atts.value("name") << "values = "<< atts.value("value");
 	if (!m_isParsing)
 	{
 		reset();
 		m_root = qname;
 		
 		m_isParsing = true;
-		
 		m_valuesList << XMLResults();
+		
 	}
-// 	else if( m_root == "Chat" )
-// 	{
-// 		if ( qname == "Message" )
-// 		{
-// 			QString login = atts.value("login");
-// 			QString msg = atts.value("value");
-// 			
-// 			m_valuesList.last().insert("login", login);
-// 			m_valuesList.last().insert("message", msg);
-// 		}
-// 	}
+	else if( m_root == "Chat" )
+	{
+		if ( qname == "Message" )
+		{
+			QString login = atts.value("login");
+			QString msg = atts.value("value");
+			
+			m_valuesList.last().insert("login", login);
+			m_valuesList.last().insert("message", msg);
+		}
+	}
 	else if ( m_root == "Results" )
 	{
-		if ( m_qname == "field" )
+		if ( qname == "field" )
 		{
 			m_valuesList.last().insert(atts.value("name"), atts.value("value"));
 		}
-		else if ( m_qname == "Record" )
+		else if ( qname == "Record" )
 		{
 			m_valuesList << XMLResults();
 		}
-		else if ( m_qname == m_root )
+		else if ( qname == m_root )
 		{
 			m_valuesList.clear();
 		}
@@ -91,21 +92,7 @@ bool ADPackageParser::startElement( const QString& , const QString& , const QStr
 	}
 	else if ( m_root == "Success" )
 	{
-// 		if ( qname == "FormDef" )
-// 		{
-// 			m_readChar = true;
-// 			
-// 			FormData formData;
-// 			formData.id = atts.value("id").toInt();
-// 			
-// 			m_currentForms << formData;
-// 		}
-// 		else if ( qname == "Module" )
-// 		{
-// 			m_currentModule.key = atts.value("key");
-// 			m_currentModule.text = atts.value("text");
-// 		}
-/*		else */if ( qname == "Message" )
+		if ( qname == "Message" )
 		{
 			m_valuesList.last().insert("message", atts.value("value"));
 		}
@@ -128,12 +115,26 @@ bool ADPackageParser::startElement( const QString& , const QString& , const QStr
 // 		}
 // 	}
 	
+// 	if (!m_isParsing)
+// 	{
+// 		reset();
+// 		m_root = qname;
+// 		m_valuesList << XMLResults();
+// 	}	
 	m_qname = qname;
+
 	return true;
 }
 
 bool ADPackageParser::endElement(const QString&, const QString& , const QString& qname)
 {
+	
+	if (!m_isParsing)
+	{
+		reset();
+		m_root = qname;
+		m_valuesList << XMLResults();
+	}
 	if ( m_root == "Error" )
 	{
 	}
@@ -221,6 +222,16 @@ QString ADPackageParser::root() const
 
 QList<XMLResults> ADPackageParser::results() const
 {
-	return m_valuesList;
+	//FIXME:: la lista tiene que venir purgada
+	QList<XMLResults> purge;
+	foreach(XMLResults r, m_valuesList)
+	{
+		if(!r.isEmpty())
+		{
+			purge << r;
+		}
+	}
+	
+	return purge;
 }
 

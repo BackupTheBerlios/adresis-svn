@@ -25,6 +25,8 @@ Adresis::Adresis(QObject * parent)
 	m_connector = new ADConnector(this);
 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
+	connect ( m_connector, SIGNAL(fillModule(Logic::TypeModule, const QList<XMLResults>&)) , this, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)) );
+	
 	DINIT;
 }
 
@@ -43,21 +45,32 @@ void Adresis::login(const QString &user, const QString &passwd)
 {
 	m_connector->login(user, passwd);
 	
-	ADSelectPackage u(QStringList()<< "aduser", QStringList() << "*");
+	ADSelectPackage u(QStringList()<< "aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser");
 	u.setWhere( "loginuser='"+  user + "'" );
 	m_connector->sendQuery( Logic::userAuthenticated,u); 
 }
 
 void Adresis::autenticated(const XMLResults & values)
 {
-	
 	m_user.setValues( values);
-	dDebug() << m_user.name();
-	dDebug() << m_user.code();
-	dDebug() << m_user.passwd();
-// 	dDebug() << m_user.passwd();
-// 	m_user.permissions();
+	requestCreateModules();
 }
 
-
-
+void Adresis::getInfoModule(Logic::TypeModule module )
+{
+	if(m_user.permissions()[module])
+	{
+		switch(module)
+		{
+			case Logic::users:
+			{
+				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser"<< "loginuser" );
+				m_connector->sendQuery(Logic::fillUserModule, select);
+			}
+		}
+	}
+	else
+	{
+		emit requestShowMessage(Msg::Error, "Error, no tiene permisos sobre este modulo");
+	}
+}

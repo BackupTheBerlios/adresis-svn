@@ -19,7 +19,6 @@
  ***************************************************************************/
 #include "adcmodulelist.h"
 #include <QToolButton>
-#include <QTreeWidget>
 #include <dtreewidgetsearchline.h>
 #include <dglobal.h>
 #include <ddebug.h>
@@ -30,17 +29,17 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	
 	QVBoxLayout *cLy = new QVBoxLayout(this);
 	QHBoxLayout *seachLayout = new QHBoxLayout;
-	QTreeWidget *tree = new QTreeWidget();
-	tree->setHeaderLabels (titles);
+	m_pTree = new QTreeWidget();
+	m_pTree->setHeaderLabels (titles);
 	
-	DTreeWidgetSearchLine *searcher = new DTreeWidgetSearchLine(tr("Enter search terms here"), 0, tree);
+	DTreeWidgetSearchLine *searcher = new DTreeWidgetSearchLine(tr("Enter search terms here"), 0, m_pTree);
 	QToolButton *button = new QToolButton;
 	
 	button->setIcon( QIcon(THEME_DIR+"/icons/clear_right.png"));
 	seachLayout->addWidget(button);
 	seachLayout->addWidget( searcher );
 	cLy->addLayout(seachLayout);
-	cLy->addWidget( tree );
+	cLy->addWidget( m_pTree );
 }
 
 
@@ -49,4 +48,7 @@ ADCModuleList::~ADCModuleList()
 	
 }
 
-
+// void fill( const QList<XMLResults>&results)
+// {
+// 	
+// }
