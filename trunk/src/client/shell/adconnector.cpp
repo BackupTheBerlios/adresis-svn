@@ -72,7 +72,20 @@ void ADConnector::readFromServer()
 		if ( root == "Results" )
 		{
 			QList<XMLResults> results = m_parser->results();
-			
+			Logic::TypeQuery type = m_querys.dequeue();
+			switch(type)
+			{
+				case Logic::userAuthenticated:
+				{
+					emit userAutenticated(results[0]);
+					break;
+				}
+				default:
+				{
+					emit message(Msg::Error, "Error: operacion no permitida" );
+					break;
+				}
+			}
 		}
 		else if ( root == "Error" )
 		{
@@ -82,7 +95,7 @@ void ADConnector::readFromServer()
 		else if( root == "Success")
 		{
 // 			emit readedModuleForms( m_parser->moduleForms() );
-			dDebug() << "here";
+// 			dDebug() << "here";
 			emit message(Msg::Info, m_parser->results()[0]["message"]);
 		}
 		
@@ -130,4 +143,10 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 	}
 }
 
-
+void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select)
+{
+	m_querys.enqueue ( type );
+	QString toSend = select.toString();
+	toSend.remove('\n');
+	sendToServer( toSend);
+}

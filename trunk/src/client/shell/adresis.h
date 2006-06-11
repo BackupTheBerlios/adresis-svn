@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@zi0n   *
+ *   kuadrosx@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,8 @@
 
 #include "adconnector.h"
 #include "global.h"
+#include "aduser.h"
+
 /**
 * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
@@ -34,16 +36,20 @@ class Adresis : public QObject
 		Adresis(QObject * parent=0);
 		~Adresis();
 		
+	public slots:
 		
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
+		void autenticated(const XMLResults& values);
 		
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
-	
+		
 	private:
 		ADConnector *m_connector;
+		ADUser m_user;
+		
 };
 
 #endif

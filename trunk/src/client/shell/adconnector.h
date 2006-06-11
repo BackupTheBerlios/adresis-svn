@@ -25,11 +25,12 @@
 
 #include <QStringList>
 #include <QXmlSimpleReader>
+#include <QQueue>
 
 #include "global.h"
 
+#include "adselectpackage.h"
 class ADPackageParser;
-
 /**
  * Maneja las conexiones al servidor, asi mismo tambien maneja los errores de conexion
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
@@ -41,6 +42,7 @@ class ADConnector : public ADConnectorBase
 		ADConnector(QObject * parent = 0);
 		~ADConnector();
 		void login(const QString &user, const QString &passwd);
+		void sendQuery(Logic::TypeQuery type, const ADSelectPackage& select);
 		
 	private slots:
 		void readFromServer();
@@ -50,12 +52,13 @@ class ADConnector : public ADConnectorBase
 // 		void readedModuleForms(const ModuleForms &);
 		void chatMessage(const QString &login, const QString &msg);
 		void message(Msg::Type t, const QString &message);
+		void userAutenticated(const XMLResults&);
 		
 	private:
 		QXmlSimpleReader m_reader;
 		ADPackageParser *m_parser;
-		
 		QString m_readed;
+		QQueue<Logic::TypeQuery> m_querys;
 };
 
 #endif

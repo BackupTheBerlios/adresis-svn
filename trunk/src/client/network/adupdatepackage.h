@@ -18,18 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
  
-#ifndef CUPDATEPACKAGE_H
-#define CUPDATEPACKAGE_H
+#ifndef ADUPDATEPACKAGE_H
+#define ADUPDATEPACKAGE_H
 
 #include "adsqlpackagebase.h"
 
 /**
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
+ * @author Jorge Cuadrado \<kuadrosxx@gmail.com\>
 */
 class ADUpdatePackage : public ADSqlPackageBase
 {
 	public:
-		ADUpdatePackage(const QString &table, const QStringList &fields);
+		ADUpdatePackage(const QString &table, const QStringList &fields, const QStringList &values);
+		ADUpdatePackage(const QStringList &tables, const QList<QStringList> &fields, const QList<QStringList> &values);
 		~ADUpdatePackage();
 };
 

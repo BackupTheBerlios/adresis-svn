@@ -36,7 +36,15 @@ namespace Msg
 		Warning,
 		Error
 	};
+	
+
 }
+namespace Logic
+{
+	enum TypeQuery{userAuthenticated=0, fillUserModule};
+	enum TypeModule{users=0};
+}
+
 typedef QHash<QString, QString> XMLResults;
 
 #endif

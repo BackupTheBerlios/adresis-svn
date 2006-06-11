@@ -106,7 +106,7 @@ void ADServer::handle(const ADServerConnection *cnx)
 	
 	connect(cnx, SIGNAL(requestAuth(ADServerConnection *, const QString &, const QString &)), this, SLOT(authenticate(ADServerConnection *,const QString &, const QString &)));
 	
-	connect(cnx, SIGNAL(requestOperation( ADServerConnection *,const DTQuery* )), this, SLOT(doOperation(ADServerConnection *, const DTQuery* )));
+	connect(cnx, SIGNAL(requestOperation( ADServerConnection *,const ADQuery* )), this, SLOT(doOperation(ADServerConnection *, const ADQuery* )));
 }
 
 
@@ -171,7 +171,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		ADSelect user(QStringList() << "passwduser", "aduser");
 		
 		cnx->sendToClient( SSuccessPackage(tr("autenticado")));
-		cnx->sendToClient( SDBM->execQuery(&user) );
+// 		cnx->sendToClient( SDBM->execQuery(&user) );
 	}
 }
 

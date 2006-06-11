@@ -52,17 +52,17 @@ bool ADPackageParser::startElement( const QString& , const QString& , const QStr
 		
 		m_valuesList << XMLResults();
 	}
-	else if( m_root == "Chat" )
-	{
-		if ( qname == "Message" )
-		{
-			QString login = atts.value("login");
-			QString msg = atts.value("value");
-			
-			m_valuesList.last().insert("login", login);
-			m_valuesList.last().insert("message", msg);
-		}
-	}
+// 	else if( m_root == "Chat" )
+// 	{
+// 		if ( qname == "Message" )
+// 		{
+// 			QString login = atts.value("login");
+// 			QString msg = atts.value("value");
+// 			
+// 			m_valuesList.last().insert("login", login);
+// 			m_valuesList.last().insert("message", msg);
+// 		}
+// 	}
 	else if ( m_root == "Results" )
 	{
 		if ( m_qname == "field" )

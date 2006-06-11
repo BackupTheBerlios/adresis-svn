@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by David Cuadrado                                  *
- *   krawek@gmail.com                                                       *
+ *   Copyright (C) 2006 by David Cuadrado             krawek@gmail.com     *
+ *                         Jorge Cuadrado             kuadrosxx@gmail.com  *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,12 +20,28 @@
 
 #include "adupdatepackage.h"
 
-ADUpdatePackage::ADUpdatePackage(const QString &table, const QStringList &fields) : ADSqlPackageBase()
+ADUpdatePackage::ADUpdatePackage(const QString &table, const QStringList &fields, const QStringList &values) : ADSqlPackageBase()
 {
 	QDomElement root = createElement("Update");
 	
 	appendChild( root );
-	addTable( table, fields);
+	addTable( table, fields, values);
+}
+
+
+ADUpdatePackage::ADUpdatePackage(const QStringList &tables, const QList<QStringList> &fields, const QList<QStringList> &values) : ADSqlPackageBase()
+{
+	QDomElement root = createElement("Update");
+	
+	appendChild( root );
+	
+	int count = 0;
+	foreach(QString table, tables )
+	{
+		addTable(table, fields[count], values[count]);
+		
+		++count;
+	}
 }
 
 

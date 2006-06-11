@@ -57,7 +57,7 @@ class ADServerConnection : public QThread
 	signals:
 		void error(QTcpSocket::SocketError socketError);
 		void requestSendToAll(const QString &msg);
-		
+		void requestSendToAll(QDomDocument);
 		void requestRemoveConnection(ADServerConnection *self);
 		
 		void requestAuth(ADServerConnection *cnx, const QString &, const QString &);

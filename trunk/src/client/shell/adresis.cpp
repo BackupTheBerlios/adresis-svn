@@ -24,6 +24,7 @@ Adresis::Adresis(QObject * parent)
 {
 	m_connector = new ADConnector(this);
 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
+	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
 	DINIT;
 }
 
@@ -41,6 +42,22 @@ void Adresis::connectToHost( const QString & hostName, quint16 port)
 void Adresis::login(const QString &user, const QString &passwd)
 {
 	m_connector->login(user, passwd);
+	
+	ADSelectPackage u(QStringList()<< "aduser", QStringList() << "*");
+	u.setWhere( "loginuser='"+  user + "'" );
+	m_connector->sendQuery( Logic::userAuthenticated,u); 
 }
+
+void Adresis::autenticated(const XMLResults & values)
+{
+	
+	m_user.setValues( values);
+	dDebug() << m_user.name();
+	dDebug() << m_user.code();
+	dDebug() << m_user.passwd();
+// 	dDebug() << m_user.passwd();
+// 	m_user.permissions();
+}
+
 
 

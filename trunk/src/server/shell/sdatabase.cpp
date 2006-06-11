@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@gmail.com                                           	   *
+ *   krawek@gmail.com                                                      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,12 +25,12 @@
 #include <QString>
 
 #include <ddebug.h>
+#include "qsql_psql.h"
 
 SDatabase *SDatabase::m_instance = 0;
 
-SDatabase::SDatabase(QObject *parent) : QObject(parent), QSqlDatabase("QPSQL")
+SDatabase::SDatabase(QObject *parent) : QObject(parent), QSqlDatabase(new QPSQLDriver(this))
 {
-	
 }
 
 
@@ -66,7 +66,8 @@ SResultSet SDatabase::execRawQuery(const QString &sql)
 	while(query.next())
 	{
 		QStringList values;
-		for(int i = 0; i < record.count(); i++)
+		
+		for(int i = 0; i < query.record().count() ; i++)
 		{
 			values << query.value(i).toString();
 		}

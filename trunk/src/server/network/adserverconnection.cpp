@@ -77,10 +77,10 @@ void ADServerConnection::run()
 				{
 					emit requestAuth(this, values["Login"], values["Password"] );
 				}
-				else if ( root == "Chat" )
-				{
-					emit requestSendToAll(  SChatPackage(m_login,values["Message"]).toString().remove('\n') );
-				}
+// 				else if ( root == "Chat" )
+// 				{
+// 					emit requestSendToAll(  SChatPackage(m_login,values["Message"]).toString().remove('\n') );
+// 				}
 				else if ( root == "Insert" )
 				{
 					QStringList fields_and_values = values["field"].split(ADS::FIELD_SEPARATOR);
@@ -166,13 +166,19 @@ void ADServerConnection::run()
 				else if ( root == "Select" )
 				{
 					QString fields = values["field"];
-					QString tables = values["tables"];
+					QString tables = values["table"];
 					
 					//remove the last (,)
-					fields = fields.remove(fields.count(),1);
-					tables = tables.remove(tables.count(),1);
+					fields = fields.remove(fields.count()-1,1);
+					tables = tables.remove(tables.count()-1,1);
 					
 					ADSelect *select = new ADSelect(QStringList() << fields, QStringList() << tables, values["distinct"].toInt() );
+					
+					if ( values.contains( "where" ) )
+						select->setWhere( values["where"] );
+					
+					if ( values.contains("condition") )
+						select->setCondition( values["condition"] );
 					
 					emit requestOperation( this, select);
 				}

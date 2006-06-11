@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qsql_psql.h'
 **
-** Created: sáb jun 10 00:37:51 2006
+** Created: Sun Jun 11 01:24:41 2006
 **      by: The Qt Meta Object Compiler version 59 (Qt 4.1.3)
 **
 ** WARNING! All changes made in this file will be lost!

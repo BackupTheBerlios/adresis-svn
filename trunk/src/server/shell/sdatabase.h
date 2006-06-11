@@ -32,11 +32,6 @@
 #include "adquery.h"
 #include "sresultset.h"
 
-#include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlError>
-#include <QSqlRecord>
-#include <QSqlField>
 
 class SDatabase;
 
