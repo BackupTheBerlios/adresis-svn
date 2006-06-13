@@ -26,7 +26,6 @@ Adresis::Adresis(QObject * parent)
 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
 	connect ( m_connector, SIGNAL(fillModule(Logic::TypeModule, const QList<XMLResults>&)) , this, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)) );
-	
 	DINIT;
 }
 

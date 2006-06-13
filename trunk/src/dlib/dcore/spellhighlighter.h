@@ -37,7 +37,7 @@
  * new SpellHighlighter(textEdit->document());
  * @endcode
  * @endif
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 
 class SpellHighlighter : public QSyntaxHighlighter

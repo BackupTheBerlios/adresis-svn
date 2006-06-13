@@ -29,7 +29,7 @@
 
 /**
  * @short The CCButton class provides a circular button
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 
 class CCButton : public QPushButton

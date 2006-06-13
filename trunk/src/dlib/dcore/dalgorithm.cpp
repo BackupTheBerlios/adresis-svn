@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by David Cuadrado                                  *
- *   krawek@toonka.com                                                     *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,12 +21,14 @@
 #include "dalgorithm.h"
 
 #include <cstdlib>
-#include <unistd.h>
 #include <cstdio>
 #include <ctime>
+
+#ifdef Q_OS_LINUX
+#include <unistd.h>
 #include <sys/time.h>
 #include <fcntl.h>
-
+#endif
 
 // DAlgorithm::DAlgorithm()
 // {
@@ -43,6 +45,7 @@ int DAlgorithm::random()
 	if (!init)
 	{
 		unsigned int seed;
+#ifdef Q_OS_LINUX
 		init = true;
 		int fd = open("/dev/urandom", O_RDONLY);
 		if (fd < 0 || ::read(fd, &seed, sizeof(seed)) != sizeof(seed))
@@ -51,6 +54,9 @@ int DAlgorithm::random()
 			seed = rand()+time(0);
 		}
 		if (fd >= 0) close(fd);
+#else
+		seed = ::time(0);
+#endif
 		srand(seed);
 	}
 	return rand();

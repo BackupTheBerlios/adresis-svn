@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@toonka.com                                                     *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,7 +24,7 @@
 #include <QTreeWidget>
 
 /**
- * @author David Cuadrado <krawek@toonka.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class DTreeListWidget : public QTreeWidget
 {
@@ -34,7 +34,9 @@ class DTreeListWidget : public QTreeWidget
 		~DTreeListWidget();
 		void addItems(const QStringList &items);
 		QList<QTreeWidgetItem *> topLevelItems();
-		void setEditable(bool e);
+		
+		void setEditable(bool isEditable);
+		bool isEditable() const;
 		
 	public slots:
 		void removeAll();
@@ -49,7 +51,7 @@ class DTreeListWidget : public QTreeWidget
 		void itemRenamed(QTreeWidgetItem *item);
 		
 	private:
-		bool m_editable;
+		bool m_isEditable;
 };
 
 #endif

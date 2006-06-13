@@ -41,7 +41,7 @@ class QPainterPath;
 
 /**
  * @short The CCBar class provides a circular button bar
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class CCBar : public QFrame
 {

@@ -29,7 +29,7 @@
  * 	La clase DWidgetListView provee una lista de widgets basada en items
  * 	@brief Provee una lista de widgets
  * @endif
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class Q_GUI_EXPORT DWidgetListView : public QTableWidget
 {

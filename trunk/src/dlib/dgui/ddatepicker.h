@@ -30,7 +30,7 @@ class QComboBox;
 class QLabel;
 
 /**
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 
 class DDatePicker : public QFrame
@@ -40,6 +40,7 @@ class DDatePicker : public QFrame
 		DDatePicker(QWidget *parent = 0);
 		~DDatePicker();
 		void setDate(const QDate &date);
+		QDate date() const;
 		
 	private:
 		void fillWeeks(const QDate &date);

@@ -311,11 +311,7 @@ DDebug& DDebug::operator << (const QGradient *g)
 			*this << static_cast<const QConicalGradient &>(*g);
 		}
 		break;
-		default:
-		{
-			
-		}
-		break;
+		
 	}
 }
 

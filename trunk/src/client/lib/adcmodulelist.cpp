@@ -18,28 +18,54 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adcmodulelist.h"
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
 #include <QToolButton>
+#include <QHeaderView>
+#include <QTimer>
+
+
 #include <dtreewidgetsearchline.h>
-#include <dglobal.h>
+
+#include "global.h"
 #include <ddebug.h>
 
 ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& titles, QWidget *parent )
 	:QWidget(parent)
 {
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	setLayout(layout);
+	QHBoxLayout *search = new QHBoxLayout;
 	
-	QVBoxLayout *cLy = new QVBoxLayout(this);
-	QHBoxLayout *seachLayout = new QHBoxLayout;
-	m_pTree = new QTreeWidget();
-	m_pTree->setHeaderLabels (titles);
-	
-	DTreeWidgetSearchLine *searcher = new DTreeWidgetSearchLine(tr("Enter search terms here"), 0, m_pTree);
 	QToolButton *button = new QToolButton;
-	
 	button->setIcon( QIcon(THEME_DIR+"/icons/clear_right.png"));
-	seachLayout->addWidget(button);
-	seachLayout->addWidget( searcher );
-	cLy->addLayout(seachLayout);
-	cLy->addWidget( m_pTree );
+	
+	
+	search->addWidget(button);
+	m_pTree = new  QTreeWidget;
+// 	m_pTree = new DTreeListWidget;
+	
+	m_pTree->setHeaderLabels ( titles );
+	m_pTree->header()->show();
+	m_pSearch = new DTreeWidgetSearchLine(this, m_pTree);
+	
+	
+	search->addWidget( m_pSearch );
+	
+	m_pSearch->setSearchColumns(QList<int>() << 0 );
+	
+	layout->addLayout(search);
+	
+	layout->addWidget(m_pTree);
+	
+	
+	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
+// 	connect(button, SIGNAL(clicked()), this, SLOT(fill()));
+	
+// 	m_pTree->setEditable(false);
+	
+	setup(titles);
 }
 
 
@@ -48,7 +74,61 @@ ADCModuleList::~ADCModuleList()
 	
 }
 
-// void fill( const QList<XMLResults>&results)
-// {
+ADModuleButtonBar *ADCModuleList::addButtonBar(int flags)
+{
+	ADModuleButtonBar *bar = new ADModuleButtonBar(flags);
+	
+	boxLayout()->addWidget( bar );
+	return bar;
+}
+
+QBoxLayout *ADCModuleList::boxLayout()
+{
+	return qobject_cast<QVBoxLayout *>(layout());
+}
+
+void ADCModuleList::addItem(const QStringList &cols)
+{
+	QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+	int count = 0;
+	foreach(QString str, cols)
+	{
+		item->setText(count, str);
+		count++;
+	}
+}
+
+void ADCModuleList::setup(const QStringList& headers )
+{
+	D_FUNCINFO;
+	
+	// TODO: guardar los campos de la BD
+	
+// 	QStringList headers;
+// 	QStringList tables, attributes;
+// 	QString where;
+// 	QTreeWidgetItem *data = new QTreeWidgetItem();
+	
+// 	int count = 0;
+// 	foreach(QString info,headers)
+// 	{
+// 		data->setText(count, info);
+// // 		data->setData(count, Field, info);
+// 		
+// // 		headers << info.first;
+// 		++count;
+// 	}
 // 	
-// }
+// 	m_pTree->setHeaderLabels(headers);
+// 	m_pTree->setHeaderItem(data);
+// 	
+// 	m_pTree->header()->show();
+// 	
+// 	m_pModuleInfo = module;
+// 	
+// 	QTimer::singleShot(500, this, SLOT(fill()));
+}
+
+
+
+

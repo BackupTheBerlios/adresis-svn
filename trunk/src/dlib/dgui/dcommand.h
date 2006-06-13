@@ -2,7 +2,7 @@
  *                                                                         *
  *  Copyright (C) 2000 Werner Trobin <trobin@kde.org>                      *
  *  Copyright (C) 2000,2006 David Faure <faure@kde.org>                    *
- *  Copyright (C) 2006 by David Cuadrado <krawek@toonka.com>               *
+ *  Copyright (C) 2006 by David Cuadrado <krawek@gmail.com>               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

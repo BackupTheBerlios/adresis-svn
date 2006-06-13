@@ -18,9 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adusermodulelist.h"
+#include <ddebug.h>
 
 ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("Users", QStringList() << "login"<< "name", parent )
 {
+	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
+	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 
@@ -35,17 +38,22 @@ void ADUserModuleList::fill( const QList<XMLResults>&results)
 	while( it != results.end() )
 	{
 		
-		QString login = (*it)["loginuser"];
-		QString name = (*it)["nameuser"];
-		
-		QTreeWidgetItem *data = m_pTree->headerItem();
-		
-		QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-		item->setText(0, login);
-		item->setText(1, name);
+		QStringList list;
+		list << (*it)["loginuser"] << (*it)["nameuser"];
+		addItem( list );
 		++it;
 	}
-	
-	
-	
+}
+
+void ADUserModuleList::requestAction(int action)
+{
+	dError() << action;
+	switch(action)
+	{
+		case ADModuleButtonBar::Add:
+		{
+			emit requestUserForm();
+			break;
+		}
+	} 
 }

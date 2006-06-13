@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado   *
- *   krawek@toonka.com   *
+ *   krawek@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,7 +53,7 @@ void DThemeDocument::addGeneralSection(ThemeKey tk)
 	QDomElement general = createElement("General");
 	QStringList keys = tk.keys();
 	QStringList values = tk.values();
-	for(int i = 0; i < keys.count(); i++)
+	for(uint i = 0; i < keys.count(); i++)
 	{
 		QDomElement e = createElement(keys[i]);
 		e.setAttribute("color", values[i]);
@@ -67,7 +67,7 @@ void DThemeDocument::addEffectsSection(ThemeKey tk)
 	QDomElement general = createElement("Effects");
 	QStringList keys = tk.keys();
 	QStringList values = tk.values();
-	for(int i = 0; i < keys.count(); i++)
+	for(uint i = 0; i < keys.count(); i++)
 	{
 		QDomElement e = createElement(keys[i]);
 		e.setAttribute("color", values[i]);
@@ -81,7 +81,7 @@ void DThemeDocument::addSelections(ThemeKey tk)
 	QDomElement general = createElement("Selections");
 	QStringList keys = tk.keys();
 	QStringList values = tk.values();
-	for(int i = 0; i < keys.count(); i++)
+	for(uint i = 0; i < keys.count(); i++)
 	{
 		QDomElement e = createElement(keys[i]);
 		e.setAttribute("color", values[i]);
@@ -95,7 +95,7 @@ void DThemeDocument::addTextEffect(ThemeKey tk)
 	QDomElement general = createElement("TextEffects");
 	QStringList keys = tk.keys();
 	QStringList values = tk.values();
-	for(int i = 0; i < keys.count(); i++)
+	for(uint i = 0; i < keys.count(); i++)
 	{
 		QDomElement e = createElement(keys[i]);
 		e.setAttribute("color", values[i]);

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@toonka.com                                                     *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -59,7 +59,7 @@ QGradient DGradientAdjuster::adjustGradient(const QGradient *gradient, const QRe
 
 QLinearGradient DGradientAdjuster::adjustGradient(const QLinearGradient &gradient, const QRect &rect)
 {
-	
+	const float offset = 10;
 	
 	QPointF start, final;
 	
@@ -84,7 +84,7 @@ QRadialGradient DGradientAdjuster::adjustGradient(const QRadialGradient &gradien
 	
 	focal.setX(((gradient.focalPoint().x() / 100) *  rect.width()) + rect.x()  );
 	focal.setY(((gradient.focalPoint().y() / 100) *  rect.height()) + rect.y()  );
-	double radius = gradient.radius()/100* (qMax(rect.width(), rect.height()));
+	int radius = gradient.radius()/100* (qMax(rect.width(), rect.height()));
 	QRadialGradient newGradient = QRadialGradient(center, radius,  focal );
 	newGradient.setStops(gradient.stops());
 	newGradient.setSpread(gradient.spread());
@@ -133,7 +133,7 @@ QGradient  DGradientAdjuster::mapGradient(const QGradient *gradient, const QMatr
 
 QLinearGradient  DGradientAdjuster::mapGradient(const QLinearGradient &gradient, const QMatrix &matrix)
 {
-// 	const float offset = 10;
+	const float offset = 10;
 	
 	QPointF start, final;
 	

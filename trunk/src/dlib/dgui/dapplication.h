@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@toonka.com                                                     *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -61,7 +61,7 @@ class Q_GUI_EXPORT DApplication : public QApplication
 {
 	Q_OBJECT
 	public:
-		enum ColorSchema { Default = 0, DarkBlue };
+		enum ColorSchema { DarkBlue };
 		/**
 		 * @if english
 		 * Translate
@@ -191,6 +191,8 @@ class Q_GUI_EXPORT DApplication : public QApplication
 		DThemeManager m_themeManager;
 };
 
-#include "dglobal.h"
+#include <dglobal.h>
+
+#define dApp static_cast<DApplication *>(qApp)
 
 #endif

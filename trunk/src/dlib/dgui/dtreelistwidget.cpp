@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2005 by David Cuadrado                                  *
- *   krawek@toonka.com                                                     *
+ *   krawek@gmail.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,7 +53,7 @@ DTreeListWidgetDelegate::~DTreeListWidgetDelegate()
 
 //////////////////
 
-DTreeListWidget::DTreeListWidget(QWidget *parent) : QTreeWidget(parent), m_editable(true)
+DTreeListWidget::DTreeListWidget(QWidget *parent) : QTreeWidget(parent)
 {
 	setEditTriggers(QAbstractItemView::EditKeyPressed | QAbstractItemView::DoubleClicked);
 // 	setAcceptDrops(true);
@@ -80,7 +80,7 @@ DTreeListWidget::~DTreeListWidget()
 
 void DTreeListWidget::editDoubleClickedItem(QTreeWidgetItem *item, int col)
 {
-	if ( item && m_editable )
+	if ( item && m_isEditable )
 	{
 		item->setFlags( item->flags() | Qt::ItemIsEditable );
 		editItem(item, col);
@@ -110,6 +110,16 @@ QList<QTreeWidgetItem *> DTreeListWidget::topLevelItems()
 	return items;
 }
 
+void DTreeListWidget::setEditable(bool isEditable)
+{
+	m_isEditable = isEditable;
+}
+
+bool DTreeListWidget::isEditable() const
+{
+	return m_isEditable;
+}
+
 void DTreeListWidget::closeEditor ( QWidget * editor, QAbstractItemDelegate::EndEditHint hint )
 {
 	D_FUNCINFO;
@@ -131,7 +141,4 @@ void DTreeListWidget::removeAll()
 	clear();
 }
 
-void DTreeListWidget::setEditable(bool e)
-{
-	m_editable = e;
-}
+

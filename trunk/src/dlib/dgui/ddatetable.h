@@ -25,7 +25,7 @@
 #include <QDate>
 
 /**
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class DDateTable : public QTableWidget
 {

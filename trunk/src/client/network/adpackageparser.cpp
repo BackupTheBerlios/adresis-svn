@@ -231,7 +231,6 @@ QList<XMLResults> ADPackageParser::results() const
 			purge << r;
 		}
 	}
-	
 	return purge;
 }
 

@@ -3,15 +3,32 @@
 # Subdir relative project main directory: ./src/client/shell
 # Target is an application:  ../../../bin/adclient.bin
 
+QT += xml network 
 INSTALLS += target 
 target.path = /bin/ 
+KDEV_QTVER = 4 
+LIBS += -ldcore \
+        -ldgui \
+        ../../../src/client/network/libnetwork.a \
+        ../../../src/client/lib/libadlib.a 
+INCLUDEPATH += ../../../src/client/network \
+               ../../../src/client/lib \
+               ../../../src/dlib/dgui \
+               ../../../src/dlib/dcore 
+QMAKE_LIBDIR = ../../../src/dlib/dcore \
+               ../../../src/dlib/dgui 
+TARGET = ../../../bin/adclient.bin 
+CONFIG += release \
+          warn_on 
+TEMPLATE = app 
 HEADERS += admainwindow.h \
            adcapplication.h \
            adresis.h \
            adconnector.h \
            adobject.h \
            aduser.h \
-           adusermodulelist.h 
+           adusermodulelist.h \
+           aduserform.h 
 SOURCES += admainwindow.cpp \
            main_cliente.cpp \
            adcapplication.cpp \
@@ -19,23 +36,5 @@ SOURCES += admainwindow.cpp \
            adconnector.cpp \
            adobject.cpp \
            aduser.cpp \
-           adusermodulelist.cpp 
-QT += xml network
-KDEV_QTVER = 4
-TARGETDEPS += ../../../src/client/logic/liblogic.a
-LIBS += -ldcore \
--ldgui \
-../../../src/client/network/libnetwork.a \
-../../../src/client/lib/libadlib.a \
-../../../src/client/logic/liblogic.a
-INCLUDEPATH += ../../../src/client/logic \
-../../../src/client/network \
-../../../src/client/lib \
-../../../src/dlib/dgui \
-../../../src/dlib/dcore
-QMAKE_LIBDIR = ../../../src/dlib/dcore \
-../../../src/dlib/dgui
-TARGET = ../../../bin/adclient.bin
-CONFIG += release \
-warn_on
-TEMPLATE = app
+           adusermodulelist.cpp \
+           aduserform.cpp 

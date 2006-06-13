@@ -38,7 +38,7 @@ struct AspellSpeller;
  * @elseif spanish
  * Interfaz para aspell
  * @endif
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class AspellIface : public SpellInterface
 {

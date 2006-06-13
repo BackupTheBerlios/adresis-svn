@@ -27,11 +27,17 @@
 #include"adcmodulelist.h"
 class ADUserModuleList : public ADCModuleList
 {
+	Q_OBJECT
 	public:
 		ADUserModuleList(QWidget *parent=0);
 		~ADUserModuleList();
-		
 		void fill( const QList<XMLResults>&results);
+		
+	private slots:
+		void requestAction(int action);
+		
+	signals:
+		void requestUserForm();
 };
 
 #endif

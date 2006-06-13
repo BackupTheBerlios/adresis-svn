@@ -30,7 +30,7 @@
  * @elseif spanish
  * Clase abstracta que define una interfaz para programas de ortografia
  * @endif
- * @author David Cuadrado <krawek@gmail.com>
+ * @author David Cuadrado \<krawek@gmail.com\>
 */
 class SpellInterface
 {

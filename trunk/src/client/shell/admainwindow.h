@@ -27,6 +27,8 @@
 
 #include <QMap>
 #include "adresis.h"
+
+#include "aduserform.h"
 /**
  * @author Jorge Cuadrado <kuadrosxx@gamail.com>
 */
@@ -36,7 +38,7 @@ class ADMainWindow : public DMainWindow
 	public:
 		ADMainWindow();
 		~ADMainWindow();
-// 		ADCModuleList* createModule(const QString& moduleName, const QStringList & titles);
+
 		
 	private:
 		Adresis *m_adresis;
@@ -57,6 +59,7 @@ class ADMainWindow : public DMainWindow
 		void showDialog(Msg::Type type, const QString& message);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
 		void createModules();
+		void createUserForm();
 };
 
 #endif

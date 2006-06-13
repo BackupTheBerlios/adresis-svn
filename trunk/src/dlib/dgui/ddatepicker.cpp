@@ -270,3 +270,8 @@ void DDatePicker::mounthFromAction(QAction *act)
 	}
 }
 
+QDate DDatePicker::date() const
+{
+	return m_dateTable->date();
+}
+

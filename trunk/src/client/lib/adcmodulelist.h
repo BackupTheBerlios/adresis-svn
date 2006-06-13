@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   kuadrosx@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,24 +20,44 @@
 #ifndef ADCMODULELIST_H
 #define ADCMODULELIST_H
 
-/**
- * @author Jorge Cuadrado <kuadrosxx@gmail.com>
-*/
-#include <QWidget>
-#include <QStringList>
+
+#include <qwidget.h>
+
 #include <QTreeWidget>
+#include <dtreelistwidget.h>
+
+#include "admodulebuttonbar.h"
 #include "global.h"
 
 
+class DTreeWidgetSearchLine;
+class QBoxLayout;
+/**
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
+ */
+
 class ADCModuleList: public QWidget
 {
+	Q_OBJECT
 	public:
 		ADCModuleList(const QString& moduleName, const QStringList& list, QWidget *parent );
 		virtual ~ADCModuleList();
 		virtual void fill( const QList<XMLResults>&results) = 0;
+		ADModuleButtonBar *addButtonBar(int flags);
+		QBoxLayout *boxLayout();
+		void addItem(const QStringList &cols);
+		
+		
+	protected slots:
+		virtual void requestAction(int action) = 0;
 		
 	protected:
+// 		DTreeListWidget *m_pTree;
 		QTreeWidget *m_pTree;
+		DTreeWidgetSearchLine *m_pSearch;
+		
+	private:
+		void setup(const QStringList& headers );
 };
 
 #endif
