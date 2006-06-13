@@ -17,29 +17,34 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADUSERMODULELIST_H
-#define ADUSERMODULELIST_H
+#ifndef ADFORMBASE_H
+#define ADFORMBASE_H
 
+#include <QFrame>
+#include <QGroupBox>
+#include <QLabel>
 /**
 	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-#include<QList>
-#include"adcmodulelist.h"
-#include "global.h" 
-
-class ADUserModuleList : public ADCModuleList
+class ADFormBase : public QFrame
 {
 	Q_OBJECT
 	public:
-		ADUserModuleList(QWidget *parent=0);
-		~ADUserModuleList();
-		void fill( const QList<XMLResults>&results);
+		ADFormBase(const QString& title=0, QWidget* parent =0 );
+		~ADFormBase();
+		void setTitle(const QString& title);
 		
-	private slots:
-		void requestAction(int action);
+	protected:
+		void setForm(QWidget*);
+		
+	private:
+		QGroupBox *m_buttons;
+		QLabel *m_title;
 		
 	signals:
-		void requestUserForm();
+		void requestClose();
+		void requestDone();
+		
 };
 
 #endif

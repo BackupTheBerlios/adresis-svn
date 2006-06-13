@@ -37,7 +37,7 @@ ADUser::~ADUser()
 {
 }
 
-ADInsertPackage &ADUser::insertPackage() const
+ADInsertPackage ADUser::insertPackage()
 {
 	QString strPermissions;
 	QMap<Logic::TypeModule, bool>::const_iterator it = m_permissions.begin();
@@ -54,12 +54,14 @@ ADInsertPackage &ADUser::insertPackage() const
 	}
 	
 	
-	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  m_name<< m_code<< m_login<< m_passwd<< strPermissions );
+	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser", QStringList() <<  m_name<< m_code<< m_login<< m_passwd<< strPermissions );
+	
+	dDebug() << insert.toString();
 	return insert;
 	
 }
 
-ADUpdatePackage &ADUser::updatePackage() const
+ADUpdatePackage ADUser::updatePackage() 
 {
 	QString strPermissions;
 	QMap<Logic::TypeModule, bool>::const_iterator it = m_permissions.begin();

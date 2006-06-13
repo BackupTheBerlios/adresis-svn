@@ -3,30 +3,34 @@
 # Subdir relative project main directory: ./src/client/lib
 # Target is a library:  adlib
 
-QT += xml network 
 INSTALLS += target 
 target.path = /lib/ 
-KDEV_QTVER = 4 
-LIBS += -ldgui \
-        -ldcore 
-INCLUDEPATH += ../../../src/server/packages \
-               ../../../src/dlib/dgui \
-               ../../../src/dlib/dcore 
-QMAKE_LIBDIR = ../../../src/dlib/dgui \
-               ../../../src/dlib/dcore 
-TARGET = adlib 
-CONFIG += release \
-          warn_on \
-          staticlib 
-TEMPLATE = lib 
 HEADERS += adcfirstrundialog.h \
            adcmodulelist.h \
            global.h \
            adconnectorbase.h \
            cconnectiondialog.h \
-           admodulebuttonbar.h 
+           admodulebuttonbar.h \
+           adformbase.h \
+           adpermissionsview.h 
 SOURCES += adcfirstrundialog.cpp \
            adcmodulelist.cpp \
            adconnectorbase.cpp \
            cconnectiondialog.cpp \
-           admodulebuttonbar.cpp 
+           admodulebuttonbar.cpp \
+           adformbase.cpp \
+           adpermissionsview.cpp 
+QT += xml network
+KDEV_QTVER = 4
+LIBS += -ldgui \
+-ldcore
+INCLUDEPATH += ../../../src/server/packages \
+../../../src/dlib/dgui \
+../../../src/dlib/dcore
+QMAKE_LIBDIR = ../../../src/dlib/dgui \
+../../../src/dlib/dcore
+TARGET = adlib
+CONFIG += release \
+warn_on \
+staticlib
+TEMPLATE = lib

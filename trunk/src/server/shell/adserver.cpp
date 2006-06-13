@@ -32,7 +32,6 @@
 
 #include "postgreserrorhandler.h"
 
-
 ADServer::ADServer(QObject *parent) : QTcpServer(parent)
 {
 }
@@ -185,7 +184,30 @@ void ADServer::doOperation(ADServerConnection *cnx, const ADQuery *query)
 	}
 	else
 	{
-		cnx->sendToClient(rs);
+		switch(query->type())
+		{
+			case ADQuery::Select:
+			{
+				cnx->sendToClient(rs);
+		
+				break;
+			}
+			case ADQuery::Insert:
+			{
+				
+				break;
+			}
+			case ADQuery::Delete:
+			{
+				
+				break;
+			}
+			case ADQuery::Update:
+			{
+				
+				break;
+			}
+		}
 	}
 }
 

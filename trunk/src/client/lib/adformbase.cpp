@@ -17,47 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "adusermodulelist.h"
-#include <ddebug.h>
+#include "adformbase.h"
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
 
-ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("Users", QStringList() << "login"<< "name", parent )
+#include "ddebug.h"
+ADFormBase::ADFormBase(const QString & title,QWidget* parent)
+	: QFrame(parent)
 {
-	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
-	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+	QVBoxLayout *containerLayout = new QVBoxLayout();
+	setLayout(containerLayout);
+	m_title = new QLabel(title);
+	containerLayout->addWidget(m_title);
+	m_title->setAlignment ( Qt::AlignHCenter );
+	m_title->setTextFormat (Qt::RichText);
 }
 
 
-ADUserModuleList::~ADUserModuleList()
+ADFormBase::~ADFormBase()
 {
 }
 
-void ADUserModuleList::fill( const QList<XMLResults>&results)
+void ADFormBase::setForm(QWidget* form)
 {
-	m_pTree->clear ();
+	static_cast<QVBoxLayout*>(layout())->addWidget(form);
+	QHBoxLayout *layout1 = new QHBoxLayout();
 	
-	QList<XMLResults>::const_iterator it= results.begin();
+	m_buttons = new QGroupBox();
+	m_buttons->setSizePolicy ( QSizePolicy::Expanding ,QSizePolicy::Fixed);
+	m_buttons->setLayout(layout1);
 	
-	while( it != results.end() )
-	{
-		
-		QStringList list;
-		list << (*it)["loginuser"] << (*it)["nameuser"];
-		addItem( list );
-		++it;
-	}
+	QPushButton *ok = new QPushButton("aceptar");
+	QPushButton *cancel = new QPushButton("cancelar");
+	connect(cancel, SIGNAL(clicked()), this, SIGNAL(requestClose()));
+	connect(ok, SIGNAL(clicked()), this, SIGNAL(requestDone()));
+	layout1->addWidget(ok);
+	layout1->addWidget(cancel);
+	
+	static_cast<QVBoxLayout*>(layout())->addWidget(m_buttons, -1);
+	
 }
 
-void ADUserModuleList::requestAction(int action)
+void ADFormBase::setTitle( const QString & title)
 {
-	dError() << action;
-	switch(action)
-	{
-		case ADModuleButtonBar::Add:
-		{
-			emit requestUserForm();
-			break;
-		}
-	}
+	m_title->setText("<h1><b>"+title+"</h1></b>");
 }
-
-

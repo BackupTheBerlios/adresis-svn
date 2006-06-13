@@ -48,7 +48,6 @@ void ADConnectorBase::sendToServer(const QString &text)
 		
 		QString toSend(text);
 		toSend.remove('\n');
-		
 		out << text+"%%" << endl;
 		flush();
 	}

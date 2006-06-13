@@ -17,29 +17,26 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADUSERMODULELIST_H
-#define ADUSERMODULELIST_H
+#ifndef ADPERMISSIONSVIEW_H
+#define ADPERMISSIONSVIEW_H
 
+#include <QGroupBox>
+#include <QMap>
+#include<QCheckBox>
+#include "global.h"
 /**
 	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-#include<QList>
-#include"adcmodulelist.h"
-#include "global.h" 
-
-class ADUserModuleList : public ADCModuleList
+class ADPermissionsView : public QGroupBox
 {
-	Q_OBJECT
 	public:
-		ADUserModuleList(QWidget *parent=0);
-		~ADUserModuleList();
-		void fill( const QList<XMLResults>&results);
+		ADPermissionsView(QWidget *parent= 0);
+		~ADPermissionsView();
+		QMap<Logic::TypeModule, bool> permissions();
 		
-	private slots:
-		void requestAction(int action);
+	private:
+		QMap<QString,QCheckBox* > m_checks;
 		
-	signals:
-		void requestUserForm();
 };
 
 #endif

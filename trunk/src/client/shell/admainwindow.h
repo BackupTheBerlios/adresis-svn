@@ -60,6 +60,7 @@ class ADMainWindow : public DMainWindow
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
 		void createModules();
 		void createUserForm();
+		void addForm(ADFormBase * form, const QString & title);
 };
 
 #endif

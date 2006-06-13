@@ -37,7 +37,7 @@ QString ADQuery::toString() const
 	return m_query + " " + m_cwhere;
 }
 
-int ADQuery::type()
+int ADQuery::type() const
 {
 	return m_type;
 }

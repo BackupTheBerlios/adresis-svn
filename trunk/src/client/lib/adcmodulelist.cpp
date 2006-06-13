@@ -65,7 +65,7 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	
 // 	m_pTree->setEditable(false);
 	
-	setup(titles);
+// 	setup(titles);
 }
 
 
@@ -98,36 +98,6 @@ void ADCModuleList::addItem(const QStringList &cols)
 	}
 }
 
-void ADCModuleList::setup(const QStringList& headers )
-{
-	D_FUNCINFO;
-	
-	// TODO: guardar los campos de la BD
-	
-// 	QStringList headers;
-// 	QStringList tables, attributes;
-// 	QString where;
-// 	QTreeWidgetItem *data = new QTreeWidgetItem();
-	
-// 	int count = 0;
-// 	foreach(QString info,headers)
-// 	{
-// 		data->setText(count, info);
-// // 		data->setData(count, Field, info);
-// 		
-// // 		headers << info.first;
-// 		++count;
-// 	}
-// 	
-// 	m_pTree->setHeaderLabels(headers);
-// 	m_pTree->setHeaderItem(data);
-// 	
-// 	m_pTree->header()->show();
-// 	
-// 	m_pModuleInfo = module;
-// 	
-// 	QTimer::singleShot(500, this, SLOT(fill()));
-}
 
 
 

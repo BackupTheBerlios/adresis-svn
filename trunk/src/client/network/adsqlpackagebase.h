@@ -1,7 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by David Cuadrado                                  *
- *   krawek@gmail.com                                                      *
- *                                                                         *
+ *   Copyright (C) 2006 by David Cuadrado           krawek@gmail.com       *
+ *                         Jorge Cuadrado           kuadrosxx@gmail.com    *                      *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
@@ -18,8 +17,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef CSQLPACKAGEBASE_H
-#define CSQLPACKAGEBASE_H
+#ifndef ADSQLPACKAGEBASE_H
+#define ADSQLPACKAGEBASE_H
 
 #include <QDomDocument>
 #include <QStringList>

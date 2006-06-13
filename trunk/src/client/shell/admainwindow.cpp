@@ -133,12 +133,32 @@ void ADMainWindow::createModules()
 	m_modules.insert( Logic::users, users);
 	toolWindow( DDockWindow::Left )->addWidget( "Users", users);
 	m_adresis->getInfoModule( Logic::users );
+	
 	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
+	
 }
 
 void ADMainWindow::createUserForm()
 {
 	ADUserForm *form = new ADUserForm;
-	addWidget( form, "Add User", false);
+	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )));
+	addForm( form, tr("Añadir Usuario"));
+
+	
+// 	addWidget( form, "Add User", false);
 }
 
+
+void ADMainWindow::addForm(ADFormBase * form, const QString & title )
+{
+	D_FUNCINFO;
+	if ( form )
+	{
+// 		QScrollArea *scroll = new QScrollArea;
+// 		scroll->setWidget(form);
+		
+		form->setTitle(title);
+		addWidget( form, title, false);
+		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
+	}
+}

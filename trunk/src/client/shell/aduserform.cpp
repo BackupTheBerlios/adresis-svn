@@ -5,46 +5,53 @@
 
 #include <QGridLayout>
 #include <QCheckBox>
+#include <ddebug.h>
 
 ADUserForm::ADUserForm(QWidget *parent)
- : QWidget(parent)
+	: ADFormBase("<h1><b>User</b><h1>" , parent)
 {
-	QHBoxLayout *vBLayout = new QHBoxLayout(this);
-		
-	QGroupBox *container = new QGroupBox( this );
-	vBLayout->addWidget(container);
+	QWidget * base = new QWidget();
+	QVBoxLayout *vBLayout = new QVBoxLayout(base);
+	QGroupBox *container = new QGroupBox("Informacion" );
+	vBLayout->addWidget(container, Qt::AlignVCenter);
 	
-	QGridLayout *layout = new QGridLayout(container);
+	QGridLayout *layout = new QGridLayout;
 	container->setLayout(layout);
 	QLabel *label;
 	QLineEdit *edits;
 	QStringList titles, titles2;
 	QCheckBox *checkB;
 	
-	titles << tr("Codigo") << tr("Nombre") << tr("Login") << tr("Clave");
+	titles << tr("Nombre") << tr("Codigo") << tr("Login") << tr("Clave");
 	for(int i = 0; i < titles.count(); i++)
 	{
 		label = new QLabel(titles[i] );
-		layout->addWidget(label, i, 0);
-		edits = new QLineEdit(container);
-		layout->addWidget(edits, i, 1);
-		m_inputs.insert(titles[i] , edits);
+		layout->addWidget(label, i, 0/*, Qt::AlignHCenter*/);
+		edits = new QLineEdit();
+		layout->addWidget(edits, i, 1/*, Qt::AlignHCenter*/);
+		m_inputs.insert(titles[i].toLower () , edits);
 	}
+	static_cast<QLineEdit*>( m_inputs[tr("clave")])->setEchoMode( QLineEdit::Password );
 	
-	container = new QGroupBox("Permisos", this );
-	vBLayout->addWidget(container);
-	layout = new QGridLayout(container);
-	titles2 << tr("Usuarios") << tr("Espacio") << tr("Ayuda") << tr("Reserva");
-	for(int i = 0; i < titles2.count(); i++)
-	{
-		checkB = new QCheckBox(titles2[i], container);
-		layout->addWidget(checkB, i, 0);
-	}
+	m_permission  =new ADPermissionsView();
+	vBLayout->addWidget(m_permission);
+	setForm(base);
+	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertUser()));
 }
-
 
 ADUserForm::~ADUserForm()
 {
 }
 
+void ADUserForm::emitInsertUser()
+{
+	
+	emit requestInsertUser(
+			static_cast<QLineEdit*>(m_inputs[tr("nombre")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("codigo")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("login")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("clave")])->text(),
+			m_permission->permissions()
+			      );
+}
 

@@ -72,35 +72,39 @@ void ADConnector::readFromServer()
 		if ( root == "Results" )
 		{
 			QList<XMLResults> results = m_parser->results();
-			Logic::TypeQuery type = m_querys.dequeue();
-#if 1
-			foreach(XMLResults r, results)
+			if(!results.empty())
 			{
-				XMLResults::const_iterator it = r.begin();
-				while(it != r.end())
+				Logic::TypeQuery type = m_querys.dequeue();
+			
+	#if 1
+				foreach(XMLResults r, results)
 				{
-					dDebug() << it.key() << " = " << it.value();
-					++it;
+					XMLResults::const_iterator it = r.begin();
+					while(it != r.end())
+					{
+						dDebug() << it.key() << " = " << it.value();
+						++it;
+					}
 				}
-			}
-#endif
-			SHOW_VAR(type);
-			switch(type)
-			{
-				case Logic::userAuthenticated:
+	#endif
+				SHOW_VAR(type);
+				switch(type)
 				{
-					emit userAutenticated(results[0]);
-					break;
-				}
-				case Logic::fillUserModule:
-				{
-					emit fillModule(Logic::users, results );
-					break;
-				}
-				default:
-				{
-					emit message(Msg::Error, "Error: operacion no permitida" );
-					break;
+					case Logic::userAuthenticated:
+					{
+						emit userAutenticated(results[0]);
+						break;
+					}
+					case Logic::fillUserModule:
+					{
+						emit fillModule(Logic::users, results );
+						break;
+					}
+					default:
+					{
+						emit message(Msg::Error, "Error: operacion no permitida" );
+						break;
+					}
 				}
 			}
 		}
@@ -112,7 +116,7 @@ void ADConnector::readFromServer()
 		else if( root == "Success")
 		{
 // 			emit readedModuleForms( m_parser->moduleForms() );
-// 			dDebug() << "here";
+// 
 			emit message(Msg::Info, m_parser->results()[0]["message"]);
 		}
 		
@@ -163,7 +167,12 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select)
 {
 	m_querys.enqueue ( type );
-	QString toSend = select.toString();
-	toSend.remove('\n');
+	sendPackage(select);
+}
+
+void ADConnector::sendPackage(const ADSqlPackageBase & package)
+{
+	QString toSend = package.toString();
 	sendToServer( toSend);
 }
+

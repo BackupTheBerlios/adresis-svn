@@ -52,12 +52,9 @@ class ADCModuleList: public QWidget
 		virtual void requestAction(int action) = 0;
 		
 	protected:
-// 		DTreeListWidget *m_pTree;
 		QTreeWidget *m_pTree;
 		DTreeWidgetSearchLine *m_pSearch;
 		
-	private:
-		void setup(const QStringList& headers );
 };
 
 #endif

@@ -42,7 +42,8 @@ namespace Msg
 namespace Logic
 {
 	enum TypeQuery{userAuthenticated=0, fillUserModule};
-	enum TypeModule{users=0};
+	enum TypeModule{users=0, space, reserves, audivisuals};
+	
 }
 
 typedef QHash<QString, QString> XMLResults;

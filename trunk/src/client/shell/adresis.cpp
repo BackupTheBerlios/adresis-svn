@@ -73,3 +73,19 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 		emit requestShowMessage(Msg::Error, "Error, no tiene permisos sobre este modulo");
 	}
 }
+
+void Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )
+{
+	ADUser newUser(name,  code, login,passwd, permissions);
+	
+	m_connector->sendPackage(  newUser.insertPackage() );
+	getInfoModule(Logic::users);
+}
+
+
+
+
+
+
+
+

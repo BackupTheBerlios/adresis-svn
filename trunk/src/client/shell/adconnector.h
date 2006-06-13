@@ -43,6 +43,7 @@ class ADConnector : public ADConnectorBase
 		~ADConnector();
 		void login(const QString &user, const QString &passwd);
 		void sendQuery(Logic::TypeQuery type, const ADSelectPackage& select);
+		void sendPackage(const ADSqlPackageBase & package);
 		
 	private slots:
 		void readFromServer();

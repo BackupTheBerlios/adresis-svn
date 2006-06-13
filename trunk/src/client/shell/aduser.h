@@ -33,8 +33,8 @@ class ADUser : public ADObject
 		ADUser();
 		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::TypeModule, bool>permissions );
 		~ADUser();
-		ADInsertPackage &insertPackage() const;
-		ADUpdatePackage &updatePackage() const;
+		ADInsertPackage insertPackage();
+		ADUpdatePackage updatePackage();
 		void setValues(XMLResults values);
 		bool isValid();
 		QMap<Logic::TypeModule, bool>/*&*/ permissions()/* const*/;

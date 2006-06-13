@@ -37,6 +37,7 @@ class Adresis : public QObject
 		~Adresis();
 		
 	public slots:
+		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
 		
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
@@ -48,6 +49,7 @@ class Adresis : public QObject
 		void requestShowMessage(Msg::Type type, const QString& message );
 		void requestCreateModules();
 		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
+		
 	private:
 		ADConnector *m_connector;
 		ADUser m_user;

@@ -21,7 +21,7 @@
 #define ADOBJECT_H
 
 /**
-	@author Jorge Cuadrado <kuadrosx@gmail.com>
+ * @author Jorge Cuadrado <kuadrosx@gmail.com>
 */
 #include<QObject>
 #include "global.h"
@@ -33,8 +33,8 @@ class ADObject : public QObject
 	public:
 		ADObject();
 		virtual ~ADObject();
-		virtual ADInsertPackage &insertPackage() const = 0;
-		virtual ADUpdatePackage &updatePackage() const = 0;
+		virtual ADInsertPackage insertPackage() = 0;
+		virtual ADUpdatePackage updatePackage() = 0;
 		virtual void setValues(XMLResults values) = 0;
 		virtual bool isValid() = 0;
 };
