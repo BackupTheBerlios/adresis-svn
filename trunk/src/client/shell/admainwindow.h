@@ -61,6 +61,7 @@ class ADMainWindow : public DMainWindow
 		void createModules();
 		void createUserForm();
 		void addForm(ADFormBase * form, const QString & title);
+		
 };
 
 #endif

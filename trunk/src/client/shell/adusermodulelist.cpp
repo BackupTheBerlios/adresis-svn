@@ -19,11 +19,12 @@
  ***************************************************************************/
 #include "adusermodulelist.h"
 #include <ddebug.h>
+#include <dconfig.h>
+#include <doptionaldialog.h>
 
 ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("Users", QStringList() << "login"<< "name", parent )
 {
-	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
-	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+
 }
 
 
@@ -55,6 +56,25 @@ void ADUserModuleList::requestAction(int action)
 		case ADModuleButtonBar::Add:
 		{
 			emit requestUserForm();
+			break;
+		}
+		case ADModuleButtonBar::Del:
+		{
+			DCONFIG->beginGroup("Users");
+			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskUser", false));
+			if ( ! noAsk )
+			{
+				DOptionalDialog dialog(tr("usted reamente quire borrar este usuario?"),tr("borrar?"), this);
+				if( dialog.exec() == QDialog::Rejected )
+				{
+					return;
+				}
+				
+				DCONFIG->setValue("RemoveWithoutAskUser", dialog.shownAgain());
+				DCONFIG->sync();
+				emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+			}
+			
 			break;
 		}
 	}

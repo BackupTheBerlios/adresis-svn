@@ -49,6 +49,7 @@ class ADModuleButtonBar : public QFrame
 		void buttonClicked ( QAbstractButton *button);
 		void buttonClicked(int id);
 		
+		
 	private:
 		void setupButtons(int buttons);
 		

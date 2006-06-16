@@ -36,6 +36,8 @@ class Adresis : public QObject
 		Adresis(QObject * parent=0);
 		~Adresis();
 		
+		
+		
 	public slots:
 		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
 		
@@ -44,6 +46,7 @@ class Adresis : public QObject
 		void login(const QString &user, const QString &passwd);
 		void autenticated(const XMLResults& values);
 		void getInfoModule(Logic::TypeModule module);
+		void execDelete(Logic::TypeModule, const QString& key);
 		
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );

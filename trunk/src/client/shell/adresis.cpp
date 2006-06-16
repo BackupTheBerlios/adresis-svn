@@ -18,6 +18,7 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adresis.h"
+#include "addeletepackage.h"
 #include <ddebug.h>
 Adresis::Adresis(QObject * parent)
 	: QObject(parent)
@@ -82,10 +83,20 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 	getInfoModule(Logic::users);
 }
 
-
-
-
-
-
-
-
+void Adresis::execDelete(Logic::TypeModule module, const QString& key)
+{
+	QString where;
+	QString table;
+	switch(module)
+	{
+		case Logic::users:
+		{
+			where = "loginuser = '" + key + "'";
+			table = "aduser";
+		}
+	}
+	ADDeletePackage del(table);
+	del.setWhere(where);
+	m_connector->sendPackage(del);
+	getInfoModule(Logic::users);
+}

@@ -61,11 +61,8 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	
 	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
-// 	connect(button, SIGNAL(clicked()), this, SLOT(fill()));
-	
-// 	m_pTree->setEditable(false);
-	
-// 	setup(titles);
+	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
+	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 

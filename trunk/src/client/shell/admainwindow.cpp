@@ -135,6 +135,7 @@ void ADMainWindow::createModules()
 	m_adresis->getInfoModule( Logic::users );
 	
 	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
+	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 	
 }
 
@@ -162,3 +163,5 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 	}
 }
+
+
