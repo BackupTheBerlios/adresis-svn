@@ -24,11 +24,14 @@
 #include <dactionmanager.h>
 
 #include "adusermodulelist.h"
+#include "adspacemodulelist.h"
+#include "adaudiovisualmodulelist.h"
 
 #include <QMap>
 #include "adresis.h"
 
 #include "aduserform.h"
+
 /**
  * @author Jorge Cuadrado <kuadrosxx@gamail.com>
 */

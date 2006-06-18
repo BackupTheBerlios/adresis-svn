@@ -138,14 +138,25 @@ void ADMainWindow::createModules()
 	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 	
 	
-	/*ADUserModuleList *users = new ADUserModuleList();
-	m_modules.insert( Logic::users, users);
-	toolWindow( DDockWindow::Left )->addWidget( "Users", users);
-	m_adresis->getInfoModule( Logic::users );
 	
-	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()))*/;
+// __ESPACIOS____
+	ADSpaceModuleList *spaces = new ADSpaceModuleList();
+	m_modules.insert( Logic::spaces, spaces);
+	toolWindow( DDockWindow::Left )->addWidget( "Spaces", spaces);
+	m_adresis->getInfoModule( Logic::spaces );
 	
+	connect(spaces, SIGNAL(requestSpaceForm()), this, SLOT(createSpaceForm()));
+	connect(spaces, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+
+// __AUDIOVISUAL____
+	ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
+	m_modules.insert( Logic::audiovisuals, audiovisual);
+	toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
+	m_adresis->getInfoModule( Logic::audiovisuals );
 	
+	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
+	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+
 }
 
 void ADMainWindow::createUserForm()
