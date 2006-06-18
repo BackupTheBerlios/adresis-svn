@@ -17,22 +17,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "adusermodulelist.h"
+#include "adaudiovisualmodulelist.h"
 #include <ddebug.h>
 #include <dconfig.h>
 #include <doptionaldialog.h>
 
-ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("aduser", QStringList() << "login"<< "name", parent )
-{
 
+ADAudiovisualModuleList::ADAudiovisualModuleList(QWidget *parent): ADCModuleList("adaudiovisual", QStringList() << "typeAV"<<"numberinventoryAV", parent )
+{
+// 	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
+// 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 
-ADUserModuleList::~ADUserModuleList()
+ADAudiovisualModuleList::~ADAudiovisualModuleList()
 {
 }
 
-void ADUserModuleList::fill( const QList<XMLResults>&results)
+
+void ADAudiovisualModuleList::fill( const QList<XMLResults>&results)
 {
 	m_pTree->clear ();
 	
@@ -42,42 +45,40 @@ void ADUserModuleList::fill( const QList<XMLResults>&results)
 	{
 		
 		QStringList list;
-		list << (*it)["loginuser"] << (*it)["nameuser"];
+		list << (*it)["typeAV"] << (*it)["numberinventoryAV"];
 		addItem( list );
 		++it;
 	}
 }
 
-void ADUserModuleList::requestAction(int action)
+void ADAudiovisualModuleList::requestAction(int action)
 {
 	dError() << action;
 	switch(action)
 	{
 		case ADModuleButtonBar::Add:
 		{
-			emit requestUserForm();
+			emit requestAudiovisualForm();
 			break;
 		}
 		case ADModuleButtonBar::Del:
 		{
-			DCONFIG->beginGroup("Users");
-			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskUser", false));
+			DCONFIG->beginGroup("Audiovisuals");
+			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskAudiovisuals", false));
 			if ( ! noAsk )
 			{
-				DOptionalDialog dialog(tr("usted realmente quiere borrar este usuario?"),tr("borrar?"), this);
+				DOptionalDialog dialog(tr("usted realmente quiere borrar esta Ayuda Audiovisual?"),tr("borrar?"), this);
 				if( dialog.exec() == QDialog::Rejected )
 				{
 					return;
 				}
 				
-				DCONFIG->setValue("RemoveWithoutAskUser", dialog.shownAgain());
+				DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
 				DCONFIG->sync();
-				emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+				emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
 			}
 			
 			break;
 		}
 	}
 }
-
-

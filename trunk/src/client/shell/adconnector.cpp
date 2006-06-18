@@ -100,6 +100,17 @@ void ADConnector::readFromServer()
 						emit fillModule(Logic::users, results );
 						break;
 					}
+					
+					case Logic::fillSpaceModule:
+					{
+						emit fillModule(Logic::spaces, results );
+						break;
+					}
+					case Logic::fillAudiovisualModule:
+					{
+						emit fillModule(Logic::audiovisuals, results );
+						break;
+					}
 					default:
 					{
 						emit message(Msg::Error, "Error: operacion no permitida" );

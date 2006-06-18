@@ -67,6 +67,24 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser"<< "loginuser" );
 				m_connector->sendQuery(Logic::fillUserModule, select);
 			}
+			
+			case Logic::spaces:
+			{
+				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace");
+				m_connector->sendQuery(Logic::fillSpaceModule, select);
+			}
+
+			case Logic::audiovisuals:
+			{
+				ADSelectPackage select(QStringList()<< "adaudiovisual", QStringList() << "typeAV"<<"numberinventoryAV");
+				m_connector->sendQuery(Logic::fillAudiovisualModule, select);
+			}
+			
+			case Logic::reserves:
+			{
+// 				ADSelectPackage select(QStringList()<< "adaudiovisual", QStringList() << "type"<<"inventoryNumber");
+// 				m_connector->sendQuery(Logic::fillAudioVisualModule, select);
+			}
 		}
 	}
 	else

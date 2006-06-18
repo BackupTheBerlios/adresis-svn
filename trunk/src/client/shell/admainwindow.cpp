@@ -137,6 +137,15 @@ void ADMainWindow::createModules()
 	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
 	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 	
+	
+	/*ADUserModuleList *users = new ADUserModuleList();
+	m_modules.insert( Logic::users, users);
+	toolWindow( DDockWindow::Left )->addWidget( "Users", users);
+	m_adresis->getInfoModule( Logic::users );
+	
+	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()))*/;
+	
+	
 }
 
 void ADMainWindow::createUserForm()

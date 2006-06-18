@@ -61,12 +61,12 @@ QMap<Logic::TypeModule, bool> ADPermissionsView::permissions()
 	{
 		
 		dDebug() << true;
-		per.insert(Logic::space, true);
+		per.insert(Logic::spaces, true);
 	}
 	else
 	{
 		dDebug() << false;
-		per.insert(Logic::space, false);
+		per.insert(Logic::spaces, false);
 	}
 	
 	if( m_checks[tr("reserva")]->checkState()  == Qt::Checked)
@@ -80,15 +80,15 @@ QMap<Logic::TypeModule, bool> ADPermissionsView::permissions()
 		per.insert(Logic::reserves, false);
 	}
 	
-	if( m_checks[tr("audiovisules")]->checkState()  == Qt::Checked)
+	if( m_checks[tr("audiovisuales")]->checkState()  == Qt::Checked)
 	{
 		dDebug() << true;
-		per.insert(Logic::audivisuals, true);
+		per.insert(Logic::audiovisuals, true);
 	}
 	else
 	{
 		dDebug() << false;
-		per.insert(Logic::audivisuals, false);
+		per.insert(Logic::audiovisuals, false);
 	}
 // 	
 	QMap<Logic::TypeModule, bool>::iterator it = per.begin();

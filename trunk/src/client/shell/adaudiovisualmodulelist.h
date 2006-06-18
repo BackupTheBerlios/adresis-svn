@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by David Cuadrado krawek@gmail.com                 *
- *                         Jorge Cuadrado kuadrosxx@gmail.com              *
+ *   Copyright (C) 2006 by Jorge Cuadrado   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,37 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef ADAUDIOVISUALMODULELIST_H
+#define ADAUDIOVISUALMODULELIST_H
 
-#ifndef _GLOBAL_H
-#define _GLOBAL_H
+#include<QList>
+#include"adcmodulelist.h"
+#include "global.h"
 
-#include <QString>
-#include <QHash>
-#include <QMap>
-#include <QList>
-
-#include <dglobal.h>
-
-namespace Msg
+/**
+@author Hector Fabio Cruz Mosquera,0329876
+*/
+class ADAudiovisualModuleList : public ADCModuleList
 {
-	enum Type
-	{
-		Info,
-		Warning,
-		Error
-	};
+	Q_OBJECT
+	public:
+		ADAudiovisualModuleList(QWidget *parent=0);
+		~ADAudiovisualModuleList();
+		
+		void fill( const QList<XMLResults>&results);
 	
+	private slots:
+		void requestAction(int action);
+		
+	signals:
+		void requestAudiovisualForm();
+		void requestDelete(Logic::TypeModule module, const QString & key);
 
-}
-namespace Logic
-{
-	enum TypeQuery{userAuthenticated=0, fillUserModule, fillSpaceModule, fillAudiovisualModule, fillReserveModule};
-	enum TypeModule{users=0, spaces, reserves, audiovisuals};
-	
-}
-
-typedef QHash<QString, QString> XMLResults;
+};
 
 #endif
-
-

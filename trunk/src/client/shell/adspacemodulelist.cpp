@@ -17,67 +17,68 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "adusermodulelist.h"
+#include "adspacemodulelist.h"
 #include <ddebug.h>
 #include <dconfig.h>
 #include <doptionaldialog.h>
 
-ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("aduser", QStringList() << "login"<< "name", parent )
+ADSpaceModuleList::ADSpaceModuleList(QWidget *parent): ADCModuleList("adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace", parent )
 {
 
+// 	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
+// 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 
-ADUserModuleList::~ADUserModuleList()
+ADSpaceModuleList::~ADSpaceModuleList()
 {
 }
 
-void ADUserModuleList::fill( const QList<XMLResults>&results)
+
+void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 {
-	m_pTree->clear ();
-	
+	m_pTree->clear ();	
+
 	QList<XMLResults>::const_iterator it= results.begin();
 	
 	while( it != results.end() )
 	{
-		
 		QStringList list;
-		list << (*it)["loginuser"] << (*it)["nameuser"];
-		addItem( list );
+		list << (*it)["codeSpace"] << (*it)["typeSpace"] << (*it)["nameSpace"];
+		addItem(list);
 		++it;
+	
 	}
 }
 
-void ADUserModuleList::requestAction(int action)
+void ADSpaceModuleList::requestAction(int action)
 {
 	dError() << action;
 	switch(action)
 	{
 		case ADModuleButtonBar::Add:
 		{
-			emit requestUserForm();
+			emit requestSpaceForm();
 			break;
 		}
 		case ADModuleButtonBar::Del:
 		{
-			DCONFIG->beginGroup("Users");
-			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskUser", false));
+			DCONFIG->beginGroup("Spaces");
+			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskSpaces", false));
 			if ( ! noAsk )
 			{
-				DOptionalDialog dialog(tr("usted realmente quiere borrar este usuario?"),tr("borrar?"), this);
+				DOptionalDialog dialog(tr("usted realmente quiere borrar esta Espacio?"),tr("borrar?"), this);
 				if( dialog.exec() == QDialog::Rejected )
 				{
 					return;
 				}
 				
-				DCONFIG->setValue("RemoveWithoutAskUser", dialog.shownAgain());
+				DCONFIG->setValue("RemoveWithoutAskSpaces", dialog.shownAgain());
 				DCONFIG->sync();
-				emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+				emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
 			}
 			
 			break;
 		}
 	}
 }
-
-
