@@ -1,7 +1,7 @@
 #ifndef ADAUDIOVISUAL_H
 #define ADAUDIOVISUAL_H
 
-#include <QMap>
+
 #include "adobject.h"
 
 /**

@@ -118,7 +118,7 @@ void ADConnector::readFromServer()
 					case Logic::queryUser:
 					{
 						dDebug() << "fillModule(Logic::audiovisuals, results );";
-						emit showUser(Logic::audiovisuals, results );
+// 						emit showUser(Logic::audiovisuals, results );
 						break;
 					}
 					default:

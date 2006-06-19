@@ -41,7 +41,7 @@ ADUpdatePackage ADAudioVisual::updatePackage()
 
 void ADAudioVisual::setValues(XMLResults values)
 {
-	dDebug() << "here sss";
+	dDebug() << "here adaudiovisual";
 	m_type = values["typeav"];
 	m_marksEquipment  = values["marksEquipmentav"];
 	m_estate  = values["estateav"];
