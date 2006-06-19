@@ -14,7 +14,9 @@ HEADERS += admainwindow.h \
            adusermodulelist.h \
            aduserform.h \
            adspacemodulelist.h \
-           adaudiovisualmodulelist.h 
+           adaudiovisualmodulelist.h \
+           adspaceform.h \
+           adaudiovisual.h 
 SOURCES += admainwindow.cpp \
            main_cliente.cpp \
            adcapplication.cpp \
@@ -25,7 +27,9 @@ SOURCES += admainwindow.cpp \
            adusermodulelist.cpp \
            aduserform.cpp \
            adspacemodulelist.cpp \
-           adaudiovisualmodulelist.cpp 
+           adaudiovisualmodulelist.cpp \
+           adspaceform.cpp \
+           adaudiovisual.cpp 
 QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldcore \
