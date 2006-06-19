@@ -25,6 +25,9 @@
 #include "adconnector.h"
 #include "global.h"
 #include "aduser.h"
+#include "adaudiovisual.h"
+#include "adspace.h"
+
 
 /**
 * @author Jorge Cuadrado <kuadrosxx@gmail.com>
@@ -38,6 +41,10 @@ class Adresis : public QObject
 		
 	public slots:
 		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
+		
+		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
+		
+		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace, const QStringList& listAudiovisual );
 		
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);

@@ -52,6 +52,6 @@ void ADUserForm::emitInsertUser()
 			static_cast<QLineEdit*>(m_inputs[tr("login")])->text(),
 			static_cast<QLineEdit*>(m_inputs[tr("clave")])->text(),
 			m_permission->permissions()
-			      );
+	);
 }
 

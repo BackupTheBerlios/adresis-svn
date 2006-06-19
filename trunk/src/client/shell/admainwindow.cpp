@@ -25,6 +25,7 @@
 #include <dglobal.h>
 #include <dtip.h>
 #include <dalgorithm.h>
+#include <ktpreferences.h>
 
 //QT
 #include <QLabel>
@@ -37,8 +38,10 @@
 #include <QScrollArea>
 
 
+
 //adresisLib
 #include "cconnectiondialog.h"
+
 
 ADMainWindow::ADMainWindow() : DMainWindow()
 {
@@ -51,7 +54,7 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
 	
 	
-// 	createModule("users", QStringList() << tr("login") << tr("name"));
+
 	connectToHost();
 
 	DCONFIG->beginGroup("TipOfDay");
@@ -62,28 +65,81 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 		QTimer::singleShot(0, this, SLOT(showTipDialog()));
 	}
 	m_actionManager = new DActionManager(this);
+	
+	
 	setupActions();
 	setupToolbar();
 	setupMenu();
+	
 }
 
 void ADMainWindow::setupActions()
 {
+
+
+	exitAct = new QAction(tr("E&xit"), this);
+        exitAct->setShortcut(tr("Ctrl+Q"));
+        exitAct->setStatusTip(tr("Exit the application"));
+        connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+
+	theme = new QAction(tr("Theme"), this);
+        theme->setStatusTip(tr("Change your window theme"));
+        connect(theme, SIGNAL(triggered()), this, SLOT(changeTheme()));
+	
+        aboutAct = new QAction(tr("&About"), this);
+        aboutAct->setStatusTip(tr("Show the application's About box"));
+        connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+
+}
+
+void ADMainWindow::about()
+{
+	QMessageBox::about(this, tr("About Application"),
+	tr("ADRESIS (ADministrador de REcursos de SIStemas)\n"
+		"es una aplicacion para el manejo\n"
+		"de los recursos de la escuela EISC\n"
+		"\n"
+		"DESARROLLADORES\n"
+		"Jorge Humberto Cuadrado	'EL TOPO'\n"
+		"Hector Fabio Cruz		'Hectorcaz'\n"
+		"Charly Aguirre		'Charlito'\n"
+		"Juan Carlos Borrero		'El Abuelo'\n"
+		"Sebastian Henao		'El Borracho'\n"));
+}
+
+void ADMainWindow::changeTheme()
+{
+	KTPreferences *themeSel = new KTPreferences(0);
+	themeSel->show();
 	
 }
+
 
 void ADMainWindow::setupMenu()
 {
-	
-}
 
-void ADMainWindow::setupToolbar()
-{
+	fileMenu = menuBar()->addMenu(tr("&File"));
+        fileMenu->addAction(exitAct);
+
+        preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
+	preferencesMenu->addAction(theme);
+
+	menuBar()->addSeparator();
+
+	
+        helpMenu = menuBar()->addMenu(tr("&Help"));
+        helpMenu->addAction(aboutAct);
+
 	
 }
 
 ADMainWindow::~ADMainWindow()
 {
+}
+
+void ADMainWindow::setupToolbar()
+{
+	
 }
 
 void ADMainWindow::showTipDialog()
@@ -93,12 +149,6 @@ void ADMainWindow::showTipDialog()
 	m_tipDialog->show();
 }
 
-// ADCModuleList *ADMainWindow::createModule(const QString& moduleName, const QStringList & titles)
-// {
-// 	ADCModuleList *module = new ADCModuleList(moduleName, titles, this);
-// 	toolWindow( DDockWindow::Left )->addWidget( moduleName, module);
-// 	
-// }
 
 void ADMainWindow::connectToHost()
 {
@@ -152,16 +202,39 @@ void ADMainWindow::createModules()
 	toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
 	m_adresis->getInfoModule( Logic::audiovisuals );
 	
-// 	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
-// 	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-
+ 	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
+ 	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 }
 
 void ADMainWindow::createUserForm()
 {
+	dDebug() << "LLEGUE A CREAR USUARIO";
+	dDebug();
 	ADUserForm *form = new ADUserForm;
 	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )));
 	addForm( form, tr("Añadir Usuario"));
+	
+}
+
+void ADMainWindow::createSpaceForm()
+{
+	dDebug() << "LLEGUE A CREAR ESPACIO";
+	dDebug();
+	
+	ADSpaceForm *sform = new ADSpaceForm;
+	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&, const QStringList&)));
+	addForm( sform, tr("Añadir Espacio"));
+	
+}
+
+void ADMainWindow::createAudiovisualForm()
+{
+	dDebug() << "LLEGUE A CREAR AYUDA";
+	dDebug();
+	
+	ADAudiovisualForm *aform = new ADAudiovisualForm;
+	connect(aform, SIGNAL(requestInsertAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&) ), m_adresis, SLOT(addAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
+	addForm( aform, tr("Añadir Ayuda Audiovisual"));
 	
 }
 

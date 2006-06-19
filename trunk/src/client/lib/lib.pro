@@ -13,7 +13,8 @@ HEADERS += adcfirstrundialog.h \
            admodulebuttonbar.h \
            adformbase.h \
            adpermissionsview.h \
-           ktthemeselector.h 
+           ktthemeselector.h \
+           ktpreferences.h 
 SOURCES += adcfirstrundialog.cpp \
            adcmodulelist.cpp \
            adconnectorbase.cpp \
@@ -21,7 +22,8 @@ SOURCES += adcfirstrundialog.cpp \
            admodulebuttonbar.cpp \
            adformbase.cpp \
            adpermissionsview.cpp \
-           ktthemeselector.cpp 
+           ktthemeselector.cpp \
+           ktpreferences.cpp 
 QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldgui \

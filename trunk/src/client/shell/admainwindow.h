@@ -28,9 +28,13 @@
 #include "adaudiovisualmodulelist.h"
 
 #include <QMap>
+#include <QTextEdit>
+#include <QAction>
 #include "adresis.h"
 
 #include "aduserform.h"
+#include "adaudiovisualform.h"
+#include "adspaceform.h"
 
 /**
  * @author Jorge Cuadrado <kuadrosxx@gamail.com>
@@ -47,14 +51,28 @@ class ADMainWindow : public DMainWindow
 		DActionManager *m_actionManager;
 		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
 		
-	private:
 		void setupActions();
 		void setupMenu();
 		void setupToolbar();
+		void createActions();
+		QMenu *fileMenu;
+		QMenu *preferencesMenu;
+		QMenu *helpMenu;
+
+		QAction *exitAct;
+		QAction *theme;
+		QAction *aboutAct;
+
+
+
+
 		
 	private slots:
 		void showTipDialog();
 		void connectToHost();
+		void about();
+		void changeTheme();
+
 		
 		
 	public slots:
@@ -63,6 +81,8 @@ class ADMainWindow : public DMainWindow
 		
 		void createModules();
 		void createUserForm();
+		void createAudiovisualForm();
+		void createSpaceForm();
 		void addForm(ADFormBase * form, const QString & title);
 		
 };

@@ -26,8 +26,8 @@ ADSpace::ADSpace()
 	m_valid = false;
 }
 
-ADSpace::ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const int & capacitySpace, const QString & nameSpace, const QStringList  listAudioVisual) 
-	: ADObject(), m_codeSpace(codeSpace), m_typeSpace(typeSpace), m_coolAirSpace(coolAirSpace), m_capacitySpace(capacitySpace), m_nameSpace(nameSpace), m_listAudioVisual(listAudioVisual)
+ADSpace::ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace, const QStringList & listAudiovisual) 
+	: ADObject(), m_codeSpace(codeSpace), m_typeSpace(typeSpace), m_coolAirSpace(coolAirSpace), m_capacitySpace(capacitySpace), m_nameSpace(nameSpace), m_listAudioVisual(listAudiovisual)
 {
 	m_valid = true;
 }
@@ -49,12 +49,11 @@ ADInsertPackage ADSpace::insertPackage()
 	
 	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << m_codeSpace << m_typeSpace << m_coolAirSpace << m_capacitySpace << m_nameSpace );
 	
-	foreach(QString tmp, listAudioVisual)
-	{
-		
-	}
-// 	QStringList::iterator it = listAudioVisual.begin();
-// 	while(i.hastNext())
+// 	foreach(QString tmp, listAudioVisual)
+// 	{
+// 		
+// 	}
+
 	
 	dDebug() << insert.toString();
 	return insert;

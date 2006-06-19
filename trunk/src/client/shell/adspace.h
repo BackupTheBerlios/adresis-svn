@@ -21,6 +21,7 @@
 #define ADSPACE_H
 
 #include "adobject.h"
+#include <QStringList>
 
 
 /**
@@ -35,7 +36,7 @@ class ADSpace : public ADObject
 // 		coolAirSpace boolean,
 // 		capacitySpace integer,
 // 		nameSpace varchar(20)
-		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const int & capacitySpace, const QString & nameSpace, const QStringList listAudioVisual );
+		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace, const QStringList & listAudiovisual );
 		~ADSpace();
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
@@ -56,7 +57,7 @@ class ADSpace : public ADObject
 		QString m_capacitySpace;
 		QString m_nameSpace;
 		bool m_valid;
-		QList <ADAudioVisual> m_listAudioVisual;
+// 		QList <ADAudioVisual> m_listAudioVisual;
 		QStringList m_listAudioVisual;
 		
 

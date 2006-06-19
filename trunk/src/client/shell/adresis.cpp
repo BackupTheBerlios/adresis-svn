@@ -107,6 +107,25 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 	getInfoModule(Logic::users);
 }
 
+void Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
+{
+	dDebug() << "Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)";
+	ADAudioVisual newAudiovisual(typeav, marksEquipmentav, estateav,  numberinventoryav, codeSpace);
+	ADInsertPackage insert = newAudiovisual.insertPackage();
+	m_connector->sendPackage( insert );
+	getInfoModule(Logic::audiovisuals);
+}
+
+void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace, const QStringList& listAudiovisual)
+{
+	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, listAudiovisual);
+	ADInsertPackage insert = newSpace.insertPackage();
+	m_connector->sendPackage( insert );
+	getInfoModule(Logic::spaces);
+}
+
+
 void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 {
 	QString where;
