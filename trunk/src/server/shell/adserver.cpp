@@ -60,12 +60,6 @@ bool ADServer::openConnection(ADS::ConnectionType type, const QString &host)
 				port = ADS::CLIENT_PORT;
 			}
 			break;
-			
-			case ADS::Admin:
-			{
-			
-			}
-			break;
 		}
 		
 		if(! listen(QHostAddress(addrs[0]), port) )

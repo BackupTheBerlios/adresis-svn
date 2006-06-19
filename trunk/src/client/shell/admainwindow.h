@@ -42,7 +42,6 @@ class ADMainWindow : public DMainWindow
 		ADMainWindow();
 		~ADMainWindow();
 
-		
 	private:
 		Adresis *m_adresis;
 		DActionManager *m_actionManager;
@@ -61,6 +60,7 @@ class ADMainWindow : public DMainWindow
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
+		
 		void createModules();
 		void createUserForm();
 		void addForm(ADFormBase * form, const QString & title);

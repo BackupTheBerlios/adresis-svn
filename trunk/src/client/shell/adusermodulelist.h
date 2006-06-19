@@ -41,6 +41,7 @@ class ADUserModuleList : public ADCModuleList
 	signals:
 		void requestUserForm();
 		void requestDelete(Logic::TypeModule module, const QString & key);
+		void requestQuery(Logic::TypeModule module, const QString & key);
 };
 
 #endif

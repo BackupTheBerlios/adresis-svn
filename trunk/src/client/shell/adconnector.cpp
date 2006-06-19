@@ -75,7 +75,7 @@ void ADConnector::readFromServer()
 			if(!results.empty())
 			{
 				Logic::TypeQuery type = m_querys.dequeue();
-			
+				
 	#if 1
 				foreach(XMLResults r, results)
 				{
@@ -88,27 +88,37 @@ void ADConnector::readFromServer()
 				}
 	#endif
 				SHOW_VAR(type);
+				SHOW_VAR(m_querys.size());
 				switch(type)
 				{
 					case Logic::userAuthenticated:
 					{
+						dDebug() << "emit userAutenticated(results[0]);";
 						emit userAutenticated(results[0]);
 						break;
 					}
 					case Logic::fillUserModule:
 					{
+						dDebug() << "emit fillModule(Logic::users, results );";
 						emit fillModule(Logic::users, results );
 						break;
 					}
-					
 					case Logic::fillSpaceModule:
 					{
+						dDebug() << "emit fillModule(Logic::spaces, results );";
 						emit fillModule(Logic::spaces, results );
 						break;
 					}
 					case Logic::fillAudiovisualModule:
 					{
+						dDebug() << "fillModule(Logic::audiovisuals, results );";
 						emit fillModule(Logic::audiovisuals, results );
+						break;
+					}
+					case Logic::queryUser:
+					{
+						dDebug() << "fillModule(Logic::audiovisuals, results );";
+						emit showUser(Logic::audiovisuals, results );
 						break;
 					}
 					default:
@@ -177,6 +187,8 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 
 void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select)
 {
+	D_FUNCINFO;
+	SHOW_VAR(type);
 	m_querys.enqueue ( type );
 	sendPackage(select);
 }

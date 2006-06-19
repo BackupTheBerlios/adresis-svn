@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "adresis.h"
 #include "addeletepackage.h"
+#include "adselectpackage.h"
 #include <ddebug.h>
 Adresis::Adresis(QObject * parent)
 	: QObject(parent)
@@ -58,6 +59,7 @@ void Adresis::autenticated(const XMLResults & values)
 
 void Adresis::getInfoModule(Logic::TypeModule module )
 {
+	D_FUNCINFO;
 	if(m_user.permissions()[module])
 	{
 		switch(module)
@@ -66,18 +68,21 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 			{
 				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser"<< "loginuser" );
 				m_connector->sendQuery(Logic::fillUserModule, select);
+				break;
 			}
 			
 			case Logic::spaces:
 			{
 				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace");
 				m_connector->sendQuery(Logic::fillSpaceModule, select);
+				break;
 			}
 
 			case Logic::audiovisuals:
 			{
 				ADSelectPackage select(QStringList()<< "adaudiovisual", QStringList() << "typeAV"<<"numberinventoryAV");
 				m_connector->sendQuery(Logic::fillAudiovisualModule, select);
+				break;
 			}
 			
 			case Logic::reserves:
@@ -95,9 +100,10 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 
 void Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )
 {
+	dDebug() << "Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )";
 	ADUser newUser(name,  code, login,passwd, permissions);
-	
-	m_connector->sendPackage(  newUser.insertPackage() );
+	ADInsertPackage insert = newUser.insertPackage();
+	m_connector->sendPackage( insert );
 	getInfoModule(Logic::users);
 }
 
@@ -116,5 +122,26 @@ void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 	ADDeletePackage del(table);
 	del.setWhere(where);
 	m_connector->sendPackage(del);
-	getInfoModule(Logic::users);
+	dDebug() << module;
+	getInfoModule(module);
 }
+
+void Adresis::execQuery(Logic::TypeModule module, const QString& key)
+{
+	QStringList columns;
+	QString table;
+	QString where;
+	switch(module)
+	{
+		case Logic::users:
+		{
+			columns << "*";
+			where = "loginuser = '" + key + "'";
+			table = "aduser";
+		}
+	}
+	ADSelectPackage query(QStringList() << table, columns, true );
+	query.setWhere(where);
+	m_connector->sendQuery(Logic::queryUser, query);
+}
+

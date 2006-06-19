@@ -44,7 +44,7 @@ void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 	while( it != results.end() )
 	{
 		QStringList list;
-		list << (*it)["codeSpace"] << (*it)["typeSpace"] << (*it)["nameSpace"];
+		list << (*it)["codespace"] << (*it)["typespace"] << (*it)["namespace"];
 		addItem(list);
 		++it;
 	

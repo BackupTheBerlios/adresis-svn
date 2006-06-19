@@ -45,7 +45,7 @@ void ADAudiovisualModuleList::fill( const QList<XMLResults>&results)
 	{
 		
 		QStringList list;
-		list << (*it)["typeAV"] << (*it)["numberinventoryAV"];
+		list << (*it)["typeav"] << (*it)["numberinventoryav"];
 		addItem( list );
 		++it;
 	}
@@ -72,12 +72,10 @@ void ADAudiovisualModuleList::requestAction(int action)
 				{
 					return;
 				}
-				
 				DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
 				DCONFIG->sync();
 				emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
 			}
-			
 			break;
 		}
 	}

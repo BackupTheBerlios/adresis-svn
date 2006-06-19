@@ -61,7 +61,7 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	
 	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
-	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
+	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify | ADModuleButtonBar::Query );
 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 

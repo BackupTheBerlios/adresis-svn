@@ -102,4 +102,4 @@ CREATE TABLE AdAVCancelation(
 
 
 
-INSERT INTO AdUser VALUES('1','charly','0330911','charagmz','charagmz');
+INSERT INTO AdUser VALUES('1111','charly','0330911','charagmz','charagmz');

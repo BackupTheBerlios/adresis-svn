@@ -136,9 +136,7 @@ void ADMainWindow::createModules()
 	
 	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
 	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-	
-	
-	
+
 // __ESPACIOS____
 	ADSpaceModuleList *spaces = new ADSpaceModuleList();
 	m_modules.insert( Logic::spaces, spaces);
@@ -154,8 +152,8 @@ void ADMainWindow::createModules()
 	toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
 	m_adresis->getInfoModule( Logic::audiovisuals );
 	
-	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
-	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+// 	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
+// 	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 
 }
 
@@ -164,9 +162,7 @@ void ADMainWindow::createUserForm()
 	ADUserForm *form = new ADUserForm;
 	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )));
 	addForm( form, tr("Añadir Usuario"));
-
 	
-// 	addWidget( form, "Add User", false);
 }
 
 
@@ -175,9 +171,6 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 	D_FUNCINFO;
 	if ( form )
 	{
-// 		QScrollArea *scroll = new QScrollArea;
-// 		scroll->setWidget(form);
-		
 		form->setTitle(title);
 		addWidget( form, title, false);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));

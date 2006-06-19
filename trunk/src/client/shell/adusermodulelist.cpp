@@ -34,6 +34,7 @@ ADUserModuleList::~ADUserModuleList()
 
 void ADUserModuleList::fill( const QList<XMLResults>&results)
 {
+	D_FUNCINFO;
 	m_pTree->clear ();
 	
 	QList<XMLResults>::const_iterator it= results.begin();
@@ -74,8 +75,11 @@ void ADUserModuleList::requestAction(int action)
 				DCONFIG->sync();
 				emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
 			}
-			
 			break;
+		}
+		case  ADModuleButtonBar::Query:
+		{
+			emit requestQuery(Logic::users, m_pTree->currentItem()->text( 0));
 		}
 	}
 }
