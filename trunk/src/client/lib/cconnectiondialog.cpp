@@ -78,8 +78,8 @@ void CConnectionDialog::loadSettings()
 	m_user->setText( DCONFIG->value("User").toString());
 	m_password->setText(DCONFIG->value("Password").toString());
 	m_server->setText(DCONFIG->value("Server", "localhost").toString());
-	m_port->setText(DCONFIG->value("Port", 31337).toString());
-	m_database->setText(DCONFIG->value("Database", "doms").toString());
+	m_port->setText(DCONFIG->value("Port", 1400).toString());
+	m_database->setText(DCONFIG->value("Database", "adresis").toString());
 }
 
 QString CConnectionDialog::user() const

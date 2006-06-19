@@ -117,8 +117,8 @@ void ADConnector::readFromServer()
 					}
 					case Logic::queryUser:
 					{
-						dDebug() << "fillModule(Logic::audiovisuals, results );";
-// 						emit showUser(Logic::audiovisuals, results );
+						dDebug() << "requestShowUser(results )";
+						emit requestShowUser( results[0] );
 						break;
 					}
 					default:
@@ -137,10 +137,8 @@ void ADConnector::readFromServer()
 		else if( root == "Success")
 		{
 // 			emit readedModuleForms( m_parser->moduleForms() );
-// 
 			emit message(Msg::Info, m_parser->results()[0]["message"]);
 		}
-		
 		m_readed = "";
 	}
 	else

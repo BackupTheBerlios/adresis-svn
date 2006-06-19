@@ -79,7 +79,7 @@ void ADSpace::setValues(XMLResults values)
 	
 }
 
-bool ADSpace::isValid()
+bool ADSpace::isValid()const
 {
 	return m_valid;
 }

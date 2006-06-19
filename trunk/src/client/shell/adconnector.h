@@ -50,11 +50,11 @@ class ADConnector : public ADConnectorBase
 		void handleError(QAbstractSocket::SocketError error);
 		
 	signals:
-// 		void readedModuleForms(const ModuleForms &);
-		void chatMessage(const QString &login, const QString &msg);
+// 		void chatMessage(const QString &login, const QString &msg);
 		void message(Msg::Type t, const QString &message);
 		void userAutenticated(const XMLResults&);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
+		void requestShowUser(const XMLResults & values);
 		
 	private:
 		QXmlSimpleReader m_reader;

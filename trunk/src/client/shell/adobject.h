@@ -36,7 +36,7 @@ class ADObject : public QObject
 		virtual ADInsertPackage insertPackage() = 0;
 		virtual ADUpdatePackage updatePackage() = 0;
 		virtual void setValues(XMLResults values) = 0;
-		virtual bool isValid() = 0;
+		virtual bool isValid()  const = 0;
 };
 
 #endif

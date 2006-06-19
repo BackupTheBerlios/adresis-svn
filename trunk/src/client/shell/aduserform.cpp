@@ -10,6 +10,33 @@
 ADUserForm::ADUserForm(QWidget *parent)
 	: ADFormBase("<h1><b>User</b><h1>" , parent)
 {
+	m_inserter = true;
+	setup();
+}
+
+ADUserForm::ADUserForm(const ADUser& user, QWidget *parent) : ADFormBase("<h1><b>User</b><h1>" , parent)
+{
+	D_FUNCINFO;
+	setup();
+	m_inserter = false;
+	if(user.isValid())
+	{
+		static_cast<QLineEdit*>(m_inputs[tr("nombre")])->setText(user.name());
+		static_cast<QLineEdit*>(m_inputs[tr("codigo")])->setText(user.code());
+		static_cast<QLineEdit*>(m_inputs[tr("login")])->setText(user.login());
+		static_cast<QLineEdit*>(m_inputs[tr("clave")])->setText(user.passwd());
+		m_permission->setPermissions(user.permissions());
+	}
+}
+
+ADUserForm::~ADUserForm()
+{
+	
+}
+
+
+void ADUserForm::setup()
+{
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
 	QGroupBox *container = new QGroupBox("Informacion" );
@@ -39,13 +66,10 @@ ADUserForm::ADUserForm(QWidget *parent)
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertUser()));
 }
 
-ADUserForm::~ADUserForm()
-{
-}
-
 void ADUserForm::emitInsertUser()
 {
-	
+	if(m_inserter)
+	{
 	emit requestInsertUser(
 			static_cast<QLineEdit*>(m_inputs[tr("nombre")])->text(),
 			static_cast<QLineEdit*>(m_inputs[tr("codigo")])->text(),
@@ -53,5 +77,18 @@ void ADUserForm::emitInsertUser()
 			static_cast<QLineEdit*>(m_inputs[tr("clave")])->text(),
 			m_permission->permissions()
 	);
+	}
+	else
+	{
+		emit requestUpdateUser(
+			static_cast<QLineEdit*>(m_inputs[tr("nombre")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("codigo")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("login")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("clave")])->text(),
+			m_permission->permissions()
+			      );
+	}
 }
+
+
 

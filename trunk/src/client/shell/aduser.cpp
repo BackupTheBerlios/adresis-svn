@@ -37,7 +37,7 @@ ADUser::~ADUser()
 {
 }
 
-ADInsertPackage ADUser::insertPackage()
+ADInsertPackage ADUser::insertPackage() 
 {
 	QString strPermissions;
 	QMap<Logic::TypeModule, bool>::const_iterator it = m_permissions.begin();
@@ -53,12 +53,10 @@ ADInsertPackage ADUser::insertPackage()
 		++it;
 	}
 	
-	
 	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser", QStringList() <<  m_name<< m_code<< m_login<< m_passwd<< strPermissions );
 	
 	dDebug() << insert.toString();
 	return insert;
-	
 }
 
 ADUpdatePackage ADUser::updatePackage() 
@@ -82,7 +80,6 @@ ADUpdatePackage ADUser::updatePackage()
 
 void ADUser::setValues(XMLResults values)
 {
-	dDebug() << "here sss";
 	m_name = values["nameuser"];
 	m_code = values["codeuser"];
 	m_login = values["loginuser"];
@@ -110,33 +107,33 @@ void ADUser::setValues(XMLResults values)
 	m_valid = true;
 }
 
-bool ADUser::isValid()
+bool ADUser::isValid() const
 {
 	return m_valid;
 }
 
-QMap<Logic::TypeModule, bool>/*&*/ ADUser::permissions() /*const*/
+QMap<Logic::TypeModule, bool> ADUser::permissions() const
 {
 	return  m_permissions;
 }
 
 
-QString /*&*/ ADUser::name() /*const*/
+QString ADUser::name() const
 {
 	return m_name;
 }
 
-QString ADUser::code()
+QString ADUser::code() const
 {
 	return m_passwd;
 }
 
-QString ADUser::login()
+QString  ADUser::login() const
 {
 	return m_login;
 }
 
-QString ADUser::passwd()
+QString  ADUser::passwd() const
 {
 	return m_passwd;
 }

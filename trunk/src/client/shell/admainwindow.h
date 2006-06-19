@@ -62,10 +62,6 @@ class ADMainWindow : public DMainWindow
 		QAction *exitAct;
 		QAction *theme;
 		QAction *aboutAct;
-
-
-
-
 		
 	private slots:
 		void showTipDialog();
@@ -74,17 +70,16 @@ class ADMainWindow : public DMainWindow
 		void changeTheme();
 
 		
-		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
-		
 		void createModules();
 		void createUserForm();
+		void createUserForm(const ADUser &);
 		void createAudiovisualForm();
 		void createSpaceForm();
 		void addForm(ADFormBase * form, const QString & title);
-		
+// 		void showUser(const ADUser & user);
 };
 
 #endif

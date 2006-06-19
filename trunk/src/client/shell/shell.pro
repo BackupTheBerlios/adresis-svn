@@ -16,10 +16,11 @@ HEADERS += admainwindow.h \
            adspacemodulelist.h \
            adaudiovisualmodulelist.h \
            adaudiovisual.h \
+           adspace.h \
+           adcfirstrundialog.h \
            adaudiovisualform.h \
-           adspaceform.h \
            adlistselect.h \
-           adspace.h 
+           adspaceform.h 
 SOURCES += admainwindow.cpp \
            main_cliente.cpp \
            adcapplication.cpp \
@@ -32,10 +33,11 @@ SOURCES += admainwindow.cpp \
            adspacemodulelist.cpp \
            adaudiovisualmodulelist.cpp \
            adaudiovisual.cpp \
+           adspace.cpp \
+           adcfirstrundialog.cpp \
            adaudiovisualform.cpp \
-           adspaceform.cpp \
            adlistselect.cpp \
-           adspace.cpp 
+           adspaceform.cpp 
 QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldcore \

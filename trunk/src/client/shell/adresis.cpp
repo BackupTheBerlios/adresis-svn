@@ -27,13 +27,22 @@ Adresis::Adresis(QObject * parent)
 	m_connector = new ADConnector(this);
 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
-	connect ( m_connector, SIGNAL(fillModule(Logic::TypeModule, const QList<XMLResults>&)) , this, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)) );
+	connect ( m_connector, SIGNAL(fillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)) );
+	
+	connect( m_connector, SIGNAL(requestShowUser(const XMLResults& )), this, SLOT(createUser(const XMLResults& )));
 	DINIT;
 }
 
 Adresis::~Adresis()
 {
 	DEND;
+}
+
+void Adresis::createUser(const XMLResults& result)
+{
+	D_FUNCINFO;
+	m_user.setValues(result);
+	emit showUser(m_user);
 }
 
 void Adresis::connectToHost( const QString & hostName, quint16 port)
@@ -45,10 +54,9 @@ void Adresis::connectToHost( const QString & hostName, quint16 port)
 void Adresis::login(const QString &user, const QString &passwd)
 {
 	m_connector->login(user, passwd);
-	
 	ADSelectPackage u(QStringList()<< "aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser");
 	u.setWhere( "loginuser='"+  user + "'" );
-	m_connector->sendQuery( Logic::userAuthenticated,u); 
+	m_connector->sendQuery(Logic::userAuthenticated, u); 
 }
 
 void Adresis::autenticated(const XMLResults & values)
@@ -70,7 +78,6 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 				m_connector->sendQuery(Logic::fillUserModule, select);
 				break;
 			}
-			
 			case Logic::spaces:
 			{
 				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace");
@@ -104,6 +111,16 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 	ADUser newUser(name,  code, login,passwd, permissions);
 	ADInsertPackage insert = newUser.insertPackage();
 	m_connector->sendPackage( insert );
+	getInfoModule(Logic::users);
+}
+void Adresis::modifyUser(const QString& name, const QString& code,const QString& login, const QString& passwd, QMap<Logic::TypeModule, bool> permissions )
+{
+	D_FUNCINFO;
+	ADUser newUser(name,  code, login,passwd, permissions);
+	ADUpdatePackage update = newUser.updatePackage();
+	QString where = "loginuser = '" + login + "'";
+	update.setWhere(where);
+	m_connector->sendPackage( update );
 	getInfoModule(Logic::users);
 }
 
@@ -145,7 +162,7 @@ void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 	getInfoModule(module);
 }
 
-void Adresis::execQuery(Logic::TypeModule module, const QString& key)
+void Adresis::getObject(Logic::TypeModule module, const QString& key)
 {
 	QStringList columns;
 	QString table;
@@ -154,7 +171,7 @@ void Adresis::execQuery(Logic::TypeModule module, const QString& key)
 	{
 		case Logic::users:
 		{
-			columns << "*";
+			columns << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser";
 			where = "loginuser = '" + key + "'";
 			table = "aduser";
 		}

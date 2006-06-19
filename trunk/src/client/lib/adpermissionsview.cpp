@@ -78,7 +78,7 @@ QMap<Logic::TypeModule, bool> ADPermissionsView::permissions()
 		dDebug() << false;
 		per.insert(Logic::reserves, false);
 	}
-	if( m_checks[tr("audiovisules")]->checkState()  == Qt::Checked)
+	if( m_checks[tr("audiovisules")]->checkState() == Qt::Checked)
 	{
 		dDebug() << true;
 		per.insert(Logic::audiovisuals, true);
@@ -95,8 +95,67 @@ QMap<Logic::TypeModule, bool> ADPermissionsView::permissions()
 		dDebug() << "permissions()" << it.value();
 		++it;
 	}
-	
-	
 	return per;
+}
+
+void ADPermissionsView::setPermissions(const QMap<Logic::TypeModule, bool> & permissions )
+{
+	QMap<Logic::TypeModule, bool>::const_iterator it = permissions.begin();
+	while(it != permissions.end())
+	{
+		switch(it.key())
+		{
+			case Logic::users:
+			{
+				if(it.value())
+				{
+					m_checks[tr("usuarios")]->setCheckState ( Qt::Checked);
+				}
+				else
+				{
+					m_checks[tr("usuarios")]->setCheckState ( Qt::Unchecked);
+				}
+				break;
+			}
+			case Logic::audiovisuals:
+			{
+				if(it.value())
+				{
+					m_checks[tr("espacio")]->setCheckState ( Qt::Checked);
+				}
+				else
+				{
+					m_checks[tr("espacio")]->setCheckState ( Qt::Unchecked);
+				}
+				break;
+			}
+			case Logic::spaces:
+			{
+				if(it.value())
+				{
+					m_checks[tr("reserva")]->setCheckState ( Qt::Checked);
+				}
+				else
+				{
+					m_checks[tr("reserva")]->setCheckState ( Qt::Unchecked);
+				}
+				break;
+			}
+			case Logic::reserves:
+			{
+				if(it.value())
+				{
+					m_checks[tr("audiovisules")]->setCheckState ( Qt::Checked);
+				}
+				else
+				{
+					m_checks[tr("audiovisules")]->setCheckState ( Qt::Checked);
+				}
+				break;
+			}
+		}
+		++it;
+	}
+// 	return per;
 }
 

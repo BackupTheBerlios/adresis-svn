@@ -41,6 +41,7 @@ class Adresis : public QObject
 		
 	public slots:
 		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
+		void modifyUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
 		
 		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
 		
@@ -52,13 +53,14 @@ class Adresis : public QObject
 		void autenticated(const XMLResults& values);
 		void getInfoModule(Logic::TypeModule module);
 		void execDelete(Logic::TypeModule, const QString& key);
-		void execQuery(Logic::TypeModule , const QString& key);
+		void getObject(Logic::TypeModule, const QString& key);
+		void createUser(const XMLResults &result);
 		
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
 		void requestCreateModules();
 		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
-		
+		void showUser( const ADUser &);
 		
 	private:
 		ADConnector *m_connector;

@@ -41,7 +41,7 @@ class ADSpace : public ADObject
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
 		void setValues(XMLResults values);
-		bool isValid();
+		bool isValid() const;
 		QString codeSpace(); 
 		QString typeSpace(); 
 		QString coolAirSpace(); 

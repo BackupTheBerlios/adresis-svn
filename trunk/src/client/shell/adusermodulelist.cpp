@@ -24,7 +24,7 @@
 
 ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("aduser", QStringList() << "login"<< "name", parent )
 {
-
+	
 }
 
 
@@ -73,15 +73,27 @@ void ADUserModuleList::requestAction(int action)
 				
 				DCONFIG->setValue("RemoveWithoutAskUser", dialog.shownAgain());
 				DCONFIG->sync();
-				emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+				if(m_pTree->currentItem())
+				{
+					emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+				}
 			}
 			break;
 		}
-		case  ADModuleButtonBar::Query:
+		case  ADModuleButtonBar::Modify:
 		{
-			emit requestQuery(Logic::users, m_pTree->currentItem()->text( 0));
+			
+			if(m_pTree->currentItem())
+			{
+				dDebug() << "emit requestUpdate(Logic::users, m_pTree->currentItem()->text( 0));";
+				emit requestUpdate(Logic::users, m_pTree->currentItem()->text(0));
+			}
+			else
+			{
+				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
+				emit requestUpdate(Logic::users, m_pTree->currentItem()->text(0));
+			}
+			break;
 		}
 	}
 }
-
-

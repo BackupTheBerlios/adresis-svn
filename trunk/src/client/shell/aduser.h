@@ -36,12 +36,12 @@ class ADUser : public ADObject
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
 		void setValues(XMLResults values);
-		bool isValid();
-		QMap<Logic::TypeModule, bool>/*&*/ permissions()/* const*/;
-		QString /*&*/ name() /*const*/ ; 
-		QString code();
-		QString login();
-		QString passwd();
+		bool isValid() const;
+		QMap<Logic::TypeModule, bool> permissions() const;
+		QString name() const ; 
+		QString code() const;
+		QString login() const;
+		QString passwd() const;
 		
 	private:
 		QString m_name;
@@ -50,7 +50,6 @@ class ADUser : public ADObject
 		QString m_passwd;
 		QMap<Logic::TypeModule, bool> m_permissions;
 		bool m_valid;
-		
 };
 
 #endif

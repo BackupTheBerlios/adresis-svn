@@ -51,7 +51,7 @@ void ADAudioVisual::setValues(XMLResults values)
 	m_valid = true;
 }
 
-bool ADAudioVisual::isValid()
+bool ADAudioVisual::isValid() const
 {
 	return m_valid;
 }
