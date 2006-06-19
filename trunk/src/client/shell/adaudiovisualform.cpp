@@ -26,7 +26,7 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <ddebug.h>
-#include <QComboBox>
+
 
 ADAudiovisualForm::ADAudiovisualForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
@@ -43,7 +43,7 @@ ADAudiovisualForm::ADAudiovisualForm(QWidget *parent)
 	QStringList titles, titles2, estados;
 	
 	estados << tr("bueno") << tr("malo");
-	QComboBox *estadoC = new QComboBox;
+	estadoC = new QComboBox;
 	estadoC->addItems(estados);
 	
 	titles << tr("Tipo") << tr("Marca") << tr("Estado") << tr("Numero de inventario") << tr("Asignado al Espacio");
@@ -53,6 +53,7 @@ ADAudiovisualForm::ADAudiovisualForm(QWidget *parent)
 		{
 			layout->addWidget(new QLabel("Estado"),2,0);
 			layout->addWidget(estadoC,2,1);
+			m_inputs.insert(titles[i].toLower () , edits);
 		}
 		else
 		{
@@ -74,13 +75,19 @@ ADAudiovisualForm::~ADAudiovisualForm()
 
 void ADAudiovisualForm::emitInsertAudiovisual()
 {
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text();
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("marca")])->text();
+	dDebug() << estadoC->currentText();
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text();
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text();
+
 	
 	emit requestInsertAudiovisual(
-			static_cast<QLineEdit*>(m_inputs[tr("Tipo")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("Marca")])->text(),
-			static_cast<QComboBox*>(m_inputs[tr("Estado")])->currentText(),
-			static_cast<QLineEdit*>(m_inputs[tr("NroInventario")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("Espacio")])->text()
+			static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("marca")])->text(),
+			estadoC->currentText(),
+			static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text()
 	);
 }
 

@@ -63,7 +63,7 @@ ADSpaceForm::ADSpaceForm(QWidget *parent)
 			layout->addWidget(label, i, 0);
 			edits = new QLineEdit();
 			layout->addWidget(edits, i, 1);
-			m_inputs.insert(titles[i].toLower () , edits);
+			m_inputs.insert(titles[i].toLower() , edits);
 		}
 	}
 	
@@ -82,13 +82,33 @@ ADSpaceForm::~ADSpaceForm()
 void ADSpaceForm::emitInsertSpace()
 {
 	dDebug() << "Entre al emitInsertSpace";
+	bool opcion;
+	
+	if(acC->checkState() == Qt::Checked)
+	{
+		opcion=true;
+	}
+	else
+	{
+		opcion=false;
+	}
+	
+	
+	
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text();
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text();
+	dDebug() << opcion;
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text();
+	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text();
+	
+	
+	
+	
 	emit requestInsertSpace(
-			static_cast<QLineEdit*>(m_inputs[tr("Codigo Espacio")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("Tipo Espacio")])->text(),
-			static_cast<QCheckBox*>(m_inputs[tr("Aire Acondicionado")])->checkState(),
-			static_cast<QLineEdit*>(m_inputs[tr("Capacidad")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("Nombre de Espacio")])->text(),
-			listSelect->takeList()
+			static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text(),			static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
+			opcion,
+			static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
 	);
 	dDebug() << "Sali del emitInsertSpace";
 }

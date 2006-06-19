@@ -36,7 +36,7 @@ class ADSpace : public ADObject
 // 		coolAirSpace boolean,
 // 		capacitySpace integer,
 // 		nameSpace varchar(20)
-		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace, const QStringList & listAudiovisual );
+		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
 		~ADSpace();
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
@@ -44,20 +44,18 @@ class ADSpace : public ADObject
 		bool isValid() const;
 		QString codeSpace(); 
 		QString typeSpace(); 
-		QString coolAirSpace(); 
+		bool coolAirSpace(); 
 		QString capacitySpace(); 
 		QString nameSpace(); 
-		//QList <ADAudioVisual> listAudioVisual();
 		QStringList listAudioVisual();
 		
 	private:
 		QString m_codeSpace;
 		QString m_typeSpace;
-		QString m_coolAirSpace;
+		bool m_coolAirSpace;
 		QString m_capacitySpace;
 		QString m_nameSpace;
 		bool m_valid;
-// 		QList <ADAudioVisual> m_listAudioVisual;
 		QStringList m_listAudioVisual;
 		
 

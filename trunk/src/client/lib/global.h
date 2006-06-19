@@ -28,6 +28,8 @@
 
 #include <dglobal.h>
 
+#define SQLSTR(s) QString("\'"+((QString("%1").arg(s)).replace('\'', "\\\'"))+"\'")
+
 namespace Msg
 {
 	enum Type

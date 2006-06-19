@@ -23,6 +23,7 @@
 #include "adformbase.h"
 #include <QMap>
 #include "global.h"
+#include <QComboBox>
 
 /**
 @author Hector Fabio Cruz Mosquera,0329876
@@ -36,6 +37,7 @@ class ADAudiovisualForm : public ADFormBase
 	
 	private:
 		QMap<QString, QWidget*> m_inputs;
+		QComboBox *estadoC;
 		
 	signals:
 		void requestInsertAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);

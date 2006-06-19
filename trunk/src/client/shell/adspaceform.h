@@ -43,7 +43,7 @@ class ADSpaceForm : public ADFormBase
 		ADListSelect *listSelect;
 		
 	signals:
-		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace, const QStringList& listAudiovisual);
+		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 
 	public slots:
 		void emitInsertSpace();

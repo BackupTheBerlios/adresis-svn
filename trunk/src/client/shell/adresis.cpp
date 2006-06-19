@@ -116,7 +116,7 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 void Adresis::modifyUser(const QString& name, const QString& code,const QString& login, const QString& passwd, QMap<Logic::TypeModule, bool> permissions )
 {
 	D_FUNCINFO;
-	ADUser newUser(name,  code, login,passwd, permissions);
+	ADUser newUser(name, code, login,passwd, permissions);
 	ADUpdatePackage update = newUser.updatePackage();
 	QString where = "loginuser = '" + login + "'";
 	update.setWhere(where);
@@ -133,10 +133,10 @@ void Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmen
 	getInfoModule(Logic::audiovisuals);
 }
 
-void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace, const QStringList& listAudiovisual)
+void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
-	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, listAudiovisual);
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace);
 	ADInsertPackage insert = newSpace.insertPackage();
 	m_connector->sendPackage( insert );
 	getInfoModule(Logic::spaces);

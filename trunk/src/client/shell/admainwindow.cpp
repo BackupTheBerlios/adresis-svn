@@ -227,7 +227,7 @@ void ADMainWindow::createSpaceForm()
 	
 	
 	ADSpaceForm *sform = new ADSpaceForm;
-	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&, const QStringList&)));
+	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&)));
 	addForm( sform, tr("Añadir Espacio"));
 	
 }

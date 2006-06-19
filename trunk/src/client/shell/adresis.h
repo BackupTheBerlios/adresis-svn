@@ -45,7 +45,7 @@ class Adresis : public QObject
 		
 		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
 		
-		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace, const QStringList& listAudiovisual );
+		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 		
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);

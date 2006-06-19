@@ -25,7 +25,7 @@ ADAudioVisual::~ADAudioVisual()
 
 ADInsertPackage ADAudioVisual::insertPackage()
 {
-	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << m_type << m_marksEquipment << m_estate << m_numberInventory << m_codeSpace );
+	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
 	
 	dDebug() << insert.toString();
 	return insert;
@@ -34,7 +34,7 @@ ADInsertPackage ADAudioVisual::insertPackage()
 
 ADUpdatePackage ADAudioVisual::updatePackage() 
 {
-	ADUpdatePackage update("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav" << "numberinventoryav" << "codeSpace", QStringList() << m_type << m_marksEquipment << m_estate << m_numberInventory << m_codeSpace );
+	ADUpdatePackage update("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav" << "numberinventoryav" << "codeSpace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
 	
 	return update;
 }
@@ -56,7 +56,7 @@ bool ADAudioVisual::isValid() const
 	return m_valid;
 }
 
-QString /*&*/ ADAudioVisual::type() /*const*/
+QString ADAudioVisual::type() /*const*/
 {
 	return m_type;
 }

@@ -53,7 +53,7 @@ ADInsertPackage ADUser::insertPackage()
 		++it;
 	}
 	
-	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser", QStringList() <<  m_name<< m_code<< m_login<< m_passwd<< strPermissions );
+	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser", QStringList() <<  m_name<< SQLSTR(m_code)<< SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
 	
 	dDebug() << insert.toString();
 	return insert;
@@ -74,7 +74,7 @@ ADUpdatePackage ADUser::updatePackage()
 		}
 		++it;
 	}
-	ADUpdatePackage update("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  m_name<< m_code<< m_login<< m_passwd<< strPermissions );
+	ADUpdatePackage update("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  SQLSTR(m_name)<< SQLSTR(m_code) << SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
 	return update;
 }
 
