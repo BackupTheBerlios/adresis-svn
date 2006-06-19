@@ -98,7 +98,7 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 		{
 			case Logic::users:
 			{
-				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser'"<< "loginuser" );
+				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser"<< "loginuser" );
 				m_connector->sendQuery(Logic::fillUserModule, select);
 				break;
 			}
