@@ -31,6 +31,32 @@
 ADAudiovisualForm::ADAudiovisualForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
 {
+	m_inserter = true;
+	setup();
+}
+
+ADAudiovisualForm::ADAudiovisualForm(const ADAudioVisual & audiovisual, QWidget * parent) : ADFormBase("<h1><b>Audiovisuals</b><h1>", parent)
+{
+	D_FUNCINFO;
+	setup();
+	m_inserter = false;
+	if(audiovisual.isValid())
+	{
+		static_cast<QLineEdit*>(m_inputs[tr("tipo")])->setText(audiovisual.type());
+		static_cast<QLineEdit*>(m_inputs[tr("marca")])->setText(audiovisual.marksEquipment());
+		estadoC->currentText();
+		static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(audiovisual.numberInventory());
+		static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(audiovisual.codeSpace());
+		
+	}
+}
+
+ADAudiovisualForm::~ADAudiovisualForm()
+{
+}
+
+void ADAudiovisualForm::setup()
+{
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
 	QGroupBox *container = new QGroupBox("Informacion");
@@ -69,26 +95,33 @@ ADAudiovisualForm::ADAudiovisualForm(QWidget *parent)
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertAudiovisual()));
 }
 
-ADAudiovisualForm::~ADAudiovisualForm()
-{
-}
-
 void ADAudiovisualForm::emitInsertAudiovisual()
 {
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text();
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("marca")])->text();
-	dDebug() << estadoC->currentText();
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text();
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text();
-
+// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text();
+// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("marca")])->text();
+// 	dDebug() << estadoC->currentText();
+// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text();
+// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text();
+	if(m_inserter)
+	{
 	
-	emit requestInsertAudiovisual(
+		emit requestInsertAudiovisual(
 			static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text(),
 			static_cast<QLineEdit*>(m_inputs[tr("marca")])->text(),
 			estadoC->currentText(),
 			static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text(),
 			static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text()
-	);
+												);
+	}
+	else
+	{
+		emit requestUpdateAudiovisual(
+			static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("marca")])->text(),
+			estadoC->currentText(),
+			static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text(),
+			static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text()
+											  );
+	}
+	
 }
-
-

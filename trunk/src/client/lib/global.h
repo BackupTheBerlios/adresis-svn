@@ -43,7 +43,8 @@ namespace Msg
 }
 namespace Logic
 {
-	enum TypeQuery{userAuthenticated=0, fillUserModule, fillSpaceModule, fillAudiovisualModule, fillReserveModule, queryUser, querySpace};
+	enum TypeQuery{userAuthenticated=0, fillUserModule, fillSpaceModule, fillAudiovisualModule, fillReserveModule, queryUser, queryAudiovisual, querySpace};
+
 	enum TypeModule{users=0, spaces, reserves, audiovisuals};
 	
 }

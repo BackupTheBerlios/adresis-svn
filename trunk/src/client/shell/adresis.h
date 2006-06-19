@@ -45,9 +45,13 @@ class Adresis : public QObject
 		void modifyUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
 		
 		
-		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav, const QString& estateav, const QString& numberinventoryav, const QString& codeSpace);
+		//cambio
+		void modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
+		//cambio
 		
-		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace );
+		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
+
+		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav, const QString& estateav, const QString& numberinventoryav, const QString& codeSpace);
 		
 		void modifySpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 		
@@ -61,13 +65,15 @@ class Adresis : public QObject
 		void getObject(Logic::TypeModule, const QString& key);
 		void createUser(const XMLResults &result);
 		void createSpace(const XMLResults &result);
-		
+		void createAudiovisual(const XMLResults& result);
+				
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
 		void requestCreateModules();
 		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
 		void showUser( const ADUser &);
 		void showSpace( const ADSpace &);
+		void showAudiovisual( const ADAudioVisual & );
 		
 	private:
 		ADConnector *m_connector;

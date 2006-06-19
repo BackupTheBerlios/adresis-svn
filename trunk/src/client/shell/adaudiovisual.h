@@ -18,11 +18,11 @@ class ADAudioVisual: public ADObject
 		void setValues(XMLResults values);
 		bool isValid() const;
 		
-		QString type();
-		QString marksEquipment();
-		QString estate();
-		QString numberInventory();
-		QString codeSpace();
+		QString type() const;
+		QString marksEquipment() const;
+		QString estate() const;
+		QString numberInventory() const;
+		QString codeSpace() const;
 		
 	private:
 		QString m_type;
@@ -35,5 +35,4 @@ class ADAudioVisual: public ADObject
 };
 
 #endif
-
 

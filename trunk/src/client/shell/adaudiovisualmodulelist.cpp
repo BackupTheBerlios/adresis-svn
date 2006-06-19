@@ -29,14 +29,15 @@ ADAudiovisualModuleList::ADAudiovisualModuleList(QWidget *parent): ADCModuleList
 // 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
-
 ADAudiovisualModuleList::~ADAudiovisualModuleList()
 {
 }
 
 
+
 void ADAudiovisualModuleList::fill( const QList<XMLResults>&results)
 {
+	D_FUNCINFO;
 	m_pTree->clear ();
 	
 	QList<XMLResults>::const_iterator it= results.begin();
@@ -74,9 +75,30 @@ void ADAudiovisualModuleList::requestAction(int action)
 				}
 				DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
 				DCONFIG->sync();
-				emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
+				//Cambio
+				//emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
+				if(m_pTree->currentItem())
+				{
+					emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
+				}
 			}
 			break;
 		}
+		case  ADModuleButtonBar::Modify:
+		{
+			
+			if(m_pTree->currentItem())
+			{
+				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 0));";
+				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(0));
+			}
+			else
+			{
+				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
+				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(0));
+			}
+			break;
+		}
+		
 	}
 }

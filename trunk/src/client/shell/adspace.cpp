@@ -49,10 +49,7 @@ ADInsertPackage ADSpace::insertPackage()
 		strAireSpace = "false";
 	}
 	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace.remove(" ")) << SQLSTR(m_typeSpace.remove(" ")) << strAireSpace << SQLSTR(m_capacitySpace.remove(" ")) << SQLSTR(m_nameSpace.remove(" ")));
-	
-
-
-	
+		
 	dDebug() << insert.toString();
 	return insert;
 }

@@ -121,6 +121,11 @@ void ADConnector::readFromServer()
 						emit requestShowUser( results[0] );
 						break;
 					}
+					case Logic::queryAudiovisual:
+					{
+						emit requestShowAudiovisual( results[0] );
+						break;
+					}
 					case Logic::querySpace:
 					{
 						dDebug() << "requestShowSpace(results )";

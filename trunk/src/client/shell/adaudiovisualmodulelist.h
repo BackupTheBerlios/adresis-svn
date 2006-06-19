@@ -42,6 +42,8 @@ class ADAudiovisualModuleList : public ADCModuleList
 	signals:
 		void requestAudiovisualForm();
 		void requestDelete(Logic::TypeModule module, const QString & key);
+		//cambio
+		void requestUpdate(Logic::TypeModule module, const QString & key);
 
 };
 

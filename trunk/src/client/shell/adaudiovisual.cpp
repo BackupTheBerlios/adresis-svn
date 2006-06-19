@@ -17,15 +17,9 @@ ADAudioVisual::~ADAudioVisual()
 {
 }
 
-/*		typeAV varchar(20),
-		marksEquipmentAV varchar(10),
-		estateAV varchar(50),
-		numberinventoryAV varchar(10) PRIMARY KEY,
-		codeSpace varchar(10), FOREIGN KEY (codeSpace) REFERENCES AdSpace(codeSpace)*/
-
 ADInsertPackage ADAudioVisual::insertPackage()
 {
-	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
+	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksequipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
 	
 	dDebug() << insert.toString();
 	return insert;
@@ -41,7 +35,7 @@ ADUpdatePackage ADAudioVisual::updatePackage()
 
 void ADAudioVisual::setValues(XMLResults values)
 {
-	dDebug() << "here adaudiovisual";
+	//dDebug() << "here adaudiovisual";
 	m_type = values["typeav"];
 	m_marksEquipment  = values["marksEquipmentav"];
 	m_estate  = values["estateav"];
@@ -56,27 +50,28 @@ bool ADAudioVisual::isValid() const
 	return m_valid;
 }
 
-QString ADAudioVisual::type() /*const*/
+QString ADAudioVisual::type() const
 {
 	return m_type;
 }
 
-QString ADAudioVisual::marksEquipment()
+QString ADAudioVisual::marksEquipment() const
 {
 	return m_marksEquipment;
 }
 
-QString ADAudioVisual::estate()
+QString ADAudioVisual::estate() const
 {
 	return m_estate;
 }
 
-QString ADAudioVisual::numberInventory()
+QString ADAudioVisual::numberInventory() const
 {
 	return m_numberInventory;
 }
 
-QString ADAudioVisual::codeSpace()
+QString ADAudioVisual::codeSpace() const
 {
 	return m_codeSpace;
 }
+

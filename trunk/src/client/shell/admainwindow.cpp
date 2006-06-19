@@ -53,6 +53,7 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	connect(m_adresis, SIGNAL(requestCreateModules()), this, SLOT(createModules()));
 	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
 	connect(m_adresis, SIGNAL(showUser(const ADUser& )), this, SLOT(createUserForm(const ADUser& )));
+	
 	connect(m_adresis, SIGNAL(showSpace(const ADSpace& )), this, SLOT(createSpaceForm(const ADSpace& )));	
 	
 // 	createModule("users", QStringList() << tr("login") << tr("name"));
@@ -223,7 +224,6 @@ void ADMainWindow::createUserForm()
 void ADMainWindow::createSpaceForm()
 {
 	dDebug() << "LLEGUE A CREAR ESPACIO";
-	
 	ADSpaceForm *sform = new ADSpaceForm;
 	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&)));
 	addForm( sform, tr("Añadir Espacio"));
@@ -244,6 +244,10 @@ void ADMainWindow::createAudiovisualForm()
 	
 	ADAudiovisualForm *aform = new ADAudiovisualForm;
 	connect(aform, SIGNAL(requestInsertAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&) ), m_adresis, SLOT(addAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
+	
+	//cambio
+	connect(aform, SIGNAL(requestUpdateAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString& )), m_adresis, SLOT(modifyAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
+	
 	addForm( aform, tr("Añadir Ayuda Audiovisual"));
 	
 }
@@ -266,6 +270,14 @@ void ADMainWindow::createUserForm(const ADUser & user)
 	ADUserForm *form = new ADUserForm(user);
 	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>)));
 	addForm( form, tr("Modificar Usuario"));
+}
+
+void ADMainWindow::createAudiovisualForm(const ADAudioVisual & audiovisual)
+{
+	D_FUNCINFO;
+	ADAudiovisualForm *aform = new ADAudiovisualForm(audiovisual);
+	connect(aform, SIGNAL(requestUpdateAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString& )), m_adresis, SLOT(modifyAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
+	addForm( aform, tr("Modificar Ayuda audio visual"));
 }
 
 

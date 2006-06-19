@@ -34,6 +34,9 @@ Adresis::Adresis(QObject * parent)
 	
 	connect( m_connector, SIGNAL(requestShowSpace(const XMLResults& )), this, SLOT(createSpace(const XMLResults& )));
 	
+	connect( m_connector, SIGNAL(requestShowAudiovisual(const XMLResults& )), this, SLOT(createAudiovisual(const XMLResults& result)));
+	
+	
 	DINIT;
 }
 
@@ -56,6 +59,14 @@ void Adresis::createSpace(const XMLResults& result)
 	ADSpace space;
 	space.setValues(result);
 	emit showSpace(space);
+}
+
+void Adresis::createAudiovisual(const XMLResults& result)
+{
+	D_FUNCINFO;
+	ADAudioVisual audiovisual;
+	audiovisual.setValues(result);
+	emit showAudiovisual(audiovisual);
 }
 
 void Adresis::connectToHost( const QString & hostName, quint16 port)
@@ -87,7 +98,7 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 		{
 			case Logic::users:
 			{
-				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser"<< "loginuser" );
+				ADSelectPackage select(QStringList()<< "aduser", QStringList() << "nameuser'"<< "loginuser" );
 				m_connector->sendQuery(Logic::fillUserModule, select);
 				break;
 			}
@@ -147,6 +158,17 @@ void Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmen
 	getInfoModule(Logic::audiovisuals);
 }
 
+void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
+{
+	D_FUNCINFO;
+	ADAudioVisual newAudiovisual(typeav, marksEquipmentav, estateav,  numberinventoryav, codeSpace);
+	ADUpdatePackage update = newAudiovisual.updatePackage();
+	QString where = "numberinventoryav = '" + numberinventoryav + "'";
+	update.setWhere(where);
+	m_connector->sendPackage(update);
+	getInfoModule(Logic::audiovisuals);
+}
+
 void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
@@ -201,6 +223,7 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 	QString table;
 	QString where;
 	Logic::TypeQuery type;
+	
 	switch(module)
 	{
 		case Logic::users:
@@ -210,6 +233,13 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			table = "aduser";
 			type = Logic::queryUser;
 			break;
+		}
+		case Logic::audiovisuals:
+		{
+			columns << "typeav" << "marksequipmentav" << "estateav"<< "numberinventoryav" << "codespace";
+			where = "numberinventoryav = '" + key + "'";
+			table = "adaudiovisual";
+			type = Logic::queryAudiovisual;
 		}
 		case Logic::spaces:
 		{
