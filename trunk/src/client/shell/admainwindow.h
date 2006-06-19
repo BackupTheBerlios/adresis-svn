@@ -80,7 +80,6 @@ class ADMainWindow : public DMainWindow
 		void createSpaceForm();
 		void createSpaceForm(const ADSpace &);
 		void addForm(ADFormBase * form, const QString & title);
-// 		void showUser(const ADUser & user);
 };
 
 #endif

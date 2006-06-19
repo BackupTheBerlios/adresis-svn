@@ -53,7 +53,7 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	connect(m_adresis, SIGNAL(requestCreateModules()), this, SLOT(createModules()));
 	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
 	connect(m_adresis, SIGNAL(showUser(const ADUser& )), this, SLOT(createUserForm(const ADUser& )));
-	connect(m_adresis, SIGNAL(showSpace(const ADSpace& )), this, SLOT(createUserForm(const ADSpace& )));	
+	connect(m_adresis, SIGNAL(showSpace(const ADSpace& )), this, SLOT(createSpaceForm(const ADSpace& )));	
 	
 // 	createModule("users", QStringList() << tr("login") << tr("name"));
 

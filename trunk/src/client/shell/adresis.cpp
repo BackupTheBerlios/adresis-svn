@@ -93,7 +93,7 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 			}
 			case Logic::spaces:
 			{
-				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace");
+				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace" <<"typeSpace" << "nameSpace" );
 				m_connector->sendQuery(Logic::fillSpaceModule, select);
 				break;
 			}
@@ -200,7 +200,7 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 	QStringList columns;
 	QString table;
 	QString where;
-	
+	Logic::TypeQuery type;
 	switch(module)
 	{
 		case Logic::users:
@@ -208,6 +208,7 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			columns << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser";
 			where = "loginuser = '" + key + "'";
 			table = "aduser";
+			type = Logic::queryUser;
 			break;
 		}
 		case Logic::spaces:
@@ -215,11 +216,12 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			columns << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace";
 			where = "codespace = '" + key + "'";
 			table = "adspace";
+			type = Logic::querySpace;
 			break;
 		}
 	}
 	ADSelectPackage query(QStringList() << table, columns, true );
 	query.setWhere(where);
-	m_connector->sendQuery(Logic::queryUser, query);
+	m_connector->sendQuery(type, query);
 }
 
