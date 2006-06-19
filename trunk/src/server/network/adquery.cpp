@@ -142,14 +142,14 @@ void ADSelect::addFilter( const QString& filter, QStringList fields )
 			{
 				for (int i = 0; i < fields.count(); i++)
 				{
-					m_filter += " OR " + fields[i]  + " ~* "+ SQLSTR(filters[f]);
+					m_filter += " OR " + fields[i]  + " ~* "+ filters[f];
 				}
 			}
 			else
 			{
 				for (int i = 0; i < m_fields.count(); i++)
 				{
-					m_filter += " OR " + m_fields[i]  + " ~* "+ SQLSTR(filters[f]);
+					m_filter += " OR " + m_fields[i]  + " ~* "+ filters[f];
 				}
 			}
 		}
@@ -235,9 +235,9 @@ ADUpdate::ADUpdate(QString table, QStringList fields, QStringList values) : ADQu
 	for (int i = 0; i < fields.count(); i++)
 	{
 		if ( i == values.count() - 1)
-			m_query += fields[i] + " = " + SQLSTR(values[i]);
+			m_query += fields[i] + " = " + values[i];
 		else
-			m_query += fields[i] + " = " + SQLSTR(values[i]) + ",";
+			m_query += fields[i] + " = " + values[i] + ",";
 	}
 }
 
@@ -270,9 +270,9 @@ ADInsert::ADInsert(const QString &table, const QStringList &fields, const QStrin
 	for (int i = 0; i < values.count(); i++)
 	{
 		if ( i == values.count() - 1)
-			m_query += SQLSTR(values[i]);
+			m_query += values[i];
 		else
-			m_query += SQLSTR(values[i]) + ",";
+			m_query += values[i] + ",";
 	}
 	
 	m_query += " )";

@@ -99,8 +99,6 @@ void ADUser::setValues(XMLResults values)
 		}
 		else
 		{
-			
-			dDebug() << "false";
 			m_permissions.insert(Logic::TypeModule(i), false);
 		}
 	}
