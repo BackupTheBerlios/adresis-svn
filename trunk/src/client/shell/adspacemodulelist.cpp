@@ -25,8 +25,6 @@
 ADSpaceModuleList::ADSpaceModuleList(QWidget *parent): ADCModuleList("adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace", parent )
 {
 
-// 	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
-// 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 
@@ -47,7 +45,6 @@ void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 		list << (*it)["codespace"] << (*it)["typespace"] << (*it)["namespace"];
 		addItem(list);
 		++it;
-	
 	}
 }
 
@@ -78,6 +75,22 @@ void ADSpaceModuleList::requestAction(int action)
 				emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
 			}
 			
+			break;
+		}
+		
+		case  ADModuleButtonBar::Modify:
+		{
+			
+			if(m_pTree->currentItem())
+			{
+				dDebug() << "emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text( 0));";
+				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
+			}
+			else
+			{
+				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
+				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
+			}
 			break;
 		}
 	}

@@ -31,23 +31,18 @@ class ADSpace : public ADObject
 {
 	public:
 		ADSpace();
-// 		codeSpace varchar(10) PRIMARY KEY,
-// 		typeSpace varchar(20),
-// 		coolAirSpace boolean,
-// 		capacitySpace integer,
-// 		nameSpace varchar(20)
 		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
 		~ADSpace();
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QString codeSpace(); 
-		QString typeSpace(); 
-		bool coolAirSpace(); 
-		QString capacitySpace(); 
-		QString nameSpace(); 
-		QStringList listAudioVisual();
+		QString codeSpace() const; 
+		QString typeSpace() const; 
+		bool coolAirSpace() const; 
+		QString capacitySpace() const; 
+		QString nameSpace() const; 
+		QStringList listAudioVisual() const;
 		
 	private:
 		QString m_codeSpace;

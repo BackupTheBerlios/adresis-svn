@@ -52,9 +52,8 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	connect(m_adresis, SIGNAL(requestCreateModules()), this, SLOT(createModules()));
 	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
-	
 	connect(m_adresis, SIGNAL(showUser(const ADUser& )), this, SLOT(createUserForm(const ADUser& )));
-	
+	connect(m_adresis, SIGNAL(showSpace(const ADSpace& )), this, SLOT(createUserForm(const ADSpace& )));	
 	
 // 	createModule("users", QStringList() << tr("login") << tr("name"));
 
@@ -189,7 +188,6 @@ void ADMainWindow::createModules()
 	
 	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
 	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-	
 	connect(users, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
 	
 // __ESPACIOS____
@@ -200,6 +198,7 @@ void ADMainWindow::createModules()
 	
 	connect(spaces, SIGNAL(requestSpaceForm()), this, SLOT(createSpaceForm()));
 	connect(spaces, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+	connect(spaces, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
 
 // __AUDIOVISUAL____
 	ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
@@ -225,11 +224,18 @@ void ADMainWindow::createSpaceForm()
 {
 	dDebug() << "LLEGUE A CREAR ESPACIO";
 	
-	
 	ADSpaceForm *sform = new ADSpaceForm;
 	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&)));
 	addForm( sform, tr("Añadir Espacio"));
 	
+}
+
+void ADMainWindow::createSpaceForm(const ADSpace & space)
+{
+	D_FUNCINFO;
+	ADSpaceForm *form = new ADSpaceForm(space);
+	connect(form, SIGNAL(requestUpdateSpace(const QString&, const QString&, const bool, const QString&, const QString& )), m_adresis, SLOT(modifySpace(const QString&, const QString&, const bool&, const QString&, const QString& )));
+	addForm( form, tr("Modificar Espacio"));
 }
 
 void ADMainWindow::createAudiovisualForm()
@@ -261,3 +267,5 @@ void ADMainWindow::createUserForm(const ADUser & user)
 	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>)));
 	addForm( form, tr("Modificar Usuario"));
 }
+
+

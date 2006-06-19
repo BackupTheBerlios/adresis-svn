@@ -20,11 +20,13 @@
 #ifndef ADSPACEFORM_H
 #define ADSPACEFORM_H
 
+
 #include "adformbase.h"
 #include <QMap>
 #include "global.h"
 #include <QCheckBox>
 #include "adlistselect.h"
+#include "adspace.h"
 
 /**
 @author Hector Fabio Cruz Mosquera,0329876
@@ -35,15 +37,20 @@ class ADSpaceForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADSpaceForm(QWidget *parent = 0);
+		ADSpaceForm(const ADSpace& space, QWidget *parent = 0);
 		~ADSpaceForm();
+		void setup();
 	
 	private:
 		QMap<QString, QWidget*> m_inputs;
 		QCheckBox *acC;
 		ADListSelect *listSelect;
+		bool m_inserter;
 		
 	signals:
 		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
+		
+		void requestUpdateSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 
 	public slots:
 		void emitInsertSpace();

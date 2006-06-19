@@ -21,7 +21,9 @@
 #include "postgreserrorhandler.h"
 
 #include <QObject>
-
+#include <QRegExp>
+#include <QStringList>
+#include <ddebug.h>
 PostgresErrorHandler::PostgresErrorHandler()
 {
 }
@@ -32,9 +34,134 @@ PostgresErrorHandler::~PostgresErrorHandler()
 
 SErrorPackage PostgresErrorHandler::handle(const QSqlError &error)
 {
-	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(error.databaseText()));
+	
+	dDebug() << error.databaseText();
+	
+	QString mensaje;
+	if("ERROR:  llave duplicada viola restricción unique \"aduser_pke\"" ==error.databaseText())
+	{
+	   	mensaje = "El usuario que usted ha intentado ingresar ya existe";
+	}
+	
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adspace_pkey\""==error.databaseText())
+	{
+	   	mensaje = "El espacio que usted ha intentado ingresar ya existe";
+	}
+	
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adaudiovisual_pkey\""==error.databaseText())
+	{
+		mensaje = "La ayuda audiovisual que usted ha intentado ingresar ya existe";
+	}
+	
+	if("ERROR:  inserción o actualización en la tabla \"adaudiovisual\" viola la llave for ánea \"$1\""==error.databaseText())
+	{
+		mensaje = "El espacio especificado no existe";
+	}
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adscheduleav\" viola la llave foránea \"$2\""==error.databaseText())
+	{
+		mensaje = "La ayuda audiovisual no existe";
+	}
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adscheduleav_pkey\""==error.databaseText())
+	{
+		mensaje = "El horario que usted ha intentado ingresar ya existe";
+	}
+
+
+	if("ERROR:  el nuevo registro para la relación \"adscheduleav\" viola la restricción check \"$1\""==error.databaseText())
+	{
+		mensaje = "La fecha no es congruente";
+	}
+	
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adschedulespace\" viola la llave foránea \"$2\""==error.databaseText())
+	{
+		mensaje = "El espacio no existe";
+	}
+	
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adschedulespace_pkey\""==error.databaseText())
+	{
+		mensaje = "El horario que usted ha intentado ingresar ya existe";
+	}
+	
+	
+	if("ERROR:  el nuevo registro para la relación \"adschedulespace\" viola la restricción check \"$1\""==error.databaseText())
+	{
+		mensaje = "La fecha no es congruente";
+	}
+	
+	
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adspacereserve\" viola la llave foránea \"$1\""==error.databaseText())
+	{
+		mensaje = "El usuario no existe";
+	}
+	
+	if("ERROR:  inserción o actualización en la tabla \"adspacereserve\" viola la llave foránea \"$2\""==error.databaseText())
+	{
+		mensaje = "El espacio no existe";
+	}
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adspacereserve\" viola la llave foránea \"$3\""==error.databaseText())
+	{
+		mensaje = "El horario asociado al espacio no existe";
+	}
+	
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adspacereserve_pkey\""==error.databaseText())
+	{
+		mensaje = "La reserva ya existe";
+	}
+	
+	if("ERROR:  inserción o actualización en la tabla \"adavreserve\" viola la llave foránea \"$1\""==error.databaseText())
+	{
+		mensaje = "El usuario no existe";
+	}
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adavreserve\" viola la llave foránea \"$2\""==error.databaseText())
+	{
+		mensaje = "La ayuda audiovisual no existe";
+	}
+	
+	
+	if("ERROR:  inserción o actualización en la tabla \"adavreserve\" viola la llave foránea \"$3\""==error.databaseText())
+	{
+		mensaje = "El horario asociado a la ayuda audiovisual no existe";
+	}
+
+	
+	if("ERROR:  llave duplicada viola restricción unique \"adavreserve_pkey\""==error.databaseText())
+	{
+		mensaje = "La reserva ya existe";
+	}
+	
+	QRegExp rg;
+	
+	
+	rg.setPattern ( "ERROR:  la sintaxis de entrada no es válida para integer: \"*\"" );
+	if(rg.exactMatch ( error.databaseText() ))
+	{
+	QStringList list = error.databaseText().split( '\"' );
+		mensaje = "El valor "+list[1]+" debe ser numerico";
+	}
+	
 	
 	// TODO: Analizar los textos!
+	
+	
+// 	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(error.databaseText()));
+	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(mensaje));
+	
+	
 	
 	return package;
 }

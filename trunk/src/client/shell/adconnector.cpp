@@ -121,6 +121,12 @@ void ADConnector::readFromServer()
 						emit requestShowUser( results[0] );
 						break;
 					}
+					case Logic::querySpace:
+					{
+						dDebug() << "requestShowSpace(results )";
+						emit requestShowSpace( results[0] );
+						break;
+					}
 					default:
 					{
 						emit message(Msg::Error, "Error: operacion no permitida" );

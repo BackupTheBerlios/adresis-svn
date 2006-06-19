@@ -78,6 +78,7 @@ class ADMainWindow : public DMainWindow
 		void createUserForm(const ADUser &);
 		void createAudiovisualForm();
 		void createSpaceForm();
+		void createSpaceForm(const ADSpace &);
 		void addForm(ADFormBase * form, const QString & title);
 // 		void showUser(const ADUser & user);
 };

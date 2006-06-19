@@ -41,6 +41,7 @@ class ADSpaceModuleList : public ADCModuleList
 	signals:
 		void requestSpaceForm();
 		void requestDelete(Logic::TypeModule module, const QString & key);
+		void requestUpdate(Logic::TypeModule module, const QString & key);
 };
 
 #endif

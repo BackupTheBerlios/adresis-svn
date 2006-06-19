@@ -55,6 +55,7 @@ class ADConnector : public ADConnectorBase
 		void userAutenticated(const XMLResults&);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
 		void requestShowUser(const XMLResults & values);
+		void requestShowSpace(const XMLResults & values);
 		
 	private:
 		QXmlSimpleReader m_reader;

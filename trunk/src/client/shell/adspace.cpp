@@ -38,12 +38,6 @@ ADSpace::~ADSpace()
 
 ADInsertPackage ADSpace::insertPackage()
 {
-// 	QString strAudioVisual;
-// 	int i = 0;
-// 	while(!listAudioVisual.isEmpty())
-// 	{
-// 		strAudioVisual = listAudioVisual.takeAt(i);
-// 	}
 	
 	QString strAireSpace;
 	if(m_coolAirSpace)
@@ -54,12 +48,9 @@ ADInsertPackage ADSpace::insertPackage()
 	{
 		strAireSpace = "false";
 	}
-	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << m_codeSpace << m_typeSpace << strAireSpace << m_capacitySpace << m_nameSpace );
+	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace.remove(" ")) << SQLSTR(m_typeSpace.remove(" ")) << strAireSpace << SQLSTR(m_capacitySpace.remove(" ")) << SQLSTR(m_nameSpace.remove(" ")));
 	
-// 	foreach(QString tmp, listAudioVisual)
-// 	{
-// 		
-// 	}
+
 
 	
 	dDebug() << insert.toString();
@@ -77,7 +68,7 @@ ADUpdatePackage ADSpace::updatePackage()
 	{
 		strAireSpace = "false";
 	}
-	ADUpdatePackage update("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace) << SQLSTR(m_typeSpace) << strAireSpace << SQLSTR(m_capacitySpace) << SQLSTR(m_nameSpace) );
+	ADUpdatePackage update("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace.remove(" ")) << SQLSTR(m_typeSpace.remove(" ")) << strAireSpace << SQLSTR(m_capacitySpace.remove(" ")) << SQLSTR(m_nameSpace.remove(" ")) );
 	
 	dDebug() << update.toString();
 	return update;
@@ -107,32 +98,32 @@ bool ADSpace::isValid()const
 	return m_valid;
 }
 
-QStringList ADSpace::listAudioVisual()
+QStringList ADSpace::listAudioVisual() const
 {
 	return m_listAudioVisual;
 }
 
-QString ADSpace::codeSpace()
+QString ADSpace::codeSpace() const
 {
 	return m_codeSpace;
 }
 
-QString ADSpace::typeSpace()
+QString ADSpace::typeSpace() const
 {
 	return m_typeSpace;
 }
 
-bool ADSpace::coolAirSpace()
+bool ADSpace::coolAirSpace() const
 {
 	return m_coolAirSpace;
 }
 
-QString ADSpace::capacitySpace()
+QString ADSpace::capacitySpace() const
 {
 	return m_capacitySpace;
 }
 
-QString ADSpace::nameSpace()
+QString ADSpace::nameSpace() const
 {
 	return m_nameSpace;
 }

@@ -18,17 +18,98 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adspaceform.h"
-
 #include <QLineEdit>
 #include <QLabel>
 #include <QGroupBox>
-#include <QHBoxLayout>
+
 #include <QGridLayout>
+#include <QCheckBox>
 #include <ddebug.h>
 
 
 ADSpaceForm::ADSpaceForm(QWidget *parent)
 	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
+{
+	m_inserter = true;
+	setup();
+}
+
+ADSpaceForm::ADSpaceForm(const ADSpace& space, QWidget *parent) 
+	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
+{
+	D_FUNCINFO;
+	setup();
+	m_inserter = false;
+	if(space.isValid())
+	{
+	
+		if(space.coolAirSpace())
+		{ 
+			acC->setCheckState( Qt::Checked );
+		}
+		else
+		{
+			acC->setCheckState( Qt::Unchecked );
+		}
+		
+		
+		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->setText(space.codeSpace());
+		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->setText(space.typeSpace());
+		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->setText(space.capacitySpace());
+		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->setText(space.nameSpace());
+	}
+}
+
+
+ADSpaceForm::~ADSpaceForm()
+{
+}
+
+
+void ADSpaceForm::emitInsertSpace()
+{
+
+	dDebug() << "Entre al emitInsertSpace";
+	bool opcion;
+	
+	if(acC->checkState() == Qt::Checked)
+	{
+		opcion=true;
+	}
+	else
+	{
+		opcion=false;
+	}
+	
+		
+
+
+	if(m_inserter)
+	{
+	emit requestInsertSpace(
+		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text(),
+		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
+		opcion,
+		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
+		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
+	);
+	}
+	else
+	{
+		emit requestUpdateSpace(
+		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text().trimmed(),
+		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text().trimmed(),
+		opcion,
+		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text().trimmed(),
+		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text().trimmed()
+	);
+	}
+
+}
+
+
+
+void ADSpaceForm::setup()
 {
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
@@ -72,47 +153,8 @@ ADSpaceForm::ADSpaceForm(QWidget *parent)
 	
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertSpace()));
+
 }
-
-
-ADSpaceForm::~ADSpaceForm()
-{
-}
-
-void ADSpaceForm::emitInsertSpace()
-{
-	dDebug() << "Entre al emitInsertSpace";
-	bool opcion;
-	
-	if(acC->checkState() == Qt::Checked)
-	{
-		opcion=true;
-	}
-	else
-	{
-		opcion=false;
-	}
-	
-	
-	
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text();
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text();
-	dDebug() << opcion;
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text();
-	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text();
-	
-	
-	
-	
-	emit requestInsertSpace(
-			static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text(),			static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
-			opcion,
-			static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
-	);
-	dDebug() << "Sali del emitInsertSpace";
-}
-
 
 
 

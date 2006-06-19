@@ -27,9 +27,13 @@ Adresis::Adresis(QObject * parent)
 	m_connector = new ADConnector(this);
 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
+	
 	connect ( m_connector, SIGNAL(fillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)) );
 	
 	connect( m_connector, SIGNAL(requestShowUser(const XMLResults& )), this, SLOT(createUser(const XMLResults& )));
+	
+	connect( m_connector, SIGNAL(requestShowSpace(const XMLResults& )), this, SLOT(createSpace(const XMLResults& )));
+	
 	DINIT;
 }
 
@@ -41,8 +45,17 @@ Adresis::~Adresis()
 void Adresis::createUser(const XMLResults& result)
 {
 	D_FUNCINFO;
-	m_user.setValues(result);
-	emit showUser(m_user);
+	ADUser user;
+	user.setValues(result);
+	emit showUser(user);
+}
+
+void Adresis::createSpace(const XMLResults& result)
+{
+	D_FUNCINFO;
+	ADSpace space;
+	space.setValues(result);
+	emit showSpace(space);
 }
 
 void Adresis::connectToHost( const QString & hostName, quint16 port)
@@ -113,6 +126,7 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 	m_connector->sendPackage( insert );
 	getInfoModule(Logic::users);
 }
+
 void Adresis::modifyUser(const QString& name, const QString& code,const QString& login, const QString& passwd, QMap<Logic::TypeModule, bool> permissions )
 {
 	D_FUNCINFO;
@@ -142,6 +156,17 @@ void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const 
 	getInfoModule(Logic::spaces);
 }
 
+void Adresis::modifySpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
+{
+	D_FUNCINFO;
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace);
+	ADUpdatePackage update = newSpace.updatePackage();
+	QString where = "codespace = '" + codeSpace + "'";
+	update.setWhere(where);
+	m_connector->sendPackage( update );
+	getInfoModule(Logic::spaces);
+}
+
 
 void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 {
@@ -153,6 +178,14 @@ void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 		{
 			where = "loginuser = '" + key + "'";
 			table = "aduser";
+			break;
+		}
+		
+		case Logic::spaces:
+		{
+			where = "codespace = '"+ key +"'";
+			table = "adspace";
+			break;
 		}
 	}
 	ADDeletePackage del(table);
@@ -167,6 +200,7 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 	QStringList columns;
 	QString table;
 	QString where;
+	
 	switch(module)
 	{
 		case Logic::users:
@@ -174,6 +208,14 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			columns << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser";
 			where = "loginuser = '" + key + "'";
 			table = "aduser";
+			break;
+		}
+		case Logic::spaces:
+		{
+			columns << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace";
+			where = "codespace = '" + key + "'";
+			table = "adspace";
+			break;
 		}
 	}
 	ADSelectPackage query(QStringList() << table, columns, true );
