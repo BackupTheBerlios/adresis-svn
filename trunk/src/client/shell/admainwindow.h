@@ -62,6 +62,7 @@ class ADMainWindow : public DMainWindow
 		QAction *exitAct;
 		QAction *theme;
 		QAction *aboutAct;
+		QAction *conect;
 		
 	private slots:
 		void showTipDialog();

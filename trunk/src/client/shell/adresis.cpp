@@ -172,7 +172,7 @@ void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquip
 void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
-	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace);
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, QStringList());
 	ADInsertPackage insert = newSpace.insertPackage();
 	m_connector->sendPackage( insert );
 	getInfoModule(Logic::spaces);
@@ -181,7 +181,7 @@ void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const 
 void Adresis::modifySpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	D_FUNCINFO;
-	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace);
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, QStringList()); //FIXME
 	ADUpdatePackage update = newSpace.updatePackage();
 	QString where = "codespace = '" + codeSpace + "'";
 	update.setWhere(where);

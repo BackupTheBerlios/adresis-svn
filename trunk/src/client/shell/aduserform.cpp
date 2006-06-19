@@ -26,6 +26,7 @@ ADUserForm::ADUserForm(const ADUser& user, QWidget *parent) : ADFormBase("<h1><b
 		static_cast<QLineEdit*>(m_inputs[tr("login")])->setText(user.login());
 		static_cast<QLineEdit*>(m_inputs[tr("clave")])->setText(user.passwd());
 		m_permission->setPermissions(user.permissions());
+		static_cast<QLineEdit*>(m_inputs[tr("login")])->setReadOnly ( true );
 	}
 }
 

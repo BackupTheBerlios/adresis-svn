@@ -57,6 +57,9 @@ ADSpaceForm::ADSpaceForm(const ADSpace& space, QWidget *parent)
 		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->setText(space.typeSpace());
 		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->setText(space.capacitySpace());
 		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->setText(space.nameSpace());
+		
+		
+
 	}
 }
 
@@ -68,7 +71,7 @@ ADSpaceForm::~ADSpaceForm()
 
 void ADSpaceForm::emitInsertSpace()
 {
-
+	
 	dDebug() << "Entre al emitInsertSpace";
 	bool opcion;
 	
@@ -91,7 +94,7 @@ void ADSpaceForm::emitInsertSpace()
 		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
 		opcion,
 		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
-		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
+		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()		
 	);
 	}
 	else

@@ -58,7 +58,7 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	
 // 	createModule("users", QStringList() << tr("login") << tr("name"));
 
-	connectToHost();
+// 	connectToHost();
 
 	DCONFIG->beginGroup("TipOfDay");
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
@@ -84,6 +84,10 @@ void ADMainWindow::setupActions()
         exitAct->setShortcut(tr("Ctrl+Q"));
         exitAct->setStatusTip(tr("Exit the application"));
         connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
+	
+	conect = new QAction(tr("Connect"), this);
+	exitAct->setStatusTip(tr("Connect to the Data Base"));
+        connect(conect, SIGNAL(triggered()), this, SLOT(connectToHost()));
 
 	theme = new QAction(tr("Theme"), this);
         theme->setStatusTip(tr("Change your window theme"));
@@ -123,6 +127,7 @@ void ADMainWindow::setupMenu()
 
 	fileMenu = menuBar()->addMenu(tr("&File"));
         fileMenu->addAction(exitAct);
+	fileMenu->addAction(conect);
 
         preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
 	preferencesMenu->addAction(theme);
