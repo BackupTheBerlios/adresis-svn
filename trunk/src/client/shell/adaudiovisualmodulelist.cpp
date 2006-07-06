@@ -25,8 +25,6 @@
 
 ADAudiovisualModuleList::ADAudiovisualModuleList(QWidget *parent): ADCModuleList("adaudiovisual", QStringList() << "typeAV"<<"numberinventoryAV", parent )
 {
-// 	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del /*| ADModuleButtonBar::Modify | ADModuleButtonBar::Query*/ );
-// 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
 ADAudiovisualModuleList::~ADAudiovisualModuleList()
@@ -62,10 +60,13 @@ void ADAudiovisualModuleList::requestAction(int action)
 			emit requestAudiovisualForm();
 			break;
 		}
+
 		case ADModuleButtonBar::Del:
 		{
 			DCONFIG->beginGroup("Audiovisuals");
+
 			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskAudiovisuals", false));
+
 			if ( ! noAsk )
 			{
 				DOptionalDialog dialog(tr("usted realmente quiere borrar esta Ayuda Audiovisual?"),tr("borrar?"), this);
@@ -73,29 +74,31 @@ void ADAudiovisualModuleList::requestAction(int action)
 				{
 					return;
 				}
+
 				DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
 				DCONFIG->sync();
 				//Cambio
 				//emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
 				if(m_pTree->currentItem())
 				{
-					emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
+					emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 1 ));
 				}
 			}
 			break;
 		}
+
 		case  ADModuleButtonBar::Modify:
 		{
-			
 			if(m_pTree->currentItem())
 			{
-				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 0));";
-				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(0));
+				
+				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 1));";
+				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
 			}
 			else
 			{
 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
-				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(0));
+				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
 			}
 			break;
 		}

@@ -62,9 +62,14 @@ void ADAudiovisualForm::setup()
 	QGroupBox *container = new QGroupBox("Informacion");
 	vBLayout->addWidget(container, Qt::AlignVCenter);
 	
+	QLabel *label;
+	
 	QGridLayout *layout = new QGridLayout;
 	container->setLayout(layout);
-	QLabel *label;
+	
+	label = new QLabel("NOTA: SI ESTA AYUDA NO ESTA ASIGNADO A NINGUN ESPACIO, DEJE EN BLANCO EL CAMPO \"ASIGNADO AL ESPACIO\"");
+	vBLayout->addWidget(label);	
+
 	QLineEdit *edits;
 	QStringList titles, titles2, estados;
 	
@@ -73,6 +78,7 @@ void ADAudiovisualForm::setup()
 	estadoC->addItems(estados);
 	
 	titles << tr("Tipo") << tr("Marca") << tr("Estado") << tr("Numero de inventario") << tr("Asignado al Espacio");
+
 	for(int i = 0; i < titles.count(); i++)
 	{
 		if(i==2)
@@ -88,20 +94,27 @@ void ADAudiovisualForm::setup()
 			edits = new QLineEdit();
 			layout->addWidget(edits, i, 1);
 			m_inputs.insert(titles[i].toLower () , edits);
-		}	
+		}
 	}
-	
+
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertAudiovisual()));
 }
 
 void ADAudiovisualForm::emitInsertAudiovisual()
 {
-// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("tipo")])->text();
-// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("marca")])->text();
-// 	dDebug() << estadoC->currentText();
-// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text();
-// 	dDebug() << static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text();
+
+	QString spaceAsign; // Este es el espacio al cual esta asignado. 
+	spaceAsign = static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text();
+
+	// Coloco este condicional por si se da el caso en que la ayuda no este asignada a ningun espacio en tal caso se debe de colocar en la base de datos null. lo que signifca que no esta asignado a ningun espacio.
+	if(spaceAsign.isEmpty())
+	{
+		spaceAsign = "null";
+	}
+
+
+
 	if(m_inserter)
 	{
 	
@@ -110,8 +123,8 @@ void ADAudiovisualForm::emitInsertAudiovisual()
 			static_cast<QLineEdit*>(m_inputs[tr("marca")])->text(),
 			estadoC->currentText(),
 			static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text()
-												);
+			spaceAsign
+		);
 	}
 	else
 	{
@@ -120,8 +133,8 @@ void ADAudiovisualForm::emitInsertAudiovisual()
 			static_cast<QLineEdit*>(m_inputs[tr("marca")])->text(),
 			estadoC->currentText(),
 			static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->text(),
-			static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->text()
-											  );
+			spaceAsign
+		);
 	}
 	
 }

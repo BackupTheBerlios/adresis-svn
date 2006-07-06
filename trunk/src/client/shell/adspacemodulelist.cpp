@@ -43,7 +43,13 @@ void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 	{
 		QStringList list;
 		list << (*it)["codespace"] << (*it)["typespace"] << (*it)["namespace"];
-		addItem(list);
+		
+		//Coloque este condicional para que en el momento en que se muestra la lista de Espacios no se muestre el Epacio null el cual me toco colocarlo debido a que por obligacion el campo codespace de audiovisual en la base de datos hace referencia a este mismo campo en space
+
+		if(!list.at(0).operator==("null"))
+		{
+			addItem(list);
+		}
 		++it;
 	}
 }
@@ -72,6 +78,7 @@ void ADSpaceModuleList::requestAction(int action)
 				
 				DCONFIG->setValue("RemoveWithoutAskSpaces", dialog.shownAgain());
 				DCONFIG->sync();
+
 				emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
 			}
 			

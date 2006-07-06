@@ -34,7 +34,7 @@ Adresis::Adresis(QObject * parent)
 	
 	connect( m_connector, SIGNAL(requestShowSpace(const XMLResults& )), this, SLOT(createSpace(const XMLResults& )));
 	
-	connect( m_connector, SIGNAL(requestShowAudiovisual(const XMLResults& )), this, SLOT(createAudiovisual(const XMLResults& result)));
+	connect( m_connector,SIGNAL(requestShowAudiovisual(const XMLResults& )),this,SLOT(createAudiovisual(const XMLResults& )));
 	
 	
 	DINIT;
@@ -104,7 +104,7 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 			}
 			case Logic::spaces:
 			{
-				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codeSpace" <<"typeSpace" << "nameSpace" );
+				ADSelectPackage select(QStringList()<< "adspace", QStringList() << "codespace" <<"typespace" << "namespace" );
 				m_connector->sendQuery(Logic::fillSpaceModule, select);
 				break;
 			}
@@ -209,6 +209,13 @@ void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 			table = "adspace";
 			break;
 		}
+
+		case Logic::audiovisuals:
+		{
+			where = "numberinventoryav = '"+ key +"'";
+			table = "adaudiovisual";
+			break;
+		}
 	}
 	ADDeletePackage del(table);
 	del.setWhere(where);
@@ -240,6 +247,8 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			where = "numberinventoryav = '" + key + "'";
 			table = "adaudiovisual";
 			type = Logic::queryAudiovisual;
+
+			break;
 		}
 		case Logic::spaces:
 		{

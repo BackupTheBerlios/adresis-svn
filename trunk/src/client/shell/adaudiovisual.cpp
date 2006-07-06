@@ -37,11 +37,16 @@ void ADAudioVisual::setValues(XMLResults values)
 {
 	//dDebug() << "here adaudiovisual";
 	m_type = values["typeav"];
-	m_marksEquipment  = values["marksEquipmentav"];
+	m_marksEquipment  = values["marksequipmentav"];
 	m_estate  = values["estateav"];
 	m_numberInventory  = values["numberinventoryav"];
-	m_codeSpace  = values["codeSpace"];
-	
+	m_codeSpace  = values["codespace"];
+
+	if(m_codeSpace.operator==("null"))
+	{
+		m_codeSpace ="";
+	}
+
 	m_valid = true;
 }
 

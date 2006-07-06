@@ -43,6 +43,7 @@ ADConnector::~ADConnector()
 
 void ADConnector::readFromServer()
 {
+
 	while(canReadLine())
 	{
 		m_readed += readLine();
@@ -123,7 +124,11 @@ void ADConnector::readFromServer()
 					}
 					case Logic::queryAudiovisual:
 					{
+						dDebug() << "requestShowAudiovisual(results )";
 						emit requestShowAudiovisual( results[0] );
+						dDebug() << "";
+						dDebug() << "YA OBTUVE LA INFO PARA MODIFICAR ESTA AYUDA, ESTOY EN GETOBJECT";
+						dDebug() << "";
 						break;
 					}
 					case Logic::querySpace:

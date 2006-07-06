@@ -83,7 +83,7 @@ void ADModuleButtonBar::setupButtons(int buttons)
 		QToolButton *but4 = new QToolButton;
 		
 		but4->setStatusTip(tr("Modify an item"));
-		but4->setIcon(QIcon(THEME_DIR+"/icons/modify.png"));
+		but4->setIcon(QIcon(THEME_DIR+"/icons/reload.png"));
 		buttonLayout->addWidget(but4);
 		m_buttons.addButton( but4, Modify);
 	}

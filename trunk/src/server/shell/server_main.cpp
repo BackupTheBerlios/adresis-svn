@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	app.setApplicationName("adserver");
 
 	// Uncomment if you want initial config
-// 	write_test_config();
+ 	//write_test_config();
 	
 	DCONFIG->beginGroup("General");
 	

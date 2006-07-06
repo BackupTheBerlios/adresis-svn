@@ -20,7 +20,6 @@
 #ifndef ADSPACEFORM_H
 #define ADSPACEFORM_H
 
-
 #include "adformbase.h"
 #include <QMap>
 #include "global.h"

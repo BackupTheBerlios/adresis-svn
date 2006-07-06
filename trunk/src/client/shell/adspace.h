@@ -23,7 +23,7 @@
 #include "adobject.h"
 #include <QStringList>
 
-
+ 
 /**
 @author Charly Aguirre Manzano,0330911
 */
