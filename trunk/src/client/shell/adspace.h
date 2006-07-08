@@ -31,9 +31,10 @@ class ADSpace : public ADObject
 {
 	public:
 		ADSpace();
-		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace, const QStringList & lista);
+		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
 		~ADSpace();
 		ADInsertPackage insertPackage();
+// 		ADInsertPackage insertListPackage();
 		ADUpdatePackage updatePackage();
 		void setValues(XMLResults values);
 		bool isValid() const;

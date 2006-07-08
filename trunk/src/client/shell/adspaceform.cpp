@@ -27,6 +27,8 @@
 #include <ddebug.h>
 
 
+
+
 ADSpaceForm::ADSpaceForm(QWidget *parent)
 	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
 {
@@ -40,6 +42,7 @@ ADSpaceForm::ADSpaceForm(const ADSpace& space, QWidget *parent)
 	D_FUNCINFO;
 	setup();
 	m_inserter = false;
+	m_list = true;
 	if(space.isValid())
 	{
 	
@@ -57,9 +60,6 @@ ADSpaceForm::ADSpaceForm(const ADSpace& space, QWidget *parent)
 		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->setText(space.typeSpace());
 		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->setText(space.capacitySpace());
 		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->setText(space.nameSpace());
-		
-		
-
 	}
 }
 
@@ -89,7 +89,7 @@ void ADSpaceForm::emitInsertSpace()
 
 	if(m_inserter)
 	{
-	emit requestInsertSpace(
+		emit requestInsertSpace(
 		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text(),
 		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
 		opcion,
@@ -109,6 +109,82 @@ void ADSpaceForm::emitInsertSpace()
 	}
 
 }
+
+void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
+{
+
+	QList<XMLResults>::const_iterator it= results.begin();
+
+	
+	//Con la variable m_list quiero representar cual de las listas estoy obteniendo, si m_list es true es porque estoy hablando de la listas de ayudas libres, si es false es la lista de ayudas asignadas a este espacio
+
+	
+	if(m_inserter)
+	{
+
+		while( it != results.end() )
+		{
+			m_listAudiovisualL.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+			++it;
+		}
+			
+		QStringList lista = QStringList(m_listAudiovisualL.keys());
+	
+		dDebug() << "";
+		foreach(QString elem, lista)
+		{
+			dDebug() << "elemento de la lista libres " << elem;
+		}
+
+		listSelect->addListToLeft(lista);
+	}
+	else
+	{
+		if(m_list)
+		{	
+			while( it != results.end() )
+			{
+				m_listAudiovisualL.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+				++it;
+			}
+		
+			QStringList lista = QStringList(m_listAudiovisualL.keys());
+			
+			dDebug() << "";
+			foreach(QString elem, lista)
+			{
+				dDebug() << "elemento de la lista libres " << elem;
+			}
+
+ 			dDebug() << "Estoy en el otro if m_list=" << m_list;
+			listSelect->addListToLeft(lista);
+			m_list=false;
+
+		}
+		else
+		{
+
+			while( it != results.end() )
+			{
+				m_listAudiovisualE.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+				++it;
+			}
+			
+			QStringList lista = QStringList(m_listAudiovisualE.keys());
+			
+			dDebug() << "";
+			foreach(QString elem, lista)
+			{
+				dDebug() << "elemento de la lista del espacio " << elem;
+			}
+			
+			dDebug() << "Estoy en el else de el otro if m_list=" << m_list;
+			listSelect->addListToRight(lista);
+			m_list=true;
+		}
+	}
+}
+
 
 
 

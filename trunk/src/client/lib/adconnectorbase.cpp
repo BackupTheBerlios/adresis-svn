@@ -48,9 +48,6 @@ void ADConnectorBase::sendToServer(const QString &text)
 	if ( state() == QAbstractSocket::ConnectedState )
 	{
 		QTextStream out(this);
-		
-		dDebug() << "ESTOY EN EL IF";
-
 		QString toSend(text);
 		toSend.remove('\n');
 		out << text+"%%" << endl;
@@ -58,7 +55,6 @@ void ADConnectorBase::sendToServer(const QString &text)
 	}
 	else
 	{
-		dDebug() << "ESTOY EN EL ELSE";
 		m_queue << text;
 	}
 }

@@ -28,6 +28,7 @@
 #include <QMimeData>
 #include <QDrag>
 #include <ddebug.h>
+#include <global.h>
 
 ADListSelect::ADListSelect(QWidget *parent)
  : QWidget(parent)
@@ -43,10 +44,12 @@ ADListSelect::ADListSelect(QWidget *parent)
 	listWidgetRight->setAcceptDrops (true );
 	
 	qTButtonLeft = new QToolButton(this);
+	qTButtonLeft->setIcon( QIcon(THEME_DIR+"/icons/previous.png"));
 	QObject::connect(qTButtonLeft, SIGNAL(clicked()), this, SLOT(addItemToLeft()));
 	
 	
 	qTButtonRight = new QToolButton(this);
+	qTButtonRight->setIcon( QIcon(THEME_DIR+"/icons/next.png"));
 	QObject::connect(qTButtonRight,SIGNAL(clicked()),this, SLOT(addItemToRight()));
 	
 	hBLayout->addWidget(listWidgetLeft);
@@ -88,15 +91,20 @@ void ADListSelect::addItemToRight()
 	}
 }
 
+
 void ADListSelect::addListToLeft(const QStringList &list)
-{
+{	
+	listWidgetLeft->clear();
 	listWidgetLeft->addItems(list);
 }
 
+
 void ADListSelect::addListToRight(const QStringList &list)
 {
+	listWidgetRight->clear();
 	listWidgetRight->addItems(list);
 }
+
 
 QStringList ADListSelect::takeList()
 {
@@ -105,7 +113,7 @@ QStringList ADListSelect::takeList()
 	{
 		lista << (listWidgetRight->item(i))->text();
 	}
-	dDebug() << "tamaño "<< lista.count();
+	dDebug() << "tamaÃ±o "<< lista.count();
 	for(int i=0; i< lista.count();i++)
 	{
 		dDebug() << lista.at(i);

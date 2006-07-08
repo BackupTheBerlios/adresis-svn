@@ -126,15 +126,22 @@ void ADConnector::readFromServer()
 					{
 						dDebug() << "requestShowAudiovisual(results )";
 						emit requestShowAudiovisual( results[0] );
-						dDebug() << "";
-						dDebug() << "YA OBTUVE LA INFO PARA MODIFICAR ESTA AYUDA, ESTOY EN GETOBJECT";
-						dDebug() << "";
 						break;
 					}
 					case Logic::querySpace:
 					{
 						dDebug() << "requestShowSpace(results )";
 						emit requestShowSpace( results[0] );
+						break;
+					}
+					case Logic::queryListAudiovisual:
+					{
+						dDebug() << "requestListAudiovisual(results )";
+						dDebug() << "";
+						dDebug() << "YA OBTUVE LA INFO SOBRE LAS AYUDAS LIBRES";
+						dDebug() << "";
+						emit requestListAudiovisual( results );
+						
 						break;
 					}
 					default:

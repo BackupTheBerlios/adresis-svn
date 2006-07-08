@@ -42,9 +42,12 @@ class ADSpaceForm : public ADFormBase
 	
 	private:
 		QMap<QString, QWidget*> m_inputs;
+		QMap<QString, QString> m_listAudiovisualL;
+		QMap<QString, QString> m_listAudiovisualE;
 		QCheckBox *acC;
 		ADListSelect *listSelect;
 		bool m_inserter;
+		bool m_list;
 		
 	signals:
 		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
@@ -53,6 +56,7 @@ class ADSpaceForm : public ADFormBase
 
 	public slots:
 		void emitInsertSpace();
+		void insertListAudiovisual(const QList<XMLResults>& results);
 	
 	
 };

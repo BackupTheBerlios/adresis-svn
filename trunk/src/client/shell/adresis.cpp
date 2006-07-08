@@ -35,6 +35,8 @@ Adresis::Adresis(QObject * parent)
 	connect( m_connector, SIGNAL(requestShowSpace(const XMLResults& )), this, SLOT(createSpace(const XMLResults& )));
 	
 	connect( m_connector,SIGNAL(requestShowAudiovisual(const XMLResults& )),this,SLOT(createAudiovisual(const XMLResults& )));
+
+	connect ( m_connector, SIGNAL(requestListAudiovisual(const QList<XMLResults>&)), this, SIGNAL (requestListAudioVisual( const QList<XMLResults>&)) );
 	
 	
 	DINIT;
@@ -149,6 +151,8 @@ void Adresis::modifyUser(const QString& name, const QString& code,const QString&
 	getInfoModule(Logic::users);
 }
 
+
+
 void Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
 {
 	dDebug() << "Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)";
@@ -157,6 +161,8 @@ void Adresis::addAudiovisual(const QString& typeav, const QString& marksEquipmen
 	m_connector->sendPackage( insert );
 	getInfoModule(Logic::audiovisuals);
 }
+
+
 
 void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
 {
@@ -172,16 +178,18 @@ void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquip
 void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
-	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, QStringList());
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace);
+	
 	ADInsertPackage insert = newSpace.insertPackage();
 	m_connector->sendPackage( insert );
 	getInfoModule(Logic::spaces);
 }
 
+
 void Adresis::modifySpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	D_FUNCINFO;
-	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace, QStringList()); //FIXME
+	ADSpace newSpace(codeSpace, typeSpace, coolAirSpace, capacitySpace, nameSpace); //FIXME
 	ADUpdatePackage update = newSpace.updatePackage();
 	QString where = "codespace = '" + codeSpace + "'";
 	update.setWhere(where);
@@ -264,3 +272,35 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 	m_connector->sendQuery(type, query);
 }
 
+
+
+
+void Adresis::consultListAudiovisual(const QString &code)
+{
+	QStringList columns;
+	QString table;
+	QString where;
+	Logic::TypeQuery type;	
+
+	columns << "typeav" << "numberinventoryav";
+	where = "codespace = '"+code+"'";
+	table = "adaudiovisual";
+	
+	type = Logic::queryListAudiovisual;
+	ADSelectPackage query(QStringList() << table, columns, true );
+	query.setWhere(where);
+	m_connector->sendQuery(type, query);
+
+	dDebug() << "Ya Mande la consulta";
+
+}
+
+// void Adresis::requestListAudioVisualSpaces(const QList<XMLResults> & result)
+// {
+// 	dDebug() << "";
+// 	dDebug() << "Ya se los voy a enviar a Main Window";
+// 	dDebug() << "";
+// 	emit requestListAudioVisual(result);
+// 	dDebug() << "Como que Ya se las envie a Main Window";
+// 	dDebug() << "";
+// }

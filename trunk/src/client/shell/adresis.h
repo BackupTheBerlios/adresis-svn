@@ -66,6 +66,10 @@ class Adresis : public QObject
 		void createUser(const XMLResults &result);
 		void createSpace(const XMLResults &result);
 		void createAudiovisual(const XMLResults& result);
+		
+		void consultListAudiovisual(const QString &code);
+// 		void requestListAudioVisualSpaces(const QList<XMLResults>& result);
+
 				
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
@@ -74,6 +78,9 @@ class Adresis : public QObject
 		void showUser( const ADUser &);
 		void showSpace( const ADSpace &);
 		void showAudiovisual( const ADAudioVisual & );
+		
+		void requestListAudioVisual(const QList<XMLResults>& result);
+		
 		
 	private:
 		ADConnector *m_connector;

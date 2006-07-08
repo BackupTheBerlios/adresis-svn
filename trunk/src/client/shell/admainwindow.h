@@ -48,6 +48,7 @@ class ADMainWindow : public DMainWindow
 
 	private:
 		Adresis *m_adresis;
+		ADSpaceForm *sform;
 		DActionManager *m_actionManager;
 		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
 		
@@ -82,6 +83,11 @@ class ADMainWindow : public DMainWindow
 		void createSpaceForm();
 		void createSpaceForm(const ADSpace &);
 		void addForm(ADFormBase * form, const QString & title);
+
+	signals:
+		void consultListSpace(const QString &code);
+		void requestListAudiovisualMW(const QList<XMLResults>& result);
+
 };
 
 #endif
