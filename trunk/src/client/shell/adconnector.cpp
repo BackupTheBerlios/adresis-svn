@@ -65,18 +65,19 @@ void ADConnector::readFromServer()
 	xmlsource.setData(m_readed);
 	
 	dDebug() << "READED: " << m_readed;
-	
-	if ( m_reader.parse(&xmlsource) )
+	bool parse =  m_reader.parse(&xmlsource);
+	SHOW_VAR(parse);
+	if ( parse )
 	{
 		QString root = m_parser->root();
-		
+		SHOW_VAR(root);
 		if ( root == "Results" )
 		{
 			QList<XMLResults> results = m_parser->results();
+
+			Logic::TypeQuery type = m_querys.dequeue();
 			if(!results.empty())
 			{
-				Logic::TypeQuery type = m_querys.dequeue();
-				
 	#if 1
 				foreach(XMLResults r, results)
 				{

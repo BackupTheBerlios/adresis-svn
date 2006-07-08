@@ -54,6 +54,11 @@ SResultSet SDatabase::execRawQuery(const QString &sql)
 	
 	SResultSet rs;
 	QSqlQuery query = exec(sql);
+	if(query.size() == 0)
+	{
+		dFatal() << "consulta vacia";
+		
+	}
 	QSqlRecord record = query.record();
 	
 	QStringList fields;
@@ -122,6 +127,7 @@ void SDatabase::setupConnection(const QString &dbname, const QString & login, co
 
 SResultSet SDatabase::execQuery(const ADQuery *query )
 {
+	
 	return execRawQuery(query->toString());
 }
 
