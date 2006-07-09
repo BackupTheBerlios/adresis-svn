@@ -79,7 +79,7 @@ class Adresis : public QObject
 		void showSpace( const ADSpace &);
 		void showAudiovisual( const ADAudioVisual & );
 		
-		void requestListAudioVisual(const QList<XMLResults>& result);
+		void requestShowListAudioVisualAD(const QList<XMLResults>& result);
 		
 		
 	private:

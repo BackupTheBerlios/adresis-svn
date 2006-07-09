@@ -137,11 +137,11 @@ void ADConnector::readFromServer()
 					}
 					case Logic::queryListAudiovisual:
 					{
-						dDebug() << "requestListAudiovisual(results )";
+						dDebug() << "requestShowListAudiovisual(results )";
 						dDebug() << "";
 						dDebug() << "YA OBTUVE LA INFO SOBRE LAS AYUDAS LIBRES";
 						dDebug() << "";
-						emit requestListAudiovisual( results );
+						emit requestShowListAudiovisual( results );
 						
 						break;
 					}

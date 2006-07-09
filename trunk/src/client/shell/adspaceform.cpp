@@ -121,7 +121,6 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 	
 	if(m_inserter)
 	{
-
 		while( it != results.end() )
 		{
 			m_listAudiovisualL.insert((*it)["typeav"], (*it)["numberinventoryav"]);

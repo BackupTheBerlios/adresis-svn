@@ -36,8 +36,7 @@ Adresis::Adresis(QObject * parent)
 	
 	connect( m_connector,SIGNAL(requestShowAudiovisual(const XMLResults& )),this,SLOT(createAudiovisual(const XMLResults& )));
 
-	connect ( m_connector, SIGNAL(requestListAudiovisual(const QList<XMLResults>&)), this, SIGNAL (requestListAudioVisual( const QList<XMLResults>&)) );
-	
+	connect ( m_connector, SIGNAL(requestShowListAudiovisual(const QList<XMLResults>&)), this, SIGNAL (requestShowListAudioVisualAD( const QList<XMLResults>&)) );
 	
 	DINIT;
 }
@@ -295,12 +294,12 @@ void Adresis::consultListAudiovisual(const QString &code)
 
 }
 
-// void Adresis::requestListAudioVisualSpaces(const QList<XMLResults> & result)
+// void Adresis::requestShowListAudioVisualSpaces(const QList<XMLResults> & result)
 // {
 // 	dDebug() << "";
 // 	dDebug() << "Ya se los voy a enviar a Main Window";
 // 	dDebug() << "";
-// 	emit requestListAudioVisual(result);
+// 	emit requestShowListAudioVisual(result);
 // 	dDebug() << "Como que Ya se las envie a Main Window";
 // 	dDebug() << "";
 // }

@@ -57,7 +57,7 @@ class ADConnector : public ADConnectorBase
 		void requestShowUser(const XMLResults & values);
 		void requestShowSpace(const XMLResults & values);
 		void requestShowAudiovisual(const XMLResults & values);
-		void requestListAudiovisual( const QList<XMLResults>& );
+		void requestShowListAudiovisual( const QList<XMLResults>& );
 		
 	private:
 		QXmlSimpleReader m_reader;

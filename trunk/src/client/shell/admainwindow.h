@@ -56,6 +56,7 @@ class ADMainWindow : public DMainWindow
 		void setupMenu();
 		void setupToolbar();
 		void createActions();
+		
 		QMenu *fileMenu;
 		QMenu *preferencesMenu;
 		QMenu *helpMenu;
@@ -83,10 +84,11 @@ class ADMainWindow : public DMainWindow
 		void createSpaceForm();
 		void createSpaceForm(const ADSpace &);
 		void addForm(ADFormBase * form, const QString & title);
-
-	signals:
-		void consultListSpace(const QString &code);
-		void requestListAudiovisualMW(const QList<XMLResults>& result);
+		void showListAudioVisualMW(const QList<XMLResults>& result);
+		
+// 	signals:
+// 		void consultListSpace(const QString &code);
+		
 
 };
 

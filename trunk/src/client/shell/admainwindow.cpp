@@ -211,11 +211,8 @@ void ADMainWindow::createModules()
 	connect(spaces, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
 	connect(spaces, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
 
-	connect(this, SIGNAL(consultListSpace(const QString &)), m_adresis, SLOT(consultListAudiovisual(const QString &)));	
-	connect ( m_adresis, SIGNAL(requestListAudioVisual(const QList<XMLResults>&)), this, SIGNAL(requestListAudiovisualMW ( const QList<XMLResults>&)) );	
-
-
-
+	connect ( m_adresis, SIGNAL(requestShowListAudioVisualAD(const QList<XMLResults>&)), this, SLOT(showListAudioVisualMW ( const QList<XMLResults>&)) );
+	
 // __AUDIOVISUAL____
 	ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
 	m_modules.insert( Logic::audiovisuals, audiovisual);
@@ -260,13 +257,20 @@ void ADMainWindow::createSpaceForm()
 	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&)));
 	addForm( sform, tr("Añadir Espacio"));
 
-	connect ( this, SIGNAL(requestListAudiovisualMW(const QList<XMLResults>&)), sform, SLOT(insertListAudiovisual ( const QList<XMLResults>&)) );
-	
-	emit consultListSpace("null");
+// 	connect ( this, SLOT(showListAudioVisualMW(const QList<XMLResults>&)), sform, SLOT(insertListAudiovisual ( const QList<XMLResults>&)) );
+	//Los slot son funciones y las podes llamar directamente
+// 	emit consultListSpace("null");
+	m_adresis->consultListAudiovisual( "null" );
 }
 
+void ADMainWindow::showListAudioVisualMW(const QList<XMLResults>&results)
+{
+	if(sform)
+	{
+		sform->insertListAudiovisual( results);
+	}
+}
 
-	
 
 void ADMainWindow::createSpaceForm(const ADSpace & space)
 {
@@ -275,10 +279,10 @@ void ADMainWindow::createSpaceForm(const ADSpace & space)
 	connect(sform, SIGNAL(requestUpdateSpace(const QString&, const QString&, const bool, const QString&, const QString& )), m_adresis, SLOT(modifySpace(const QString&, const QString&, const bool&, const QString&, const QString& )));
 	addForm( sform, tr("Modificar Espacio"));
 
-	connect ( this, SIGNAL(requestListAudiovisualMW(const QList<XMLResults>&)), sform, SLOT(insertListAudiovisual ( const QList<XMLResults>&)) );
+// 	connect ( this, SLOT(showListAudioVisualMW(const QList<XMLResults>&)), sform, SLOT(insertListAudiovisual ( const QList<XMLResults>&)) );
 
-	emit consultListSpace("null");
-	emit consultListSpace(space.codeSpace());
+	m_adresis->consultListAudiovisual("null");
+	m_adresis->consultListAudiovisual(space.codeSpace());
 }
 
 
