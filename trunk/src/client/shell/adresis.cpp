@@ -84,11 +84,62 @@ void Adresis::login(const QString &user, const QString &passwd)
 	m_connector->sendQuery(Logic::userAuthenticated, u); 
 }
 
+
+//////////////////////////////ASI ESTABA ANTES //////////////////////////////
+// void Adresis::autenticated(const XMLResults & values)
+// {
+// 	m_user.setValues(values);
+// 	requestCreateModules();
+// }
+
+
 void Adresis::autenticated(const XMLResults & values)
 {
-	m_user.setValues( values);
-	requestCreateModules();
+	m_user.setValues(values);
+ 	Logic::TypeModule module;
+
+////AQUI ES DONDE MANEJO QUE SE ENVIE A CREAR LAS FORMAS DE LAS CUALES EL USUARIO REALMENTE TIENE PERMISOS.
+////LO ESTOY HACIENDO POR MEDIO DE ESTE FOR, EL CUAL VA HASTA 4, PARA REPRESENTAR LOS 4  MODULOS QUE HAY (USER, SPACE,
+////AUDIOVISUAL Y RESERVES). ESTA NO DEBERIA DE SER LA FORMA EN QUE DEBERIA DE HACERSE YA QUE YO NO DEBERAIA DE COLOCAR EL 4 ASI
+//// NO MAS PORQUE SI, DEBERIA DE HABER ALGUNA FORMA DE TOMAR EL TAMAÑO DE MODULOS QUE HAY, PERO ES Q REALMENTE NO SE COMO SE
+//// DEBERIA DE HACER. POR AHORA LO VOY A DEJAR ASI.
+
+	for(int i=0; i < 4; i++)
+	{
+		module = Logic::TypeModule(i);
+		if(m_user.permissions()[module])
+		{
+			switch(module)
+			{
+				case Logic::users:
+				{
+					requestCreateModules(module);
+					break;
+				}
+				case Logic::spaces:
+				{
+					requestCreateModules(module);
+					break;
+				}
+				case Logic::audiovisuals:
+				{
+					requestCreateModules(module);
+					break;
+				}
+				case Logic::reserves:
+				{
+					requestCreateModules(module);
+					break;
+				}
+			}
+		}
+	}
+	
 }
+
+
+
+
 
 void Adresis::getInfoModule(Logic::TypeModule module )
 {
@@ -124,10 +175,12 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 			}
 		}
 	}
-	else
-	{
-		emit requestShowMessage(Msg::Error, "Error, no tiene permisos sobre este modulo");
-	}
+
+
+// 	else
+// 	{
+// 		emit requestShowMessage(Msg::Error, "Error, no tiene permisos sobre este modulo");
+// 	}
 }
 
 void Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )

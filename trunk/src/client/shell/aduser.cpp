@@ -94,11 +94,12 @@ void ADUser::setValues(XMLResults values)
 		strPermissions[i];
 		if(strPermissions[i] == '1')
 		{
-			
+			dDebug() << "LE ASIGNE AL MODULO " << Logic::TypeModule(i) << "true";
 			m_permissions.insert(Logic::TypeModule(i), true);
 		}
 		else
 		{
+			dDebug() << "LE ASIGNE AL MODULO " << Logic::TypeModule(i) << "false";
 			m_permissions.insert(Logic::TypeModule(i), false);
 		}
 	}

@@ -51,7 +51,7 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	
 	
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
-	connect(m_adresis, SIGNAL(requestCreateModules()), this, SLOT(createModules()));
+	connect(m_adresis, SIGNAL(requestCreateModules(Logic::TypeModule)), this, SLOT(createModules(Logic::TypeModule)));
 	connect(m_adresis, SIGNAL(requestFillModule(Logic::TypeModule, const QList<XMLResults>&)), this, SLOT(fillModule(Logic::TypeModule, const QList<XMLResults>&)));
 	connect(m_adresis, SIGNAL(showUser(const ADUser& )), this, SLOT(createUserForm(const ADUser& )));
 	
@@ -88,9 +88,10 @@ void ADMainWindow::setupActions()
         exitAct->setStatusTip(tr("Exit the application"));
         connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 	
-	conect = new QAction(tr("Connect"), this);
+	conect = new QAction(QPixmap(THEME_DIR+"/icons/connect.png"),tr("Connect"), this);
 	exitAct->setStatusTip(tr("Connect to the Data Base"));
         connect(conect, SIGNAL(triggered()), this, SLOT(connectToHost()));
+	connect(this, SIGNAL(disabledConnect()), conect, SLOT(setDisabled(true)));
 
 	theme = new QAction(tr("Theme"), this);
         theme->setStatusTip(tr("Change your window theme"));
@@ -188,42 +189,68 @@ void ADMainWindow::fillModule(Logic::TypeModule module, const QList<XMLResults>&
 }
 
 //FIXME: crear todos los modulos
-void ADMainWindow::createModules()
+void ADMainWindow::createModules(Logic::TypeModule module)
 {
-	ADUserModuleList *users = new ADUserModuleList();
-	m_modules.insert( Logic::users, users);
-	toolWindow( DDockWindow::Left )->addWidget( "Users", users);
-	m_adresis->getInfoModule( Logic::users );
-	
-	connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
-	connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-	connect(users, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+	dDebug() << "YA VOY A CREAR MODULOS " << module;
+	emit disabledConnect();
+	switch(module)
+	{
+		case Logic::users:
+		{
+			ADUserModuleList *users = new ADUserModuleList();
+			m_modules.insert( Logic::users, users);
+			toolWindow( DDockWindow::Left )->addWidget( "Users", users);
+			m_adresis->getInfoModule( Logic::users );
+			
+			connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
+			connect(users, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+			connect(users, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+			break;
+		}
+
+		case Logic::spaces:
+		{
+			ADSpaceModuleList *spaces = new ADSpaceModuleList();
+			m_modules.insert( Logic::spaces, spaces);
+			toolWindow( DDockWindow::Left )->addWidget( "Spaces", spaces);
+			m_adresis->getInfoModule( Logic::spaces );
+			
+			connect(spaces, SIGNAL(requestSpaceForm()), this, SLOT(createSpaceForm()));
+			connect(spaces, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+			connect(spaces, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+		
+			connect(this, SIGNAL(consultListSpace(const QString &)), m_adresis, SLOT(consultListAudiovisual(const QString &)));	
+			connect ( m_adresis, SIGNAL(requestListAudioVisual(const QList<XMLResults>&)), this, SIGNAL(requestListAudiovisualMW ( const QList<XMLResults>&)) );
+			break;
+		}
+
+		case Logic::audiovisuals:
+		{
+			connect ( m_adresis, SIGNAL(requestShowListAudioVisualAD(const QList<XMLResults>&)), this, SLOT(showListAudioVisualMW ( const QList<XMLResults>&)) );
+
+			ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
+			m_modules.insert( Logic::audiovisuals, audiovisual);
+			toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
+			m_adresis->getInfoModule( Logic::audiovisuals );
+			
+			connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
+			connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
+			connect(audiovisual, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+			break;
+		}
 
 
-	
-// __ESPACIOS____
-	ADSpaceModuleList *spaces = new ADSpaceModuleList();
-	m_modules.insert( Logic::spaces, spaces);
-	toolWindow( DDockWindow::Left )->addWidget( "Spaces", spaces);
-	m_adresis->getInfoModule( Logic::spaces );
-	
-	connect(spaces, SIGNAL(requestSpaceForm()), this, SLOT(createSpaceForm()));
-	connect(spaces, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-	connect(spaces, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+		case Logic::reserves:
+		{
+			
+			break;
+		}
+	}
 
-	connect ( m_adresis, SIGNAL(requestShowListAudioVisualAD(const QList<XMLResults>&)), this, SLOT(showListAudioVisualMW ( const QList<XMLResults>&)) );
 	
-// __AUDIOVISUAL____
-	ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
-	m_modules.insert( Logic::audiovisuals, audiovisual);
-	toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
-	m_adresis->getInfoModule( Logic::audiovisuals );
 	
- 	connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
- 	connect(audiovisual, SIGNAL(requestDelete(Logic::TypeModule, const QString&)), m_adresis, SLOT(execDelete(Logic::TypeModule, const QString&)));
-	connect(audiovisual, SIGNAL(requestUpdate(Logic::TypeModule, const QString& )), m_adresis, SLOT(getObject(Logic::TypeModule, const QString& )));
+
 }
-
 
 
 void ADMainWindow::createUserForm()

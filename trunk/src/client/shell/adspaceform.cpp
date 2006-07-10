@@ -128,7 +128,7 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 		}
 			
 		QStringList lista = QStringList(m_listAudiovisualL.keys());
-	
+
 		dDebug() << "";
 		foreach(QString elem, lista)
 		{

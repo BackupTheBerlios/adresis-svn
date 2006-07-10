@@ -76,7 +76,7 @@ class ADMainWindow : public DMainWindow
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
-		void createModules();
+		void createModules(Logic::TypeModule module);
 		void createUserForm();
 		void createUserForm(const ADUser &);
 		void createAudiovisualForm();
@@ -88,7 +88,11 @@ class ADMainWindow : public DMainWindow
 		
 // 	signals:
 // 		void consultListSpace(const QString &code);
-		
+	
+	signals:
+		void disabledConnect();
+	
+	
 
 };
 

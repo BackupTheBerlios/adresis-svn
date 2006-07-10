@@ -73,7 +73,7 @@ class Adresis : public QObject
 				
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
-		void requestCreateModules();
+		void requestCreateModules(Logic::TypeModule);
 		void requestFillModule(Logic::TypeModule, const QList<XMLResults>&);
 		void showUser( const ADUser &);
 		void showSpace( const ADSpace &);
