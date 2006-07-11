@@ -42,20 +42,31 @@ class ADSpaceForm : public ADFormBase
 	
 	private:
 		QMap<QString, QWidget*> m_inputs;
-		QMap<QString, QString> m_listAudiovisualL;
-		QMap<QString, QString> m_listAudiovisualE;
+// 		QMap<QString, QString> m_listAudiovisualL;
+// 		QMap<QString, QString> m_listAudiovisualE;
+
+		QList< QStringList > m_listAudiovisualL;
+		QList< QStringList > m_listAudiovisualE;
+
+
 		QCheckBox *acC;
 		ADListSelect *listSelect;
 		bool m_inserter;
 		bool m_list;
+		void checkListsToSave();
+		QStringList takeListKeys(const QString &list);
+
 		
 	signals:
 		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 		
 		void requestUpdateSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 
+		void updateAudiovisuaList(const QString&, const QString&, const QString&, const QString&, const QString& );
+
 	public slots:
 		void emitInsertSpace();
+		void listChangedSF(const QString &lista, int pos);
 		void insertListAudiovisual(const QList<XMLResults>& results);
 	
 	

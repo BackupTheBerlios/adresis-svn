@@ -86,11 +86,10 @@ class ADMainWindow : public DMainWindow
 		void addForm(ADFormBase * form, const QString & title);
 		void showListAudioVisualMW(const QList<XMLResults>& result);
 		
-// 	signals:
-// 		void consultListSpace(const QString &code);
+
 	
 	signals:
-		void disabledConnect();
+		void disabledConnect(bool);
 	
 	
 

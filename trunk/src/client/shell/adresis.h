@@ -45,9 +45,9 @@ class Adresis : public QObject
 		void modifyUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
 		
 		
-		//cambio
 		void modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
-		//cambio
+		
+		void modifyAudiovisualL(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
 		
 		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 
@@ -68,7 +68,6 @@ class Adresis : public QObject
 		void createAudiovisual(const XMLResults& result);
 		
 		void consultListAudiovisual(const QString &code);
-// 		void requestListAudioVisualSpaces(const QList<XMLResults>& result);
 
 				
 	signals:

@@ -84,9 +84,6 @@ void ADSpaceForm::emitInsertSpace()
 		opcion=false;
 	}
 	
-		
-
-
 	if(m_inserter)
 	{
 		emit requestInsertSpace(
@@ -95,19 +92,91 @@ void ADSpaceForm::emitInsertSpace()
 		opcion,
 		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
 		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()		
-	);
+		);
+
+		checkListsToSave();
 	}
 	else
 	{
 		emit requestUpdateSpace(
-		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text().trimmed(),
-		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text().trimmed(),
+		static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text(),
+		static_cast<QLineEdit*>(m_inputs[tr("tipo espacio")])->text(),
 		opcion,
-		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text().trimmed(),
-		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text().trimmed()
-	);
+		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
+		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
+		);
+
+		checkListsToSave();
+	}
+}
+
+void ADSpaceForm::checkListsToSave()
+{	
+	dDebug() << "El tamaño de la lista de espacios es ==>" << m_listAudiovisualE.count();
+	for(int i=0; i < m_listAudiovisualE.count();i++)
+	{
+		dDebug() << "ini ";
+		dDebug() << "El codigo de espacio de la ayuda  es "<<(m_listAudiovisualE.at(i)).last();	
+		dDebug() << "fin ";
+
+		if( ((m_listAudiovisualE.at(i)).last()).operator==("null") )
+		{	
+			dDebug() << "Voy a mandar a modficar la ayuda de espacio No " << i;
+			 emit updateAudiovisuaList((m_listAudiovisualE.at(i)).at(0),	//Tipo	
+						(m_listAudiovisualE.at(i)).at(2),	//marca
+						(m_listAudiovisualE.at(i)).at(3), 	//estado
+						(m_listAudiovisualE.at(i)).at(1),	//numero inventario
+						static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text()	//espacio
+			);
+		}
+	}
+	
+	dDebug() << "El tamaño de la lista de libres es ==>" << m_listAudiovisualL.count();
+	for(int i=0; i < m_listAudiovisualL.count();i++)
+	{
+		dDebug() << "ini ";
+		dDebug() << "El codigo de espacio de la ayuda  es "<<(m_listAudiovisualL.at(i)).last();	
+		dDebug() << "fin ";
+
+		if( ((m_listAudiovisualL.at(i)).last()).operator!=("null") )
+		{
+			dDebug() << "Voy a mandar a modficar la ayuda de Libres No " << i;
+			 emit updateAudiovisuaList((m_listAudiovisualL.at(i)).at(0),	//Tipo	
+						(m_listAudiovisualL.at(i)).at(2),	//marca
+						(m_listAudiovisualL.at(i)).at(3), 	//estado
+						(m_listAudiovisualL.at(i)).at(1),	//numero inventario
+						"null" 					//espacio
+			);
+		}
+	}
+}
+
+
+void ADSpaceForm::listChangedSF(const QString & lista, int pos)
+{
+	if(lista.operator==("derecha"))
+	{
+		m_listAudiovisualE.append(m_listAudiovisualL.takeAt(pos));
+	}
+	else
+	{
+		m_listAudiovisualL.append(m_listAudiovisualE.takeAt(pos));
 	}
 
+	dDebug() << "Asi quedaron las listas";
+	dDebug() << "LIBRES";
+	for(int i=0; i < m_listAudiovisualL.count();i++)
+	{
+		
+		dDebug() << (m_listAudiovisualL.at(i)).first();
+	}
+	dDebug() << "\nESPACIO";
+	for(int i=0; i < m_listAudiovisualE.count();i++)
+	{
+		
+		dDebug() << (m_listAudiovisualE.at(i)).first();
+	}
+	
 }
 
 void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
@@ -118,16 +187,30 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 	
 	//Con la variable m_list quiero representar cual de las listas estoy obteniendo, si m_list es true es porque estoy hablando de la listas de ayudas libres, si es false es la lista de ayudas asignadas a este espacio
 
-	
+	QStringList listaDeListas;
+
 	if(m_inserter)
 	{
+		
 		while( it != results.end() )
 		{
-			m_listAudiovisualL.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+			int pos = 0;
+			listaDeListas.insert(pos, (*it)["typeav"]);
+			pos++;
+			listaDeListas.insert(pos, (*it)["numberinventoryav"]);
+			pos++;
+			listaDeListas.insert(pos, (*it)["marksequipmentav"]);
+			pos++;
+			listaDeListas.insert(pos, (*it)["estateav"]);
+			pos++;
+			listaDeListas.insert(pos, (*it)["codespace"]);
+
+			m_listAudiovisualL.append(listaDeListas);
 			++it;
+			
 		}
 			
-		QStringList lista = QStringList(m_listAudiovisualL.keys());
+		QStringList lista = takeListKeys("libres");
 
 		dDebug() << "";
 		foreach(QString elem, lista)
@@ -137,17 +220,30 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 
 		listSelect->addListToLeft(lista);
 	}
+
 	else
 	{
 		if(m_list)
 		{	
 			while( it != results.end() )
 			{
-				m_listAudiovisualL.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+				int pos=0;
+				listaDeListas.insert(pos, (*it)["typeav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["numberinventoryav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["marksequipmentav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["estateav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["codespace"]);
+
+				m_listAudiovisualL.append(listaDeListas);
 				++it;
+				
 			}
 		
-			QStringList lista = QStringList(m_listAudiovisualL.keys());
+			QStringList lista = takeListKeys("libres");
 			
 			dDebug() << "";
 			foreach(QString elem, lista)
@@ -165,11 +261,22 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 
 			while( it != results.end() )
 			{
-				m_listAudiovisualE.insert((*it)["typeav"], (*it)["numberinventoryav"]);
+				int pos=0;
+				listaDeListas.insert(pos, (*it)["typeav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["numberinventoryav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["marksequipmentav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["estateav"]);
+				pos++;
+				listaDeListas.insert(pos, (*it)["codespace"]);
+
+				m_listAudiovisualE.append(listaDeListas);
 				++it;
 			}
 			
-			QStringList lista = QStringList(m_listAudiovisualE.keys());
+			QStringList lista = takeListKeys("espacio");
 			
 			dDebug() << "";
 			foreach(QString elem, lista)
@@ -185,18 +292,34 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 }
 
 
+QStringList ADSpaceForm::takeListKeys(const QString &list)
+{
+	QStringList lista;
+	if(list.operator==("libres"))
+	{
+		for(int i=0; i < m_listAudiovisualL.count();i++)
+		{
+			lista << (m_listAudiovisualL.at(i)).first();
+		}
+	}
+	else
+	{
+		for(int i=0; i < m_listAudiovisualE.count();i++)
+		{
+			lista << (m_listAudiovisualE.at(i)).first();
+		}
+	}
+
+	return lista;
+}
 
 
 void ADSpaceForm::setup()
 {
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
-	
 	QGroupBox *container = new QGroupBox("Informacion");
-	
 	vBLayout->addWidget(container, Qt::AlignVCenter);
-	
-	
 	QGridLayout *layout = new QGridLayout;
 	
 	container->setLayout(layout);
@@ -227,6 +350,8 @@ void ADSpaceForm::setup()
 	}
 	
 	listSelect = new ADListSelect();
+	connect(listSelect, SIGNAL(listChanged(const QString&, int)), this, SLOT(listChangedSF(const QString&, int)));
+
 	vBLayout->addWidget(listSelect, Qt::AlignVCenter);
 	
 	setForm(base);

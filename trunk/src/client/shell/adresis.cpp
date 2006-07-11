@@ -227,6 +227,14 @@ void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquip
 	getInfoModule(Logic::audiovisuals);
 }
 
+
+void Adresis::modifyAudiovisualL(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
+{
+	dDebug() << "Estoy en ADRESIS \ntipo =>" << typeav << "  marca =>" << marksEquipmentav << "  estado => " << estateav << "  inventario => " << numberinventoryav <<"  espacio =>" << codeSpace;
+}
+
+
+
 void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
@@ -334,7 +342,7 @@ void Adresis::consultListAudiovisual(const QString &code)
 	QString where;
 	Logic::TypeQuery type;	
 
-	columns << "typeav" << "numberinventoryav";
+	columns << "typeav" << "numberinventoryav" << "marksequipmentav" << "estateav" << "codespace";
 	where = "codespace = '"+code+"'";
 	table = "adaudiovisual";
 	

@@ -36,8 +36,12 @@ class ADListSelect : public QWidget
 		~ADListSelect();
 		void addListToLeft(const QStringList &list);
 		void addListToRight(const QStringList &list);
-		QStringList takeList();
+		QStringList takeList(const QString& listWidget);
 		
+		
+	signals:
+		void listChanged(const QString &lista, int pos);
+
 	public slots:
 		void addItemToLeft();
 		void addItemToRight();
@@ -49,6 +53,7 @@ class ADListSelect : public QWidget
 		QToolButton *qTButtonLeft;
 		QToolButton *qTButtonRight;
 		QMap<QString, QWidget*> m_inputs;
+		bool check(const QString& lista, const QListWidgetItem *item);
 		
 		
 };

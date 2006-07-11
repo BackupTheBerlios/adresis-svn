@@ -29,6 +29,7 @@
 #include <QDrag>
 #include <ddebug.h>
 #include <global.h>
+#include <QMessageBox>
 
 ADListSelect::ADListSelect(QWidget *parent)
  : QWidget(parent)
@@ -66,30 +67,72 @@ ADListSelect::~ADListSelect()
 {
 }
 
+
 void ADListSelect::addItemToLeft()
 {
 	int pos = listWidgetRight->currentRow();
 	
 	QListWidgetItem *itemTmp = listWidgetRight->takeItem(pos);
+	
 	if(itemTmp)
 	{
 		listWidgetLeft->addItem(itemTmp);
-		listWidgetLeft->sortItems(Qt::AscendingOrder);
-		listWidgetRight->sortItems(Qt::AscendingOrder);
+// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
+// 		listWidgetRight->sortItems(Qt::AscendingOrder);
+		listChanged("izquierda", pos);
 	}
+
 }
+
 
 void ADListSelect::addItemToRight()
 {
 	int pos = listWidgetLeft->currentRow();
 	QListWidgetItem *itemTmp = listWidgetLeft->takeItem(pos);
-	if(itemTmp)
+	
+	if(itemTmp && !check("derecha", itemTmp))
 	{
 		listWidgetRight->addItem(itemTmp);
-		listWidgetRight->sortItems(Qt::AscendingOrder);
-		listWidgetLeft->sortItems(Qt::AscendingOrder);
+// 		listWidgetRight->sortItems(Qt::AscendingOrder);
+// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
+		listChanged("derecha", pos);
+	}
+	else
+	{
+		listWidgetLeft->insertItem(pos, itemTmp);
+// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
+		QMessageBox::information ( 0 , "Error", "Este espacio ya cuenta con una ayuda de ese tipo,\nsi desea agregar esta ayuda elimine la otra de la lista de ayudas de el espacio", 0);
 	}
 }
+
+
+bool ADListSelect::check(const QString& lista, const QListWidgetItem *item)
+{
+	bool find=false;
+	int pos=0;
+	QStringList stringlist;
+
+	if(lista.operator==("derecha"))
+	{
+		stringlist = takeList("derecha");
+	}
+	else
+	{
+		stringlist = takeList("izquierda");
+	}
+	
+	while(pos < stringlist.count() && !find)
+	{
+		if( (item->text()).operator==(stringlist.at(pos)) )
+		{
+			find=true;
+		}
+		pos++;
+	}
+
+	return find;
+}
+
 
 
 void ADListSelect::addListToLeft(const QStringList &list)
@@ -106,17 +149,30 @@ void ADListSelect::addListToRight(const QStringList &list)
 }
 
 
-QStringList ADListSelect::takeList()
+QStringList ADListSelect::takeList(const QString &listWidget)
 {
 	QStringList lista;
-	for(int i=0; i < listWidgetRight->count();i++)
+	if(listWidget.operator==("derecha"))
 	{
-		lista << (listWidgetRight->item(i))->text();
+		for(int i=0; i < listWidgetRight->count();i++)
+		{
+			lista << (listWidgetRight->item(i))->text();
+		}
+		dDebug() << "tamaño ==>"<< lista.count();
 	}
-	dDebug() << "tamaño "<< lista.count();
+	else
+	{
+		for(int i=0; i < listWidgetLeft->count();i++)
+		{
+			lista << (listWidgetLeft->item(i))->text();
+		}
+		dDebug() << "tamaño ==>"<< lista.count();
+	}
+
+
 	for(int i=0; i< lista.count();i++)
 	{
-		dDebug() << lista.at(i);
+		dDebug() << "El elemento " << lista.at(i);
 	}
 	return lista;
 }
