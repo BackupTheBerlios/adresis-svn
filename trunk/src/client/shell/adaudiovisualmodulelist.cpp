@@ -69,18 +69,18 @@ void ADAudiovisualModuleList::requestAction(int action)
 
 			if ( ! noAsk )
 			{
-				DOptionalDialog dialog(tr("usted realmente quiere borrar esta Ayuda Audiovisual?"),tr("borrar?"), this);
-				if( dialog.exec() == QDialog::Rejected )
-				{
-					return;
-				}
-
-				DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
-				DCONFIG->sync();
-				//Cambio
-				//emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 0 ));
 				if(m_pTree->currentItem())
 				{
+					DOptionalDialog dialog(tr("usted realmente quiere borrar esta Ayuda Audiovisual?"),tr("borrar?"), this);
+					if( dialog.exec() == QDialog::Rejected )
+					{
+						return;
+					}
+	
+					DCONFIG->setValue("RemoveWithoutAskAudiovisuals", dialog.shownAgain());
+					DCONFIG->sync();
+				
+				
 					emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 1 ));
 				}
 			}
@@ -95,11 +95,11 @@ void ADAudiovisualModuleList::requestAction(int action)
 				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 1));";
 				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
 			}
-			else
-			{
-				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
-				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
-			}
+// 			else
+// 			{
+// 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0));
+// 				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
+// 			}
 			break;
 		}
 		

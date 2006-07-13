@@ -70,16 +70,20 @@ void ADSpaceModuleList::requestAction(int action)
 			bool noAsk = qvariant_cast<bool>(DCONFIG->value("RemoveWithoutAskSpaces", false));
 			if ( ! noAsk )
 			{
-				DOptionalDialog dialog(tr("usted realmente quiere borrar esta Espacio?"),tr("borrar?"), this);
-				if( dialog.exec() == QDialog::Rejected )
+				if(m_pTree->currentItem())
 				{
-					return;
-				}
+					DOptionalDialog dialog(tr("usted realmente quiere borrar esta Espacio?"),tr("borrar?"), this);
+					if( dialog.exec() == QDialog::Rejected )
+					{
+						return;
+					}
+					
+					DCONFIG->setValue("RemoveWithoutAskSpaces", dialog.shownAgain());
+					DCONFIG->sync();
 				
-				DCONFIG->setValue("RemoveWithoutAskSpaces", dialog.shownAgain());
-				DCONFIG->sync();
-
-				emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
+				
+					emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
+				}
 			}
 			
 			break;
@@ -93,11 +97,11 @@ void ADSpaceModuleList::requestAction(int action)
 				dDebug() << "emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text( 0));";
 				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
 			}
-			else
-			{
-				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
-				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
-			}
+// 			else
+// 			{
+// 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
+// 				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
+// 			}
 			break;
 		}
 	}
