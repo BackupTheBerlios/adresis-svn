@@ -77,8 +77,6 @@ void ADListSelect::addItemToLeft()
 	if(itemTmp)
 	{
 		listWidgetLeft->addItem(itemTmp);
-// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
-// 		listWidgetRight->sortItems(Qt::AscendingOrder);
 		listChanged("izquierda", pos);
 	}
 
@@ -90,18 +88,19 @@ void ADListSelect::addItemToRight()
 	int pos = listWidgetLeft->currentRow();
 	QListWidgetItem *itemTmp = listWidgetLeft->takeItem(pos);
 	
-	if(itemTmp && !check("derecha", itemTmp))
+	if(itemTmp)
 	{
-		listWidgetRight->addItem(itemTmp);
-// 		listWidgetRight->sortItems(Qt::AscendingOrder);
-// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
-		listChanged("derecha", pos);
-	}
-	else
-	{
-		listWidgetLeft->insertItem(pos, itemTmp);
-// 		listWidgetLeft->sortItems(Qt::AscendingOrder);
-		QMessageBox::information ( 0 , "Error", "Este espacio ya cuenta con una ayuda de ese tipo,\nsi desea agregar esta ayuda elimine la otra de la lista de ayudas de el espacio", 0);
+		if(!check("derecha", itemTmp))
+		{
+			listWidgetRight->addItem(itemTmp);
+	
+			listChanged("derecha", pos);
+		}
+		else
+		{
+			listWidgetLeft->insertItem(pos, itemTmp);
+			QMessageBox::information ( 0 , "Error", "Este espacio ya cuenta con una ayuda de ese tipo,\nsi desea agregar esta ayuda elimine la otra de la lista de ayudas de el espacio", 0);
+		}
 	}
 }
 
@@ -158,7 +157,7 @@ QStringList ADListSelect::takeList(const QString &listWidget)
 		{
 			lista << (listWidgetRight->item(i))->text();
 		}
-		dDebug() << "tamaño ==>"<< lista.count();
+// 		dDebug() << "tamaño ==>"<< lista.count();
 	}
 	else
 	{
@@ -166,14 +165,14 @@ QStringList ADListSelect::takeList(const QString &listWidget)
 		{
 			lista << (listWidgetLeft->item(i))->text();
 		}
-		dDebug() << "tamaño ==>"<< lista.count();
+// 		dDebug() << "tamaño ==>"<< lista.count();
 	}
 
 
-	for(int i=0; i< lista.count();i++)
-	{
-		dDebug() << "El elemento " << lista.at(i);
-	}
+// 	for(int i=0; i< lista.count();i++)
+// 	{
+// 		dDebug() << "El elemento " << lista.at(i);
+// 	}
 	return lista;
 }
 

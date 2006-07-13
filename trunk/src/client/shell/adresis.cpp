@@ -38,6 +38,8 @@ Adresis::Adresis(QObject * parent)
 
 	connect ( m_connector, SIGNAL(requestShowListAudiovisual(const QList<XMLResults>&)), this, SIGNAL (requestShowListAudioVisualAD( const QList<XMLResults>&)) );
 	
+	connect ( m_connector, SIGNAL(requestListTypes(const QList<XMLResults>&)), this, SIGNAL (requestListTypesAD( const QList<XMLResults>&)) );
+
 	DINIT;
 }
 
@@ -228,13 +230,6 @@ void Adresis::modifyAudiovisual(const QString& typeav, const QString& marksEquip
 }
 
 
-void Adresis::modifyAudiovisualL(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace)
-{
-	dDebug() << "Estoy en ADRESIS \ntipo =>" << typeav << "  marca =>" << marksEquipmentav << "  estado => " << estateav << "  inventario => " << numberinventoryav <<"  espacio =>" << codeSpace;
-}
-
-
-
 void Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace)
 {
 	dDebug() << "Adresis::addSpace(const QString& codeSpace, const QString& typeSpace,const QString& coolAirSpace,const QString& capacitySpace, const QString& nameSpace)";
@@ -351,16 +346,22 @@ void Adresis::consultListAudiovisual(const QString &code)
 	query.setWhere(where);
 	m_connector->sendQuery(type, query);
 
-	dDebug() << "Ya Mande la consulta";
+// 	dDebug() << "Ya Mande la consulta";
 
 }
 
-// void Adresis::requestShowListAudioVisualSpaces(const QList<XMLResults> & result)
-// {
-// 	dDebug() << "";
-// 	dDebug() << "Ya se los voy a enviar a Main Window";
-// 	dDebug() << "";
-// 	emit requestShowListAudioVisual(result);
-// 	dDebug() << "Como que Ya se las envie a Main Window";
-// 	dDebug() << "";
-// }
+void Adresis::consultListTypes( const QString &typeL)
+{
+	QStringList columns;
+	QString table;
+	Logic::TypeQuery type;	
+
+	columns << "type";
+	table = typeL;
+	
+	type = Logic::querytypes;
+
+	ADSelectPackage query(QStringList() << table, columns, true );
+	m_connector->sendQuery(type, query);
+	
+}

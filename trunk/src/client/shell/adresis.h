@@ -47,8 +47,6 @@ class Adresis : public QObject
 		
 		void modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
 		
-		void modifyAudiovisualL(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
-		
 		void addSpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 
 		void addAudiovisual(const QString& typeav, const QString& marksEquipmentav, const QString& estateav, const QString& numberinventoryav, const QString& codeSpace);
@@ -68,6 +66,7 @@ class Adresis : public QObject
 		void createAudiovisual(const XMLResults& result);
 		
 		void consultListAudiovisual(const QString &code);
+		void consultListTypes(const QString &typeL);
 
 				
 	signals:
@@ -79,6 +78,7 @@ class Adresis : public QObject
 		void showAudiovisual( const ADAudioVisual & );
 		
 		void requestShowListAudioVisualAD(const QList<XMLResults>& result);
+		void requestListTypesAD( const QList<XMLResults>&);
 		
 		
 	private:

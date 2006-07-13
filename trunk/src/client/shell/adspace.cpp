@@ -56,13 +56,6 @@ ADInsertPackage ADSpace::insertPackage()
 }
 
 
-// ADInsertPackage ADSpace::insertListPackage()
-// {
-// 	ADInsertPackage insertLista("adaudiovisual",QStringList() << "");
-// }
-
-
-
 ADUpdatePackage ADSpace::updatePackage()
 {
 	QString strAireSpace;

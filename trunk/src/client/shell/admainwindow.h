@@ -49,9 +49,11 @@ class ADMainWindow : public DMainWindow
 	private:
 		Adresis *m_adresis;
 		ADSpaceForm *sform;
+		ADAudiovisualForm *aform;
 		DActionManager *m_actionManager;
 		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
-		
+		QString tipo;	
+
 		void setupActions();
 		void setupMenu();
 		void setupToolbar();
@@ -85,6 +87,7 @@ class ADMainWindow : public DMainWindow
 		void createSpaceForm(const ADSpace &);
 		void addForm(ADFormBase * form, const QString & title);
 		void showListAudioVisualMW(const QList<XMLResults>& result);
+		void requestListTypeslMW (const QList<XMLResults>&results);
 		
 
 	

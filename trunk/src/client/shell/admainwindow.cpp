@@ -59,6 +59,8 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	
 	connect(m_adresis, SIGNAL(showAudiovisual(const ADAudioVisual & )), this, SLOT(createAudiovisualForm(const ADAudioVisual & )));
 
+	connect ( m_adresis, SIGNAL(requestListTypesAD(const QList<XMLResults>&)), this, SLOT(requestListTypeslMW ( const QList<XMLResults>&)) );
+
 
 	DCONFIG->beginGroup("TipOfDay");
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
@@ -190,7 +192,7 @@ void ADMainWindow::fillModule(Logic::TypeModule module, const QList<XMLResults>&
 //FIXME: crear todos los modulos
 void ADMainWindow::createModules(Logic::TypeModule module)
 {
-	dDebug() << "YA VOY A CREAR MODULOS " << module;
+// 	dDebug() << "YA VOY A CREAR MODULOS " << module;
 	emit disabledConnect(false);
 	switch(module)
 	{
@@ -220,13 +222,14 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 		
 			connect(this, SIGNAL(consultListSpace(const QString &)), m_adresis, SLOT(consultListAudiovisual(const QString &)));	
 			connect ( m_adresis, SIGNAL(requestListAudioVisual(const QList<XMLResults>&)), this, SIGNAL(requestListAudiovisualMW ( const QList<XMLResults>&)) );
+
+			connect ( m_adresis, SIGNAL(requestShowListAudioVisualAD(const QList<XMLResults>&)), this, SLOT(showListAudioVisualMW ( const QList<XMLResults>&)) );
+
 			break;
 		}
 
 		case Logic::audiovisuals:
 		{
-			connect ( m_adresis, SIGNAL(requestShowListAudioVisualAD(const QList<XMLResults>&)), this, SLOT(showListAudioVisualMW ( const QList<XMLResults>&)) );
-
 			ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
 			m_modules.insert( Logic::audiovisuals, audiovisual);
 			toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
@@ -250,7 +253,7 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 
 void ADMainWindow::createUserForm()
 {
-	dDebug() << "LLEGUE A CREAR USUARIO";
+// 	dDebug() << "LLEGUE A CREAR USUARIO";
 	dDebug();
 	ADUserForm *form = new ADUserForm;
 	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )));
@@ -273,7 +276,7 @@ void ADMainWindow::createUserForm(const ADUser & user)
 
 void ADMainWindow::createSpaceForm()
 {
-	dDebug() << "LLEGUE A CREAR ESPACIO";
+// 	dDebug() << "LLEGUE A CREAR ESPACIO";
 	sform = new ADSpaceForm();
 
 	connect(sform, SIGNAL(requestInsertSpace(const QString&, const QString&,const bool &, const QString&, const QString&) ), m_adresis, SLOT(addSpace(const QString&, const QString&,const bool&, const QString&, const QString&)));
@@ -281,6 +284,8 @@ void ADMainWindow::createSpaceForm()
 
 	connect(sform, SIGNAL(updateAudiovisuaList (const QString&, const QString&, const QString&, const QString&, const QString& )), m_adresis, SLOT(modifyAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
 
+	tipo = "espacio";
+	m_adresis->consultListTypes("adspacetype");
 	m_adresis->consultListAudiovisual( "null" );
 }
 
@@ -294,6 +299,23 @@ void ADMainWindow::showListAudioVisualMW(const QList<XMLResults>&results)
 	}
 }
 
+void ADMainWindow::requestListTypeslMW (const QList<XMLResults>&results)
+{
+	if(tipo.operator==("audiovisual"))
+	{
+		if(aform)
+		{
+			aform->insertListTypes( results);
+		}
+	}
+	else
+	{
+		if(sform)
+		{
+			sform->insertListTypes( results);
+		}
+	}
+}
 
 
 void ADMainWindow::createSpaceForm(const ADSpace & space)
@@ -305,6 +327,8 @@ void ADMainWindow::createSpaceForm(const ADSpace & space)
 
 	connect(sform, SIGNAL(updateAudiovisuaList (const QString&, const QString&, const QString&, const QString&, const QString& )), m_adresis, SLOT(modifyAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
 
+	tipo = "espacio";
+	m_adresis->consultListTypes("adspacetype");
 
 	addForm( sform, tr("Modificar Espacio"));
 	m_adresis->consultListAudiovisual("null");
@@ -315,11 +339,14 @@ void ADMainWindow::createSpaceForm(const ADSpace & space)
 
 void ADMainWindow::createAudiovisualForm()
 {
-	dDebug() << "LLEGUE A CREAR AYUDA";
+// 	dDebug() << "LLEGUE A CREAR AYUDA";
 	
-	ADAudiovisualForm *aform = new ADAudiovisualForm;
+	aform = new ADAudiovisualForm;
+
 	connect(aform, SIGNAL(requestInsertAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&) ), m_adresis, SLOT(addAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
 	
+	tipo = "audiovisual";
+	m_adresis->consultListTypes("adaudiovisualtype");
 	addForm( aform, tr("Añadir Ayuda Audiovisual"));
 	
 }
@@ -328,10 +355,17 @@ void ADMainWindow::createAudiovisualForm()
 void ADMainWindow::createAudiovisualForm(const ADAudioVisual & audiovisual)
 {
 	D_FUNCINFO;
-	ADAudiovisualForm *aform = new ADAudiovisualForm(audiovisual);
+
+	aform = new ADAudiovisualForm(audiovisual);
 	
+	tipo = "audiovisual";
+
 	connect(aform, SIGNAL(requestUpdateAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString& )), m_adresis, SLOT(modifyAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
+	
+	m_adresis->consultListTypes("adaudiovisualtype");
 	addForm( aform, tr("Modificar Ayuda Audiovisual"));
+
+	
 }
 
 

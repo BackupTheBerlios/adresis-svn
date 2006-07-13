@@ -24,6 +24,7 @@
 #include <QMap>
 #include "global.h"
 #include <QComboBox>
+#include <QPushButton>
 
 //cambios
 #include "adaudiovisual.h"
@@ -38,12 +39,17 @@ class ADAudiovisualForm : public ADFormBase
 		ADAudiovisualForm(QWidget *parent = 0);
 		ADAudiovisualForm(const ADAudioVisual & audiovisual, QWidget *parent = 0);
 		~ADAudiovisualForm();
-		void setup();
+		
 		
 	private:
 		QMap<QString, QWidget*> m_inputs;
-		QComboBox *estadoC;
+		QComboBox *estadoC, *tiposC;
 		bool m_inserter;
+		QStringList tipos;
+		ADAudioVisual *adAudiovisual;
+		void fill();
+		void setup();
+// 		QPushButton *addType;
 		
 	signals:
 		void requestInsertAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
@@ -51,6 +57,7 @@ class ADAudiovisualForm : public ADFormBase
 		
 	public slots:
 		void emitInsertAudiovisual();
+		void insertListTypes(const QList<XMLResults>& results);
 		
 };
 

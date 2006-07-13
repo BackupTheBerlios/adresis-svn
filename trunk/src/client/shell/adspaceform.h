@@ -26,6 +26,7 @@
 #include <QCheckBox>
 #include "adlistselect.h"
 #include "adspace.h"
+#include <QComboBox>
 
 /**
 @author Hector Fabio Cruz Mosquera,0329876
@@ -38,17 +39,21 @@ class ADSpaceForm : public ADFormBase
 		ADSpaceForm(QWidget *parent = 0);
 		ADSpaceForm(const ADSpace& space, QWidget *parent = 0);
 		~ADSpaceForm();
-		void setup();
+		
 	
 	private:
+		ADSpace *adSpace;
 		QMap<QString, QWidget*> m_inputs;
-// 		QMap<QString, QString> m_listAudiovisualL;
-// 		QMap<QString, QString> m_listAudiovisualE;
 
 		QList< QStringList > m_listAudiovisualL;
 		QList< QStringList > m_listAudiovisualE;
+		
+		QStringList typeSpace;
+		QStringList tipos;
+		QComboBox *tiposC;
 
-
+		void fill();
+		void setup();
 		QCheckBox *acC;
 		ADListSelect *listSelect;
 		bool m_inserter;
@@ -68,6 +73,7 @@ class ADSpaceForm : public ADFormBase
 		void emitInsertSpace();
 		void listChangedSF(const QString &lista, int pos);
 		void insertListAudiovisual(const QList<XMLResults>& results);
+		void insertListTypes(const QList<XMLResults>& results);
 	
 	
 };
