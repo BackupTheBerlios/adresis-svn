@@ -35,6 +35,7 @@ class ADAudiovisualModuleList : public ADCModuleList
 		~ADAudiovisualModuleList();
 		
 		void fill( const QList<XMLResults>&results);
+		void clean();
 	
 	private slots:
 		void requestAction(int action);
@@ -42,7 +43,6 @@ class ADAudiovisualModuleList : public ADCModuleList
 	signals:
 		void requestAudiovisualForm();
 		void requestDelete(Logic::TypeModule module, const QString & key);
-		//cambio
 		void requestUpdate(Logic::TypeModule module, const QString & key);
 
 };

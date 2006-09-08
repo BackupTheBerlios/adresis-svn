@@ -24,8 +24,8 @@ class ADUserForm : public ADFormBase
 		bool m_inserter;
 		
 	signals:
-		void requestInsertUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions  );
-		void requestUpdateUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions  );
+		void requestInsertUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeUser, bool> permissions  );
+		void requestUpdateUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeUser, bool> permissions  );
 		
 	public slots:
 		void emitInsertUser();

@@ -3,21 +3,11 @@
 # Subdir relative project main directory: ./src/dlib/dcore
 # Target is a library:  
 
-QT += xml 
 INSTALLS += include \
             target 
 target.path = /lib/ 
 include.files += *.h 
 include.path = /include/dcore 
-KDEV_QTVER = 4 
-INCLUDEPATH += ../ 
-MOC_DIR = .moc 
-UI_DIR = .ui 
-OBJECTS_DIR = .obj 
-CONFIG += release \
-          warn_on \
-          dll 
-TEMPLATE = lib 
 HEADERS += aspelliface.h \
            dalgorithm.h \
            dbrushadjuster.h \
@@ -54,3 +44,13 @@ SOURCES += aspelliface.cpp \
            dmd5hash.cpp \
            dapplicationproperties.cpp \
            dtipdatabase.cpp 
+QT += xml
+KDEV_QTVER = 4
+INCLUDEPATH += ../
+MOC_DIR = .moc
+UI_DIR = .ui
+OBJECTS_DIR = .obj
+CONFIG += release \
+warn_on \
+dll
+TEMPLATE = lib

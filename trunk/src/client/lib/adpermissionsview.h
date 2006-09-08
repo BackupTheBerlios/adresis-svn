@@ -32,8 +32,8 @@ class ADPermissionsView : public QGroupBox
 	public:
 		ADPermissionsView(QWidget *parent= 0);
 		~ADPermissionsView();
-		QMap<Logic::TypeModule, bool> permissions();
-		void setPermissions(const QMap<Logic::TypeModule, bool> & permissions );
+		QMap<Logic::TypeUser, bool> permissions();
+		void setPermissions(const QMap<Logic::TypeUser, bool> & permissions );
 		
 	private:
 		QMap<QString,QCheckBox* > m_checks;

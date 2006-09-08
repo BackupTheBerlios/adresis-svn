@@ -34,6 +34,7 @@ class ADUserModuleList : public ADCModuleList
 		ADUserModuleList(QWidget *parent=0);
 		~ADUserModuleList();
 		void fill( const QList<XMLResults>&results);
+		void clean();
 		
 	private slots:
 		void requestAction(int action);

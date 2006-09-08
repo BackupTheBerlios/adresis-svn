@@ -36,8 +36,6 @@ ADAudiovisualModuleList::~ADAudiovisualModuleList()
 void ADAudiovisualModuleList::fill( const QList<XMLResults>&results)
 {
 	D_FUNCINFO;
-	m_pTree->clear ();
-	
 	QList<XMLResults>::const_iterator it= results.begin();
 	
 	while( it != results.end() )
@@ -49,6 +47,12 @@ void ADAudiovisualModuleList::fill( const QList<XMLResults>&results)
 		++it;
 	}
 }
+
+void ADAudiovisualModuleList::clean()
+{
+	m_pTree->clear ();
+}
+
 
 void ADAudiovisualModuleList::requestAction(int action)
 {
@@ -95,11 +99,7 @@ void ADAudiovisualModuleList::requestAction(int action)
 				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 1));";
 				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
 			}
-// 			else
-// 			{
-// 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0));
-// 				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
-// 			}
+
 			break;
 		}
 		

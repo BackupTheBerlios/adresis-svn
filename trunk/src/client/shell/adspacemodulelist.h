@@ -34,6 +34,7 @@ class ADSpaceModuleList : public ADCModuleList
 		ADSpaceModuleList(QWidget *parent=0);
 		~ADSpaceModuleList();
 		void fill( const QList<XMLResults>&results);
+		void clean();
 	
 	private slots:
 		void requestAction(int action);

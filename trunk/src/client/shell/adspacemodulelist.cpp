@@ -35,8 +35,6 @@ ADSpaceModuleList::~ADSpaceModuleList()
 
 void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 {
-	m_pTree->clear ();	
-
 	QList<XMLResults>::const_iterator it= results.begin();
 	
 	while( it != results.end() )
@@ -53,6 +51,12 @@ void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 		++it;
 	}
 }
+
+void ADSpaceModuleList::clean()
+{
+	m_pTree->clear ();
+}
+
 
 void ADSpaceModuleList::requestAction(int action)
 {
@@ -97,11 +101,6 @@ void ADSpaceModuleList::requestAction(int action)
 				dDebug() << "emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text( 0));";
 				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
 			}
-// 			else
-// 			{
-// 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
-// 				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
-// 			}
 			break;
 		}
 	}

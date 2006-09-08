@@ -18,14 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adlistselect.h"
-#include <QLineEdit>
-#include <QLabel>
-#include <QGroupBox>
 #include <QListWidgetItem>
 #include <QGridLayout>
-#include <QCheckBox>
-#include <QDebug>
-#include <QMimeData>
 #include <QDrag>
 #include <ddebug.h>
 #include <global.h>

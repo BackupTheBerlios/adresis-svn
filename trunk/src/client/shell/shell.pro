@@ -20,7 +20,13 @@ HEADERS += adcapplication.h \
            adaudiovisualform.h \
            adlistselect.h \
            adspaceform.h \
-           admainwindow.h 
+           admainwindow.h \
+           adreservemodulelist.h \
+           adreserveform.h \
+           adschedule.h \
+           adreserve.h \
+           adconfigschoollmodule.h \
+           adinsertresource.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
@@ -37,7 +43,13 @@ SOURCES += main_cliente.cpp \
            adaudiovisualform.cpp \
            adlistselect.cpp \
            adspaceform.cpp \
-           admainwindow.cpp 
+           admainwindow.cpp \
+           adreservemodulelist.cpp \
+           adreserveform.cpp \
+           adschedule.cpp \
+           adreserve.cpp \
+           adconfigschoollmodule.cpp \
+           adinsertresource.cpp 
 QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldcore \

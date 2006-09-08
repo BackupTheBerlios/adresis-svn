@@ -26,18 +26,25 @@
 #include "adusermodulelist.h"
 #include "adspacemodulelist.h"
 #include "adaudiovisualmodulelist.h"
+#include "adreservemodulelist.h"
+#include "adconfigschoollmodule.h"
+#include "adinsertresource.h"
 
 #include <QMap>
 #include <QTextEdit>
 #include <QAction>
+#include <QToolBar>
+#include <QVariant>
 #include "adresis.h"
+
 
 #include "aduserform.h"
 #include "adaudiovisualform.h"
 #include "adspaceform.h"
+#include "adreserveform.h"
 
 /**
- * @author Jorge Cuadrado <kuadrosxx@gamail.com>
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
 class ADMainWindow : public DMainWindow
 {
@@ -50,29 +57,40 @@ class ADMainWindow : public DMainWindow
 		Adresis *m_adresis;
 		ADSpaceForm *sform;
 		ADAudiovisualForm *aform;
+		ADReserveForm *rform;
+		ADInsertResource *insertResource;
 		DActionManager *m_actionManager;
 		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
-		QString tipo;	
-
-		void setupActions();
-		void setupMenu();
-		void setupToolbar();
-		void createActions();
+		QString tipo;
+		QString typeRequest;
 		
 		QMenu *fileMenu;
 		QMenu *preferencesMenu;
+		QMenu *configureMenu;
 		QMenu *helpMenu;
+		
+		QToolBar *toolBar;
 
 		QAction *exitAct;
 		QAction *theme;
 		QAction *aboutAct;
 		QAction *conect;
+		QAction *configSchoollAct;
+		QAction *configResourceAct;
+		
+		void setupActions();
+		void setupMenu();
+		void setupToolbar();
+		void createActions();
+		
 		
 	private slots:
 		void showTipDialog();
 		void connectToHost();
 		void about();
 		void changeTheme();
+		void configSchooll();
+		void configResource();
 
 		
 	public slots:
@@ -85,9 +103,12 @@ class ADMainWindow : public DMainWindow
 		void createAudiovisualForm(const ADAudioVisual &);
 		void createSpaceForm();
 		void createSpaceForm(const ADSpace &);
+		void createReserveForm();
 		void addForm(ADFormBase * form, const QString & title);
 		void showListAudioVisualMW(const QList<XMLResults>& result);
 		void requestListTypeslMW (const QList<XMLResults>&results);
+		void requestNameResource(const QString& table, const QString& typeResource);
+		void requestScheduleMW (const QList<XMLResults>&results);
 		
 
 	

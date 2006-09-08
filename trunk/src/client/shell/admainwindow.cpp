@@ -45,10 +45,14 @@
 
 ADMainWindow::ADMainWindow() : DMainWindow()
 {
-	setWindowTitle(tr("Adresis Client"));
+	DCONFIG->beginGroup("ConfigurationOfSchooll");
+	QString titulo = "Adresis - " + qvariant_cast<QString>(DCONFIG->value("NameSchooll"));
+	setWindowTitle(titulo);
+	QIcon icon = QIcon(qvariant_cast<QString>(DCONFIG->value("LogoPath")));
+	setWindowIcon(icon);
+	
 	DCONFIG->beginGroup("TipOfDay");
 	m_adresis = new Adresis();
-	
 	
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	connect(m_adresis, SIGNAL(requestCreateModules(Logic::TypeModule)), this, SLOT(createModules(Logic::TypeModule)));
@@ -60,8 +64,10 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	connect(m_adresis, SIGNAL(showAudiovisual(const ADAudioVisual & )), this, SLOT(createAudiovisualForm(const ADAudioVisual & )));
 
 	connect ( m_adresis, SIGNAL(requestListTypesAD(const QList<XMLResults>&)), this, SLOT(requestListTypeslMW ( const QList<XMLResults>&)) );
-
-
+	
+	connect ( m_adresis, SIGNAL(requestScheduleAD(const QList<XMLResults>&)), this, SLOT(requestScheduleMW ( const QList<XMLResults>&)) );
+	
+	
 	DCONFIG->beginGroup("TipOfDay");
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
 	
@@ -71,36 +77,41 @@ ADMainWindow::ADMainWindow() : DMainWindow()
 	}
 	m_actionManager = new DActionManager(this);
 	
-	
 	setupActions();
 	setupToolbar();
 	setupMenu();
-	
 }
+
 
 void ADMainWindow::setupActions()
 {
+	exitAct = new QAction(tr("&Exit"), this);
+	exitAct->setShortcut(tr("Ctrl+Q"));
+	exitAct->setStatusTip(tr("Exit the application"));
+	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-
-	exitAct = new QAction(tr("E&xit"), this);
-        exitAct->setShortcut(tr("Ctrl+Q"));
-        exitAct->setStatusTip(tr("Exit the application"));
-        connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
-	
 	conect = new QAction(QPixmap(THEME_DIR+"/icons/connect.png"),tr("Connect"), this);
 	exitAct->setStatusTip(tr("Connect to the Data Base"));
-        connect(conect, SIGNAL(triggered()), this, SLOT(connectToHost()));
+	connect(conect, SIGNAL(triggered()), this, SLOT(connectToHost()));
 	connect(this, SIGNAL(disabledConnect(bool)), conect, SLOT(setEnabled(bool)));
 
+	configSchoollAct = new QAction(tr("Configure Schooll"), this);
+	configSchoollAct->setStatusTip("Configure the information about the schooll");
+	configSchoollAct->setEnabled(false);
+	connect(configSchoollAct, SIGNAL(triggered()), this, SLOT(configSchooll()));
 
+	configResourceAct = new QAction(tr("Add/Del Resources"), this);
+	configResourceAct->setStatusTip("Add or del resource from schooll");
+	configResourceAct->setEnabled(false);
+	connect( configResourceAct, SIGNAL( triggered() ), this, SLOT( configResource() ));
 
 	theme = new QAction(tr("Theme"), this);
-        theme->setStatusTip(tr("Change your window theme"));
-        connect(theme, SIGNAL(triggered()), this, SLOT(changeTheme()));
-	
-        aboutAct = new QAction(tr("&About"), this);
-        aboutAct->setStatusTip(tr("Show the application's About box"));
-        connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
+	theme->setStatusTip(tr("Change your window theme"));
+	connect(theme, SIGNAL(triggered()), this, SLOT(changeTheme()));
+
+	aboutAct = new QAction(tr("&About"), this);
+	aboutAct->setStatusTip(tr("Show the application's About box"));
+	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
 }
 
@@ -112,8 +123,8 @@ void ADMainWindow::about()
 		"de los recursos de la escuela EISC\n"
 		"\n"
 		"DESARROLLADORES\n"
-		"Jorge Humberto Cuadrado	'EL TOPO'\n"
-		"Hector Fabio Cruz		'Hectorcaz'\n"
+		"Jorge Humberto Cuadrado	'El Topo'\n"
+		"Hector Fabio Cruz		'HectorCaz'\n"
 		"Charly Aguirre		'Charlito'\n"
 		"Juan Carlos Borrero		'El Abuelo'\n"
 		"Sebastian Henao		'El Borracho'\n"));
@@ -123,7 +134,22 @@ void ADMainWindow::changeTheme()
 {
 	KTPreferences *themeSel = new KTPreferences(0);
 	themeSel->show();
-	
+}
+
+void ADMainWindow::configSchooll()
+{
+	ADConfigSchoollModule *config = new ADConfigSchoollModule(0);
+	config->show();
+}
+
+void ADMainWindow::configResource()
+{
+	insertResource = new ADInsertResource();
+	tipo = "configResource";
+	m_adresis->consultListTypes("adspacetype");
+	m_adresis->consultListTypes("adaudiovisualtype");
+	connect( insertResource, SIGNAL(addDelResource(const QString&, const QString&, const QString& )), m_adresis, SLOT(addDelResourceAD ( const QString&, const QString&, const QString&)) );
+	insertResource->show();
 }
 
 
@@ -136,6 +162,10 @@ void ADMainWindow::setupMenu()
 
         preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
 	preferencesMenu->addAction(theme);
+	
+	configureMenu = menuBar()->addMenu(tr("&Configure"));
+	configureMenu->addAction(configSchoollAct);
+	configureMenu->addAction(configResourceAct);
 
 	menuBar()->addSeparator();
 
@@ -152,7 +182,6 @@ ADMainWindow::~ADMainWindow()
 
 void ADMainWindow::setupToolbar()
 {
-	
 }
 
 void ADMainWindow::showTipDialog()
@@ -186,18 +215,22 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 
 void ADMainWindow::fillModule(Logic::TypeModule module, const QList<XMLResults>&results)
 {
+	m_modules[module]->clean();
 	m_modules[module]->fill(results);
 }
 
 //FIXME: crear todos los modulos
 void ADMainWindow::createModules(Logic::TypeModule module)
 {
-// 	dDebug() << "YA VOY A CREAR MODULOS " << module;
 	emit disabledConnect(false);
+	
 	switch(module)
 	{
 		case Logic::users:
 		{
+			configSchoollAct->setEnabled(true);
+			configResourceAct->setEnabled(true);
+			
 			ADUserModuleList *users = new ADUserModuleList();
 			m_modules.insert( Logic::users, users);
 			toolWindow( DDockWindow::Left )->addWidget( "Users", users);
@@ -244,10 +277,17 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 
 		case Logic::reserves:
 		{
-			
+			ADReserveModuleList *reserve = new ADReserveModuleList();
+			m_modules.insert( Logic::reserves, reserve );
+			toolWindow( DDockWindow::Left )->addWidget( "Reserves", reserve );
+			m_adresis->getInfoModule( Logic::reserves );
+
+			connect(reserve, SIGNAL(requestReserveForm()), this, SLOT(createReserveForm()));
 			break;
 		}
 	}
+	
+	
 }
 
 
@@ -256,9 +296,10 @@ void ADMainWindow::createUserForm()
 // 	dDebug() << "LLEGUE A CREAR USUARIO";
 	dDebug();
 	ADUserForm *form = new ADUserForm;
-	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )));
-	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>)));
+	connect(form, SIGNAL(requestInsertUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>  )), m_adresis, SLOT(addUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>  )));
+	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>)));
 	addForm( form, tr("Añadir Usuario"));
+	
 }
 
 
@@ -267,7 +308,7 @@ void ADMainWindow::createUserForm(const ADUser & user)
 {
 	D_FUNCINFO;
 	ADUserForm *form = new ADUserForm(user);
-	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeModule, bool>)));
+	connect(form, SIGNAL(requestUpdateUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>  )), m_adresis, SLOT(modifyUser(const QString& , const QString& ,const QString& ,const QString& ,QMap<Logic::TypeUser, bool>)));
 	addForm( form, tr("Modificar Usuario"));
 }
 
@@ -301,6 +342,7 @@ void ADMainWindow::showListAudioVisualMW(const QList<XMLResults>&results)
 
 void ADMainWindow::requestListTypeslMW (const QList<XMLResults>&results)
 {
+	
 	if(tipo.operator==("audiovisual"))
 	{
 		if(aform)
@@ -308,13 +350,37 @@ void ADMainWindow::requestListTypeslMW (const QList<XMLResults>&results)
 			aform->insertListTypes( results);
 		}
 	}
-	else
+	else if(tipo.operator==("espacio"))
 	{
 		if(sform)
 		{
 			sform->insertListTypes( results);
 		}
 	}
+	else if(tipo.operator==("reserva"))
+	{
+		if( typeRequest.operator==("nameResource") )
+		{
+			if(rform)
+			{
+				rform->insertListNameResources(results);
+				typeRequest="";
+			}
+		}
+		else
+		{
+			if(rform)
+			{
+				rform->insertListTypes(results);
+			}
+		}
+	}
+	else if(tipo.operator==("configResource"))
+	{
+		dDebug() << "CONFIGRESOURCE";
+		insertResource->insertListTypes( results );
+	}
+
 }
 
 
@@ -339,8 +405,6 @@ void ADMainWindow::createSpaceForm(const ADSpace & space)
 
 void ADMainWindow::createAudiovisualForm()
 {
-// 	dDebug() << "LLEGUE A CREAR AYUDA";
-	
 	aform = new ADAudiovisualForm;
 
 	connect(aform, SIGNAL(requestInsertAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&) ), m_adresis, SLOT(addAudiovisual(const QString&, const QString&, const QString&, const QString&, const QString&)));
@@ -364,10 +428,45 @@ void ADMainWindow::createAudiovisualForm(const ADAudioVisual & audiovisual)
 	
 	m_adresis->consultListTypes("adaudiovisualtype");
 	addForm( aform, tr("Modificar Ayuda Audiovisual"));
-
-	
 }
 
+
+void ADMainWindow::createReserveForm()
+{
+	rform = new ADReserveForm();
+
+	connect( m_adresis, SIGNAL(requestInfoUser(const QString&, const bool)), rform, SLOT(permisos(const QString&, const bool)) );
+	connect( rform, SIGNAL ( requestTypeResources(const QString&, const QString&) ), this, SLOT ( requestNameResource(const QString&, const QString&) )  );
+	connect( rform, SIGNAL ( consultSchedule( const QStrins&, const QString& ) ), m_adresis, SLOT( consultScheduleAD( const QString&, const QString&) ));
+	
+	connect(rform, SIGNAL(requestInsertReserve(const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const bool&, const QString&)), m_adresis, SLOT(addReserve(const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const QString&, const bool&, const QString& )));
+
+	m_adresis->consultInfoUser();
+	
+	tipo= "reserva";
+	m_adresis->consultListTypes("adspacetype");
+	m_adresis->consultListTypes("adaudiovisualtype");
+
+	addForm( rform, tr("Añadir Reserva"));
+}
+
+
+void ADMainWindow::requestNameResource(const QString& table, const QString& typeResource)
+{
+	dDebug() << "Estoy en adMainwindow voy a solicitar los nombres";
+	tipo = "reserva";
+	typeRequest = "nameResource";
+	m_adresis->requestNameResourcesAD(table, typeResource );
+}
+
+
+void ADMainWindow::requestScheduleMW (const QList<XMLResults>&results)
+{
+	if(rform)
+	{
+		rform->requestSchedule( results );
+	}
+}
 
 
 void ADMainWindow::addForm(ADFormBase * form, const QString & title )
@@ -380,8 +479,4 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 	}
 }
-
-
-
-
 

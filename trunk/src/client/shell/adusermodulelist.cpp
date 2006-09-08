@@ -35,8 +35,6 @@ ADUserModuleList::~ADUserModuleList()
 void ADUserModuleList::fill( const QList<XMLResults>&results)
 {
 	D_FUNCINFO;
-	m_pTree->clear ();
-	
 	QList<XMLResults>::const_iterator it= results.begin();
 	
 	while( it != results.end() )
@@ -47,6 +45,11 @@ void ADUserModuleList::fill( const QList<XMLResults>&results)
 		addItem( list );
 		++it;
 	}
+}
+
+void ADUserModuleList::clean()
+{
+	m_pTree->clear ();
 }
 
 void ADUserModuleList::requestAction(int action)

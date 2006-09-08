@@ -198,7 +198,7 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 		while( it != results.end() )
 		{
 			int pos = 0;
-			listaDeListas.insert(pos, (*it)["typeav"]);
+			listaDeListas.insert(pos, (*it)["typespace"]);
 			pos++;
 			listaDeListas.insert(pos, (*it)["numberinventoryav"]);
 			pos++;
@@ -224,7 +224,7 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 			while( it != results.end() )
 			{
 				int pos=0;
-				listaDeListas.insert(pos, (*it)["typeav"]);
+				listaDeListas.insert(pos, (*it)["typespace"]);
 				pos++;
 				listaDeListas.insert(pos, (*it)["numberinventoryav"]);
 				pos++;
@@ -251,7 +251,7 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 			while( it != results.end() )
 			{
 				int pos=0;
-				listaDeListas.insert(pos, (*it)["typeav"]);
+				listaDeListas.insert(pos, (*it)["typespace"]);
 				pos++;
 				listaDeListas.insert(pos, (*it)["numberinventoryav"]);
 				pos++;

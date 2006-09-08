@@ -117,6 +117,12 @@ void ADConnector::readFromServer()
 						emit fillModule(Logic::audiovisuals, results );
 						break;
 					}
+					case Logic::fillReserveModule :
+					{
+						dDebug() << "fillModule(Logic::reserves, results );";
+						emit fillModule(Logic::reserves, results );
+						break;
+					}
 					case Logic::queryUser:
 					{
 						dDebug() << "requestShowUser(results )";
@@ -145,6 +151,12 @@ void ADConnector::readFromServer()
 					{
 						dDebug() << "requestListTypes( results )";
 						emit requestListTypes( results );
+						break;
+					}
+					case Logic::querySchedule:
+					{
+						dDebug() << "requestSchadule( results )"; 
+						emit requestSchedule( results );
 						break;
 					}
 					default:

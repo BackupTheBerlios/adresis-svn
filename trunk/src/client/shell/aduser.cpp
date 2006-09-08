@@ -26,7 +26,7 @@ ADUser::ADUser()
 }
 
 
-ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::TypeModule, bool>permissions )
+ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::TypeUser, bool>permissions )
 	: ADObject(), m_name(name), m_code(code), m_login(login), m_passwd(passwd), m_permissions(permissions)
 {
 	m_valid = true;
@@ -40,7 +40,7 @@ ADUser::~ADUser()
 ADInsertPackage ADUser::insertPackage() 
 {
 	QString strPermissions;
-	QMap<Logic::TypeModule, bool>::const_iterator it = m_permissions.begin();
+	QMap<Logic::TypeUser, bool>::const_iterator it = m_permissions.begin();
 	while(it != m_permissions.end())
 	{
 		if(it.value())
@@ -62,7 +62,7 @@ ADInsertPackage ADUser::insertPackage()
 ADUpdatePackage ADUser::updatePackage() 
 {
 	QString strPermissions;
-	QMap<Logic::TypeModule, bool>::const_iterator it = m_permissions.begin();
+	QMap<Logic::TypeUser, bool>::const_iterator it = m_permissions.begin();
 	while(it != m_permissions.end())
 	{
 		if(it.value())
@@ -94,13 +94,11 @@ void ADUser::setValues(XMLResults values)
 		strPermissions[i];
 		if(strPermissions[i] == '1')
 		{
-			dDebug() << "LE ASIGNE AL MODULO " << Logic::TypeModule(i) << "true";
-			m_permissions.insert(Logic::TypeModule(i), true);
+			m_permissions.insert(Logic::TypeUser(i), true);
 		}
 		else
 		{
-			dDebug() << "LE ASIGNE AL MODULO " << Logic::TypeModule(i) << "false";
-			m_permissions.insert(Logic::TypeModule(i), false);
+			m_permissions.insert(Logic::TypeUser(i), false);
 		}
 	}
 	m_valid = true;
@@ -111,7 +109,7 @@ bool ADUser::isValid() const
 	return m_valid;
 }
 
-QMap<Logic::TypeModule, bool> ADUser::permissions() const
+QMap<Logic::TypeUser, bool> ADUser::permissions() const
 {
 	return  m_permissions;
 }

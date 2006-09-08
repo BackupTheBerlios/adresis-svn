@@ -40,6 +40,8 @@ Adresis::Adresis(QObject * parent)
 	
 	connect ( m_connector, SIGNAL(requestListTypes(const QList<XMLResults>&)), this, SIGNAL (requestListTypesAD( const QList<XMLResults>&)) );
 
+	connect ( m_connector, SIGNAL(requestSchedule (const QList<XMLResults>&)), this, SIGNAL (requestScheduleAD( const QList<XMLResults>&)) );
+	
 	DINIT;
 }
 
@@ -87,13 +89,6 @@ void Adresis::login(const QString &user, const QString &passwd)
 }
 
 
-//////////////////////////////ASI ESTABA ANTES //////////////////////////////
-// void Adresis::autenticated(const XMLResults & values)
-// {
-// 	m_user.setValues(values);
-// 	requestCreateModules();
-// }
-
 
 void Adresis::autenticated(const XMLResults & values)
 {
@@ -106,11 +101,12 @@ void Adresis::autenticated(const XMLResults & values)
 //// NO MAS PORQUE SI, DEBERIA DE HABER ALGUNA FORMA DE TOMAR EL TAMAÑO DE MODULOS QUE HAY, PERO ES Q REALMENTE NO SE COMO SE
 //// DEBERIA DE HACER. POR AHORA LO VOY A DEJAR ASI.
 
-	for(int i=0; i < 4; i++)
+	if(m_user.permissions()[Logic::administrador])
 	{
-		module = Logic::TypeModule(i);
-		if(m_user.permissions()[module])
+		for(int i=0; i < 5; i++)
 		{
+			module = Logic::TypeModule(i);
+			
 			switch(module)
 			{
 				case Logic::users:
@@ -136,6 +132,10 @@ void Adresis::autenticated(const XMLResults & values)
 			}
 		}
 	}
+	else
+	{
+		requestCreateModules(Logic::reserves);
+	}
 	
 }
 
@@ -146,7 +146,7 @@ void Adresis::autenticated(const XMLResults & values)
 void Adresis::getInfoModule(Logic::TypeModule module )
 {
 	D_FUNCINFO;
-	if(m_user.permissions()[module])
+	if(m_user.permissions()[Logic::administrador])
 	{
 		switch(module)
 		{
@@ -172,20 +172,32 @@ void Adresis::getInfoModule(Logic::TypeModule module )
 			
 			case Logic::reserves:
 			{
-// 				ADSelectPackage select(QStringList()<< "adaudiovisual", QStringList() << "type"<<"inventoryNumber");
-// 				m_connector->sendQuery(Logic::fillAudioVisualModule, select);
+				ADSelectPackage selectSpace(QStringList()<< "adspacereserve"<< "adspace", QStringList() <<"idreserve as id" <<"typereserve as type"<<"namespace as name");
+				selectSpace.setWhere( "adspacereserve.idresource = adspace.codespace and isactive=true");
+				m_connector->sendQuery(Logic::fillReserveModule, selectSpace);
+				
+				ADSelectPackage selectAV(QStringList()<< "adavreserve"<< "adaudiovisual", QStringList() <<"idreserve as id" << "typereserve as type"<<"typeav as name");
+				selectAV.setWhere( "adavreserve.idresource = adaudiovisual.numberinventoryav and isactive=true" );
+				m_connector->sendQuery(Logic::fillReserveModule, selectAV);
 			}
 		}
 	}
 
 
-// 	else
-// 	{
-// 		emit requestShowMessage(Msg::Error, "Error, no tiene permisos sobre este modulo");
-// 	}
+	else
+	{
+		ADSelectPackage selectSpace(QStringList()<< "adspacereserve"<< "adspace", QStringList() <<"idreserve as id" <<"typereserve as type"<<"namespace as name");
+		selectSpace.setWhere( "adspacereserve.idresource = adspace.codespace and isactive=true");
+		m_connector->sendQuery(Logic::fillReserveModule, selectSpace);
+
+		ADSelectPackage selectAV(QStringList()<< "adavreserve"<< "adaudiovisual", QStringList() <<"idreserve as id" << "typereserve as type"<<"typeav as name");
+		selectAV.setWhere( "adavreserve.idresource = adaudiovisual.numberinventoryav and isactive=true" );
+		m_connector->sendQuery(Logic::fillReserveModule, selectAV);
+	}
 }
 
-void Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )
+
+void Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeUser, bool> permissions )
 {
 	dDebug() << "Adresis::addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions )";
 	ADUser newUser(name,  code, login,passwd, permissions);
@@ -194,7 +206,7 @@ void Adresis::addUser(const QString& name, const QString& code,const QString& lo
 	getInfoModule(Logic::users);
 }
 
-void Adresis::modifyUser(const QString& name, const QString& code,const QString& login, const QString& passwd, QMap<Logic::TypeModule, bool> permissions )
+void Adresis::modifyUser(const QString& name, const QString& code,const QString& login, const QString& passwd, QMap<Logic::TypeUser, bool> permissions )
 {
 	D_FUNCINFO;
 	ADUser newUser(name, code, login,passwd, permissions);
@@ -252,6 +264,18 @@ void Adresis::modifySpace(const QString& codeSpace, const QString& typeSpace,con
 	getInfoModule(Logic::spaces);
 }
 
+void Adresis::addReserve( const QString& table, const QString& typeR, const QString& userReserve, const QString& userResponsable, const QString& idRecurso, const QString& day, const QString& beginhour, const QString& endhour, const QString& begindate, const QString& enddate, const bool& isactive, const QString& destinationReserve)
+{
+
+	dDebug() << "Adresis::addReserve";
+	ADReserve newReserve(typeR, userReserve, userResponsable, idRecurso, day, beginhour, endhour, begindate, enddate, isactive, destinationReserve);
+	
+	ADInsertPackage insert = newReserve.insertPackage( table );
+	m_connector->sendPackage( insert );
+	getInfoModule(Logic::reserves);
+
+}
+
 
 void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 {
@@ -277,6 +301,10 @@ void Adresis::execDelete(Logic::TypeModule module, const QString& key)
 		{
 			where = "numberinventoryav = '"+ key +"'";
 			table = "adaudiovisual";
+			break;
+		}
+		case Logic::reserves:
+		{
 			break;
 		}
 	}
@@ -321,6 +349,10 @@ void Adresis::getObject(Logic::TypeModule module, const QString& key)
 			type = Logic::querySpace;
 			break;
 		}
+		case Logic::reserves:
+		{
+		
+		}
 	}
 	ADSelectPackage query(QStringList() << table, columns, true );
 	query.setWhere(where);
@@ -346,7 +378,6 @@ void Adresis::consultListAudiovisual(const QString &code)
 	query.setWhere(where);
 	m_connector->sendQuery(type, query);
 
-// 	dDebug() << "Ya Mande la consulta";
 
 }
 
@@ -354,14 +385,91 @@ void Adresis::consultListTypes( const QString &typeL)
 {
 	QStringList columns;
 	QString table;
-	Logic::TypeQuery type;	
-
-	columns << "type";
-	table = typeL;
+	Logic::TypeQuery type;
 	
+	columns << "type";
+	
+	table = typeL;
 	type = Logic::querytypes;
-
 	ADSelectPackage query(QStringList() << table, columns, true );
 	m_connector->sendQuery(type, query);
-	
 }
+
+void Adresis::requestNameResourcesAD(const QString table, const QString typeResource)
+{
+	QStringList columns;
+	QString where;
+	Logic::TypeQuery type;
+	
+	if(table.operator==("adspace"))
+	{
+		columns << "codespace as idresource" <<"namespace as nameresource";
+		where = "typespace = '"+typeResource+"'";
+	}
+	else if( table.operator==("adaudiovisual"))
+	{
+		columns << "numberinventoryav as idresource";
+		where = "typeav = '"+typeResource+"'";
+	}
+	
+	type = Logic::querytypes;
+	ADSelectPackage query(QStringList() << table, columns, true );
+	query.setWhere(where);
+	m_connector->sendQuery(type, query);
+}
+
+
+void Adresis::consultScheduleAD( const QString& table, const QString& name )
+{
+	QStringList columns;
+	QStringList tables;
+	QString where;
+	Logic::TypeQuery type;
+	
+	dDebug() << "CONSULTSCHEDULEAD CONSULTSCHEDULEAD CONSULTSCHEDULEAD";
+// 	select typereserve, nameuser, day, beginhour, endhour, begindate, enddate from adspacereserve, adspace, aduser where namespace= 'salon ingenieria 1'  and adspacereserve.idspace = adspace.codespace and iduser=loginuser;
+	
+	columns << "typereserve" << "nameuser" << "day" <<"beginhour" << "endhour" << "begindate" << "enddate";
+	
+	if(table.operator==("adspace"))
+	{
+		tables << "adspace" << "adspacereserve" << "aduser";
+		where = "codespace= '"+name+"' and adspacereserve.idresource = adspace.codespace and iduserresponsable=loginuser";
+	}
+	else if( table.operator==("adaudiovisual") )
+	{
+		tables << "adaudiovisual" << "adavreserve" << "aduser";
+		where = "numberinventoryav= '"+name+"' and adavreserve.idresource = adaudiovisual.numberinventoryav and iduserresponsable=loginuser";
+	}
+	
+	type = Logic::querySchedule;
+	ADSelectPackage query(tables, columns, true );
+	query.setWhere(where);
+	m_connector->sendQuery(type, query);
+}
+
+
+void Adresis::consultInfoUser()
+{
+	emit requestInfoUser(m_user.login(), m_user.permissions()[Logic::administrador]);
+}
+
+
+void Adresis::addDelResourceAD( const QString &opcion, const QString &table ,const QString &resource)
+{
+	
+	if( opcion.operator==("add"))
+	{
+		ADInsertPackage addDel = ADInsertPackage(table, QStringList() << "type", QStringList() << "'"+resource+"'");
+		m_connector->sendPackage(addDel);
+	}
+	
+	else if( opcion.operator==("del") )
+	{
+		ADDeletePackage addDel(table);
+		QString where = "type = '"+resource+"'";
+		addDel.setWhere( where );
+		m_connector->sendPackage(addDel);
+	}
+}
+

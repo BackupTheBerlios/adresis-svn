@@ -49,7 +49,6 @@ class ADAudiovisualForm : public ADFormBase
 		ADAudioVisual *adAudiovisual;
 		void fill();
 		void setup();
-// 		QPushButton *addType;
 		
 	signals:
 		void requestInsertAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);

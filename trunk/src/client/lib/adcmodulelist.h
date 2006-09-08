@@ -43,6 +43,7 @@ class ADCModuleList: public QWidget
 		ADCModuleList(const QString& moduleName, const QStringList& list, QWidget *parent );
 		virtual ~ADCModuleList();
 		virtual void fill( const QList<XMLResults>&results) = 0;
+		virtual void clean() = 0;
 		ADModuleButtonBar *addButtonBar(int flags);
 		QBoxLayout *boxLayout();
 		void addItem(const QStringList &cols);

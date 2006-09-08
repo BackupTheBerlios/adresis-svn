@@ -49,7 +49,7 @@ ADInsertPackage ADSpace::insertPackage()
 		strAireSpace = "false";
 	}
 
-	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace.remove(" ")) << SQLSTR(m_typeSpace.remove(" ")) << strAireSpace << SQLSTR(m_capacitySpace.remove(" ")) << SQLSTR(m_nameSpace.remove(" ")));
+	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace) << SQLSTR(m_typeSpace) << strAireSpace << SQLSTR(m_capacitySpace) << SQLSTR(m_nameSpace));
 	
 	dDebug() << insert.toString();
 	return insert;
@@ -67,7 +67,7 @@ ADUpdatePackage ADSpace::updatePackage()
 	{
 		strAireSpace = "false";
 	}
-	ADUpdatePackage update("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace.remove(" ")) << SQLSTR(m_typeSpace.remove(" ")) << strAireSpace << SQLSTR(m_capacitySpace.remove(" ")) << SQLSTR(m_nameSpace.remove(" ")) );
+	ADUpdatePackage update("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace) << SQLSTR(m_typeSpace) << strAireSpace << SQLSTR(m_capacitySpace) << SQLSTR(m_nameSpace) );
 	
 	dDebug() << update.toString();
 	return update;

@@ -27,6 +27,7 @@
 #include "aduser.h"
 #include "adaudiovisual.h"
 #include "adspace.h"
+#include "adreserve.h"
 
 
 /**
@@ -40,9 +41,9 @@ class Adresis : public QObject
 		~Adresis();
 		
 	public slots:
-		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
+		void addUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeUser, bool> permissions );
 		
-		void modifyUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeModule, bool> permissions );
+		void modifyUser(const QString& name, const QString& code,const QString& login,const QString& passwd,QMap<Logic::TypeUser, bool> permissions );
 		
 		
 		void modifyAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
@@ -53,8 +54,8 @@ class Adresis : public QObject
 		
 		void modifySpace(const QString& codeSpace, const QString& typeSpace,const bool & coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 		
+		void addReserve(const QString& table, const QString& typeR, const QString& userReserve, const QString& userResponsable, const QString& idRecurso, const QString& day, const QString& beginhour, const QString& endhour, const QString& begindate, const QString& enddate, const bool& isactive, const QString& destinationReserve);
 		
-	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
 		void autenticated(const XMLResults& values);
@@ -67,8 +68,12 @@ class Adresis : public QObject
 		
 		void consultListAudiovisual(const QString &code);
 		void consultListTypes(const QString &typeL);
+		void consultInfoUser();
+		void requestNameResourcesAD(const QString table, const QString typeResource);
+		void consultScheduleAD( const QString& table, const QString& name );
+		void addDelResourceAD(const QString &opcion, const QString &table, const QString &resource);
 
-				
+
 	signals:
 		void requestShowMessage(Msg::Type type, const QString& message );
 		void requestCreateModules(Logic::TypeModule);
@@ -79,6 +84,9 @@ class Adresis : public QObject
 		
 		void requestShowListAudioVisualAD(const QList<XMLResults>& result);
 		void requestListTypesAD( const QList<XMLResults>&);
+		void requestInfoUser(const QString&, const bool);
+		void requestScheduleAD( const QList<XMLResults>& );
+		
 		
 		
 	private:
