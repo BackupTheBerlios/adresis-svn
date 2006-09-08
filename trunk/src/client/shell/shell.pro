@@ -26,7 +26,8 @@ HEADERS += adcapplication.h \
            adschedule.h \
            adreserve.h \
            adconfigschoollmodule.h \
-           adinsertresource.h 
+           adinsertresource.h \
+           adevent.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
@@ -49,7 +50,8 @@ SOURCES += main_cliente.cpp \
            adschedule.cpp \
            adreserve.cpp \
            adconfigschoollmodule.cpp \
-           adinsertresource.cpp 
+           adinsertresource.cpp \
+           adevent.cpp 
 QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldcore \
