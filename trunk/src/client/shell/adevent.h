@@ -35,7 +35,7 @@ class ADEvent
 		enum m_module{user,spaces,audiovisual,reserve};
 		enum m_operation{add,del,update,select,fill};
 		QVariant m_data;
-		ADSqlPackageBase m_package;
+		ADSqlPackageBase *m_package;
 
 	public slots:
 		ADSqlPackageBase toXml();
