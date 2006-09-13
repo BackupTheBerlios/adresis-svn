@@ -1,0 +1,46 @@
+Using Qt: 4.1.2
+vie sep 8 08:22:05 COT 2006
+###################################
+-> Using DEBUG support
+###################################
+Compiling ADRESIS 0.1alpha-svn...
+Go for a coffee cup ;)
+make: *** No hay ninguna regla para construir el objetivo `/usr/local/Trolltech/Qt-4.1.2/mkspecs/linux-g++/qmake.conf', necesario para `Makefile'.  Alto.
+Error
+------ dmesg --------
+[17179599.580000] Starting AFS cache scan...found 335 non-empty cache files (0%). [17179608.260000] eth0: no IPv6 routers present [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up)
+---------------------
+Using Qt: 4.1.2
+vie sep 8 08:22:18 COT 2006
+###################################
+-> Using DEBUG support
+###################################
+Cleaning...
+Compiling ADRESIS 0.1alpha-svn...
+Go for a coffee cup ;)
+make: *** No hay ninguna regla para construir el objetivo `/usr/local/Trolltech/Qt-4.1.2/mkspecs/linux-g++/qmake.conf', necesario para `Makefile'.  Alto.
+Error
+------ dmesg --------
+[17179599.580000] Starting AFS cache scan...found 335 non-empty cache files (0%). [17179608.260000] eth0: no IPv6 routers present [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up)
+---------------------
+Using Qt: 4.1.2
+vie sep 8 08:23:36 COT 2006
+###################################
+-> Using DEBUG support
+###################################
+Cleaning...
+Compiling ADRESIS 0.1alpha-svn...
+Go for a coffee cup ;)
+make: *** No hay ninguna regla para construir el objetivo `/usr/local/Trolltech/Qt-4.1.2/mkspecs/linux-g++/qmake.conf', necesario para `Makefile'.  Alto.
+Error
+------ dmesg --------
+[17179599.580000] Starting AFS cache scan...found 335 non-empty cache files (0%). [17179608.260000] eth0: no IPv6 routers present [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.23 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.24 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.25 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up) [17180385.192000] afs: Lost contact with file server 192.168.131.94 in cell eisc.univalle.edu.co (multi-homed address; other same-host interfaces maybe up)
+---------------------
+Using Qt: 4.1.2
+vie sep 8 09:11:45 COT 2006
+###################################
+-> Using DEBUG support
+###################################
+Compiling ADRESIS 0.1alpha-svn...
+Go for a coffee cup ;)
+Compiling successful! Time: 4 seconds
