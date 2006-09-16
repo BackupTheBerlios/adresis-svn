@@ -20,27 +20,30 @@
 #ifndef ADEVENT_H
 #define ADEVENT_H
 
+#include <QVariant>
+#include "adsqlpackagebase.h"
+
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
 */
-class ADEvent
+class ADEvent : public QObject
 {
 	Q_OBJECT;
 	public:
-		ADEvent();
+		enum Module{user,spaces,audiovisual,reserve};
+		enum Operation{add,del,update,select,fill};
+		ADEvent(Module, Operation, QVariant variant);
 		~ADEvent();
 		
 	
 	private:
-		enum m_module{user,spaces,audiovisual,reserve};
-		enum m_operation{add,del,update,select,fill};
 		QVariant m_data;
 		ADSqlPackageBase *m_package;
 
 	public slots:
 		ADSqlPackageBase toXml();
 		int operation();
-		QVariant data;
+		QVariant data();
 		
 		
 

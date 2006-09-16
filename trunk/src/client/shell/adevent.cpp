@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "adevent.h"
 
-ADEvent::ADEvent()
+ADEvent::ADEvent(Module, Operation, QVariant variant)
 {
 }
 
@@ -28,4 +28,11 @@ ADEvent::~ADEvent()
 {
 }
 
+ADSqlPackageBase ADEvent::toXml()
+{}
 
+int ADEvent::operation()
+{}
+
+QVariant ADEvent::data()
+{}
