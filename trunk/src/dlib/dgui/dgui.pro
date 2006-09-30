@@ -3,29 +3,12 @@
 # Subdir relative project main directory: ./src/dlib/dgui
 # Target is a library:  
 
-RESOURCES += images.qrc 
-QT += xml 
 INSTALLS += include \
             target 
 target.path = /lib/ 
 include.files += *.h 
 include.path = /include/dgui 
-KDEV_QTVER = 4 
-LIBS += -ldcore 
-INCLUDEPATH += ../../../src/dlib/dcore \
-               ../ 
-MOC_DIR = .moc 
-UI_DIR = .ui 
-OBJECTS_DIR = .obj 
-QMAKE_LIBDIR = ../dcore 
-CONFIG += release \
-          warn_on \
-          dll 
-TEMPLATE = lib 
-HEADERS += ccbar.h \
-           ccbutton.h \
-           collapsiblewidget.h \
-           danimwidget.h \
+HEADERS += danimwidget.h \
            dapplication.h \
            dcellview.h \
            dcolorbutton.h \
@@ -36,7 +19,6 @@ HEADERS += ccbar.h \
            dflatbutton.h \
            dfontchooser.h \
            dformfactory.h \
-           dimagebutton.h \
            doptionaldialog.h \
            dradiobuttongroup.h \
            drulerbase.h \
@@ -49,31 +31,41 @@ HEADERS += ccbar.h \
            dwidgetlistview.h \
            dwizard.h \
            dxyspinbox.h \
-           kseparator.h \
            daction.h \
            dactionmanager.h \
-           comdefs.h \
-           ddockwindow.h \
-           dlstabwidget.h \
            dmainwindow.h \
-           docksplitter.h \
            dmdiwindow.h \
-           button.h \
-           buttonbar.h \
            ddatepicker.h \
            ddatetable.h \
-           dcommand.h \
            dthemedocument.h \
            dthememanager.h \
            dclicklineedit.h \
            dtreewidgetsearchline.h \
            ddatewidget.h \
            dosd.h \
-           dtipdialog.h 
-SOURCES += ccbar.cpp \
-           ccbutton.cpp \
-           collapsiblewidget.cpp \
-           danimwidget.cpp \
+           dtipdialog.h \
+           dwaitstyle.h \
+           dpagedialog.h \
+           dpagemodel.h \
+           dpageview.h \
+           dpageview_p.h \
+           dpagewidget.h \
+           dpagewidgetmodel.h \
+           dcirclebutton.h \
+           dcirclebuttonbar.h \
+           dcollapsiblewidget.h \
+           dseparator.h \
+           dimagebutton.h \
+           dstylecombobox.h \
+           dterm.h \
+           dtermtab.h \
+           dflashwidget.h \
+           ddualcolorbutton.h \
+           dbuttonbar.h \
+           dtabbedmainwindow.h \
+           dtoolview.h \
+           dviewbutton.h 
+SOURCES += danimwidget.cpp \
            dapplication.cpp \
            dcellview.cpp \
            dcolorbutton.cpp \
@@ -97,37 +89,59 @@ SOURCES += ccbar.cpp \
            dwidgetlistview.cpp \
            dwizard.cpp \
            dxyspinbox.cpp \
-           kseparator.cpp \
            daction.cpp \
            dactionmanager.cpp \
-           ddockwindow.cpp \
-           dlstabwidget.cpp \
            dmainwindow.cpp \
-           docksplitter.cpp \
            dmdiwindow.cpp \
-           button.cpp \
-           buttonbar.cpp \
            ddatepicker.cpp \
            ddatetable.cpp \
-           dcommand.cpp \
            dthemedocument.cpp \
            dthememanager.cpp \
            dclicklineedit.cpp \
            dtreewidgetsearchline.cpp \
            ddatewidget.cpp \
            dosd.cpp \
-           dtipdialog.cpp 
+           dtipdialog.cpp \
+           dwaitstyle.cpp \
+           dpagedialog.cpp \
+           dpagemodel.cpp \
+           dpageview.cpp \
+           dpageview_p.cpp \
+           dpagewidget.cpp \
+           dpagewidgetmodel.cpp \
+           dcirclebutton.cpp \
+           dcirclebuttonbar.cpp \
+           dcollapsiblewidget.cpp \
+           dseparator.cpp \
+           dstylecombobox.cpp \
+           dterm.cpp \
+           dtermtab.cpp \
+           dflashwidget.cpp \
+           ddualcolorbutton.cpp \
+           dbuttonbar.cpp \
+           dtabbedmainwindow.cpp \
+           dtoolview.cpp \
+           dviewbutton.cpp 
+DEFINES += DLIB_GUI
+RESOURCES += dgui_images.qrc
+QT += xml
+KDEV_QTVER = 4
+LIBS += -ldcore
+INCLUDEPATH += ../dcore \
+../
+MOC_DIR = .moc
+UI_DIR = .ui
+OBJECTS_DIR = .obj
+QMAKE_LIBDIR = ../../../src/dlib/dcore \
+../dcore
+CONFIG += release \
+warn_on \
+dll
+TEMPLATE = lib
+QT += opengl
+! include(../dlibconfig.pri){
+  error("Run ./configure first!")
+}
 linux-g++{
-  HEADERS += dterm.h \
-  dtermtab.h \
-  dflashwidget.h
-  SOURCES += dterm.cpp \
-  dtermtab.cpp \
-  dflashwidget.cpp
-}
-
-macosx{
-}
-
-win32{
+  TARGETDEPS += ../dcore/libdcore.so
 }

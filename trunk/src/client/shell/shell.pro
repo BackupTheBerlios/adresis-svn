@@ -52,19 +52,14 @@ SOURCES += main_cliente.cpp \
            adconfigschoollmodule.cpp \
            adinsertresource.cpp \
            adevent.cpp 
-QT += xml network
 KDEV_QTVER = 4
 LIBS += -ldcore \
 -ldgui \
-../../../src/client/network/libnetwork.a \
-../../../src/client/lib/libadlib.a
-INCLUDEPATH += ../../../src/client/network \
-../../../src/client/lib \
-../../../src/dlib/dgui \
-../../../src/dlib/dcore
-QMAKE_LIBDIR = ../../../src/dlib/dcore \
-../../../src/dlib/dgui
 TARGET = ../../../bin/adclient.bin
 CONFIG += release \
 warn_on
 TEMPLATE = app
+
+
+include(shell_config.pri)
+

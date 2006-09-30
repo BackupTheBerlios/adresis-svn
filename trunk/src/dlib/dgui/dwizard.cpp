@@ -20,10 +20,10 @@
 #include "dwizard.h"
 
 #include "dvhbox.h"
-#include "kseparator.h"
+#include "dseparator.h"
 #include "ddebug.h"
 
-#include "kimageeffect.h"
+#include "dimageeffect.h"
 
 // Qt
 #include <QLabel>
@@ -114,7 +114,7 @@ void DWizard::next()
 {
 	m_history.setCurrentIndex(m_history.currentIndex()+1);
 	
-	dDebug() << m_history.currentIndex() << " " << m_history.count() << endl;
+// 	dDebug() << m_history.currentIndex() << " " << m_history.count() << endl;
 	
 	if ( m_history.currentIndex() == m_history.count()-1 )
 	{
@@ -159,7 +159,7 @@ DWizardPage::DWizardPage(const QString &title, QWidget *parent) : DVHBox(parent)
 {
 	DVHBox *theTitle = new DVHBox(this, Qt::Vertical);
 	new QLabel(title, theTitle);
-	new KSeparator(theTitle);
+	new DSeparator(theTitle);
 	boxLayout()->setAlignment(theTitle, Qt::AlignTop);
 	
 	m_container = new QFrame(this);
@@ -170,7 +170,7 @@ DWizardPage::DWizardPage(const QString &title, QWidget *parent) : DVHBox(parent)
 	m_layout->addWidget(m_image, 0, 0, Qt::AlignLeft);
 	m_image->hide();
 	
-	new KSeparator(this);
+	new DSeparator(this);
 	
 	hide();
 }
@@ -178,7 +178,7 @@ DWizardPage::DWizardPage(const QString &title, QWidget *parent) : DVHBox(parent)
 void DWizardPage::setPixmap(const QPixmap &px)
 {
 	QImage image = px.toImage();
-// 	KImageEffect::hash( image, KImageEffect::SouthLite, 1);
+// 	DImageEffect::hash( image, DImageEffect::SouthLite, 1);
 	m_image->setPixmap(QPixmap::fromImage(image));
 	m_image->show();
 }

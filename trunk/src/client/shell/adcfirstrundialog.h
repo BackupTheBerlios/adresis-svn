@@ -84,7 +84,7 @@ class CWWelcomePage : public DWizardPage
 		
 		void setMessage(const QString &msg);
 		
-		bool isComplete() { return true; };
+		bool isComplete() const { return true; } ;
 		void reset() { };
 		
 	private:
@@ -101,7 +101,7 @@ class CWSecondPage : public DWizardPage
 		QString home();
 		QString repository();
 		
-		bool isComplete();
+		bool isComplete()const;
 		void reset();
 		
 	private slots:

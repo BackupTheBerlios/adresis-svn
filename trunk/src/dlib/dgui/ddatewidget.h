@@ -23,14 +23,15 @@
 
 #include <qwidget.h>
 #include <QDate>
+#include "dglobal.h"
 
 class QComboBox;
 class QSpinBox;
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DDateWidget : public QWidget
+class D_GUI_EXPORT DDateWidget : public QWidget
 {
 	Q_OBJECT;
 	public:

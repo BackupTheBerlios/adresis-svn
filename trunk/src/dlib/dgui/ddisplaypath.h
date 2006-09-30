@@ -26,6 +26,7 @@
 #include <QImage>
 #include <QPen>
 #include <QBrush>
+#include "dglobal.h"
 
 /**
  * @if english
@@ -33,9 +34,9 @@
  * @elseif spanish
  * @short Esta clase provee de un visualizador de path.
  * @endif
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DDisplayPath : public QFrame
+class D_GUI_EXPORT DDisplayPath : public QFrame
 {
 	Q_OBJECT
 	public:

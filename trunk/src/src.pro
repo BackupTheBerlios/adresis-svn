@@ -6,8 +6,9 @@
 SUBDIRS += dlib \
            server \
            client 
-KDEV_QTVER = 3
+KDEV_QTVER = 4
 TARGET = ../bin/adresis
 CONFIG += release \
 warn_on
 TEMPLATE = subdirs
+

@@ -22,14 +22,15 @@
 
 #include <QWidget>
 #include <QStringList>
+#include <dglobal.h>
 
 class QBoxLayout;
 class QGridLayout;
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DFormFactory
+class D_GUI_EXPORT DFormFactory
 {
 	public:
 		DFormFactory();

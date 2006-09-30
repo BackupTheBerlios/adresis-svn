@@ -26,6 +26,7 @@
 #include <QHash>
 
 #include "dconfigdocument.h"
+#include "dglobal.h"
 
 class DConfig;
 
@@ -34,7 +35,7 @@ class DConfig;
  * this is a doon config handler
 */
 
-class DConfig : public QObject
+class D_CORE_EXPORT DConfig : public QObject
 {
 	protected:
 		DConfig();
@@ -44,6 +45,8 @@ class DConfig : public QObject
 		
 	public:
 		void beginGroup(const QString & prefix );
+		void endGroup();
+		
 		void setValue ( const QString & key, const QVariant & value );
 
 		QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const;

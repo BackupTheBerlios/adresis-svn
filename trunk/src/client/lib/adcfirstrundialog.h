@@ -35,6 +35,44 @@ class QLineEdit;
  * El home que es el directorio donde esta instalada la aplicacion y el repositorio es usado para multiples propositos
  * @author Jorge Cuadrado
  */
+
+class CWWelcomePage : public DWizardPage
+{
+	Q_OBJECT
+	public:
+		CWWelcomePage(QWidget *parent = 0);
+		~CWWelcomePage();
+		
+		void setMessage(const QString &msg);
+		
+		bool isComplete() { return true; };
+		void reset() { };
+		
+	private:
+		QLabel *m_message;
+};
+
+class CWSecondPage : public DWizardPage
+{
+	Q_OBJECT
+	public:
+		CWSecondPage(QWidget *parent = 0);
+		~CWSecondPage();
+		void setData(const QString &home, const QString &repos);
+		QString home();
+		QString repository();
+		
+		bool isComplete();
+		void reset();
+		
+	private slots:
+		void verify(const QString &);
+		
+	private:
+		QLineEdit *m_kthome;
+		QLineEdit *m_ktrepos;
+};
+
 class ADCFirstRunDialog : public DWizard
 {
 	Q_OBJECT
@@ -75,42 +113,7 @@ class ADCFirstRunDialog : public DWizard
 		QString ktrepos;
 };
 
-class CWWelcomePage : public DWizardPage
-{
-	Q_OBJECT
-	public:
-		CWWelcomePage(QWidget *parent = 0);
-		~CWWelcomePage();
-		
-		void setMessage(const QString &msg);
-		
-		bool isComplete() { return true; };
-		void reset() { };
-		
-	private:
-		QLabel *m_message;
-};
 
-class CWSecondPage : public DWizardPage
-{
-	Q_OBJECT
-	public:
-		CWSecondPage(QWidget *parent = 0);
-		~CWSecondPage();
-		void setData(const QString &home, const QString &repos);
-		QString home();
-		QString repository();
-		
-		bool isComplete();
-		void reset();
-		
-	private slots:
-		void verify(const QString &);
-		
-	private:
-		QLineEdit *m_kthome;
-		QLineEdit *m_ktrepos;
-};
 
 #endif
 

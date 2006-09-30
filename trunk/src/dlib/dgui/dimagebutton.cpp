@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
+
 #include "dimagebutton.h"
 
 #include <QPainter>
@@ -34,7 +34,7 @@
 class DImageButton::Animation
 {
 	public:
-		Animation(int initialSize) : aSize(initialSize), m_interval(80), aBeginning(true)
+		Animation(int initialSize) : aSize(initialSize), aBeginning(true), m_interval(80)
 		{
 			aTimer = new QTimer;
 		}
@@ -84,14 +84,13 @@ void DImageButton::setup()
 {
 	setFlat( true );
 	setAutoDefault( false );
+	setIconSize( QSize(m_imageSize, m_imageSize) );
 	setMaximumSize(m_imageSize, m_imageSize);
 	setMinimumSize(m_imageSize, m_imageSize);
+	m_animator = new Animation(m_imageSize);
+	connect(m_animator->aTimer, SIGNAL(timeout()), this, SLOT(animate()));
 	
-	if ( m_isAnimated )
-	{
-		m_animator = new Animation(m_imageSize);
-		connect(m_animator->aTimer, SIGNAL(timeout()), this, SLOT(animate()));
-	}
+	setFocusPolicy( Qt::NoFocus );
 }
 
 void DImageButton::enterEvent(QEvent *)
@@ -194,3 +193,10 @@ void DImageButton::setImage ( const QIcon & icon)
 // 	QStylePainter p(this);
 // 	p.drawControl(QStyle::CE_PushButton, opt);
 // }
+
+
+void DImageButton::setAnimated(bool anim)
+{
+	m_isAnimated = anim;
+}
+

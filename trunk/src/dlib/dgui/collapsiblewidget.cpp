@@ -19,11 +19,31 @@
 */
 
 #include <QtGui>
-#include <collapsiblewidget.h>
+#include "collapsiblewidget.h"
 
 /******************************************************************
  * Helper classes
  *****************************************************************/
+
+class ClickableLabel : public QLabel
+{
+	Q_OBJECT
+	public:
+		ClickableLabel( QWidget* parent = 0 );
+		~ClickableLabel();
+		
+	protected:
+		void paintEvent(QPaintEvent *e);
+		void enterEvent ( QEvent * e);
+		void leaveEvent(QEvent *e);
+		void mousePressEvent( QMouseEvent *e );
+		
+	signals:
+		void clicked();
+		
+	private:
+		bool m_isEnter;
+};
 
 ClickableLabel::ClickableLabel( QWidget* parent )
 	: QLabel( parent ), m_isEnter(false)
@@ -160,6 +180,18 @@ SettingsContainer::~SettingsContainer()
 	delete d;
 }
 
+CollapsibleWidget::CollapsibleWidget(QWidget *parent)
+	: QWidget(parent), d(new CollapsibleWidget::Private)
+{
+	init();
+}
+CollapsibleWidget::CollapsibleWidget(const QString& caption, QWidget *parent)
+	: QWidget(parent), d(new CollapsibleWidget::Private)
+{
+	init();
+	setCaption(caption);
+}
+
 CollapsibleWidget* SettingsContainer::insertWidget( QWidget *w, const QString& name )
 {
 	if (w && w->layout()) 
@@ -173,18 +205,6 @@ CollapsibleWidget* SettingsContainer::insertWidget( QWidget *w, const QString& n
 	d->layout->addWidget( cw );
 	cw->setInnerWidget( w );
 	return cw;
-}
-
-CollapsibleWidget::CollapsibleWidget(QWidget *parent)
-	: QWidget(parent), d(new CollapsibleWidget::Private)
-{
-	init();
-}
-CollapsibleWidget::CollapsibleWidget(const QString& caption, QWidget *parent)
-	: QWidget(parent), d(new CollapsibleWidget::Private)
-{
-	init();
-	setCaption(caption);
 }
 
 void CollapsibleWidget::init()
@@ -265,3 +285,4 @@ bool CollapsibleWidget::isExpanded() const
 	return d->colButton->isChecked();
 }
 
+#include "collapsiblewidget.moc"

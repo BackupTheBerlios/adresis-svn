@@ -51,7 +51,7 @@ void DTerm::showTerm()
 {
 	QStringList args;
 
-	args << QStringList() << "-into" << QString::number(winId());
+	args << QStringList() << "-into" << QString::number(winId()) << "-bg" << palette().color(QPalette::Background).name() << "-fg" << palette().color(QPalette::Foreground).name();
 
 	m_process->start("xterm", args);
 	

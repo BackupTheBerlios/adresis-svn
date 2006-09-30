@@ -25,7 +25,7 @@
 #include <QMap>
 #include <QColorGroup>
 
-#include "dthememanager.h"
+#include "dgui/dthememanager.h"
 #include "dconfig.h"
 
 #include <QLineEdit>
@@ -34,9 +34,10 @@
 #include <QFileDialog>
 #include <QDialog>
 
-#include "dvhbox.h"
+#include "dgui/dvhbox.h"
+#include "dglobal.h"
 
-#include "dwizard.h"
+#include "dgui/dwizard.h"
 
 class QApplication;
 class QString;
@@ -57,7 +58,7 @@ typedef QMap<QString, QString> ParseArgs;
  * @TODO
  * @li We need have a cache directory (like /tmp in un*x)
 */
-class Q_GUI_EXPORT DApplication : public QApplication
+class D_GUI_EXPORT DApplication : public QApplication
 {
 	Q_OBJECT
 	public:
@@ -173,6 +174,9 @@ class Q_GUI_EXPORT DApplication : public QApplication
 		 * @param font 
 		 */
 		void changeFont(const QFont &font); // static?
+		
+		
+		DConfig *config(const QString &group = "General");
 		
 	public slots:
 		/**

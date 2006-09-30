@@ -1,0 +1,191 @@
+DROP TABLE AdUser CASCADE;
+DROP TABLE AdSpace CASCADE;
+DROP TABLE AdAudioVisual CASCADE;
+--DROP TABLE AdSpaceWhitAV CASCADE;
+DROP TABLE AdSpaceReserve CASCADE;
+DROP TABLE AdAVReserve CASCADE;
+--DROP TABLE AdSpaceCancelation CASCADE;
+--DROP TABLE AdAVCancelation CASCADE;
+DROP TABLE AdScheduleAV CASCADE;
+DROP TABLE AdScheduleSpace CASCADE;
+
+CREATE TABLE AdUser(
+	permissionsUser varchar(4), --check (permissionsUser('1111', '0000')),
+	nameUser varchar(30),
+	codeUser varchar(20),
+	loginUser varchar(20) PRIMARY KEY,
+	passwdUser varchar(20)
+);
+
+INSERT INTO AdUser VALUES('1111','charly','0330911','charagmz','charagmz');
+INSERT INTO AdUser VALUES('1111','juan','0330912','juank','juank');
+INSERT INTO AdUser VALUES('1111','carlos','0330913','carlosbor','carlosbor');
+INSERT INTO AdUser VALUES('1111','hector','0330914','hecfa','hecfa');
+INSERT INTO AdUser VALUES('1111','jorge','0330915','jorgecua','jorgecua');
+INSERT INTO AdUser VALUES('1111','humberto','0330916','humbertocu','humbertocu');
+INSERT INTO AdUser VALUES('1111','sebastian','0330917','sebrand','sebrand');
+INSERT INTO AdUser VALUES('1111','deisy','0330918','deisych','deisych');
+INSERT INTO AdUser VALUES('1111','rafael','0330919','rafaca','rafaca');
+INSERT INTO AdUser VALUES('1111','jhon','0330910','jhonmu','jhonmu');
+
+
+CREATE TABLE AdSpace(
+	codeSpace varchar(20) PRIMARY KEY,
+	typeSpace varchar(20),
+	coolAirSpace boolean,
+	capacitySpace integer,
+	nameSpace varchar(30)
+);
+
+INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
+INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
+INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
+INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
+INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
+INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
+INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
+INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
+INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
+INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
+
+
+CREATE TABLE AdAudioVisual(
+	typeAV varchar(20),
+	marksEquipmentAV varchar(20),
+	estateAV varchar(50) check(estateAv in ('bueno', 'malo')),
+	numberinventoryAV varchar(20) PRIMARY KEY,
+	codeSpace varchar(20), FOREIGN KEY (codeSpace) REFERENCES AdSpace(codeSpace)
+	--Si la ayuda no tiene espacio es Null
+	--este codigo se utiliza para determinar que ayudas tiene un espacio
+);
+
+INSERT INTO AdAudioVisual VALUES('video beam','sony','bueno', '1122', '211');
+INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','bueno', '1133', '212');
+INSERT INTO AdAudioVisual VALUES('proyector acetatos','hp','bueno', '1144', '213');
+INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','malo', '1155', '214');
+INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1166', '211');
+INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1177', '216');
+INSERT INTO AdAudioVisual VALUES('reproductor VHS','sony','bueno', '1188', '217');
+INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
+INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', '218');
+INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '219');
+
+-- CREATE TABLE AdSpaceWhitAV(
+-- 	nroInventarioAyuda varvarchar(10), FOREIGN KEY (nroInventarioAyuda) REFERENCES AyudaAudioVisual(numeroInventario),
+-- 	codigoEspacio varvarchar(10), FOREIGN KEY (codigoEspacio) REFERENCES Espacio(codigo),
+-- 	PRIMARY KEY(nroInventarioAyuda, codigoEspacio)
+-- );
+
+
+CREATE TABLE AdScheduleAV(
+	idAudioVisual varchar(20), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV)ON DELETE CASCADE ON UPDATE CASCADE,
+	idScheduleAV varchar(20) PRIMARY KEY,
+	beginHour time ,
+	endHour time, 
+	beginDate date,
+	endDate date,
+	check(beginHour < endHour and beginDate <= endDate)
+);
+
+
+INSERT INTO AdScheduleAV VALUES('1122','111110','10:00:00.00','11:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleAV VALUES('1133','111111','11:00:00.00','12:00:00.00','2/6/2006','2/6/2006');
+INSERT INTO AdScheduleAV VALUES('1144','111112','12:00:00.00','13:00:00.00','3/6/2006','3/6/2006');
+INSERT INTO AdScheduleAV VALUES('1155','111113','13:00:00.00','14:00:00.00','4/6/2006','4/6/2006');
+INSERT INTO AdScheduleAV VALUES('1166','111114','14:00:00.00','15:00:00.00','5/6/2006','5/6/2006');
+INSERT INTO AdScheduleAV VALUES('1177','111115','15:00:00.00','16:00:00.00','6/6/2006','6/6/2006');
+INSERT INTO AdScheduleAV VALUES('1188','111116','16:00:00.00','17:00:00.00','7/6/2006','7/6/2006');
+INSERT INTO AdScheduleAV VALUES('1199','111117','17:00:00.00','18:00:00.00','8/6/2006','8/6/2006');
+INSERT INTO AdScheduleAV VALUES('1100','111118','18:00:00.00','19:00:00.00','9/6/2006','9/6/2006');
+INSERT INTO AdScheduleAV VALUES('1222','111119','19:00:00.00','20:00:00.00','10/6/2006','10/6/2006');
+
+CREATE TABLE AdScheduleSpace(
+	idSpace varchar(20), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE,
+	idScheduleSpace varchar(20) PRIMARY KEY,
+	beginHour time,
+	endHour time,
+	beginDate date,
+	endDate date,
+	check(beginHour < endHour and beginDate <= endDate)
+);
+
+INSERT INTO AdScheduleSpace VALUES('211','11510','08:00:00.00','10:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('212','11511','10:00:00.00','11:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('213','11512','12:00:00.00','13:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('214','11513','14:00:00.00','16:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('215','11514','10:00:00.00','11:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('216','11515','07:00:00.00','10:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('217','11516','09:00:00.00','11:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('218','11517','16:00:00.00','18:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('219','11518','16:00:00.00','18:00:00.00','1/6/2006','1/6/2006');
+INSERT INTO AdScheduleSpace VALUES('220','11519','16:00:00.00','18:00:00.00','1/6/2006','1/6/2006');
+
+
+CREATE TABLE AdSpaceReserve(
+	typeReserve varchar(20),
+	--tipoRecurso varvarchar(20),
+	idUser varchar(20), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE,
+	idSpace varchar(20), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE,
+	idScheduleSpace varchar(20), FOREIGN KEY (idScheduleSpace) REFERENCES AdScheduleSpace(idScheduleSpace)ON DELETE CASCADE ON UPDATE CASCADE, 
+	destinationReserve varchar(50),
+	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
+);
+
+INSERT INTO AdSpaceReserve VALUES('semestral','charagmz','211','11510','Clase de Algoritmia y Programacion');
+INSERT INTO AdSpaceReserve VALUES('temporal','juank','212','11511','Monitoria Matematicas Discretas I');
+INSERT INTO AdSpaceReserve VALUES('semestral','carlosbor','213','11512','Clase de FADA');
+INSERT INTO AdSpaceReserve VALUES('temporal','hecfa','214','11513','Monitoria de ITI');
+INSERT INTO AdSpaceReserve VALUES('semestral','jorgecua','215','11514','Desarrollo proyecto ADRESIS');
+INSERT INTO AdSpaceReserve VALUES('temporal','humbertocu','216','11515','Taller de Desarrollo de Software');
+INSERT INTO AdSpaceReserve VALUES('semestral','sebrand','217','11516','Clase de IPOO');
+INSERT INTO AdSpaceReserve VALUES('temporal','deisych','218','11517','Monitoria IPOO');
+INSERT INTO AdSpaceReserve VALUES('semestral','rafaca','219','11518','Desarrollo proyecto CENESIS');
+INSERT INTO AdSpaceReserve VALUES('temporal','jhonmu','220','11519','Monitoria FADA');
+
+
+CREATE TABLE AdAVReserve(
+	typeReserve varchar(20),
+	--tipoRecurso varvarchar(20),
+	idUser varchar(20), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser) ON UPDATE CASCADE ON DELETE CASCADE,
+	idAudioVisual varchar(20), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
+	idScheduleAV varchar(20), FOREIGN KEY (idScheduleAV) REFERENCES AdScheduleAV(idScheduleAV)ON UPDATE CASCADE ON DELETE CASCADE, 
+	destinationReserve varchar(50),
+	PRIMARY KEY(idUser, idAudioVisual, idScheduleAV)
+);
+
+INSERT INTO AdAVReserve VALUES('semestral','charagmz','1122', '111110', 'Clase de Algoritmia y Programacion');
+INSERT INTO AdAVReserve VALUES('semestral','juank','1133', '111111', 'Clase de FADA');
+INSERT INTO AdAVReserve VALUES('semestral','carlosbor','1144', '111112', 'Clase de IPOO');
+INSERT INTO AdAVReserve VALUES('temporal','hecfa','1155', '111113', 'Monitoria de ITI');
+INSERT INTO AdAVReserve VALUES('temporal','jorgecua','1166', '111114', 'Monitoria Matematicas Discretas I');
+INSERT INTO AdAVReserve VALUES('temporal','humbertocu','1177', '111115', 'Desarrollo Proyecto ADRESIS');
+INSERT INTO AdAVReserve VALUES('temporal','sebrand','1188', '111116', 'Desarrollo Proyecto CENESIS');
+INSERT INTO AdAVReserve VALUES('temporal','humbertocu','1199', '111117', 'Desarrollo Proyecto ADRESIS');
+INSERT INTO AdAVReserve VALUES('temporal','deisych','1100', '111118', 'Monitoria de FADA');
+
+
+--CREATE TABLE AdSpaceCancelation(
+--	typeCancelation varvarchar(20),
+	--tipoRecurso varvarchar(20),
+--	idUser varvarchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
+--	idSpace varvarchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),
+--	idScheduleSpace varvarchar(10), FOREIGN KEY (idScheduleSpace) REFERENCES AdScheduleSpace(idScheduleSpace), 
+--	cancelationDetails varvarchar(50),
+--	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
+--);
+
+--CREATE TABLE AdAVCancelation(
+--	typeCancelation varvarchar(20),
+--	--tipoRecurso varvarchar(20),
+--	idUser varvarchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
+--	idAudioVisual varvarchar(10), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV),
+--	idScheduleAV varvarchar(10), FOREIGN KEY (idScheduleAV) REFERENCES AdScheduleAV(idScheduleAV), 
+--	cancelationDetails varvarchar(50),
+--	PRIMARY KEY(idUser, idAudioVisual, idScheduleAV)
+--);
+
+
+
+
+
+

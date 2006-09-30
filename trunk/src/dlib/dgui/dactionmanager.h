@@ -26,62 +26,45 @@
 #include <QList>
 #include <QHash>
 
-#include "daction.h"
+#include "dgui/daction.h"
+#include "dglobal.h"
 
-typedef QList<DAction *> QActionList;
-typedef QHash<QString, DAction *> QActionDict;
+typedef QList<DAction *> DActionList;
+typedef QHash<QString, DAction *> DActionDict;
+typedef QHash<QString, DActionDict> DActionContainer;
+
+class QToolBar;
+class QMenuBar;
 
 /**
  * @short la clase DActionManager provee de un manejador de acciones, este manejador facilita el acceso y ordenamiento a las acciones contieniendo todas las acciones de la aplicacion.
  * @author David Cuadrado \<krawek@gmail.com\>
 */
 
-class DActionManager : public QObject
+class D_GUI_EXPORT DActionManager : public QObject
 {
 	Q_OBJECT
 
 	public:
-		/**
-		 * Construye un manejador de acciones.
-		 * @param parent widget que contine el manejador de acciones
-		 */
-		DActionManager(QWidget *parent = 0L);
-		/**
-		 * Destructor
-		 */
+		
+		DActionManager(QWidget *parent = 0);
 		~DActionManager();
-
-		/**
-		 * Inserta una accion al manejador
-		 * @param action accion para añadir
-		 * @return 
-		 */
-		bool insert(DAction *action);
-		/**
-		 * Remueve una accion del manejador
-		 * @param action para remover
-		 */
-		void remove( DAction* action );
-		/**
-		 * Remuve una accion del manejador retornando dicha accion.
-		 * @param action para remover
-		 * @return la accion removida o cero si esta no estaba en el manejador
-		 */
-		QAction *take( DAction* action );
-		/**
-		 * Busca una accion en el manejardor.
-		 * @param id asociado a la accion
-		 * @return la accion requeriada
-		 */
-		QAction *find(const QString &id) const;
-		/**
-		 * Retorna la accion asociada a id
-		 * @param id 
-		 */
+		
+		bool insert(DAction *action, const QString &id, const QString &container = "default" );
+		void remove( DAction* action, const QString &container = QString()  );
+		
+		QAction *take( DAction* action, const QString &container = QString()  );
+		QAction *find(const QString &id, const QString &container = QString() ) const;
 		QAction *operator[](const QString &id) const;
-
+		
+		QMenuBar *setupMenuBar(QMenuBar *menu, const QStringList &containers, bool clear = true);
+		QMenu *setupMenu(QMenu *menu, const QString &container, bool clear = true);
+		QToolBar *setupToolBar(QToolBar *toolBar, const QString &container, bool clear = true );
+		
 	private:
-		QActionDict m_actionDict;
+		DActionContainer m_actionContainer;
 };
 
 #endif
+
+

@@ -30,7 +30,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 
-#include "kseparator.h"
+#include "dseparator.h"
 
 #include <QDomDocument>
 #include <QFile>
@@ -162,7 +162,7 @@ void DTipDialog::setupGUI()
 	
 	layout->addWidget(m_textArea);
 	
-	layout->addWidget(new KSeparator);
+	layout->addWidget(new DSeparator);
 	
 	QHBoxLayout *buttonLayout = new QHBoxLayout;
 	

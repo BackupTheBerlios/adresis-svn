@@ -22,6 +22,7 @@
 #define DSQUEEZELABEL_H
 
 #include <qlabel.h>
+#include <dglobal.h>
 
 /**
  * @if english
@@ -41,10 +42,10 @@
  * Si el texto es muy largo para ser llenado en el label es dividido en el espacio restante que son separadas por tres puntos.
  * 
  * @endif
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
 
-class DSqueezeLabel : public QLabel
+class D_GUI_EXPORT DSqueezeLabel : public QLabel
 {
 	public:
 		DSqueezeLabel(QWidget *parent, const char *name=0);

@@ -8,42 +8,42 @@ INSTALLS += include \
 target.path = /lib/ 
 include.files += *.h 
 include.path = /include/dcore 
-HEADERS += aspelliface.h \
-           dalgorithm.h \
+HEADERS += dalgorithm.h \
            dbrushadjuster.h \
            dconfig.h \
            dconfigdocument.h \
            ddebug.h \
-           dguiitem.h \
-           dpathadjuster.h \
-           ispelliface.h \
-           kcpuinfo.h \
-           kimageeffect.h \
-           speller.h \
-           spellhighlighter.h \
-           spellinterface.h \
            dmd5hash.h \
            dapplicationproperties.h \
            dglobal.h \
            dgradientadjuster.h \
-           dtipdatabase.h 
-SOURCES += aspelliface.cpp \
-           dalgorithm.cpp \
+           dtipdatabase.h \
+           daspellchecker.h \
+           dspellinterface.h \
+           dcpuinfo.h \
+           dimageeffect.h \
+           dspeller.h \
+           dspellhighlighter.h \
+           dpathhandler.h 
+SOURCES += dalgorithm.cpp \
            dbrushadjuster.cpp \
            dconfig.cpp \
            dconfigdocument.cpp \
            ddebug.cpp \
            dgradientadjuster.cpp \
-           dguiitem.cpp \
-           dpathadjuster.cpp \
-           ispelliface.cpp \
-           kcpuinfo.cpp \
-           kimageeffect.cpp \
-           speller.cpp \
-           spellhighlighter.cpp \
            dmd5hash.cpp \
            dapplicationproperties.cpp \
-           dtipdatabase.cpp 
+           dtipdatabase.cpp \
+           daspellchecker.cpp \
+           dcpuinfo.cpp \
+           dimageeffect.cpp \
+           dspeller.cpp \
+           dspellhighlighter.cpp \
+           dpathhandler.cpp 
+! include(../dlibconfig.pri ) {
+error("Run ./configure first")
+}
+DEFINES += DLIB_CORE
 QT += xml
 KDEV_QTVER = 4
 INCLUDEPATH += ../

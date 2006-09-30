@@ -1,0 +1,5 @@
+
+INCLUDEPATH += $$NETWORK_DIR
+
+LIBS += -L$$NETWORK_DIR -lnetwork
+

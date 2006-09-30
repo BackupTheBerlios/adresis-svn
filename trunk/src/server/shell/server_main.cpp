@@ -35,6 +35,7 @@ void write_test_config();
 
 int main(int argc, char **argv)
 {
+	//DDebug::setForceDisableGUI();
 	QCoreApplication app(argc, argv);
 	app.setApplicationName("adserver");
 

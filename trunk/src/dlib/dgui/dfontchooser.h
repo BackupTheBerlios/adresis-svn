@@ -22,34 +22,42 @@
 #define DFONTCHOOSER_H
 
 #include <QFrame>
+#include <dglobal.h>
 
 class QComboBox;
+
+#if QT_VERSION >= 0x040200
+class QFontComboBox;
+#else
+typedef QComboBox QFontComboBox;
+#endif
 
 /**
  * @author David Cuadrado \<krawek@gmail.com\>
 */
-class DFontChooser : public QFrame
+class D_GUI_EXPORT DFontChooser : public QFrame
 {
 	Q_OBJECT
 	public:
 		DFontChooser(QWidget *parent = 0);
 		~DFontChooser();
 		void setCurrentFont(const QFont &font);
-		QFont font() const;
+		QFont currentFont() const;
 		
 	signals:
 		void fontChanged();
 		
 	private slots:
-		void emitFontChanged(int =0);
-		
-	public slots:
-		void loadFontInfo(const QString &family);
+		void emitFontChanged(int = 0);
+		void loadFontInfo(const QFont &newFont);
 		
 	private:
-		QComboBox *m_families;
+		QFontComboBox *m_families;
 		QComboBox *m_fontStyle;
 		QComboBox *m_fontSize;
+		
+		QFont m_currentFont;
 };
 
 #endif
+

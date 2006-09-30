@@ -26,18 +26,21 @@
 #include <QStringList>
 #include <QVariant>
 #include <QHash>
+#include "dglobal.h"
 
 /**
  * This class represents the doon configuration xml document
  * @author David Cuadrado
 */
-class DConfigDocument : public QDomDocument
+class D_CORE_EXPORT DConfigDocument : public QDomDocument
 {
 	public:
     		DConfigDocument(const QString &path);
     		~DConfigDocument();
 		
 		void beginGroup(const QString & prefix );
+		void endGroup();
+		
 		void setValue ( const QString & key, const QVariant & value );
 		QVariant value ( const QString & key, const QVariant & defaultValue = QVariant() ) const;
 		
@@ -62,6 +65,8 @@ class DConfigDocument : public QDomDocument
 		
 		QString m_path;
 		bool m_isOk;
+		
+		QString m_lastGroup;
 };
 
 #endif

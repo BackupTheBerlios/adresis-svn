@@ -22,7 +22,7 @@
 #define DTABDIALOG_H
 
 #include <QDialog>
-#include "dtabwidget.h"
+#include "dgui/dtabwidget.h"
 
 #include <QHash>
 
@@ -30,9 +30,9 @@ typedef QHash<int, QPushButton *> Buttons;
 
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DTabDialog : public QDialog
+class D_GUI_EXPORT DTabDialog : public QDialog
 {
 	Q_OBJECT
 	public:
@@ -58,6 +58,8 @@ class DTabDialog : public QDialog
 		
 		void setButtonText(Button b, const QString &text);
 		QPushButton *button(Button b);
+		
+		DTabWidget *tabWidget() const;
 		
 	private:
 		void setupButtons(int buttons);

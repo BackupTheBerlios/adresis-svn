@@ -32,7 +32,7 @@ SResourcePackage::SResourcePackage() : QDomDocument()
 	appendChild(root);
 	
 	// Leemos los datos desde un archivo de indices
-	QFile rscIndex(HOME+"/data/index.rsc");
+	QFile rscIndex(HOME_DIR+"/data/index.rsc");
 	
 	if( rscIndex.open( QIODevice::ReadOnly | QIODevice::Text))
 	{
@@ -118,7 +118,7 @@ void SResourcePackage::addResource(QDomElement &element, const QString &path)
 	
 	if ( finfo.isRelative() )
 	{
-		realPath = HOME+"/data/"+path;
+		realPath = HOME_DIR+"/data/"+path;
 	}
 	
 	QFile file(realPath);

@@ -149,7 +149,7 @@ bool ADPackageParser::endElement(const QString&, const QString& , const QString&
 // 	{
 // 		if ( !m_resources.isEmpty() )
 // 		{
-// 			QFile rsc(REPOSITORY+"/"+m_resources.last().first );
+// 			QFile rsc(CACHE_DIR+"/"+m_resources.last().first );
 // 			
 // 			if( rsc.open( QIODevice::WriteOnly ) ) // FIXME: Images and sound must be binary
 // 			{

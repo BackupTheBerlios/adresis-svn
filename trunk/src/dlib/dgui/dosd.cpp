@@ -24,74 +24,109 @@
 #include <QBitmap>
 #include <QTimer>
 #include <QPainter>
+#include <QDesktopWidget>
+#include <QLinearGradient>
 
 #include "ddebug.h"
 
-DOsd::DOsd( QWidget * parent )
-	: QWidget( parent), m_timer( 0 )
+DOsd::DOsd( QWidget * parent ) : QWidget( parent), m_timer( 0 )
 {
 	setFocusPolicy( Qt::NoFocus );
 	
 	m_palette = palette();
 // 	setBackgroundMode( Qt::NoBackground );
 	
-	move( 10, 10 );
+	move( 50, 50 );
 	resize( 0, 0 );
 	hide();
 	
 	m_animator = new Animation;
 	connect(&m_animator->timer, SIGNAL(timeout()), this, SLOT(animate()));
+	
+	m_timer = new QTimer( this );
+	connect( m_timer, SIGNAL( timeout() ), SLOT( hide() ) );
+	
+	
+	setWindowFlags( Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint | Qt::ToolTip );
+	
+	m_document = new QTextDocument(this);
 }
 
 DOsd::~DOsd()
 {
 	delete m_animator;
+	delete m_timer;
 }
 
-void DOsd::display( const QString & message, Level level, int ms )
+void DOsd::display( const QString &message, Level level, int ms )
 {
-	if ( ms < 0 )
-	{
-		ms = message.length() * 80;
-	}
-	
-	m_animator->level = level;
-	
 	QBrush background = palette().background();
 	QBrush foreground = palette().foreground();
 	
-	// determine text rectangle
-	QRect textRect = fontMetrics().boundingRect( message );
-	textRect.translate( -textRect.left(), -textRect.top() );
-	textRect.adjust( 0, 0, 2, 2 );
-	int width = textRect.width();
-	int height = textRect.height();
-
 	if ( level != None )
 	{
 		switch ( level )
 		{
 			case Info:
-				break;
+			{
+				background = QColor(0x678eae);
+				m_document->setHtml("<font size=+3 >"+tr("Information")+"</font><br><font size=+2>"+message+"</font>");
+			}
+			break;
 			case Warning:
-				break;
+			{
+				m_document->setHtml("<font size=+3>"+tr("Attention")+"</font><br><font size=+2>"+message+"</font>");
+			}
+			break;
 			case Error:
+			{
 				background = Qt::red;
-				break;
+				m_document->setHtml("<font size=+3>"+tr("Error")+"</font><br><font size=+2>"+message+"</font>");
+			}
+			break;
 			case Fatal:
+			{
 				background = Qt::magenta;
-				break;
+				m_document->setHtml("<font size=+3>"+tr("Error")+"</font><br><font size=+2>"+message+"</font>");
+			}
+			break;
 			default:
-				break;
+			{
+				m_document->setHtml(message);
+			}
+			break;
 		}
 	}
+	
+	if ( ms < 0 )
+	{
+		ms = m_document->toPlainText().length() * 80;
+	}
+	
+	m_animator->level = level;
+	
+#if QT_VERSION >= 0x040200
+	QSizeF textSize = m_document->size();
+#else
+#warning FIX ME
+	QSizeF textSize(300,300);
+#endif
+	
+	int width = (int)textSize.width()+10;
+	int height = (int)textSize.height()+10;
+	
+	QDesktopWidget desktop;
+	move ( (desktop.screenGeometry().width() - textSize.width() ) - 50, 50 );
+	
+	
 	QRect geometry( 0, 0, width + 10, height + 8 );
 	QRect geometry2( 0, 0, width + 9, height + 7 );
 
-    	// resize pixmap, mask and widget
-	static QBitmap mask;
+	// resize pixmap, mask and widget
+	/*static*/ QBitmap mask;
 	mask = QBitmap( geometry.size() );
 	m_pixmap = QPixmap( geometry.size() );
+	
 	resize( geometry.size() );
 
     	// create and set transparency mask
@@ -102,8 +137,9 @@ void DOsd::display( const QString & message, Level level, int ms )
 	maskPainter.drawRoundRect( geometry2, 1600 / geometry2.width(), 1600 / geometry2.height() );
 	setMask( mask );
 	
+	maskPainter.end();
 	
-	drawPixmap( message, background, foreground);
+	drawPixmap( background, foreground );
 	
     	// show widget and schedule a repaint
 	show();
@@ -112,20 +148,13 @@ void DOsd::display( const QString & message, Level level, int ms )
     	// close the message window after given mS
 	if ( ms > 0 )
 	{
-		if ( !m_timer )
-		{
-			m_timer = new QTimer( this );
-			connect( m_timer, SIGNAL( timeout() ), SLOT( hide() ) );
-		}
-		
 		m_animator->timer.start(300);
 		m_timer->start( ms );
-	} else if ( m_timer )
+	} 
+	else if ( m_timer )
 	{
 		m_timer->stop();
 	}
-	
-	m_lastMessage = message;
 }
 
 void DOsd::paintEvent( QPaintEvent * e )
@@ -134,7 +163,7 @@ void DOsd::paintEvent( QPaintEvent * e )
 	p.drawPixmap( e->rect().topLeft(), m_pixmap, e->rect() );
 }
 
-void DOsd::mousePressEvent( QMouseEvent * /*e*/ )
+void DOsd::mousePressEvent( QMouseEvent *e )
 {
 	if ( m_timer )
 		m_timer->stop();
@@ -149,6 +178,9 @@ void DOsd::animate()
 	}
 	
 	QBrush background;
+	
+	if ( m_animator->level == Info )
+		return;
 	
 	if ( m_animator->level == Error )
 	{
@@ -172,44 +204,93 @@ void DOsd::animate()
 			background = palette().background();
 		}
 	}
+	else if ( m_animator->level == Fatal )
+	{
+		if ( m_animator->on )
+		{
+			background = Qt::magenta;
+		}
+		else
+		{
+			background = palette().background();
+		}
+	}
 	
-	m_animator->on = !m_animator->on;
-	drawPixmap( m_lastMessage, background, palette().foreground());
+	m_animator->on = m_animator->on ? false : true;
 	
-	update();
+	drawPixmap( background, palette().foreground() );
+	
+	repaint();
 }
 
-void DOsd::drawPixmap(const QString &message, const QBrush &background, const QBrush &foreground)
+void DOsd::drawPixmap(const QBrush &background, const QBrush &foreground)
 {
 	QPixmap symbol;
+#if QT_VERSION >= 0x040200
+	QSizeF textSize = m_document->size();
+#else
+#warning FIX ME
+	QSizeF textSize(300,300);
+#endif
+	QRect textRect = QRect(QPoint(0, 0), textSize.toSize() );
 	
-	QRect textRect = fontMetrics().boundingRect( message );
-	textRect.translate( -textRect.left(), -textRect.top() );
-	textRect.adjust( 0, 0, 2, 2 );
-	int width = textRect.width();
-	int height = textRect.height();
+	
+	int width = (int)textSize.width()+10;
+	int height = (int)textSize.height()+10;
+	
 	int textXOffset = 0;
-	int shadowOffset = message.isRightToLeft() ? -1 : 1;
+	int shadowOffset = QApplication::isRightToLeft() ? -1 : 1;
 	
 	QRect geometry( 0, 0, width + 10, height + 8 );
 	QRect geometry2( 0, 0, width + 9, height + 7 );
 	
 	textXOffset = 2;
+	
 	width += textXOffset;
 	height = qMax( height, symbol.height() );
 	
 	// draw background
+	m_pixmap.fill( Qt::gray );
 	QPainter bufferPainter( &m_pixmap );
 	bufferPainter.setRenderHint(QPainter::Antialiasing);
 	bufferPainter.setPen( QPen(QBrush(foreground), 3)  );
-	bufferPainter.setBrush( background ); 
+	
+	
+	
+	QLinearGradient gradient(geometry.topLeft(), geometry.bottomLeft() );
+	
+	QColor color0 = background.color();
+	color0.setAlpha(180);
+	
+	QColor color1 = palette().color( QPalette::Button);
+	color1.setAlpha(180);
+	
+	gradient.setColorAt(0.0, color0 );
+	gradient.setColorAt(1.0, color1 );
+	gradient.setSpread(QGradient::ReflectSpread );
+	
+	bufferPainter.setBrush( gradient ); 
 	bufferPainter.drawRoundRect( geometry2, 1600 / geometry2.width(), 1600 / geometry2.height() );
 	 
 	// draw shadow and text
-	int yText = geometry.height() - height / 2;
+// 	int yText = geometry.height() - height / 2;
 	bufferPainter.setPen( palette().background().color().dark( 115 ) );
-	bufferPainter.drawText( 5 + textXOffset + shadowOffset, yText + 1, message );
+	
+	
+	bufferPainter.translate( 5 + textXOffset + shadowOffset, 1);
+	
+#if QT_VERSION >= 0x040200
+	m_document->drawContents(&bufferPainter,  QRect(0,0, textRect.width(), textRect.height() ));
+#else
+#warning FIXME ME
+#endif
+	bufferPainter.translate( -shadowOffset, -1 );
+	
 	bufferPainter.setPen( palette().foreground().color() );
-	bufferPainter.drawText( 5 + textXOffset, yText, message );
+#if QT_VERSION >= 0x040200
+	m_document->drawContents(&bufferPainter,  QRect(0, 0, textRect.width(), textRect.height() ));
+#else
+#warning FIXME ME
+#endif
 }
 

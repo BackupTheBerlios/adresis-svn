@@ -22,24 +22,31 @@
 #define DDEBUG_H
 
 #include <QTextStream>
+#include <QStringList>
+
+#ifdef QT_GUI_LIB
 #include <QColor>
+#endif
+
+#include "dglobal.h"
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
 
 #ifdef __GNUC__
 #define D_FUNCINFO dDebug() << "[" << __PRETTY_FUNCTION__ << "] "
-#define DINIT dDebug() << "[Initializing " << __FUNCTION__ << "]"
-#define DEND dDebug() << "[Destroying " << __FUNCTION__ << "]"
+#define DINIT dDebug("class") << "[Initializing " << __FUNCTION__ << "]"
+#define DEND dDebug("class") << "[Destroying " << __FUNCTION__ << "]"
 #define FUNC_NOT_IMPLEMENTED dWarning() << __FILE__ << ":" << __LINE__ << " " << __PRETTY_FUNCTION__ << " not implemented yet";
 #else
 #define D_FUNCINFO
-#define DINIT dDebug() << "[Initializing " << __FILE__ << ":" << __LINE__ << "] "
-#define DEND dDebug() << "[Destroying " << __FILE__ << ":" << __LINE__ << "] "
+#define DINIT dDebug("class") << "[Initializing " << __FILE__ << ":" << __LINE__ << "] "
+#define DEND dDebug("class") << "[Destroying " << __FILE__ << ":" << __LINE__ << "] "
 #define FUNC_NOT_IMPLEMENTED dWarning() << __FILE__<<":"<<__LINE__ << " not implemented yet";
 #endif
 
+#define D_CHECKPTR(ptr) if ( ptr == 0 ) { dFatal() << __PRETTY_FUNCTION__ << ": " << #ptr << " is NULL"; } 
 #define SHOW_VAR(arg) dDebug() << #arg << " = " << arg;
 
 class QPalette;
@@ -66,6 +73,7 @@ class QLinearGradient;
 class QRadialGradient;
 class QConicalGradient;
 class QGradient;
+class QTextBrowser;
 
 template <class T> class QList;
 
@@ -74,11 +82,21 @@ enum DebugType
 	DDebugMsg = 0,
 	DWarningMsg,
 	DErrorMsg,
-	DFatalMsg 
+	DFatalMsg
+};
+
+enum DebugOutput
+{
+	DDefault = -1,
+	DNone = 0,
+	DFileOutput,
+	DBoxOutput,
+	DShellOutput,
+	DBrowserOutput
 };
 
 #if !defined(D_NODEBUG)
-class DDebug
+class D_CORE_EXPORT DDebug
 {
 	public:
 		class Streamer : public QObject
@@ -163,18 +181,19 @@ class DDebug
 					buffer += string;
 					return *this;
 				}
-				Streamer & operator<< (const void *ptr)
+				Streamer & operator<< ( const void * /*ptr*/ )
 				{
+					
 					return *this;
 				}
 		} *streamer;
 		
 		
-		DDebug(DebugType t);
+		DDebug(DebugType t, const QString &area, DebugOutput o);
 		DDebug(const DDebug &);
 		~DDebug();
 		
-		void resaltWidget(QWidget *w, const QColor &color = QColor(Qt::magenta));
+		static void setForceDisableGUI();
 		
 		inline DDebug &operator<<(QTextStreamManipulator /*m*/)
 		{ 
@@ -251,9 +270,7 @@ class DDebug
 			*streamer << t; 
 			return *this; 
 		}
-		DDebug& operator<<( const QPixmap& p );
-		DDebug& operator<<( const QIcon& p );
-		DDebug& operator<<( const QImage& p ) ;
+		
 		DDebug& operator<<( const QDateTime& );
 		DDebug& operator<<( const QDate&     );
 		DDebug& operator<<( const QTime&     );
@@ -261,19 +278,29 @@ class DDebug
 		DDebug& operator<<( const QPointF & ) ;
 		DDebug& operator<<( const QSize & ) ;
 		DDebug& operator<<( const QRect & ) ;
-		DDebug& operator<<( const QRegion & );
+		DDebug& operator<<( const QVariant & );
+		DDebug& operator << (const QEvent*);
 		DDebug& operator<<( const QStringList & );
+		
+		
+#ifdef QT_GUI_LIB
+		void resaltWidget(QWidget *w, const QColor &color = QColor(Qt::magenta));
+		
+		DDebug& operator<<( const QPixmap& p );
+		DDebug& operator<<( const QIcon& p );
+		DDebug& operator<<( const QImage& p );
+		DDebug& operator<<( const QRegion & );
 		DDebug& operator<<( const QColor & );
 		DDebug& operator<<( const QPen & );
 		DDebug& operator<<( const QBrush & );
-		DDebug& operator<<( const QVariant & );
 		DDebug& operator << (const QWidget*);
-		DDebug& operator << (const QEvent*);
-		
 		DDebug& operator << (const QLinearGradient &);
 		DDebug& operator << (const QRadialGradient &);
 		DDebug& operator << (const QConicalGradient &);
 		DDebug& operator << (const QGradient *);
+		
+		static QTextBrowser *browser();
+#endif
 		
 		
 		template <class T> DDebug& operator << ( const QList<T> &list );
@@ -284,6 +311,9 @@ class DDebug
 	private:
 		DebugType m_type;
 		QString m_toWrite;
+		DebugOutput m_output;
+		
+		QString m_area;
 };
 
 template <class T> DDebug &DDebug::operator<<( const QList<T> &list )
@@ -303,24 +333,45 @@ template <class T> DDebug &DDebug::operator<<( const QList<T> &list )
 }
 
 // Global functions
-inline DDebug dDebug()
+
+inline DDebug dDebug(const QString &area = QString(), int output = DDefault)
 {
-	return DDebug(DDebugMsg);
+	return DDebug(DDebugMsg, area, DebugOutput(output));
 }
 
-inline DDebug dFatal()
+inline DDebug dDebug(int area, int output = DDefault)
 {
-	return DDebug(DFatalMsg);
+	return DDebug(DDebugMsg, QString::number(area), DebugOutput(output));
 }
 
-inline DDebug dError()
+inline DDebug dFatal(const QString &area = QString(), int output = DDefault)
 {
-	return DDebug(DErrorMsg);
+	return DDebug(DFatalMsg, area, DebugOutput(output));
 }
 
-inline DDebug dWarning()
+inline DDebug dFatal(int area, int output = DDefault)
 {
-	return DDebug(DWarningMsg);
+	return DDebug(DFatalMsg, QString::number(area), DebugOutput(output));
+}
+
+inline DDebug dError(const QString &area = QString(), int output = DDefault)
+{
+	return DDebug(DErrorMsg, area, DebugOutput(output));
+}
+
+inline DDebug dError(int area, int output = DDefault)
+{
+	return DDebug(DErrorMsg, QString::number(area), DebugOutput(output));
+}
+
+inline DDebug dWarning(const QString &area = QString(), int output = DDefault)
+{
+	return DDebug(DWarningMsg, area, DebugOutput(output));
+}
+
+inline DDebug dWarning(int area, int output = DDefault)
+{
+	return DDebug(DWarningMsg, QString::number(area), DebugOutput(output));
 }
 
 #else // D_NODEBUG
@@ -337,12 +388,17 @@ class DNDebug
 		inline DNDebug &nospace() { return *this; }
 		inline DNDebug &maybeSpace() { return *this; }
 		template<typename T> inline DNDebug &operator<<(const T &) { return *this; }
+		
+#ifdef QT_GUI_LIB
 		void resaltWidget(QWidget */*w*/, const QColor &/*color*/ = QColor(Qt::magenta))
 		{
 		}
+		
+		static QTextBrowser *browser() { return 0; };
+#endif
 };
 
-inline DNDebug dDebug()
+inline DNDebug dDebug(int = 0,int = DDefault)
 {
 	return DNDebug();
 }
@@ -352,5 +408,11 @@ inline DNDebug dDebug()
 #define dWarning dDebug
 
 #endif // D_NODEBUG
+
+#ifdef __GNUC__
+#define dfDebug dDebug() << __FILE__ << ":" <<__FUNCTION__ << ":: "
+#else
+#define dfDebug dDebug() << __FILE__<<":"<<__LINE__<<":: "
+#endif
 
 #endif

@@ -32,6 +32,10 @@ DClickLineEdit::DClickLineEdit( const QString &msg, QWidget *parent) :
 	setClickMessage( msg );
 	
 	setFocusPolicy ( Qt::ClickFocus );
+	
+#if QT_VERSION >= 0x0402000
+	setStyleSheet(QString(":enabled { padding-right: %1; }").arg(8));
+#endif
 }
 
 void DClickLineEdit::setClickMessage( const QString &msg )

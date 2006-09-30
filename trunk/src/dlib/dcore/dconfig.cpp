@@ -70,7 +70,6 @@ DConfig *DConfig::instance()
 
 void DConfig::init()
 {
-	dDebug() << "*********Init configuration file : " << m_dconfig->path() << endl;
 	m_dconfig->setup();
 	m_isOk = m_dconfig->isOk();
 
@@ -96,6 +95,11 @@ void DConfig::sync()
 void DConfig::beginGroup(const QString & prefix )
 {
 	m_dconfig->beginGroup( prefix);
+}
+
+void DConfig::endGroup()
+{
+	m_dconfig->endGroup();
 }
 
 void DConfig::setValue ( const QString & key, const QVariant & value )

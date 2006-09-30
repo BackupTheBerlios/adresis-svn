@@ -112,7 +112,7 @@ CWSecondPage::CWSecondPage(QWidget *parent) : DWizardPage(tr("Configure ADRESIS"
 	m_kthome = new QLineEdit("", hbox1);
 	connect(m_kthome, SIGNAL(textChanged(const QString &)), this, SLOT(verify(const QString &)));
 
-	m_kthome->setToolTip(tr("Choose your HOME directory"));
+	m_kthome->setToolTip(tr("Choose your HOME_DIR directory"));
 	
 	QPushButton *button = new QPushButton(tr("browse..."), hbox1);
 	
@@ -145,8 +145,8 @@ CWSecondPage::CWSecondPage(QWidget *parent) : DWizardPage(tr("Configure ADRESIS"
 	setWidget(container);
 	
 	
-	m_kthome->setText(HOME);
-	m_ktrepos->setText(REPOSITORY);
+	m_kthome->setText(HOME_DIR);
+	m_ktrepos->setText(CACHE_DIR);
 }
 
 CWSecondPage::~ CWSecondPage()
@@ -169,7 +169,7 @@ QString CWSecondPage::repository()
 	return m_ktrepos->text();
 }
 
-bool CWSecondPage::isComplete()
+bool CWSecondPage::isComplete() const
 {
 	bool isOk = false;
 	

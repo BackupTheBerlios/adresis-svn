@@ -21,16 +21,17 @@
 #ifndef DTERMTAB_H
 #define DTERMTAB_H
 
-#include <dtabwidget.h>
+#include <dgui/dtabwidget.h>
 #include <QToolButton>
+#include <dglobal.h>
 
 
 class DTerm;
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DTermTab : public DTabWidget
+class D_GUI_EXPORT DTermTab : public DTabWidget
 {
 	Q_OBJECT
 	public:

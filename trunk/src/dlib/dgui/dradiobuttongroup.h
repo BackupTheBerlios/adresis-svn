@@ -25,11 +25,12 @@
 #include <QRadioButton>
 #include <QBoxLayout>
 #include <QButtonGroup>
+#include <dglobal.h>
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DRadioButtonGroup : public QGroupBox
+class D_GUI_EXPORT DRadioButtonGroup : public QGroupBox
 {
 	Q_OBJECT
 	public:

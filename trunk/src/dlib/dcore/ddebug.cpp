@@ -27,18 +27,28 @@
 #include <QPoint>
 #include <QPointF>
 #include <QRect>
-#include <QRegion>
 #include <QStringList>
+#include <QVariant>
+#include <QSize>
+#include <QEvent>
+#include <QTimer>
+
+#ifdef QT_GUI_LIB
+
+#include <QRegion>
 #include <QPen>
 #include <QBrush>
-#include <QSize>
-#include <QVariant>
 #include <QImage>
 #include <QIcon>
 #include <QPixmap>
 #include <QWidget>
-#include <QEvent>
-#include <QTimer>
+#include <QMessageBox>
+#include <QTextBrowser>
+#include <QSyntaxHighlighter>
+
+#endif
+
+#include <QSettings>
 
 #if defined(Q_OS_UNIX)
 # define SHOW_ERROR "*** \033[0;31m%s\033[0;0m ***\n"
@@ -50,8 +60,130 @@
 # define SHOW_FATAL "***** %s *****\n"
 #endif
 
-static void DDebutOutput(DebugType t, const char *data)
+#ifdef QT_GUI_LIB
+	static QTextBrowser *debugBrowser = 0;
+#endif
+
+static class ConfigReader
 {
+	public:
+		ConfigReader();
+		~ConfigReader();
+		
+		QStringList areas;
+		
+		bool showArea;
+		bool showAll;
+		bool forceDisableGUI;
+		DebugOutput defaultOutput;
+} configReader;
+
+ConfigReader::ConfigReader()
+{
+	QSettings settings("ddebug");
+	
+	settings.beginGroup("Iface");
+	areas = settings.value("areas", QStringList()).toStringList();
+	showArea = settings.value("show_area", false).toBool();
+	showAll = settings.value("show_all", true).toBool();
+	
+	defaultOutput= DebugOutput(settings.value("default", DShellOutput).toInt());
+	
+	forceDisableGUI = false;
+}
+
+ConfigReader::~ConfigReader()
+{
+	QSettings settings("ddebug");
+	settings.beginGroup("Iface");
+	
+	if ( areas.isEmpty() )
+	{
+		settings.setValue("areas", "");
+	}
+	else
+	{
+		settings.setValue("areas", areas);
+	}
+	
+	settings.setValue("show_area", showArea);
+	settings.setValue("show_all", showAll);
+	
+	settings.setValue("default", defaultOutput);
+	
+	if ( debugBrowser )
+	{
+		if  (debugBrowser->parentWidget() == 0 )
+		{
+			delete debugBrowser;
+		}
+	}
+}
+
+#ifdef QT_GUI_LIB
+
+class DebugBrowserHighlighter : public QSyntaxHighlighter
+{
+	Q_OBJECT;
+	public:
+		DebugBrowserHighlighter(QTextDocument *doc);
+		~DebugBrowserHighlighter() {};
+		
+	protected:
+		virtual void highlightBlock ( const QString & text );
+		
+	private:
+		QMap<QString, QColor> m_colors;
+};
+
+//#include "ddebug.moc"
+
+
+DebugBrowserHighlighter::DebugBrowserHighlighter(QTextDocument *doc) : QSyntaxHighlighter(doc)
+{
+	QVector<int> colorIndexes = QVector<int>() << 7 << 13 << 8 << 14 <<
+			9 <<
+			15 <<
+			10 <<
+			16 <<
+			11 <<
+			17 <<
+			18;
+	
+	int count = 0;
+	foreach(QString area, configReader.areas)
+	{
+		m_colors.insert(area, QColor(Qt::GlobalColor(colorIndexes[count++ % colorIndexes.count()])) );
+	}
+}
+
+void DebugBrowserHighlighter::highlightBlock ( const QString &text )
+{
+	int sepIndex = text.indexOf(":");
+	
+	if ( sepIndex < 0 ) return;
+	
+	QString area = text.left(sepIndex);
+	
+	if ( !m_colors.contains(area) ) return;
+	
+	QTextCharFormat format;
+	format.setFontWeight(QFont::Bold);
+	format.setForeground( m_colors[area] );
+	
+	setFormat(0, sepIndex, format);
+}
+
+#endif // QT_GUI_LIB
+
+static void dDebugOutput(DebugType t, DebugOutput o, const char *data)
+{
+	if ( o == DBoxOutput || o == DBrowserOutput && configReader.forceDisableGUI )
+	{
+		o == DShellOutput;
+		configReader.defaultOutput = DShellOutput;
+	}
+	
 	char *output = "%s\n";
 	switch(t)
 	{
@@ -77,41 +209,101 @@ static void DDebutOutput(DebugType t, const char *data)
 		break;
 	}
 	
-	fprintf(stderr, output, data);
+	switch(o)
+	{
+		case DShellOutput:
+		{
+			fprintf(stderr, output, data);
+		}
+		break;
+		case DFileOutput:
+		{
+			QFile outFile("ddebug.log");
+			
+			if ( outFile.open( QIODevice::WriteOnly | QIODevice::Text) )
+			{
+				outFile.write( data, strlen( data ) );
+				outFile.close();
+			}
+		}
+		break;
+#ifdef QT_GUI_LIB
+		case DBoxOutput:
+		{
+			switch(t)
+			{
+				case DDebugMsg:
+				{
+					QMessageBox::information(0, QObject::tr("Information"), data,  QMessageBox::Ok );
+				}
+				break;
+				case DWarningMsg:
+				{
+					QMessageBox::warning ( 0, QObject::tr("Warning"), data);
+				}
+				break;
+				case DErrorMsg:
+				{
+					QMessageBox::critical ( 0, QObject::tr("Error"), data);
+				}
+				break;
+				case DFatalMsg:
+				{
+					QMessageBox::critical ( 0, QObject::tr("Critical"), data);
+				}
+				break;
+			}
+		}
+		break;
+		case DBrowserOutput:
+		{
+			DDebug::browser()->append(QString(data));
+		}
+		break;
+#endif
+		default: break;
+	}
 }
 
-DDebug::DDebug(DebugType t) : m_type(t)
+DDebug::DDebug(DebugType t, const QString &area, DebugOutput o) : m_type(t), m_output(o), m_area(area)
 {
 	streamer = new Streamer();
+	
+	if ( configReader.showArea && !m_area.isEmpty())
+	{
+		*streamer << m_area << ": ";
+	}
+	
+	if ( m_output == DDefault )
+	{
+		m_output = configReader.defaultOutput;
+	}
+	
+// 	if ( m_output == DBrowserOutput )
+// 	{
+// 		browser()->show();
+// 	}
 };
 
-DDebug::DDebug(const DDebug & d ) : streamer(d.streamer), m_type(d.m_type)
+DDebug::DDebug(const DDebug & d ) : streamer(d.streamer), m_type(d.m_type), m_output(d.m_output), m_area(d.m_area)
 {
 }
 
 DDebug::~DDebug()
 {
-	::DDebutOutput( m_type, streamer->buffer.toLocal8Bit().data() );
+	if ( m_area.isEmpty() && configReader.showAll || configReader.areas.contains(m_area )  )
+	{
+		::dDebugOutput( m_type, m_output, streamer->buffer.toLocal8Bit().data() );
+	}
+	
 	delete streamer;
 }
 
-DDebug& DDebug::operator<<( const QPixmap& p ) 
+void DDebug::setForceDisableGUI()
 {
-	*this << "(" << p.width() << ", " << p.height() << ")";
-	return *this;
+	configReader.forceDisableGUI = true;
 }
 
-DDebug& DDebug::operator<<( const QIcon& p )
-{
-	*this << "(" << p.pixmap(QSize() ).width() << ", " << p.pixmap(QSize()).height() << ")";
-	return *this;
-}
-
-DDebug& DDebug::operator<<( const QImage& p ) 
-{
-	*this << "(" << p.width() << ", " << p.height() << ")";
-	return *this;
-}
 
 DDebug& DDebug::operator<<( const QDateTime& time) 
 {
@@ -144,6 +336,7 @@ DDebug& DDebug::operator<<( const QPointF & p)
 	return *this;
 }
 
+
 DDebug& DDebug::operator<<( const QSize & s)  
 {
 	*this << "[" << s.width() << "x" << s.height() << "]";
@@ -156,6 +349,56 @@ DDebug& DDebug::operator<<( const QRect & r)
 	return *this;
 }
 
+DDebug& DDebug::operator<<( const QStringList & l) 
+{
+	*this << "(";
+	*this << l.join(",");
+	*this << ")";
+
+	return *this;
+}
+
+
+DDebug& DDebug::operator<<( const QVariant & v) 
+{
+	*this << "[variant: ";
+	*this << v.typeName();
+	*this << " toString=";
+	*this << v.toString();
+	*this << "]";
+	return *this;
+}
+
+
+DDebug& DDebug::operator << (const QEvent* e)
+{
+	*this << "[Event " << e->type() << "]";
+	
+	return *this;
+}
+
+
+#ifdef QT_GUI_LIB
+DDebug& DDebug::operator<<( const QPixmap& p ) 
+{
+	*this << "(" << p.width() << ", " << p.height() << ")";
+	return *this;
+}
+
+DDebug& DDebug::operator<<( const QIcon& p )
+{
+	*this << "(" << p.pixmap(QSize() ).width() << ", " << p.pixmap(QSize()).height() << ")";
+	return *this;
+}
+
+DDebug& DDebug::operator<<( const QImage& p ) 
+{
+	*this << "(" << p.width() << ", " << p.height() << ")";
+	return *this;
+}
+
+
+
 DDebug& DDebug::operator<<( const QRegion & reg) 
 {
 	*this<< "[ ";
@@ -167,15 +410,6 @@ DDebug& DDebug::operator<<( const QRegion & reg)
 	}
 
 	*this <<"]";
-	return *this;
-}
-
-DDebug& DDebug::operator<<( const QStringList & l) 
-{
-	*this << "(";
-	*this << l.join(",");
-	*this << ")";
-
 	return *this;
 }
 
@@ -243,16 +477,7 @@ DDebug& DDebug::operator<<( const QBrush & b)
 	return *this;
 }
 
-DDebug& DDebug::operator<<( const QVariant & v) 
-{
-	*this << "[variant: ";
-	*this << v.typeName();
-	*this << " toString=";
-	*this << v.toString();
-	*this << "]";
-	return *this;
-}
-// 5580379
+// angie: 5580379
 DDebug& DDebug::operator << (const QWidget* t) 
 {
 	if ( t )
@@ -265,14 +490,6 @@ DDebug& DDebug::operator << (const QWidget* t)
 	}
 	return *this; 
 }
-
-DDebug& DDebug::operator << (const QEvent* e)
-{
-	*this << "[Event " << e->type() << "]";
-	
-	return *this;
-}
-
 
 DDebug& DDebug::operator << (const QLinearGradient &g)
 {
@@ -311,8 +528,9 @@ DDebug& DDebug::operator << (const QGradient *g)
 			*this << static_cast<const QConicalGradient &>(*g);
 		}
 		break;
-		
+		default: break;
 	}
+	return *this;
 }
 
 void DDebug::resaltWidget(QWidget *w, const QColor &color)
@@ -321,6 +539,22 @@ void DDebug::resaltWidget(QWidget *w, const QColor &color)
 	pal.setColor(QPalette::Background, color);
 	w->setPalette(pal);
 }
+
+QTextBrowser *DDebug::browser()
+{
+	qDebug("HERE");
+	if ( !debugBrowser)
+	{
+		debugBrowser = new QTextBrowser;
+		new DebugBrowserHighlighter(debugBrowser->document());
+// 		debugBrowser->setWindowFlags(Qt::WindowStaysOnTopHint);
+	}
+	
+	return debugBrowser;
+}
+
+
+#endif // QT_GUI_LIB
 
 #endif // D_NODEBUG
 

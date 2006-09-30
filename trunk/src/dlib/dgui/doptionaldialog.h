@@ -25,6 +25,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <dglobal.h>
 
 /**
  * @if english
@@ -33,9 +34,9 @@
  * Esta clase representa un dialogo que es opcional
  * @endif
  * 
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
-class DOptionalDialog : public QDialog
+class D_GUI_EXPORT DOptionalDialog : public QDialog
 {
 	Q_OBJECT
 	public:

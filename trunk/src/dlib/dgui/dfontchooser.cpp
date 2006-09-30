@@ -24,17 +24,22 @@
 #include <QHBoxLayout>
 #include <QFontDatabase>
 
+#if QT_VERSION >= 0x040200
+#include <QFontComboBox>
+#endif
+
 #include "dformfactory.h"
 
 DFontChooser::DFontChooser(QWidget *parent) : QFrame(parent)
 {
 	QHBoxLayout *mainLayout = new QHBoxLayout(this);
-	m_families = new QComboBox;
-	QFontDatabase fdb;
-	m_families->addItems ( fdb.families() );
+	m_families = new QFontComboBox;
 	
-	connect(m_families, SIGNAL(activated (const QString &)), this, SLOT(loadFontInfo(const QString &)));
+#if QT_VERSION >= 0x040200
+	connect(m_families, SIGNAL(currentFontChanged(const QFont & )), this, SLOT(loadFontInfo(const QFont &)));
 	
+#endif
+
 	mainLayout->addLayout(DFormFactory::makeLine(tr("Family"), m_families));
 	
 	m_fontStyle = new QComboBox;
@@ -45,7 +50,9 @@ DFontChooser::DFontChooser(QWidget *parent) : QFrame(parent)
 	connect(m_fontSize, SIGNAL(activated (int)), this, SLOT(emitFontChanged( int)));
 	mainLayout->addLayout(DFormFactory::makeLine(tr("Size"), m_fontSize));
 	
-	setCurrentFont(font());
+#if QT_VERSION >= 0x040200
+	setCurrentFont(m_families->currentFont());
+#endif
 }
 
 
@@ -53,15 +60,22 @@ DFontChooser::~DFontChooser()
 {
 }
 
-void DFontChooser::loadFontInfo(const QString &family)
+void DFontChooser::loadFontInfo(const QFont &newFont)
 {
 	QString currentSize = m_fontSize->currentText();
 	QString currentStyle = m_fontStyle->currentText();
 	
+	QString family = newFont.family();
+	
 	QFontDatabase fdb;
 	
 	m_fontStyle->clear();
-	m_fontStyle->addItems(fdb.styles(family));
+	
+	m_fontStyle->addItem(tr("Normal"), QFont::StyleNormal );
+	m_fontStyle->addItem(tr("Italic"), QFont::StyleItalic );
+	m_fontStyle->addItem(tr("Oblique"), QFont::StyleOblique );
+	
+// 	m_fontStyle->addItems();
 	
 	
 	m_fontSize->clear();
@@ -85,6 +99,12 @@ void DFontChooser::loadFontInfo(const QString &family)
 		m_fontStyle->setCurrentIndex(styleIndex);
 	}
 	
+	m_families->blockSignals(true);
+	m_currentFont = newFont;
+	m_currentFont.setPointSize( m_fontSize->currentText().toInt() );
+	m_currentFont.setStyle( QFont::Style(m_fontStyle->itemData( m_fontStyle->currentIndex() ).toInt()) );
+	m_families->blockSignals(false);
+	
 	emit fontChanged();
 }
 
@@ -96,16 +116,15 @@ void DFontChooser::emitFontChanged(int )
 void DFontChooser::setCurrentFont(const QFont &font)
 {
 	QFontDatabase fdb;
+	
 	m_families->setCurrentIndex(m_families->findText(font.family()));
 	m_fontStyle->setCurrentIndex(m_fontStyle->findText(fdb.styleString(font.family())));
 	m_fontSize->setCurrentIndex(m_fontSize->findText(QString::number(font.pointSize())));
 }
 
-QFont DFontChooser::font() const
+QFont DFontChooser::currentFont() const
 {
-	QFontDatabase fdb;
-	
-	return fdb.font(m_families->currentText(), m_fontStyle->currentText(), m_fontSize->currentText().toInt());
+	return m_currentFont;
 }
 
 

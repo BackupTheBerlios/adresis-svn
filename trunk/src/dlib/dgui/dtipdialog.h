@@ -24,6 +24,7 @@
 #include <QString>
 #include <QList>
 #include <QDialog>
+#include <dglobal.h>
 
 #include "dtipdatabase.h"
 
@@ -32,10 +33,10 @@ class QTextBrowser;
 
 /**
  * @class DTipDialog
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
  */
 
-class DTipDialog : public QDialog
+class D_GUI_EXPORT DTipDialog : public QDialog
 {
 	Q_OBJECT;
 	public:

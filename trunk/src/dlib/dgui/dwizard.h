@@ -27,14 +27,15 @@
 #include <QStackedWidget>
 
 #include "dvhbox.h"
+#include <dglobal.h>
 
 class DWizardPage;
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
 
-class DWizard : public QDialog
+class D_GUI_EXPORT DWizard : public QDialog
 {
 	Q_OBJECT
 
@@ -74,7 +75,7 @@ class DWizardPage : public DVHBox
 		DWizardPage(const QString &title, QWidget *parent );
 		virtual ~DWizardPage();
 		
-		virtual bool isComplete() = 0;
+		virtual bool isComplete() const = 0;
 		virtual void reset() = 0;
 		
 		void setPixmap(const QPixmap &px);

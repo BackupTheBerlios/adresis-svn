@@ -20,16 +20,17 @@
 #ifndef DELABEL_H
 #define DELABEL_H
 
-#include <dsqueezelabel.h>
+#include <dgui/dsqueezelabel.h>
 
 #include <QLineEdit>
 #include <QMouseEvent>
+#include <dglobal.h>
 
 /**
- * @author David Cuadrado \<krawek@gmail.com\>
+ * @author David Cuadrado <krawek@gmail.com>
 */
 
-class DELabel : public DSqueezeLabel
+class D_GUI_EXPORT DELabel : public DSqueezeLabel
 {
 	Q_OBJECT
 
