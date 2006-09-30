@@ -26,7 +26,7 @@
 #include <QList>
 #include <QHash>
 
-#include "dgui/daction.h"
+#include "daction.h"
 #include "dglobal.h"
 
 typedef QList<DAction *> DActionList;

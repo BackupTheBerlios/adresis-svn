@@ -25,7 +25,7 @@
 #include <QMap>
 #include <QColorGroup>
 
-#include "dgui/dthememanager.h"
+#include "dthememanager.h"
 #include "dconfig.h"
 
 #include <QLineEdit>
@@ -34,10 +34,10 @@
 #include <QFileDialog>
 #include <QDialog>
 
-#include "dgui/dvhbox.h"
+#include "dvhbox.h"
 #include "dglobal.h"
 
-#include "dgui/dwizard.h"
+#include "dwizard.h"
 
 class QApplication;
 class QString;

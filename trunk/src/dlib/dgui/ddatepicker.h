@@ -24,7 +24,7 @@
 #include <QFrame>
 #include <QToolButton>
 
-#include "dgui/ddatetable.h"
+#include "ddatetable.h"
 #include "dglobal.h"
 
 class QComboBox;

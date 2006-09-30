@@ -23,6 +23,8 @@
 #include <qtextcodec.h>
 
 #include "ktpreferences.h"
+
+
 #include "dglobal.h"
 #include "ddebug.h"
 #include "dapplication.h"
@@ -42,19 +44,23 @@ class KTPreferences::GeneralPage : public QWidget
 		~GeneralPage();
 		void saveValues();
 		
+// 		KToon::RenderType m_renderType;
+		
 	private:
 		QLineEdit *m_home, *m_repository, *m_browser;
 		QComboBox *m_renderType;
+		
+		
+// 	private slots:
+// 		void syncRenderType(int index);
 };
 
 KTPreferences::GeneralPage::GeneralPage()
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
-// 	m_renderType = KToon::RenderType(0);
 	DCONFIG->beginGroup("General");
 	
 	m_home = new QLineEdit;
-	
 	QString str = DCONFIG->value("Home").toString();
 	if ( !str.isEmpty())
 	{
@@ -62,16 +68,23 @@ KTPreferences::GeneralPage::GeneralPage()
 	}
 	
 	m_repository = new QLineEdit;
-	str = DCONFIG->value("Repository").toString();
+	str = DCONFIG->value("Cache").toString();
 	if ( !str.isEmpty())
 	{
 		m_repository->setText(str);
 	}
-
-	m_renderType = new QComboBox();
-	QLayout *form = DFormFactory::makeGrid( QStringList() << tr("Adresis Home") << tr("Repository"), QWidgetList() << m_home << m_repository );
+	
+	m_browser = new QLineEdit;
+	str = DCONFIG->value("Browser").toString();
+	if ( !str.isEmpty())
+	{
+		m_browser->setText(str);
+	}
+	
+	QLayout *form = DFormFactory::makeGrid( QStringList() << tr("Home") << tr("Cache") << tr("Browser") , QWidgetList() << m_home << m_repository << m_browser );
 	
 	layout->addLayout(form);
+	
 	layout->addStretch(3);
 }
 
@@ -92,10 +105,42 @@ void KTPreferences::GeneralPage::saveValues()
 	str = m_repository->text();
 	if ( !str.isEmpty() && m_repository->isModified () )
 	{
-		DCONFIG->setValue("Repository", str);
+		DCONFIG->setValue("Cache", str);
 	}
 	
-	DCONFIG->sync();
+	str = m_browser->text();
+	if ( !str.isEmpty() && m_browser->isModified () )
+	{
+		DCONFIG->setValue("Browser", str);
+	}
+}
+
+class KTPreferences::FontPage : public QWidget
+{
+	public:
+		FontPage();
+		~FontPage();
+		
+		QFont currentFont() const;
+		
+	private:
+		DFontChooser *m_fontChooser;
+};
+
+KTPreferences::FontPage::FontPage()
+{
+	m_fontChooser = new DFontChooser(this);
+	m_fontChooser->setCurrentFont(font());
+}
+
+KTPreferences::FontPage::~FontPage()
+{
+}
+
+
+QFont KTPreferences::FontPage::currentFont() const
+{
+	return m_fontChooser->currentFont();
 }
 
 
@@ -105,19 +150,20 @@ void KTPreferences::GeneralPage::saveValues()
 
 KTPreferences::KTPreferences( QWidget *parent ) : DConfigurationDialog(parent )
 {
-	setWindowTitle( tr( "Application ADPreferences" ) );
+	setWindowTitle( tr( "Application KTPreferences" ) );
 	
 	m_generalPage = new GeneralPage;
-	addPage(m_generalPage, tr("General"), QPixmap(THEME_DIR+"/icons/personal.png"));
+	addPage(m_generalPage, tr("General"))->setIcon(QPixmap(THEME_DIR+"/icons/general_config.png"));;
 	
 	m_themeSelector = new KTThemeSelector;
-	addPage(m_themeSelector, tr("Theme preferences"), QPixmap(THEME_DIR+"/icons/chart.png"));
-
-	m_fontChooser = new DFontChooser;
+	addPage(m_themeSelector, tr("Theme preferences"))->setIcon( QPixmap(THEME_DIR+"/icons/theme_config.png") );
 	
-	m_fontChooser->setCurrentFont( font() );
 	
-	addPage(m_fontChooser, tr("Font"), QPixmap(THEME_DIR+"/icons/fonts.png"));
+	
+	m_fontChooser = new FontPage;
+	addPage(m_fontChooser, tr("Font"))->setIcon(QPixmap(THEME_DIR+"/icons/font_config.png"));
+	
+	resize(400,400);
 }
 
 //-------------- DESTRUCTOR -----------------
@@ -134,20 +180,20 @@ void KTPreferences::ok()
 
 void KTPreferences::apply()
 {
-	if ( static_cast<KTThemeSelector *>(currentPage()) ==  m_themeSelector)
+	if ( static_cast<KTThemeSelector *>(currentPage()->widget()) ==  m_themeSelector)
 	{
 		if(m_themeSelector->applyColors() )
 		{
 			dApp->applyTheme(m_themeSelector->document());
 		}
 	}
-	else if ( static_cast<GeneralPage *>( currentPage()) == m_generalPage )
+	else if ( static_cast<GeneralPage *>( currentPage()->widget()) == m_generalPage )
 	{
 		m_generalPage->saveValues();
 	}
-	else if ( qobject_cast<DFontChooser *>(currentPage() ) == m_fontChooser )
+	else if ( qobject_cast<FontPage *>(currentPage()->widget() ) == m_fontChooser )
 	{
-		dApp->setFont(m_fontChooser->font());
+		dApp->setFont(m_fontChooser->currentFont());
 	}
 }
 

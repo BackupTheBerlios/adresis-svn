@@ -23,7 +23,7 @@
 
 #include <QModelIndex>
 
-#include <dgui/dclicklineedit.h>
+#include <dclicklineedit.h>
 #include <dglobal.h>
 
 class QTreeWidget;

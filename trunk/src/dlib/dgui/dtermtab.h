@@ -21,7 +21,7 @@
 #ifndef DTERMTAB_H
 #define DTERMTAB_H
 
-#include <dgui/dtabwidget.h>
+#include <dtabwidget.h>
 #include <QToolButton>
 #include <dglobal.h>
 

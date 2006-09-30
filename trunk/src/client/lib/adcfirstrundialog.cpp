@@ -135,7 +135,7 @@ QString CWSecondPage::repository()
 	return m_ktrepos->text();
 }
 
-bool CWSecondPage::isComplete()
+bool CWSecondPage::isComplete() const
 {
 	bool isOk = false;
 	

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2005 by David Cuadrado   				   *
- *   krawek@toonka.com   *
+ *   Copyright (C) 2005 by David Cuadrado                                  *
+ *   krawek@toonka.com                                                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,9 +34,10 @@
 // DLib
 #include <dglobal.h>
 #include <ddebug.h>
-#include <kseparator.h>
+#include <dseparator.h>
 #include <dcolorbutton.h>
 #include <dapplication.h>
+#include <dstylecombobox.h>
 
 KTThemeSelector::KTThemeSelector(QWidget *parent) : DVHBox(parent, Qt::Vertical)
 {
@@ -67,7 +68,7 @@ void KTThemeSelector::setupChooseColor()
 	
 	QList<QColor> colors = QList<QColor>() << colorGroup.text ().color() << colorGroup.base().color() << colorGroup.foreground().color() << colorGroup.background().color() << colorGroup.button().color() << colorGroup.buttonText().color();
 	
-	for(uint i = 0; i < labels1.count(); i++)
+	for(int i = 0; i < labels1.count(); i++)
 	{
 		layout1->addWidget(new QLabel(labels1[i], m_general), i, 0 );
 		DColorButton *button = new DColorButton(m_general);
@@ -91,7 +92,7 @@ void KTThemeSelector::setupChooseColor()
 	colors.clear();
 	colors << colorGroup.light().color() << colorGroup.midlight().color() << colorGroup.dark().color() << colorGroup.mid().color();
 	
-	for(uint i = 0; i < labels2.count(); i++)
+	for(int i = 0; i < labels2.count(); i++)
 	{
 		layout2->addWidget(new QLabel(labels2[i], m_effects), i, 0 );
 		DColorButton *button = new DColorButton(m_effects);
@@ -116,7 +117,7 @@ void KTThemeSelector::setupChooseColor()
 	colors.clear();
 	colors << colorGroup.highlight().color() << colorGroup.highlightedText().color();
 	
-	for(uint i = 0; i < labels3.count(); i++)
+	for(int i = 0; i < labels3.count(); i++)
 	{
 		layout3->addWidget(new QLabel(labels3[i], m_selections), i, 0 );
 		DColorButton *button = new DColorButton(m_selections);
@@ -138,7 +139,7 @@ void KTThemeSelector::setupChooseColor()
 	colors.clear();
 	colors << colorGroup.brightText().color() << colorGroup.link().color() << colorGroup.linkVisited().color();
 	
-	for(uint i = 0; i < labels4.count(); i++)
+	for(int i = 0; i < labels4.count(); i++)
 	{
 		layout4->addWidget(new QLabel(labels4[i], m_textEffects), i, 0 );
 		DColorButton *button = new DColorButton(m_textEffects);
@@ -169,7 +170,11 @@ void KTThemeSelector::setupChooseColor()
 	
 	schemeWidget->setLayout(schemaLayout);
 	
-	new KSeparator(this);
+	new DSeparator(this);
+	new QLabel(tr("Style"), this);
+	DStyleComboBox *styleComboBox = new DStyleComboBox(this);
+	
+	new DSeparator(this);
 	m_useColors = new QCheckBox(tr("Use this colors"), this);
 	
 	connect(&m_generalButtonGroup, SIGNAL(buttonClicked(QAbstractButton * )), SLOT(chooseGeneralColor(QAbstractButton * )));
@@ -218,7 +223,7 @@ void KTThemeSelector::chooseTextEffectsColor(QAbstractButton *  button)
 
 }
 
-DThemeDocument KTThemeSelector::document()
+DThemeDocument KTThemeSelector::document() const
 {
 	DThemeDocument doc;
 	
@@ -250,7 +255,7 @@ void KTThemeSelector::loadSchemes()
 	}
 }
 
-bool KTThemeSelector::applyColors()
+bool KTThemeSelector::applyColors() const
 {
 	return m_useColors->isChecked();
 }
@@ -265,9 +270,9 @@ void KTThemeSelector::saveSchema()
 	
 	QString fileName = QInputDialog::getText (this,tr("Name"), tr("Please choose a theme name"));
 	
-	if ( !fileName.endsWith(".adt"))
+	if ( !fileName.endsWith(".ktt"))
 	{
-		fileName += ".adt";
+		fileName += ".ktt";
 	}
 	
 	QFile file(themeDir.path()+"/"+fileName);
@@ -282,7 +287,7 @@ void KTThemeSelector::saveSchema()
 	loadSchemes();
 }
 
-QString KTThemeSelector::lastFile()
+QString KTThemeSelector::lastFile() const
 {
 	return m_lastFile;
 }

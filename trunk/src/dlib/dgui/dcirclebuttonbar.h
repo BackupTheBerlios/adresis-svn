@@ -35,7 +35,7 @@
 #include <QPainterPath>
 #include <QImage>
 
-#include "dgui/dcirclebutton.h"
+#include "dcirclebutton.h"
 #include "dglobal.h"
 
 class QPainterPath;

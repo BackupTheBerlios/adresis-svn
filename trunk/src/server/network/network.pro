@@ -5,9 +5,7 @@
 
 QT += xml network 
 KDEV_QTVER = 4 
-LIBS += -ldgui \
-        -ldcore \
-        ../../../src/server/packages/libpackages.a 
+	
 INCLUDEPATH += ../../../src/server/network \
                ../../../src/server/packages \
                ../../../src/dlib/dgui \
@@ -27,3 +25,9 @@ SOURCES += adserverconnection.cpp \
            adserverclient.cpp \
            adspackageparser.cpp \
            adquery.cpp 
+
+include(network.pri)
+
+PACKAGES_DIR=../packages/
+include($$PACKAGES_DIR/packages.pri)
+

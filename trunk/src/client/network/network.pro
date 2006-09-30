@@ -3,11 +3,7 @@
 # Subdirectorio relativo al directorio principal del proyecto: ./src/client/network
 # Destiono es una biblioteca:  
 
-QT += xml network
 KDEV_QTVER = 4 
-LIBS += -ldgui \
-        -ldcore \
-        ../../../src/client/lib/libadlib.a 
 INCLUDEPATH += ../../../src/client/lib \
                ../../../src/dlib/dgui \
                ../../../src/dlib/dcore 
@@ -16,7 +12,17 @@ QMAKE_LIBDIR = ../../../src/dlib/dgui \
 CONFIG += release \
           warn_on \
           staticlib 
+QT += xml network
+
+DLIB_DIR = ../../dlib
+!include($$DLIB_DIR/dlib.pri) {
+error("No encuentro dlib")
+}
+
+LIB_DIR = ../lib
+include($$LIB_DIR/lib.pri)
 TEMPLATE = lib 
+
 HEADERS += adconnectpackage.h \
            addeletepackage.h \
            adinsertpackage.h \
@@ -31,3 +37,4 @@ SOURCES += adconnectpackage.cpp \
            adselectpackage.cpp \
            adsqlpackagebase.cpp \
            adupdatepackage.cpp 
+

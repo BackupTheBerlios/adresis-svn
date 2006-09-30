@@ -26,10 +26,10 @@
 #include <QMap>
 #include <QButtonGroup>
 
-#include "dgui/dwidgetlistview.h"
-#include "dgui/dflatbutton.h"
+#include "dwidgetlistview.h"
+#include "dflatbutton.h"
 
-#include "dgui/dpagedialog.h"
+#include "dpagedialog.h"
 #include "dglobal.h"
 
 class QStackedWidget;

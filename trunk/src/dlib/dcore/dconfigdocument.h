@@ -26,7 +26,8 @@
 #include <QStringList>
 #include <QVariant>
 #include <QHash>
-#include "dglobal.h"
+
+#include "dcore/dglobal.h"
 
 /**
  * This class represents the doon configuration xml document

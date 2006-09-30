@@ -3,8 +3,19 @@
 # Subdir relative project main directory: ./src/client/lib
 # Target is a library:  adlib
 
+KDEV_QTVER = 4 
 INSTALLS += target 
 target.path = /lib/ 
+LIBS += -ldgui \
+        -ldcore 
+INCLUDEPATH += ../../../src/server/packages 
+QMAKE_LIBDIR = ../../../src/dlib/dgui \
+               ../../../src/dlib/dcore 
+TARGET = adlib 
+CONFIG += release \
+          warn_on \
+          staticlib 
+TEMPLATE = lib 
 HEADERS += adcfirstrundialog.h \
            adcmodulelist.h \
            global.h \
@@ -24,17 +35,4 @@ SOURCES += adcfirstrundialog.cpp \
            adpermissionsview.cpp \
            ktthemeselector.cpp \
            ktpreferences.cpp 
-QT += xml network
-KDEV_QTVER = 4
-LIBS += -ldgui \
--ldcore
-INCLUDEPATH += ../../../src/server/packages \
-../../../src/dlib/dgui \
-../../../src/dlib/dcore
-QMAKE_LIBDIR = ../../../src/dlib/dgui \
-../../../src/dlib/dcore
-TARGET = adlib
-CONFIG += release \
-warn_on \
-staticlib
-TEMPLATE = lib
+include(lib_config.pri)

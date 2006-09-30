@@ -53,8 +53,11 @@ bool DActionManager::insert(DAction *action, const QString &_id, const QString &
 // 		dWarning() << tr("Cannot insert action with null id or container");
 		return false;
 	}
-	
-	DAction *a = (m_actionContainer[container])[ id ];
+	DAction *a = 0;
+	if( !m_actionContainer.isEmpty() )
+	{
+		a = (m_actionContainer[container])[ id ];
+	}
 	if ( a == action )
 	{
 		dWarning() << tr("Cannot insert action with id: ") << id;

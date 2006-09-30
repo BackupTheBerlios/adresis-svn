@@ -24,7 +24,7 @@
 #include <QTextStream>
 #include <QTextDocument>
 
-#include "ddebug.h"
+#include "dcore/ddebug.h"
 
 DConfigDocument::DConfigDocument(const QString &path) : QDomDocument(), m_path(path)
 {
@@ -82,6 +82,7 @@ void DConfigDocument::beginGroup(const QString & prefix )
 	if ( m_groups.contains(stripped) )
 	{
 // 		m_currentGroup = m_groups[stripped];
+		m_groups[prefix];
 	}
 	else // Create element
 	{

@@ -53,13 +53,9 @@ SOURCES += main_cliente.cpp \
            adinsertresource.cpp \
            adevent.cpp 
 KDEV_QTVER = 4
-LIBS += -ldcore \
--ldgui \
+include(shell_config.pri)
 TARGET = ../../../bin/adclient.bin
-CONFIG += release \
-warn_on
 TEMPLATE = app
 
 
-include(shell_config.pri)
 

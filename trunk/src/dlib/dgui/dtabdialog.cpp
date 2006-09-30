@@ -23,6 +23,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
+
 DTabDialog::DTabDialog(QWidget *parent, bool modal)
  : QDialog(parent)
 {

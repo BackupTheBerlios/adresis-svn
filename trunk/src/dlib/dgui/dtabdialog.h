@@ -22,7 +22,7 @@
 #define DTABDIALOG_H
 
 #include <QDialog>
-#include "dgui/dtabwidget.h"
+#include "dtabwidget.h"
 
 #include <QHash>
 
