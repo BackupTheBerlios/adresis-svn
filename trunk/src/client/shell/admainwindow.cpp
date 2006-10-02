@@ -43,7 +43,7 @@
 #include "cconnectiondialog.h"
 
 
-ADMainWindow::ADMainWindow() : DMainWindow()
+ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 {
 	DCONFIG->beginGroup("ConfigurationOfSchooll");
 	QString titulo = "Adresis - " + qvariant_cast<QString>(DCONFIG->value("NameSchooll"));
@@ -233,7 +233,8 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 			
 			ADUserModuleList *users = new ADUserModuleList();
 			m_modules.insert( Logic::users, users);
-			toolWindow( DDockWindow::Left )->addWidget( "Users", users);
+			addToolView(users, Qt::LeftDockWidgetArea);
+// 			toolWindow( DDockWindow::Left )->addWidget( "Users", users);
 			m_adresis->getInfoModule( Logic::users );
 			
 			connect(users, SIGNAL(requestUserForm()), this, SLOT(createUserForm()));
@@ -246,7 +247,8 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 		{
 			ADSpaceModuleList *spaces = new ADSpaceModuleList();
 			m_modules.insert( Logic::spaces, spaces);
-			toolWindow( DDockWindow::Left )->addWidget( "Spaces", spaces);
+			addToolView((spaces), Qt::LeftDockWidgetArea);
+// 			toolWindow( DDockWindow::Left )->addWidget( "Spaces", spaces);
 			m_adresis->getInfoModule( Logic::spaces );
 			
 			connect(spaces, SIGNAL(requestSpaceForm()), this, SLOT(createSpaceForm()));
@@ -265,7 +267,8 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 		{
 			ADAudiovisualModuleList *audiovisual = new ADAudiovisualModuleList();
 			m_modules.insert( Logic::audiovisuals, audiovisual);
-			toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
+			addToolView((audiovisual), Qt::LeftDockWidgetArea);
+// 			toolWindow( DDockWindow::Left )->addWidget( "Audiovisuals", audiovisual);
 			m_adresis->getInfoModule( Logic::audiovisuals );
 			
 			connect(audiovisual, SIGNAL(requestAudiovisualForm()), this, SLOT(createAudiovisualForm()));
@@ -279,7 +282,8 @@ void ADMainWindow::createModules(Logic::TypeModule module)
 		{
 			ADReserveModuleList *reserve = new ADReserveModuleList();
 			m_modules.insert( Logic::reserves, reserve );
-			toolWindow( DDockWindow::Left )->addWidget( "Reserves", reserve );
+			addToolView((reserve), Qt::LeftDockWidgetArea);
+// 			toolWindow( DDockWindow::Left )->addWidget( "Reserves", reserve );
 			m_adresis->getInfoModule( Logic::reserves );
 
 			connect(reserve, SIGNAL(requestReserveForm()), this, SLOT(createReserveForm()));
@@ -475,7 +479,8 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 	if ( form )
 	{
 		form->setTitle(title);
-		addWidget( form, title, false);
+// 		addWidget( form, title, false);
+		addToPerspective(form );
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 	}
 }

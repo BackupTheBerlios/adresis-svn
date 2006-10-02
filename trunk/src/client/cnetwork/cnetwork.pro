@@ -4,11 +4,6 @@
 # Destiono es una biblioteca:  
 
 KDEV_QTVER = 4 
-INCLUDEPATH += ../../../src/client/lib \
-               ../../../src/dlib/dgui \
-               ../../../src/dlib/dcore 
-QMAKE_LIBDIR = ../../../src/dlib/dgui \
-               ../../../src/dlib/dcore 
 CONFIG += release \
           warn_on \
           staticlib 

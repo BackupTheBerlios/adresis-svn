@@ -20,7 +20,7 @@
 #ifndef ADMAINWINDOW_H
 #define ADMAINWINDOW_H
 
-#include <dmainwindow.h>
+#include <dtabbedmainwindow.h>
 #include <dactionmanager.h>
 
 #include "adusermodulelist.h"
@@ -42,11 +42,12 @@
 #include "adaudiovisualform.h"
 #include "adspaceform.h"
 #include "adreserveform.h"
+#include "ddockwindow.h"
 
 /**
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADMainWindow : public DMainWindow
+class ADMainWindow : public DTabbedMainWindow
 {
 	Q_OBJECT;
 	public:

@@ -23,8 +23,8 @@
 /**
 	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-#include<QList>
-#include"adcmodulelist.h"
+#include <QList>
+#include "adcmodulelist.h"
 #include "global.h" 
 
 class ADUserModuleList : public ADCModuleList

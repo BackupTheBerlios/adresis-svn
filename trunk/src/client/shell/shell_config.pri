@@ -10,6 +10,7 @@ error("No encuentro dlib")
 }
 include($$LIB_DIR/lib.pri)
 
-NETWORKC_DIR = ../network
-include($$NETWORKC_DIR/network.pri )
-
+CNETWORK_DIR = ../cnetwork
+!include($$CNETWORK_DIR/cnetwork.pri ){
+error("No encuentro cnerwork"
+}

@@ -1,0 +1,5 @@
+
+INCLUDEPATH += $$CNETWORK_DIR
+
+LIBS += -L$$CNETWORK_DIR -lcnetwork
+
