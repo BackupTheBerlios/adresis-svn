@@ -1,0 +1,4 @@
+INCLUDEPATH += $$SNETWORK_DIR
+
+LIBS += -L$$SNETWORK_DIR -lsnetwork
+
