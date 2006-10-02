@@ -4,7 +4,7 @@
 # Target is a subdirs project 
 
 SUBDIRS += packages \
-           network \
+           snetwork \
            shell
 
 KDEV_QTVER = 3

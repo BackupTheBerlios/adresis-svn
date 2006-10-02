@@ -9,7 +9,7 @@ target.path = /bin/
 linux-g++{
 TARGETDEPS += ../../../src/server/packages/libpackages.a \
               ../../../3rdparty/psql/libpsql.a \
-              ../../../src/server/network/libnetwork.a }
+              ../../../src/server/snetwork/libsnetwork.a }
 HEADERS += adserver.h \
            postgreserrorhandler.h \
            sdatabase.h 
@@ -24,4 +24,4 @@ KDEV_QTVER = 4
 MOC_DIR = .moc 
 UI_DIR = .ui 
 OBJECTS_DIR = .obj 
-TARGET = ../../../bin/adserver.bin 
+TARGET = ../../../bin/adserver.bin

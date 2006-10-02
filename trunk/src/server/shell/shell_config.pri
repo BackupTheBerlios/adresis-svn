@@ -10,9 +10,19 @@ error("No encuentro dlib")
 }
 
 PACKAGES_DIR = ../packages
-include($$PACKGES_DIR/packages.pri)
-include($$PACKGES_DIR/packages_config.pri)
+!include($$PACKAGES_DIR/packages.pri){
+error("No encuentro packages")
+}
 
-NETWORK_DIR = ../network
-include($$NETWORK_DIR/network.pri )
+SNETWORK_DIR = ../snetwork
+!include($$SNETWORK_DIR/snetwork.pri ){
+	error ("No encuentro network")
+}
+
+PSQL_DIR = ../../../3rdparty/psql 
+!include($$PSQL_DIR/psql.pri ){
+        error ("No encuentro psql")
+}
+
+
 

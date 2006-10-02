@@ -17,7 +17,10 @@ SOURCES += schatpackage.cpp \
            ssuccesspackage.cpp
 
 QT += xml
-
+CONFIG += release \
+          warn_on \
+	   staticlib
+		    
 DLIB_DIR = ../../dlib
 !include($$DLIB_DIR/dlib.pri) {
 error("No encuentro dlib")
