@@ -121,7 +121,7 @@ ConfigReader::~ConfigReader()
 }
 
 #ifdef QT_GUI_LIB
-
+/*
 class DebugBrowserHighlighter : public QSyntaxHighlighter
 {
 	Q_OBJECT;
@@ -136,7 +136,7 @@ class DebugBrowserHighlighter : public QSyntaxHighlighter
 		QMap<QString, QColor> m_colors;
 };
 
-//#include "ddebug.moc"
+// #include "ddebug.moc"
 
 
 DebugBrowserHighlighter::DebugBrowserHighlighter(QTextDocument *doc) : QSyntaxHighlighter(doc)
@@ -173,7 +173,7 @@ void DebugBrowserHighlighter::highlightBlock ( const QString &text )
 	
 	setFormat(0, sepIndex, format);
 }
-
+*/
 #endif // QT_GUI_LIB
 
 static void dDebugOutput(DebugType t, DebugOutput o, const char *data)
@@ -546,7 +546,7 @@ QTextBrowser *DDebug::browser()
 	if ( !debugBrowser)
 	{
 		debugBrowser = new QTextBrowser;
-		new DebugBrowserHighlighter(debugBrowser->document());
+// 		new DebugBrowserHighlighter(debugBrowser->document());
 // 		debugBrowser->setWindowFlags(Qt::WindowStaysOnTopHint);
 	}
 	
