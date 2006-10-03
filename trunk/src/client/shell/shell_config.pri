@@ -1,6 +1,6 @@
 
 QT += xml network gui
-
+CONFIG += release
 
 DLIB_DIR = ../../dlib
 LIB_DIR = ../lib
