@@ -28,13 +28,11 @@ HEADERS += adconnectpackage.h \
            adinsertpackage.h \
            adpackageparser.h \
            adselectpackage.h \
-           adsqlpackagebase.h \
            adupdatepackage.h 
 SOURCES += adconnectpackage.cpp \
            addeletepackage.cpp \
            adinsertpackage.cpp \
            adpackageparser.cpp \
            adselectpackage.cpp \
-           adsqlpackagebase.cpp \
            adupdatepackage.cpp 
 

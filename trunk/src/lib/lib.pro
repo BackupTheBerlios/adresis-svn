@@ -4,9 +4,15 @@
 # Target is a library:  adlib
 
 INSTALLS += target 
-target.path = /lib 
-TARGET = adlib 
+target.path = /lib/ 
+TARGET = adlib
+QT += xml network
 CONFIG += release \
           warn_on \
           dll 
 TEMPLATE = lib 
+HEADERS += adevent.h \
+	   adsqlpackagebase.h \
+           global.h 
+SOURCES += adevent.cpp \
+	   adsqlpackagebase.cpp
