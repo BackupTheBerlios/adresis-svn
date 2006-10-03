@@ -6,4 +6,8 @@ DLIB_DIR = ../../dlib
 error("No encuentro dlib")
 }
 
+ADLIB_DIR =../../lib
+!include($$ADLIB_DIR/lib.pri) {
+error("No encuentro a adlib")
+}
 

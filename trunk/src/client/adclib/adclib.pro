@@ -14,7 +14,6 @@ CONFIG += release \
 TEMPLATE = lib 
 HEADERS += adcfirstrundialog.h \
            adcmodulelist.h \
-           global.h \
            adconnectorbase.h \
            cconnectiondialog.h \
            admodulebuttonbar.h \
@@ -30,5 +29,6 @@ SOURCES += adcfirstrundialog.cpp \
            adformbase.cpp \
            adpermissionsview.cpp \
            ktthemeselector.cpp \
-           ktpreferences.cpp 
+           ktpreferences.cpp
+
 include(adclib_config.pri)

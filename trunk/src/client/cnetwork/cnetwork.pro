@@ -14,8 +14,13 @@ DLIB_DIR = ../../dlib
 error("No encuentro dlib")
 }
 
+ADLIB_DIR = ../../lib
+include($$ADLIB_DIR/lib.pri)
+
 ADCLIB_DIR = ../adclib
 include($$ADCLIB_DIR/adclib.pri)
+
+
 TEMPLATE = lib 
 
 HEADERS += adconnectpackage.h \
