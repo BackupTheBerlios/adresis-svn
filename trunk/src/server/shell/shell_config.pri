@@ -1,6 +1,6 @@
 
 QT += xml network sql
-
+CONFIG += release
 
 
 DLIB_DIR = ../../dlib

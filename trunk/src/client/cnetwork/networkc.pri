@@ -1,5 +1,0 @@
-
-INCLUDEPATH += $$NETWORKC_DIR
-
-LIBS += -L$$NETWORKC_DIR -lnetworkc
-

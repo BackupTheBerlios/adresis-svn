@@ -31,4 +31,4 @@ SOURCES += adcfirstrundialog.cpp \
            adpermissionsview.cpp \
            ktthemeselector.cpp \
            ktpreferences.cpp 
-include(lib_config.pri)
+include(adclib_config.pri)

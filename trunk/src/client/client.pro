@@ -4,7 +4,7 @@
 # Target is a subdirs project 
 
 SUBDIRS += theme \
-           lib \
+           adclib \
            cnetwork \
            shell 
 KDEV_QTVER = 4

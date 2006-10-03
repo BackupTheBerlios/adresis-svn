@@ -1,0 +1,5 @@
+
+INCLUDEPATH += $$ADCLIB_DIR
+
+LIBS += -L$$ADCLIB_DIR -ladclib
+
