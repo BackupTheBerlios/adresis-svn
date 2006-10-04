@@ -31,7 +31,7 @@ INSERT INTO AdUser VALUES('1111','jhon','0330910','jhonmu','jhonmu');
 
 CREATE TABLE AdSpace(
 	codeSpace varchar(20) PRIMARY KEY,
-	typeSpace varchar(20),
+	typespace varchar(20),
 	coolAirSpace boolean,
 	capacitySpace integer,
 	nameSpace varchar(30)
@@ -47,6 +47,7 @@ INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
 INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
 INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
 INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
+INSERT INTO AdSpace VALUES('null','null');
 
 
 CREATE TABLE AdAudioVisual(
@@ -70,13 +71,9 @@ INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
 INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', '218');
 INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '219');
 
--- CREATE TABLE AdSpaceWhitAV(
--- 	nroInventarioAyuda varvarchar(10), FOREIGN KEY (nroInventarioAyuda) REFERENCES AyudaAudioVisual(numeroInventario),
--- 	codigoEspacio varvarchar(10), FOREIGN KEY (codigoEspacio) REFERENCES Espacio(codigo),
--- 	PRIMARY KEY(nroInventarioAyuda, codigoEspacio)
--- );
 
 
+/*
 CREATE TABLE AdScheduleAV(
 	idAudioVisual varchar(20), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV)ON DELETE CASCADE ON UPDATE CASCADE,
 	idScheduleAV varchar(20) PRIMARY KEY,
@@ -161,28 +158,79 @@ INSERT INTO AdAVReserve VALUES('temporal','jorgecua','1166', '111114', 'Monitori
 INSERT INTO AdAVReserve VALUES('temporal','humbertocu','1177', '111115', 'Desarrollo Proyecto ADRESIS');
 INSERT INTO AdAVReserve VALUES('temporal','sebrand','1188', '111116', 'Desarrollo Proyecto CENESIS');
 INSERT INTO AdAVReserve VALUES('temporal','humbertocu','1199', '111117', 'Desarrollo Proyecto ADRESIS');
-INSERT INTO AdAVReserve VALUES('temporal','deisych','1100', '111118', 'Monitoria de FADA');
+INSERT INTO AdAVReserve VALUES('temporal','deisych','1100', '111118', 'Monitoria de FADA');*/
 
 
---CREATE TABLE AdSpaceCancelation(
---	typeCancelation varvarchar(20),
-	--tipoRecurso varvarchar(20),
---	idUser varvarchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
---	idSpace varvarchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),
---	idScheduleSpace varvarchar(10), FOREIGN KEY (idScheduleSpace) REFERENCES AdScheduleSpace(idScheduleSpace), 
---	cancelationDetails varvarchar(50),
---	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
---);
+-- CREATE TABLE AdSpaceCancelation(
+-- 	typeCancelation varchar(20),
+-- 	tipoRecurso varchar(20),
+-- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
+-- 	idSpace varchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),
+-- 	idScheduleSpace varchar(10), FOREIGN KEY (idScheduleSpace) REFERENCES AdScheduleSpace(idScheduleSpace), 
+-- 	cancelationDetails varchar(50),
+-- -- 	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
+-- );
+-- 
+-- CREATE TABLE AdAVCancelation(
+-- 	typeCancelation varchar(20),
+-- 	tipoRecurso varchar(20),
+-- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
+-- 	idAudioVisual varchar(10), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV),
+-- 	idScheduleAV varchar(10), FOREIGN KEY (idScheduleAV) REFERENCES AdScheduleAV(idScheduleAV), 
+-- 	cancelationDetails varchar(50),
+-- -- 	PRIMARY KEY(idUser, idAudioVisual, idScheduleAV)
+-- );
 
---CREATE TABLE AdAVCancelation(
---	typeCancelation varvarchar(20),
---	--tipoRecurso varvarchar(20),
---	idUser varvarchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
---	idAudioVisual varvarchar(10), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV),
---	idScheduleAV varvarchar(10), FOREIGN KEY (idScheduleAV) REFERENCES AdScheduleAV(idScheduleAV), 
---	cancelationDetails varvarchar(50),
---	PRIMARY KEY(idUser, idAudioVisual, idScheduleAV)
---);
+
+/*****************************************************
+***********EJEMPLO DE COMO CREAR UNA SEQUENCIA********
+******************************************************
+
+CREATE SEQUENCE tablename_colname_seq;
+CREATE TABLE tablename (
+    colname integer DEFAULT nextval('tablename_colname_seq') NOT NULL
+);*/
+
+
+CREATE SEQUENCE adSpaceReserve_idReserve_seq;
+
+CREATE TABLE AdSpaceReserve
+(
+	idReserve integer default nextval('adSpaceReserve_idReserve_seq') not null,
+	typeReserve varchar(20),
+	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idResource varchar(20), FOREIGN KEY (idResource) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE,
+	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....)
+	beginHour time,
+	endHour time,
+	beginDate date,
+	endDate date,
+	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
+	destinationReserve varchar(80),
+	check(beginHour < endHour and beginDate <= endDate)
+);
+
+CREATE SEQUENCE adAvReserve_idReserve_seq;
+CREATE TABLE AdAvReserve
+(
+	idReserve integer default nextval('adAvReserve_idReserve_seq') not null,
+	typeReserve varchar(20),
+	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idResource varchar(20), FOREIGN KEY (idResource) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
+	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
+	beginHour time ,
+	endHour time, 
+	beginDate date,
+	endDate date,
+	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
+	destinationReserve varchar(80),
+	check(beginHour < endHour and beginDate <= endDate)
+);
+
+-- INSERT INTO adspacereserve (typereserve,iduser,idspace,day,beginhour,endhour,begindate,enddate,isactive) VALUES ('Semestral', 'hecfa', '211', 'lunes', '8:00','10:00','01/15/2006','08/15/2006',true); 
+
 
 
 
