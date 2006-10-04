@@ -28,11 +28,21 @@ ADEvent::~ADEvent()
 {
 }
 
-ADSqlPackageBase ADEvent::toXml()
-{}
+QString ADEvent::toXml()
+{
+	//FIXME: implementar
+}
 
 int ADEvent::operation()
-{}
+{
+}
 
 QVariant ADEvent::data()
-{}
+{
+	return m_data;
+}
+
+void ADEvent::setData(const QVariant& data)
+{
+	m_data = data;
+}

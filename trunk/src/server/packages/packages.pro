@@ -29,3 +29,6 @@ error("No encuentro dlib")
 NETWORK_DIR = ../network
 include($$NETWORK_DIR/network.pri)
 
+ADLIB_DIR=../../lib
+include($$ADLIB_DIR/lib.pri)
+

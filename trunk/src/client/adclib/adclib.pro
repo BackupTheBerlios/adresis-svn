@@ -32,3 +32,4 @@ SOURCES += adcfirstrundialog.cpp \
            ktpreferences.cpp
 
 include(adclib_config.pri)
+

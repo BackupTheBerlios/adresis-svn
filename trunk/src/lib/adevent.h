@@ -21,7 +21,6 @@
 #define ADEVENT_H
 
 #include <QVariant>
-#include "adsqlpackagebase.h"
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
@@ -35,16 +34,14 @@ class ADEvent : public QObject
 		ADEvent(Module, Operation, QVariant variant);
 		~ADEvent();
 		
-	
 	private:
 		QVariant m_data;
-		ADSqlPackageBase *m_package;
-
+		
 	public slots:
-		ADSqlPackageBase toXml();
+		QString toXml();
 		int operation();
 		QVariant data();
-		
+		void setData(const QVariant & data );
 		
 
 };
