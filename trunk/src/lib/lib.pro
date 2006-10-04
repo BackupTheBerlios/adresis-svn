@@ -6,6 +6,7 @@
 INSTALLS += target 
 target.path = /lib 
 HEADERS += adevent.h \
+           adeventhandler.h \ 
            global.h 
 SOURCES += adevent.cpp 
 TARGET = adlib
