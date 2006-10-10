@@ -23,6 +23,9 @@
 #include <QFrame>
 #include <QGroupBox>
 #include <QLabel>
+
+#include "adevent.h"
+
 /**
 	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
@@ -44,6 +47,7 @@ class ADFormBase : public QFrame
 	signals:
 		void requestClose();
 		void requestDone();
+		void sendEvent( ADEvent *event );
 		
 };
 

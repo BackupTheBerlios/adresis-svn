@@ -26,6 +26,7 @@
 #include <QMap>
 #include <QList>
 
+#include <QMetaType>
 #include <dglobal.h>
 
 #define SQLSTR(s) QString("\'"+((QString("%1").arg(s)).replace('\'', "\\\'"))+"\'")
@@ -45,13 +46,19 @@ namespace Logic
 {
 	enum TypeQuery{userAuthenticated=0, fillUserModule, fillSpaceModule, fillAudiovisualModule, fillReserveModule, queryUser, queryAudiovisual, querySpace, queryListAudiovisual, querytypes, querySchedule};
 
-	enum TypeModule{users=0, spaces, audiovisuals, reserves};
+	enum Module{Users=0, Spaces, Audiovisuals, Reserves};
+	
+	enum Action{Add = 0, Del, Update, Select, Find, Info};
 	
 	enum TypeUser{administrador=0};
 	
 }
 
 typedef QHash<QString, QString> XMLResults;
+Q_DECLARE_METATYPE( XMLResults * );
+typedef QMap <Logic::TypeUser, bool> permissions;
+Q_DECLARE_METATYPE( permissions * );
+
 
 #endif
 

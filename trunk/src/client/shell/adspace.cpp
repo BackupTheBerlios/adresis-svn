@@ -73,6 +73,16 @@ ADUpdatePackage ADSpace::updatePackage()
 	return update;
 }
 
+QString ADSpace::toXml() const
+{
+	
+}
+
+void ADSpace::fromXml(const QString & xml )
+{
+	
+}
+
 void ADSpace::setValues(XMLResults values)
 {
 	dDebug() << "here adspace";

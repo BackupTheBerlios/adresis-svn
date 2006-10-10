@@ -31,13 +31,17 @@ class ADUser : public ADObject
 {
 	public:
 		ADUser();
-		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::TypeUser, bool>permissions );
+		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions );
 		~ADUser();
 		ADInsertPackage insertPackage();
 		ADUpdatePackage updatePackage();
+		
+		QString toXml() const;
+		void fromXml(const QString & xml );
+		
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QMap<Logic::TypeUser, bool> permissions() const;
+		QMap<Logic::Module, bool> permissions() const;
 		QString name() const ; 
 		QString code() const;
 		QString login() const;
@@ -48,7 +52,7 @@ class ADUser : public ADObject
 		QString m_code;
 		QString m_login;
 		QString m_passwd;
-		QMap<Logic::TypeUser, bool> m_permissions;
+		QMap<Logic::Module, bool> m_permissions;
 		bool m_valid;
 };
 

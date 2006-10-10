@@ -6,11 +6,17 @@
 INSTALLS += target 
 target.path = /lib 
 HEADERS += adevent.h \
-           adeventhandler.h \ 
-           global.h 
-SOURCES += adevent.cpp 
+           adeventhandler.h \
+           global.h \
+           adeventfactory.h 
+SOURCES += adevent.cpp \
+           adeventhandler.cpp \
+           adeventfactory.cpp 
 TARGET = adlib
 CONFIG += release \
 warn_on \
 dll
 TEMPLATE = lib
+
+include(lib_config.pri)
+

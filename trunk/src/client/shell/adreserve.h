@@ -34,6 +34,10 @@ class ADReserve : public ADObject
 		ADInsertPackage insertPackage();
 		ADInsertPackage insertPackage(const QString&);
 		ADUpdatePackage updatePackage();
+		
+		QString toXml() const;
+		void fromXml(const QString & xml );
+		
 		void setValues(XMLResults values);
 		bool isValid() const;
 		QString typeReserve() const;

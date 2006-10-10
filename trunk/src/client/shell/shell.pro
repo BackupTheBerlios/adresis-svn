@@ -26,7 +26,8 @@ HEADERS += adcapplication.h \
            adschedule.h \
            adreserve.h \
            adconfigschoollmodule.h \
-           adinsertresource.h
+           adinsertresource.h \
+           adpermission.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
@@ -49,11 +50,9 @@ SOURCES += main_cliente.cpp \
            adschedule.cpp \
            adreserve.cpp \
            adconfigschoollmodule.cpp \
-           adinsertresource.cpp
+           adinsertresource.cpp \
+           adpermission.cpp 
 KDEV_QTVER = 4
 include(shell_config.pri)
 TARGET = ../../../bin/adclient.bin
 TEMPLATE = app
-
-
-

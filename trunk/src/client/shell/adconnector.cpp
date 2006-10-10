@@ -96,67 +96,67 @@ void ADConnector::readFromServer()
 					case Logic::userAuthenticated:
 					{
 						dDebug() << "emit userAutenticated(results[0]);";
-						emit userAutenticated(results[0]);
+// 						emit userAutenticated(results[0]);
 						break;
 					}
 					case Logic::fillUserModule:
 					{
 						dDebug() << "emit fillModule(Logic::users, results );";
-						emit fillModule(Logic::users, results );
+// 						emit fillModule(Logic::users, results );
 						break;
 					}
 					case Logic::fillSpaceModule:
 					{
 						dDebug() << "emit fillModule(Logic::spaces, results );";
-						emit fillModule(Logic::spaces, results );
+// 						emit fillModule(Logic::spaces, results );
 						break;
 					}
 					case Logic::fillAudiovisualModule:
 					{
 						dDebug() << "fillModule(Logic::audiovisuals, results );";
-						emit fillModule(Logic::audiovisuals, results );
+// 						emit fillModule(Logic::audiovisuals, results );
 						break;
 					}
 					case Logic::fillReserveModule :
 					{
 						dDebug() << "fillModule(Logic::reserves, results );";
-						emit fillModule(Logic::reserves, results );
+// 						emit fillModule(Logic::reserves, results );
 						break;
 					}
 					case Logic::queryUser:
 					{
 						dDebug() << "requestShowUser(results )";
-						emit requestShowUser( results[0] );
+// 						emit requestShowUser( results[0] );
 						break;
 					}
 					case Logic::queryAudiovisual:
 					{
 						dDebug() << "requestShowAudiovisual(results )";
-						emit requestShowAudiovisual( results[0] );
+// 						emit requestShowAudiovisual( results[0] );
 						break;
 					}
 					case Logic::querySpace:
 					{
 						dDebug() << "requestShowSpace(results )";
-						emit requestShowSpace( results[0] );
+// 						emit requestShowSpace( results[0] );
 						break;
 					}
 					case Logic::queryListAudiovisual:
 					{
 						dDebug() << "requestShowListAudiovisual(results )";
-						emit requestShowListAudiovisual( results );
+// 						emit requestShowListAudiovisual( results );
 						break;
 					}
 					case Logic::querytypes:
 					{
 						dDebug() << "requestListTypes( results )";
-						emit requestListTypes( results );
+// 						emit requestListTypes( results );
 						break;
 					}
 					case Logic::querySchedule:
 					{
 						dDebug() << "requestSchadule( results )"; 
-						emit requestSchedule( results );
+// 						emit requestSchedule( results );
 						break;
 					}
 					default:
@@ -224,7 +224,7 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select)
 {
 	D_FUNCINFO;
-	SHOW_VAR(type);
+// 	SHOW_VAR(type);
 	m_querys.enqueue ( type );
 	sendPackage(select);
 }
@@ -235,3 +235,9 @@ void ADConnector::sendPackage(const ADSqlPackageBase & package)
 	sendToServer( toSend);
 }
 
+void ADConnector::sendEvent( const ADEvent & event )
+{
+	QString toSend = event.toString();
+	sendToServer( toSend);
+	
+}

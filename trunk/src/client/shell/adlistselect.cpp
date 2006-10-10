@@ -105,7 +105,7 @@ bool ADListSelect::check(const QString& lista, const QListWidgetItem *item)
 	int pos=0;
 	QStringList stringlist;
 
-	if(lista.operator==("derecha"))
+	if(lista ==("derecha"))
 	{
 		stringlist = takeList("derecha");
 	}
@@ -116,7 +116,7 @@ bool ADListSelect::check(const QString& lista, const QListWidgetItem *item)
 	
 	while(pos < stringlist.count() && !find)
 	{
-		if( (item->text()).operator==(stringlist.at(pos)) )
+		if( (item->text()) ==(stringlist.at(pos)) )
 		{
 			find=true;
 		}
@@ -145,7 +145,7 @@ void ADListSelect::addListToRight(const QStringList &list)
 QStringList ADListSelect::takeList(const QString &listWidget)
 {
 	QStringList lista;
-	if(listWidget.operator==("derecha"))
+	if(listWidget ==("derecha"))
 	{
 		for(int i=0; i < listWidgetRight->count();i++)
 		{

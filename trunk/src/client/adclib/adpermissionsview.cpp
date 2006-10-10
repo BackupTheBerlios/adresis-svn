@@ -18,9 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adpermissionsview.h"
-#include<QVBoxLayout>
-#include<QCheckBox>
+#include <QVBoxLayout>
+#include <QCheckBox>
 #include <ddebug.h>
+
 ADPermissionsView::ADPermissionsView(QWidget * parent)
 	: QGroupBox(tr("Permissions"), parent)
 {
@@ -39,29 +40,36 @@ ADPermissionsView::~ADPermissionsView()
 {
 }
 
-QMap<Logic::TypeUser, bool> ADPermissionsView::permissions() 
+QMap<Logic::Module, bool> ADPermissionsView::permissions() 
 {
 	dDebug() << "QMap<Logic::TypeUser, bool> ADPermissionsView::permissions() ";
-	QMap<Logic::TypeUser, bool> per;
-	if( m_checks[tr("administrador")]->checkState()  == Qt::Checked)
+	QMap<Logic::Module, bool> per;
+	for(int i =0; i < 5; i++)
 	{
-		dDebug() << true;
-		per.insert(Logic::administrador, true);
+		per.insert(Logic::Module(i), true);
 	}
-	else
-	{
-		dDebug() << false;
-		per.insert(Logic::administrador, false);
-	}
+// 	if( m_checks[tr("administrador")]->checkState()  == Qt::Checked)
+// 	{
+// 		dDebug() << true;
+// 		per.insert(Logic::, true);
+// 	}
+// 	else
+// 	{
+// 		dDebug() << false;
+// 		per.insert(Logic::administrador, false);
+// 	}
 	
-	QMap<Logic::TypeUser, bool>::iterator it = per.begin();
+/*	QMap<Logic::TypeUser, bool>::iterator it = per.begin();
 	while(it != per.end())
 	{
 		dDebug() << "permissions()" << it.value();
 		++it;
-	}
+	}*/
 	return per;
 }
+
+// typedef  mapa;
+
 
 void ADPermissionsView::setPermissions(const QMap<Logic::TypeUser, bool> & permissions )
 {

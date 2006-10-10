@@ -72,6 +72,16 @@ ADUpdatePackage ADReserve::updatePackage()
 	return update;
 }
 
+QString ADReserve::toXml() const
+{
+	
+}
+
+void ADReserve::fromXml(const QString & xml )
+{
+	
+}
+
 void ADReserve::setValues(XMLResults values)
 {
 	dDebug() << "here adspace";

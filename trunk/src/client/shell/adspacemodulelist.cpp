@@ -44,7 +44,7 @@ void ADSpaceModuleList::fill( const QList<XMLResults>&results)
 		
 		//Coloque este condicional para que en el momento en que se muestra la lista de Espacios no se muestre el Epacio null el cual me toco colocarlo debido a que por obligacion el campo codespace de audiovisual en la base de datos hace referencia a este mismo campo en space
 
-		if(!list.at(0).operator==("null"))
+		if(list[0] != ("null"))
 		{
 			addItem(list);
 		}
@@ -86,7 +86,7 @@ void ADSpaceModuleList::requestAction(int action)
 					DCONFIG->sync();
 				
 				
-					emit requestDelete(Logic::spaces, m_pTree->currentItem()->text( 0 ));
+					emit requestDelete(Logic::Spaces, m_pTree->currentItem()->text( 0 ));
 				}
 			}
 			
@@ -99,7 +99,7 @@ void ADSpaceModuleList::requestAction(int action)
 			if(m_pTree->currentItem())
 			{
 				dDebug() << "emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text( 0));";
-				emit requestUpdate(Logic::spaces, m_pTree->currentItem()->text(0));
+				emit requestUpdate(Logic::Spaces, m_pTree->currentItem()->text(0));
 			}
 			break;
 		}

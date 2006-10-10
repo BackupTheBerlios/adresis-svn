@@ -85,7 +85,7 @@ void ADAudiovisualModuleList::requestAction(int action)
 					DCONFIG->sync();
 				
 				
-					emit requestDelete(Logic::audiovisuals, m_pTree->currentItem()->text( 1 ));
+					emit requestDelete(Logic::Audiovisuals, m_pTree->currentItem()->text( 1 ));
 				}
 			}
 			break;
@@ -97,7 +97,7 @@ void ADAudiovisualModuleList::requestAction(int action)
 			{
 				
 				dDebug() << "emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text( 1));";
-				emit requestUpdate(Logic::audiovisuals, m_pTree->currentItem()->text(1));
+				emit requestUpdate(Logic::Audiovisuals, m_pTree->currentItem()->text(1));
 			}
 
 			break;

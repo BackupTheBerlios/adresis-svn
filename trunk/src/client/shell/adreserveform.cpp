@@ -97,7 +97,7 @@ void ADReserveForm::changeTypeReserve(int opcion)
 		horario->makeTable( false );
 	}
 	
-	if( (resourcesNameC->currentText()).operator!=("Escoja uno de los Recursos") && (resourcesNameC->currentText()).operator!=("") )
+	if( (resourcesNameC->currentText()) !=("Escoja uno de los Recursos") && (resourcesNameC->currentText()) !=("") )
 	{
 		horario->assignTypeReserve( tipoResC->currentText() );
 		horario->fill();
@@ -169,7 +169,7 @@ void ADReserveForm::fill()
 void ADReserveForm::changeTypeSpace(QString typeR)
 {
 	QString table;
-	if((tipoRecC->currentText()).toLower().operator==("espacios"))
+	if((tipoRecC->currentText()).toLower() ==("espacios"))
 	{
 		table="adspace";
 	}
@@ -179,7 +179,7 @@ void ADReserveForm::changeTypeSpace(QString typeR)
 	}
 	
 	
-	if( typeR.operator!=( "ESCOJA UN RECURSO" ) )
+	if( typeR !=( "ESCOJA UN RECURSO" ) )
 	{
 		nameResources.clear();
 		resourcesNameC->clear();
@@ -194,7 +194,7 @@ void ADReserveForm::changeNameSpace(const QString& name)
 	QString table;
 	QString resource;
 	
-	if((tipoRecC->currentText()).toLower().operator==("espacios"))
+	if((tipoRecC->currentText()).toLower() ==("espacios"))
 	{
 		table="adspace";
 	}
@@ -203,7 +203,7 @@ void ADReserveForm::changeNameSpace(const QString& name)
 		table="adaudiovisual";
 	}
 
-	if( name.operator!=( "Escoja uno de los Recursos" ) )
+	if( name !=( "Escoja uno de los Recursos" ) )
 	{
 		resource = nameResources.key(name);
 		
@@ -231,11 +231,11 @@ void ADReserveForm::insertListNameResources(const QList<XMLResults>& results)
 	
 	while( it != results.end() )
 	{
-		if(tipoRecC->currentText().toLower().operator==("espacios"))
+		if(tipoRecC->currentText().toLower() ==("espacios"))
 		{
 			nameResources.insert( ((*it)["idresource"]) , ((*it)["nameresource"]));
 		}
-		else if(tipoRecC->currentText().toLower().operator==("audiovisual"))
+		else if(tipoRecC->currentText().toLower() ==("audiovisual"))
 		{
 			nameResources.insert( ((*it)["idresource"]), ""+recursosC->currentText()+" "+QString::number(n));
 			n++;
@@ -322,7 +322,7 @@ void ADReserveForm::emitInsertReserve()
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
 	
 	
-	if( tipoRecC->currentText().operator==("Espacios") )
+	if( tipoRecC->currentText() ==("Espacios") )
 	{
 		table="adspacereserve";
 	}

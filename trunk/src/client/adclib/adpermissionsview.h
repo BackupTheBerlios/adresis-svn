@@ -22,17 +22,18 @@
 
 #include <QGroupBox>
 #include <QMap>
-#include<QCheckBox>
+#include <QCheckBox>
 #include "global.h"
+
 /**
-	@author Jorge Cuadrado <kuadrosx@kuadrosx>
+ * @author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
 class ADPermissionsView : public QGroupBox
 {
 	public:
 		ADPermissionsView(QWidget *parent= 0);
 		~ADPermissionsView();
-		QMap<Logic::TypeUser, bool> permissions();
+		QMap<Logic::Module, bool> permissions();
 		void setPermissions(const QMap<Logic::TypeUser, bool> & permissions );
 		
 	private:

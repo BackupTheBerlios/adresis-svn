@@ -13,8 +13,22 @@ class ADAudioVisual: public ADObject
 		ADAudioVisual();
 		ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace);
 		~ADAudioVisual();
+		
+		/**
+		 * deprecada
+		 * @return 
+		 */
 		ADInsertPackage insertPackage();
+		/**
+		 * deprecada
+		 *
+		 * @return 
+		 */
 		ADUpdatePackage updatePackage();
+		
+		QString toXml() const;
+		void fromXml(const QString & xml );
+		
 		void setValues(XMLResults values);
 		bool isValid() const;
 		

@@ -78,7 +78,7 @@ void ADUserModuleList::requestAction(int action)
 				DCONFIG->sync();
 				if(m_pTree->currentItem())
 				{
-					emit requestDelete(Logic::users, m_pTree->currentItem()->text( 0 ));
+					emit requestDelete(Logic::Users, m_pTree->currentItem()->text( 0 ));
 				}
 			}
 			break;
@@ -89,12 +89,12 @@ void ADUserModuleList::requestAction(int action)
 			if(m_pTree->currentItem())
 			{
 				dDebug() << "emit requestUpdate(Logic::users, m_pTree->currentItem()->text( 0));";
-				emit requestUpdate(Logic::users, m_pTree->currentItem()->text(0));
+				emit requestUpdate(Logic::Users, m_pTree->currentItem()->text(0));
 			}
 			else
 			{
 				m_pTree->setCurrentItem(m_pTree->takeTopLevelItem (0 ));
-				emit requestUpdate(Logic::users, m_pTree->currentItem()->text(0));
+				emit requestUpdate(Logic::Users, m_pTree->currentItem()->text(0));
 			}
 			break;
 		}

@@ -41,12 +41,22 @@ void ADAudioVisual::setValues(XMLResults values)
 	m_numberInventory  = values["numberinventoryav"];
 	m_codeSpace  = values["codespace"];
 
-	if(m_codeSpace.operator==("null"))
+	if(m_codeSpace ==("null"))
 	{
 		m_codeSpace ="";
 	}
 
 	m_valid = true;
+}
+
+QString ADAudioVisual::toXml() const
+{
+	
+}
+
+void ADAudioVisual::fromXml(const QString & xml )
+{
+	
 }
 
 bool ADAudioVisual::isValid() const
@@ -78,4 +88,9 @@ QString ADAudioVisual::codeSpace() const
 {
 	return m_codeSpace;
 }
+
+
+QString toXml() ;
+
+void fromXml(const QString & xml );
 

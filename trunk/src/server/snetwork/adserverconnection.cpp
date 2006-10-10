@@ -29,6 +29,8 @@
 
 #include "adsglobal.h"
 
+#include "adeventfactory.h"
+
 ADServerConnection::ADServerConnection(int socketDescriptor, QObject *parent) : QThread(parent)
 {
 	m_client = new ADServerClient(this);
@@ -62,7 +64,50 @@ void ADServerConnection::run()
 		if ( !readed.isEmpty() )
 		{
 			readed.remove(readed.lastIndexOf("%%"), 2);
+			dDebug() << "Readed:" <<  readed;
+			QDomDocument doc;
 			
+			if ( doc.setContent(readed) )
+			{
+				QString root = doc.documentElement().tagName();
+				
+				dDebug() << root;
+				if ( root == "Connection" )
+				{
+					QString login, passwd;
+					QDomElement docElem = doc.documentElement();
+					QDomNode n = docElem.firstChild();
+					while(!n.isNull()) {
+						QDomElement e = n.toElement();
+						if(!e.isNull())
+						{
+							QString str = e.tagName();
+							if(str == "Login")
+							{
+								login = e.attribute ( "value" );
+							}
+							if(str == "Password")
+							{
+								passwd = e.attribute ( "value" );
+							}
+						}
+						n = n.nextSibling();
+					}
+					emit requestAuth(this, login,passwd);
+				}
+				else if(root == "Event")
+				{
+					ADEventFactory factory;
+					ADEvent *request = factory.build( readed );
+					
+					if ( request )
+					{
+// 						m_server->sendToAll( KTRequestPackage(request) );
+// 						delete request;
+					}
+				}
+			}
+			/*
 			QXmlInputSource xmlsource;
 			xmlsource.setData(readed+'\n');
 			
@@ -75,7 +120,7 @@ void ADServerConnection::run()
 				
 				if ( root == "Connection")
 				{
-					emit requestAuth(this, values["Login"], values["Password"] );
+					
 				}
 // 				else if ( root == "Chat" )
 // 				{
@@ -191,7 +236,7 @@ void ADServerConnection::run()
 				{
 					close();
 				}
-			}
+			}*/
 		}
 	}
 	

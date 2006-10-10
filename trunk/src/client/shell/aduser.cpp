@@ -26,7 +26,7 @@ ADUser::ADUser()
 }
 
 
-ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::TypeUser, bool>permissions )
+ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions )
 	: ADObject(), m_name(name), m_code(code), m_login(login), m_passwd(passwd), m_permissions(permissions)
 {
 	m_valid = true;
@@ -40,7 +40,7 @@ ADUser::~ADUser()
 ADInsertPackage ADUser::insertPackage() 
 {
 	QString strPermissions;
-	QMap<Logic::TypeUser, bool>::const_iterator it = m_permissions.begin();
+	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
 	while(it != m_permissions.end())
 	{
 		if(it.value())
@@ -62,7 +62,7 @@ ADInsertPackage ADUser::insertPackage()
 ADUpdatePackage ADUser::updatePackage() 
 {
 	QString strPermissions;
-	QMap<Logic::TypeUser, bool>::const_iterator it = m_permissions.begin();
+	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
 	while(it != m_permissions.end())
 	{
 		if(it.value())
@@ -76,6 +76,16 @@ ADUpdatePackage ADUser::updatePackage()
 	}
 	ADUpdatePackage update("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  SQLSTR(m_name)<< SQLSTR(m_code) << SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
 	return update;
+}
+
+QString ADUser::toXml() const
+{
+	
+}
+
+void ADUser::fromXml(const QString & xml )
+{
+	
 }
 
 void ADUser::setValues(XMLResults values)
@@ -94,11 +104,11 @@ void ADUser::setValues(XMLResults values)
 		strPermissions[i];
 		if(strPermissions[i] == '1')
 		{
-			m_permissions.insert(Logic::TypeUser(i), true);
+			m_permissions.insert(Logic::Module(i), true);
 		}
 		else
 		{
-			m_permissions.insert(Logic::TypeUser(i), false);
+			m_permissions.insert(Logic::Module(i), false);
 		}
 	}
 	m_valid = true;
@@ -109,7 +119,7 @@ bool ADUser::isValid() const
 	return m_valid;
 }
 
-QMap<Logic::TypeUser, bool> ADUser::permissions() const
+QMap<Logic::Module, bool> ADUser::permissions() const
 {
 	return  m_permissions;
 }

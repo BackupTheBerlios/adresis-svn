@@ -130,11 +130,11 @@ void ADInsertResource::insertResource()
 		QString table;
 		resource->addItem(texto);
 		resource->clear();
-		if( type.operator==("Espacios"))
+		if( type ==("Espacios"))
 		{
 			table = "adspacetype";
 		}
-		else if( type.operator==("Audiovisual") )
+		else if( type ==("Audiovisual") )
 		{
 			table = "adaudiovisualtype";
 		}
@@ -156,11 +156,11 @@ void ADInsertResource::deleteResource()
 		resource->clear();
 		resource->removeItem( resource->currentIndex() );
 		QString table;
-		if( type.operator==("Espacios"))
+		if( type ==("Espacios"))
 		{
 			table = "adspacetype";
 		}
-		else if( type.operator==("Audiovisual") )
+		else if( type ==("Audiovisual") )
 		{
 			table = "adaudiovisualtype";
 		}
@@ -193,7 +193,7 @@ void ADInsertResource::cancel()
 
 void ADInsertResource::changeNameResource( const QString & resource)
 {
-	if( resource.operator!=("ESCOJA UN RECURSO") )
+	if( resource !=("ESCOJA UN RECURSO") )
 	{
 		edit->setText(resource);
 	}

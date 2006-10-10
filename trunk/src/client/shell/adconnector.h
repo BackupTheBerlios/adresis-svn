@@ -29,8 +29,11 @@
 
 #include "global.h"
 
+#include "adevent.h"
+
 #include "adselectpackage.h"
 class ADPackageParser;
+
 /**
  * Maneja las conexiones al servidor, asi mismo tambien maneja los errores de conexion
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
@@ -44,6 +47,8 @@ class ADConnector : public ADConnectorBase
 		void login(const QString &user, const QString &passwd);
 		void sendQuery(Logic::TypeQuery type, const ADSelectPackage& select);
 		void sendPackage(const ADSqlPackageBase & package);
+		void sendEvent( const ADEvent & event );
+		
 		
 	private slots:
 		void readFromServer();
@@ -53,7 +58,7 @@ class ADConnector : public ADConnectorBase
 // 		void chatMessage(const QString &login, const QString &msg);
 		void message(Msg::Type t, const QString &message);
 		void userAutenticated(const XMLResults&);
-		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
+		void fillModule(Logic::Module, const QList<XMLResults>&);
 		void requestShowUser(const XMLResults & values);
 		void requestShowSpace(const XMLResults & values);
 		void requestShowAudiovisual(const XMLResults & values);

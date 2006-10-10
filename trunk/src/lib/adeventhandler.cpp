@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@zi0n   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                *
+ *   kuadrosxx@gmail.com                                                 *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,32 +17,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADSPACEMODULELIST_H
-#define ADSPACEMODULELIST_H
 
-#include<QList>
-#include"adcmodulelist.h"
-#include "global.h"
 
-/**
-@author Hector Fabio Cruz Mosquera,0329876
-*/
-class ADSpaceModuleList : public ADCModuleList
+#include "adeventhandler.h"
+ADAbstractEventHandler::ADAbstractEventHandler()
 {
-	Q_OBJECT
-	public:
-		ADSpaceModuleList(QWidget *parent=0);
-		~ADSpaceModuleList();
-		void fill( const QList<XMLResults>&results);
-		void clean();
 	
-	private slots:
-		void requestAction(int action);
-		
-	signals:
-		void requestSpaceForm();
-		void requestDelete(Logic::Module module, const QString & key);
-		void requestUpdate(Logic::Module module, const QString & key);
-};
+}
 
-#endif
+
+ADAbstractEventHandler::~ADAbstractEventHandler()
+{
+	
+}
+
+

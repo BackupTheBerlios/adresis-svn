@@ -12,11 +12,11 @@ ADLIB_DIR = ../../lib
 error("No encuentro adlib")
 }
 
-ADCLIB_DIR = ../adclib
-include($$ADCLIB_DIR/adclib.pri)
-
 CNETWORK_DIR = ../cnetwork
 !include($$CNETWORK_DIR/cnetwork.pri ){
 error("No encuentro cnerwork"
 }
+
+ADCLIB_DIR = ../adclib
+include($$ADCLIB_DIR/adclib.pri)
 

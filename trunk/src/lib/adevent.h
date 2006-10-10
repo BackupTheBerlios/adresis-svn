@@ -21,7 +21,7 @@
 #define ADEVENT_H
 
 #include <QVariant>
-
+#include <global.h>
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
 */
@@ -29,18 +29,33 @@ class ADEvent : public QObject
 {
 	Q_OBJECT;
 	public:
-		enum Module{user,spaces,audiovisual,reserve};
-		enum Operation{add,del,update,select,fill};
-		ADEvent(Module, Operation, QVariant variant);
+		enum Source{Client = 0, Server };
+		ADEvent();
+		ADEvent(Source source, Logic::Module module, Logic::Action action, const QVariant & data);
 		~ADEvent();
+		int module() const;
+		int action() const;
+		int source() const;
+		
+		
+		void setSource(Source source);
+		void setModule(Logic::Module module);
+		void setAction(Logic::Action action);
+		
+		QString toString() const;
+		QVariant data() const;
+		
+		bool isValid() const;
 		
 	private:
+		Source m_source;
+		Logic::Module m_module;
+		Logic::Action m_action;
 		QVariant m_data;
 		
+		bool m_valid;
+		
 	public slots:
-		QString toXml();
-		int operation();
-		QVariant data();
 		void setData(const QVariant & data );
 		
 

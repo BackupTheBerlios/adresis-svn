@@ -7,13 +7,12 @@ HEADERS += adserverconnection.h \
            adserverclient.h \
            adspackageparser.h \
            adsglobal.h \
-           adquery.h \
-           adsqlpackagebase.h 
+           adquery.h
 SOURCES += adserverconnection.cpp \
            adserverclient.cpp \
            adspackageparser.cpp \
-           adquery.cpp \
-           adsqlpackagebase.cpp 
+           adquery.cpp
+
 QT += xml network
 KDEV_QTVER = 4
 CONFIG += release \
@@ -25,3 +24,11 @@ DLIB_DIR=../../dlib/
 include($$DLIB_DIR/dlib.pri)
 PACKAGES_DIR=../packages/
 include($$PACKAGES_DIR/packages.pri)
+
+ADLIB_DIR = ../../lib
+!include($$ADLIB_DIR/lib.pri) {
+error("No encuentro adlib")
+}
+
+
+

@@ -44,24 +44,24 @@
 #include "adreserveform.h"
 #include "ddockwindow.h"
 
+
+#include "adeventhandler.h"
+
 /**
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADMainWindow : public DTabbedMainWindow
+class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 {
 	Q_OBJECT;
 	public:
 		ADMainWindow();
 		~ADMainWindow();
-
+		void handleEvent(ADEvent * event = 0);
+		
 	private:
 		Adresis *m_adresis;
-		ADSpaceForm *sform;
-		ADAudiovisualForm *aform;
-		ADReserveForm *rform;
-		ADInsertResource *insertResource;
 		DActionManager *m_actionManager;
-		QMap<Logic::TypeModule, ADCModuleList*>m_modules;
+		QMap<Logic::Module, ADCModuleList*>m_modules;
 		QString tipo;
 		QString typeRequest;
 		
@@ -91,33 +91,11 @@ class ADMainWindow : public DTabbedMainWindow
 		void about();
 		void changeTheme();
 		void configSchooll();
-		void configResource();
 
 		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
-		void fillModule(Logic::TypeModule, const QList<XMLResults>&);
-		void createModules(Logic::TypeModule module);
-		void createUserForm();
-		void createUserForm(const ADUser &);
-		void createAudiovisualForm();
-		void createAudiovisualForm(const ADAudioVisual &);
-		void createSpaceForm();
-		void createSpaceForm(const ADSpace &);
-		void createReserveForm();
 		void addForm(ADFormBase * form, const QString & title);
-		void showListAudioVisualMW(const QList<XMLResults>& result);
-		void requestListTypeslMW (const QList<XMLResults>&results);
-		void requestNameResource(const QString& table, const QString& typeResource);
-		void requestScheduleMW (const QList<XMLResults>&results);
-		
-
-	
-	signals:
-		void disabledConnect(bool);
-	
-	
-
 };
 
 #endif

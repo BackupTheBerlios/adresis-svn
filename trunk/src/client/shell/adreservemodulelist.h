@@ -44,9 +44,9 @@ class ADReserveModuleList : public ADCModuleList
 		
 	signals:
 		void requestReserveForm();
-		void requestDelete(Logic::TypeModule module, const QString & key);
+		void requestDelete(Logic::Module module, const QString & key);
 		//cambio
-		void requestUpdate(Logic::TypeModule module, const QString & key);
+		void requestUpdate(Logic::Module module, const QString & key);
 
 };
 

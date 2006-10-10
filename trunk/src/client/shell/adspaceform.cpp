@@ -121,7 +121,7 @@ void ADSpaceForm::checkListsToSave()
 {	
 	for(int i=0; i < m_listAudiovisualE.count();i++)
 	{
-		if( ((m_listAudiovisualE.at(i)).last()).operator==("null") )
+		if( ((m_listAudiovisualE.at(i)).last()) ==("null") )
 		{	
 			emit updateAudiovisuaList((m_listAudiovisualE.at(i)).at(0),	//Tipo	
 						(m_listAudiovisualE.at(i)).at(2),	//marca
@@ -134,7 +134,7 @@ void ADSpaceForm::checkListsToSave()
 	
 	for(int i=0; i < m_listAudiovisualL.count();i++)
 	{
-		if( ((m_listAudiovisualL.at(i)).last()).operator!=("null") )
+		if( ((m_listAudiovisualL.at(i)).last()) !=("null") )
 		{
 			emit updateAudiovisuaList((m_listAudiovisualL.at(i)).at(0),	//Tipo	
 						(m_listAudiovisualL.at(i)).at(2),	//marca
@@ -149,7 +149,7 @@ void ADSpaceForm::checkListsToSave()
 
 void ADSpaceForm::listChangedSF(const QString & lista, int pos)
 {
-	if(lista.operator==("derecha"))
+	if(lista ==("derecha"))
 	{
 		m_listAudiovisualE.append(m_listAudiovisualL.takeAt(pos));
 	}
@@ -277,7 +277,7 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 QStringList ADSpaceForm::takeListKeys(const QString &list)
 {
 	QStringList lista;
-	if(list.operator==("libres"))
+	if(list ==("libres"))
 	{
 		for(int i=0; i < m_listAudiovisualL.count();i++)
 		{

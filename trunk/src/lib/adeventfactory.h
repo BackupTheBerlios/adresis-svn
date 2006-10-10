@@ -17,32 +17,43 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADSPACEMODULELIST_H
-#define ADSPACEMODULELIST_H
+#ifndef ADEVENTFACTORY_H
+#define ADEVENTFACTORY_H
 
-#include<QList>
-#include"adcmodulelist.h"
-#include "global.h"
+#include <QXmlDefaultHandler>
+#include <QString>
+#include <QVariant>
 
+#include "adevent.h"
 /**
-@author Hector Fabio Cruz Mosquera,0329876
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADSpaceModuleList : public ADCModuleList
+class ADEventFactory : public QXmlDefaultHandler
 {
-	Q_OBJECT
 	public:
-		ADSpaceModuleList(QWidget *parent=0);
-		~ADSpaceModuleList();
-		void fill( const QList<XMLResults>&results);
-		void clean();
-	
-	private slots:
-		void requestAction(int action);
+		ADEventFactory();
+		~ADEventFactory();
 		
-	signals:
-		void requestSpaceForm();
-		void requestDelete(Logic::Module module, const QString & key);
-		void requestUpdate(Logic::Module module, const QString & key);
+		bool startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts);
+		
+		bool endElement( const QString& ns, const QString& localname, const QString& qname);
+		
+		bool characters ( const QString & ch );
+		
+		bool error ( const QXmlParseException & exception );
+		bool fatalError ( const QXmlParseException & exception );
+		
+		ADEvent *build(const QString &document);
+		
+	private:
+		QString m_qname;
+		
+		bool m_isParsing;
+		bool m_readCharacters;
+		ADEvent *m_event;
+		QVariant m_data;
+		
+		QString m_root;
 };
 
 #endif

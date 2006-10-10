@@ -63,3 +63,4 @@ void ADFormBase::setTitle( const QString & title)
 {
 	m_title->setText("<h1><b>"+title+"</h1></b>");
 }
+

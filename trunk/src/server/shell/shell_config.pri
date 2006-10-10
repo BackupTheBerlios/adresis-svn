@@ -9,6 +9,11 @@ DLIB_DIR = ../../dlib
 error("No encuentro dlib")
 }
 
+ADLIB_DIR = ../../lib
+!include($$ADLIB_DIR/lib.pri) {
+error("No encuentro adlib")
+}
+
 PACKAGES_DIR = ../packages
 !include($$PACKAGES_DIR/packages.pri){
 error("No encuentro packages")

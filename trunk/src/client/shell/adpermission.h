@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@zi0n   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                  *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,32 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADSPACEMODULELIST_H
-#define ADSPACEMODULELIST_H
+#ifndef ADPERMISSION_H
+#define ADPERMISSION_H
 
-#include<QList>
-#include"adcmodulelist.h"
-#include "global.h"
+#include <adobject.h>
 
 /**
-@author Hector Fabio Cruz Mosquera,0329876
+	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-class ADSpaceModuleList : public ADCModuleList
+class ADPermission : public ADObject
 {
-	Q_OBJECT
 	public:
-		ADSpaceModuleList(QWidget *parent=0);
-		~ADSpaceModuleList();
-		void fill( const QList<XMLResults>&results);
-		void clean();
-	
-	private slots:
-		void requestAction(int action);
+		ADPermission( Logic::Module, Logic::Action, bool value = true);
+		~ADPermission();
+		ADInsertPackage insertPackage(){ };
+		ADUpdatePackage updatePackage(){};
+		void setValues(XMLResults values);
+		bool isValid()  const;
+		QString toXml() const;
+		void fromXml(const QString &xml);
 		
-	signals:
-		void requestSpaceForm();
-		void requestDelete(Logic::Module module, const QString & key);
-		void requestUpdate(Logic::Module module, const QString & key);
+		
+	public:
+		int module() const;
+		int action() const;
+		bool value() const;
+		
+		
+	private:
+		Logic::Module m_module;
+		Logic::Action m_action;
+		bool m_value;
 };
 
 #endif

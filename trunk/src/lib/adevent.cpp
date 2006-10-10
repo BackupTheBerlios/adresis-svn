@@ -18,9 +18,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adevent.h"
+#include <QDomDocument>
 
-ADEvent::ADEvent(Module, Operation, QVariant variant)
+#include <ddebug.h>
+
+ADEvent::ADEvent()
 {
+	m_valid = false;
+}
+
+
+ADEvent::ADEvent(Source source, Logic::Module module, Logic::Action action, const QVariant  & data):  m_source(source), m_module(module), m_action(action), m_data(data)
+{
+	m_valid = true;
 }
 
 
@@ -28,16 +38,57 @@ ADEvent::~ADEvent()
 {
 }
 
-QString ADEvent::toXml()
+QString ADEvent::toString() const
 {
-	//FIXME: implementar
+	QDomDocument doc;
+	QDomElement root = doc.createElement ( "Event" );
+	doc.appendChild(root);
+	
+	QDomElement sourceE = doc.createElement( "Source" );
+	sourceE.setAttribute("value", int(source()));
+	root.appendChild(sourceE);
+	
+	QDomElement moduleE = doc.createElement( "Module" );
+	moduleE.setAttribute("value", int(module()));
+	root.appendChild(moduleE);
+	
+	QDomElement actionE = doc.createElement( "Action" );
+	actionE.setAttribute("value", int(action()));
+	root.appendChild(actionE);
+	
+	
+	QDomElement dataE = doc.createElement( "Data" );
+	switch(m_action)
+	{
+		case Logic::Find:
+		{
+			QDomElement conditionE = doc.createElement ( "Condition" );
+			conditionE.setAttribute("value", m_data.toString());
+			dataE.appendChild(conditionE);
+		}
+		break;
+		
+	}
+	root.appendChild(dataE);
+	return doc.toString();
 }
 
-int ADEvent::operation()
+int ADEvent::source() const
 {
+	return m_source;
 }
 
-QVariant ADEvent::data()
+int ADEvent::module() const
+{
+	return m_module;
+}
+
+int ADEvent::action() const
+{
+	return m_action;
+}
+
+QVariant ADEvent::data() const
 {
 	return m_data;
 }
@@ -46,3 +97,26 @@ void ADEvent::setData(const QVariant& data)
 {
 	m_data = data;
 }
+
+bool ADEvent::isValid() const 
+{
+	return m_valid;
+}
+
+
+void ADEvent::setSource(Source source)
+{
+	m_source = source;
+}
+
+void ADEvent::setModule(Logic::Module module)
+{
+	
+	m_module = module;
+}
+
+void ADEvent::setAction(Logic::Action action)
+{
+	m_action = action;
+}
+

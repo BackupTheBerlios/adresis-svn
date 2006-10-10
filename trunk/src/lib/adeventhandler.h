@@ -20,17 +20,22 @@
 #ifndef ADEVENTHANDLER_H
 #define ADEVENTHANDLER_H
 
+#include "adevent.h"
+
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
+*	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
 */
-class ADEventHandler
+
+class ADAbstractEventHandler
 {
 	public:
-		ADEventHandler();
-		~ADEventHandler();
+		ADAbstractEventHandler();
+		virtual ~ADAbstractEventHandler();
 		
-		virtual void eventHandler(ADEvent event)=0;
+		virtual void handleEvent(ADEvent * event = 0)=0;
 
 };
+
+
 
 #endif

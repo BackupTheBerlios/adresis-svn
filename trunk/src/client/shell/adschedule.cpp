@@ -164,7 +164,7 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 	QList< QPair<int,int> >::const_iterator point = m_points.begin();
 	
 	///Este IF es por si se quiere desseleccionar un item ya seleccionado
-	if( (m_table->item( currentRow , currentColumn)->text()).operator==("RESERVAR") )
+	if( (m_table->item( currentRow , currentColumn)->text()) ==("RESERVAR") )
 	{
 		(m_table->item( currentRow , currentColumn))->setText("");
 		(m_table->item( currentRow , currentColumn))->setBackgroundColor(Qt::white);
@@ -236,14 +236,14 @@ void ADSchedule::fill()
 
 	while( it != m_schedule.end() )
 	{
-		if( ((*it)["typereserve"]).operator==(m_reserve) && (m_reserve.toLower()).operator==("semestral") )
+		if( ((*it)["typereserve"]) ==(m_reserve) && (m_reserve.toLower()) ==("semestral") )
 		{
 			column << cols.indexOf( ( (*it)["day"] ).toUpper() );
 			row1 = rows.indexOf( ( (*it)["beginhour"] ).mid(0,5) );
 			row2 = rows.indexOf( ( (*it)["endhour"] ).mid(0,5) );
 		}
 		
-		else if( ((*it)["typereserve"]).operator==(m_reserve) && (m_reserve.toLower()).operator==("temporal") && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 )
+		else if( ((*it)["typereserve"]) ==(m_reserve) && (m_reserve.toLower()) ==("temporal") && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 )
 		{
 			///En la siguiente linea, tomo el valor de el dia de la fecha de inicio ya que en una reserva temporal la fecha de inicio y la de finalizacion es la misma
 			column << ((( (*it)["begindate"] ).mid(8,2)).toInt())-1;
@@ -253,7 +253,7 @@ void ADSchedule::fill()
 		
 		
 		
-		else if( ((*it)["typereserve"]).operator==("Semestral") && (m_reserve.toLower()).operator==("temporal") && monthNo >= (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo <= (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
+		else if( ((*it)["typereserve"]) ==("Semestral") && (m_reserve.toLower()) ==("temporal") && monthNo >= (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo <= (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
 		{
 			int diaIniRes = ((( (*it)["begindate"] ).mid(8,2)).toInt())-1;;
 			int diaFinRes = ((( (*it)["enddate"] ).mid(8,2)).toInt())-1;;
@@ -261,19 +261,19 @@ void ADSchedule::fill()
 			for(int c=0; c < m_table->columnCount (); c++)
 			{
 			///Este if maneja si el mes elegido y el mes inicial de la reserva son iguales, en tal caso descartara los dias que sean menores a el dia inicial de la reserva.
-				if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()).operator== ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && c >= diaIniRes )
+				if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && c >= diaIniRes )
 				{
 					column << c;
 				}
 				
 			///Este else if maneja si el mes elegido y el mes final de la reserva son iguales, en tal caso descartara los dias que sean mayores a el dia final de la reserva.	
-				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()).operator== ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["enddate"] ).mid(5,2)).toInt()-1 && c <= diaFinRes )
+				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["enddate"] ).mid(5,2)).toInt()-1 && c <= diaFinRes )
 				{
 					column << c;
 				}
 				
 			///Este else if maneja si el mes elegido y el mes de la reserva son diferentes, en ese caso no se descarta ningun dia.
-				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()).operator== ( ((*it)["day"] ).toUpper()) && monthNo != (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo != (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
+				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo != (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo != (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
 				{
 					column << c;
 				}
@@ -350,7 +350,7 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 			column = ((m_table->horizontalHeaderItem(previousColumn))->text()).toLower();
 			dDebug() << "COLUMN ES >> " << column;
 			
-			if((m_reserve.toLower()).operator==("semestral"))
+			if((m_reserve.toLower()) ==("semestral"))
 			{
 				map.insert("day", column );
 				map.insert("typereserve", m_reserve);
@@ -365,7 +365,7 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 				month = (qvariant_cast<QString>(DCONFIG->value("dateFinSem" ))).section("/",1,1).toInt()+1;
 				map.insert("enddate", day+"/"+ QString::number(month)+"/"+QString::number(year) );
 			}
-			else if ((m_reserve.toLower()).operator==("temporal"))
+			else if ((m_reserve.toLower()) ==("temporal"))
 			{
 				map.insert("day", column.section('\n',0,0) );
 				map.insert("typereserve", m_reserve);
