@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                  *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,43 +17,37 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADUSER_H
-#define ADUSER_H
-#include <QMap>
+#ifndef ADPERMISSION_H
+#define ADPERMISSION_H
 
-#include "adobject.h"
+#include <adobject.h>
 
 /**
-*	@author Jorge Cuadrado <kuadrosx@gmail>
+	@author Jorge Cuadrado <kuadrosx@kuadrosx>
 */
-
-class ADUser : public ADObject
+class ADPermission : public ADObject
 {
 	public:
-		ADUser();
-		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions );
-		~ADUser();
-		ADInsertPackage insertPackage();
-		ADUpdatePackage updatePackage();
-		
-		QString toXml() const;
-		void fromXml(const QString & xml );
-		
+		ADPermission( Logic::Module, Logic::Action, bool value = true);
+		~ADPermission();
+// 		ADInsertPackage insertPackage(){ };
+// 		ADUpdatePackage updatePackage(){};
 		void setValues(XMLResults values);
-		bool isValid() const;
-		QMap<Logic::Module, bool> permissions() const;
-		QString name() const ; 
-		QString code() const;
-		QString login() const;
-		QString passwd() const;
+		bool isValid()  const;
+		QString toXml() const;
+		void fromXml(const QString &xml);
+		
+		
+	public:
+		int module() const;
+		int action() const;
+		bool value() const;
+		
 		
 	private:
-		QString m_name;
-		QString m_code;
-		QString m_login;
-		QString m_passwd;
-		QMap<Logic::Module, bool> m_permissions;
-		bool m_valid;
+		Logic::Module m_module;
+		Logic::Action m_action;
+		bool m_value;
 };
 
 #endif

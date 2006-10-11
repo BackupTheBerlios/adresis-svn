@@ -127,7 +127,6 @@ void SDatabase::setupConnection(const QString &dbname, const QString & login, co
 
 SResultSet SDatabase::execQuery(const ADQuery *query )
 {
-	
 	return execRawQuery(query->toString());
 }
 

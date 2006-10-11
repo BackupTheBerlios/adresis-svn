@@ -37,7 +37,7 @@ ADReserve::ADReserve(const QString& typeReserve, const QString& idUserReserve, c
 ADReserve::~ADReserve()
 {
 }
-
+/*
 ADInsertPackage ADReserve::insertPackage()
 {
 	ADInsertPackage insert("",QStringList(),QStringList());
@@ -71,7 +71,7 @@ ADUpdatePackage ADReserve::updatePackage()
 	dDebug() << update.toString();
 	return update;
 }
-
+*/
 QString ADReserve::toXml() const
 {
 	

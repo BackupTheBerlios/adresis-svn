@@ -35,7 +35,7 @@ ADSpace::ADSpace(const QString & codeSpace, const QString & typeSpace, const boo
 ADSpace::~ADSpace()
 {
 }
-
+/*
 ADInsertPackage ADSpace::insertPackage()
 {
 	
@@ -72,7 +72,7 @@ ADUpdatePackage ADSpace::updatePackage()
 	dDebug() << update.toString();
 	return update;
 }
-
+*/
 QString ADSpace::toXml() const
 {
 	

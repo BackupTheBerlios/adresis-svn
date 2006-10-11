@@ -17,46 +17,55 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADSPACE_H
-#define ADSPACE_H
+#ifndef ADRESERVE_H
+#define ADRESERVE_H
 
 #include "adobject.h"
-#include <QStringList>
 
- 
 /**
-@author Charly Aguirre Manzano,0330911
+	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
 */
-class ADSpace : public ADObject
+class ADReserve : public ADObject
 {
 	public:
-		ADSpace();
-		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
-		~ADSpace();
-		ADInsertPackage insertPackage();
-		ADUpdatePackage updatePackage();
+		ADReserve();
+		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idResource, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
+		~ADReserve();
+// 		ADInsertPackage insertPackage();
+// 		ADInsertPackage insertPackage(const QString&);
+// 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
 		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QString codeSpace() const; 
-		QString typeSpace() const; 
-		bool coolAirSpace() const; 
-		QString capacitySpace() const; 
-		QString nameSpace() const; 
-		QStringList listAudioVisual() const;
+		QString typeReserve() const;
+		QString iduserreserve() const;
+		QString iduserresponsable() const;
+		QString idresource() const;
+		QString day() const;
+		QString beginhour() const;
+		QString endhour() const;
+		QString begindate() const;
+		QString enddate() const;
+		bool isActive() const;
+		QString destinationreserve() const;
 		
 	private:
-		QString m_codeSpace;
-		QString m_typeSpace;
-		bool m_coolAirSpace;
-		QString m_capacitySpace;
-		QString m_nameSpace;
+		QString m_typereserve;
+		QString m_iduserreserve;
+		QString m_iduserresponsable;
+		QString m_idresource;
+		QString m_day;
+		QString m_beginhour;
+		QString m_endhour;
+		QString m_begindate;
+		QString m_enddate;
+		bool m_isactive;
+		QString m_destinationreserve;
 		bool m_valid;
-		QStringList m_listAudioVisual;
-		
+		QString tipo;
 
 };
 

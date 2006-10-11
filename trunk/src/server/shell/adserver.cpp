@@ -32,6 +32,10 @@
 
 #include "postgreserrorhandler.h"
 
+#include "aduser.h"
+#include "adevent.h"
+
+
 ADServer::ADServer(QObject *parent) : QTcpServer(parent)
 {
 }
@@ -169,13 +173,33 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 // 	else
 	{
 		cnx->setLogin(login);
-		ADSelect user(QStringList() << "passwduser", "aduser");
-		
+		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "permissionsuser" , "aduser");
+		infoUser.setWhere("loginuser="+SQLSTR(login));
+		SResultSet rs = SDBM->execQuery(&infoUser);
+		QMap<Logic::Module, bool> permissions;
+		dDebug() << rs.map().size();
+		QString strPermissions = rs.map()["permissionsuser"][0];
+		for(int i = 0; i < strPermissions.length (); i++)
+		{
+			strPermissions[i];
+			if(strPermissions[i] == '1')
+			{
+				permissions.insert(Logic::Module(i), true);
+			}
+			else
+			{
+				permissions.insert(Logic::Module(i), false);
+			}
+		}
 // 		cnx->sendToClient( SSuccessPackage(tr("autenticado")));
-		ADUser user = 
-		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info,   );
+		ADUser user( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
+		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info, QVariant::fromValue (user)  );
+		dDebug() << "here";
+		event.toString();
+				dDebug() << "here2";
+		cnx->sendToClient( event.toString() );
 		
-		cnx->sendToClient( SDBM->execQuery(&user) );
+// 		cnx->sendToClient( SDBM->execQuery(&user) );
 	}
 }
 

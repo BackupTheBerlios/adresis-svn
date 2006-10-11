@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                   *
+ *   Copyright (C) 2006 by Jorge Cuadrado   *
+ *   kuadrosx@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,37 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADPERMISSION_H
-#define ADPERMISSION_H
-
-#include <adobject.h>
+#ifndef ADOBJECT_H
+#define ADOBJECT_H
 
 /**
-	@author Jorge Cuadrado <kuadrosx@kuadrosx>
+ * @author Jorge Cuadrado <kuadrosx@gmail.com>
 */
-class ADPermission : public ADObject
+// #include<QObject>
+#include "global.h"
+// #include "adinsertpackage.h"
+// #include "adupdatepackage.h"
+
+class ADObject /*: public QObject*/
 {
 	public:
-		ADPermission( Logic::Module, Logic::Action, bool value = true);
-		~ADPermission();
-		ADInsertPackage insertPackage(){ };
-		ADUpdatePackage updatePackage(){};
-		void setValues(XMLResults values);
-		bool isValid()  const;
-		QString toXml() const;
-		void fromXml(const QString &xml);
-		
-		
-	public:
-		int module() const;
-		int action() const;
-		bool value() const;
-		
-		
-	private:
-		Logic::Module m_module;
-		Logic::Action m_action;
-		bool m_value;
+		ADObject();
+		virtual ~ADObject();
+// 		virtual ADInsertPackage insertPackage() = 0;
+// 		virtual ADUpdatePackage updatePackage() = 0;
+		virtual void setValues(XMLResults values) = 0;
+		virtual bool isValid()  const = 0;
+		/**
+		 * Cualquier objeto tiene que poderse convertir en un string xml
+		 * @return 
+		 */
+		virtual QString toXml()const = 0;
+		/**
+		 * Cualquier objeto tiene que poder objeter sus datos de un xml
+		 * @param xml 
+		 */
+		virtual void fromXml(const QString & xml ) = 0;
 };
 
 #endif

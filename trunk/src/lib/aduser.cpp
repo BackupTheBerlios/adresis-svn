@@ -32,11 +32,15 @@ ADUser::ADUser(const QString & name, const QString & code,const QString &login,c
 	m_valid = true;
 }
 
+ADUser::ADUser(const ADUser & copy): ADObject(), m_name(copy.m_name), m_code(copy.m_code), m_login(copy.m_login), m_passwd(copy.m_passwd), m_permissions(copy.m_permissions)
+{
+	m_valid = true;
+}
 
 ADUser::~ADUser()
 {
 }
-
+/*
 ADInsertPackage ADUser::insertPackage() 
 {
 	QString strPermissions;
@@ -77,10 +81,38 @@ ADUpdatePackage ADUser::updatePackage()
 	ADUpdatePackage update("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  SQLSTR(m_name)<< SQLSTR(m_code) << SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
 	return update;
 }
+*/
+
+QDomElement ADUser::toXml(QDomDocument &doc)
+{
+	QDomElement root = doc.createElement("user");
+	
+	QString strPermissions;
+	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
+	while(it != m_permissions.end())
+	{
+		if(it.value())
+		{
+			strPermissions += '1';
+		}else
+		{
+			strPermissions += '0';
+		}
+		++it;
+	}
+	
+	root.setAttribute( "name", m_name );
+	root.setAttribute( "code", m_code );
+	root.setAttribute( "login", m_login );
+	root.setAttribute( "passwd", m_passwd );
+	root.setAttribute( "permissions", strPermissions );
+	
+	return root;
+}
 
 QString ADUser::toXml() const
 {
-	
+	return "";
 }
 
 void ADUser::fromXml(const QString & xml )
@@ -113,6 +145,9 @@ void ADUser::setValues(XMLResults values)
 	}
 	m_valid = true;
 }
+
+
+
 
 bool ADUser::isValid() const
 {

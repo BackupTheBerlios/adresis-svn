@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@zi0n   *
+ *   kuadrosx@gmail.com   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,56 +17,50 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADRESERVE_H
-#define ADRESERVE_H
+#ifndef ADUSER_H
+#define ADUSER_H
+#include <QMap>
 
 #include "adobject.h"
+#include <QMetaType>
+#include <QDomElement>
 
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
+*	@author Jorge Cuadrado <kuadrosx@gmail>
 */
-class ADReserve : public ADObject
+
+class ADUser : public ADObject
 {
 	public:
-		ADReserve();
-		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idResource, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
-		~ADReserve();
-		ADInsertPackage insertPackage();
-		ADInsertPackage insertPackage(const QString&);
-		ADUpdatePackage updatePackage();
+		ADUser();
+		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions );
+		ADUser(const ADUser & copy);
+		~ADUser();
+// 		ADInsertPackage insertPackage();
+// 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
+		QDomElement toXml(QDomDocument &doc);
+		
 		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QString typeReserve() const;
-		QString iduserreserve() const;
-		QString iduserresponsable() const;
-		QString idresource() const;
-		QString day() const;
-		QString beginhour() const;
-		QString endhour() const;
-		QString begindate() const;
-		QString enddate() const;
-		bool isActive() const;
-		QString destinationreserve() const;
+		QMap<Logic::Module, bool> permissions() const;
+		QString name() const ; 
+		QString code() const;
+		QString login() const;
+		QString passwd() const;
 		
 	private:
-		QString m_typereserve;
-		QString m_iduserreserve;
-		QString m_iduserresponsable;
-		QString m_idresource;
-		QString m_day;
-		QString m_beginhour;
-		QString m_endhour;
-		QString m_begindate;
-		QString m_enddate;
-		bool m_isactive;
-		QString m_destinationreserve;
+		QString m_name;
+		QString m_code;
+		QString m_login;
+		QString m_passwd;
+		QMap<Logic::Module, bool> m_permissions;
 		bool m_valid;
-		QString tipo;
-
 };
+
+Q_DECLARE_METATYPE(ADUser);
 
 #endif

@@ -8,9 +8,23 @@ target.path = /lib
 HEADERS += adevent.h \
            adeventhandler.h \
            global.h \
+	   adobject.h \
+	   adaudiovisual.h \
+	   adreserve.h \
+	   adpermission.h \
+	   adschedule.h \
+	   adspace.h \
+	   aduser.h \
            adeventfactory.h 
 SOURCES += adevent.cpp \
            adeventhandler.cpp \
+           adobject.cpp \
+           adaudiovisual.cpp \
+           adreserve.cpp \
+           adpermission.cpp \
+           adschedule.cpp \
+           adspace.cpp \
+           aduser.cpp \
            adeventfactory.cpp 
 TARGET = adlib
 CONFIG += release \

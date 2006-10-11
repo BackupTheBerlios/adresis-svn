@@ -8,14 +8,10 @@ target.path = /bin/
 HEADERS += adcapplication.h \
            adresis.h \
            adconnector.h \
-           adobject.h \
-           aduser.h \
            adusermodulelist.h \
            aduserform.h \
            adspacemodulelist.h \
            adaudiovisualmodulelist.h \
-           adaudiovisual.h \
-           adspace.h \
            adcfirstrundialog.h \
            adaudiovisualform.h \
            adlistselect.h \
@@ -23,23 +19,16 @@ HEADERS += adcapplication.h \
            admainwindow.h \
            adreservemodulelist.h \
            adreserveform.h \
-           adschedule.h \
-           adreserve.h \
            adconfigschoollmodule.h \
-           adinsertresource.h \
-           adpermission.h 
+           adinsertresource.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
            adconnector.cpp \
-           adobject.cpp \
-           aduser.cpp \
            adusermodulelist.cpp \
            aduserform.cpp \
            adspacemodulelist.cpp \
            adaudiovisualmodulelist.cpp \
-           adaudiovisual.cpp \
-           adspace.cpp \
            adcfirstrundialog.cpp \
            adaudiovisualform.cpp \
            adlistselect.cpp \
@@ -47,11 +36,8 @@ SOURCES += main_cliente.cpp \
            admainwindow.cpp \
            adreservemodulelist.cpp \
            adreserveform.cpp \
-           adschedule.cpp \
-           adreserve.cpp \
            adconfigschoollmodule.cpp \
-           adinsertresource.cpp \
-           adpermission.cpp 
+           adinsertresource.cpp 
 KDEV_QTVER = 4
 include(shell_config.pri)
 TARGET = ../../../bin/adclient.bin

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   kuadrosx@zi0n   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,36 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADOBJECT_H
-#define ADOBJECT_H
+#ifndef ADSPACE_H
+#define ADSPACE_H
 
+#include "adobject.h"
+#include <QStringList>
+
+ 
 /**
- * @author Jorge Cuadrado <kuadrosx@gmail.com>
+@author Charly Aguirre Manzano,0330911
 */
-#include<QObject>
-#include "global.h"
-#include "adinsertpackage.h"
-#include "adupdatepackage.h"
-
-class ADObject : public QObject
+class ADSpace : public ADObject
 {
 	public:
-		ADObject();
-		virtual ~ADObject();
-// 		virtual ADInsertPackage insertPackage() = 0;
-// 		virtual ADUpdatePackage updatePackage() = 0;
-		virtual void setValues(XMLResults values) = 0;
-		virtual bool isValid()  const = 0;
-		/**
-		 * Cualquier objeto tiene que poderse convertir en un string xml
-		 * @return 
-		 */
-		virtual QString toXml()const = 0;
-		/**
-		 * Cualquier objeto tiene que poder objeter sus datos de un xml
-		 * @param xml 
-		 */
-		virtual void fromXml(const QString & xml ) = 0;
+		ADSpace();
+		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
+		~ADSpace();
+// 		ADInsertPackage insertPackage();
+// 		ADUpdatePackage updatePackage();
+		
+		QString toXml() const;
+		void fromXml(const QString & xml );
+		
+		void setValues(XMLResults values);
+		bool isValid() const;
+		QString codeSpace() const; 
+		QString typeSpace() const; 
+		bool coolAirSpace() const; 
+		QString capacitySpace() const; 
+		QString nameSpace() const; 
+		QStringList listAudioVisual() const;
+		
+	private:
+		QString m_codeSpace;
+		QString m_typeSpace;
+		bool m_coolAirSpace;
+		QString m_capacitySpace;
+		QString m_nameSpace;
+		bool m_valid;
+		QStringList m_listAudioVisual;
+		
+
 };
 
 #endif

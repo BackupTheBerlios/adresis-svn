@@ -18,13 +18,13 @@ class ADAudioVisual: public ADObject
 		 * deprecada
 		 * @return 
 		 */
-		ADInsertPackage insertPackage();
+// 		ADInsertPackage insertPackage();
 		/**
 		 * deprecada
 		 *
 		 * @return 
 		 */
-		ADUpdatePackage updatePackage();
+// 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
 		void fromXml(const QString & xml );

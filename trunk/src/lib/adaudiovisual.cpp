@@ -16,7 +16,7 @@ ADAudioVisual::ADAudioVisual(const QString & type, const QString & marksEquipmen
 ADAudioVisual::~ADAudioVisual()
 {
 }
-
+/*
 ADInsertPackage ADAudioVisual::insertPackage()
 {
 	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksequipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
@@ -32,7 +32,7 @@ ADUpdatePackage ADAudioVisual::updatePackage()
 	
 	return update;
 }
-
+*/
 void ADAudioVisual::setValues(XMLResults values)
 {
 	m_type = values["typeav"];

@@ -22,6 +22,10 @@
 
 #include <ddebug.h>
 
+#include "aduser.h"
+
+#include <QVariant>
+
 ADEvent::ADEvent()
 {
 	m_valid = false;
@@ -66,10 +70,20 @@ QString ADEvent::toString() const
 			conditionE.setAttribute("value", m_data.toString());
 			dataE.appendChild(conditionE);
 		}
+		case Logic::Info:
+		{
+			if(m_module == Logic::Users)
+			{
+				dataE.appendChild( qvariant_cast<ADUser>( m_data ).toXml(doc) );
+			}
+		} 
 		break;
 		
 	}
 	root.appendChild(dataE);
+	
+	SHOW_VAR(doc.toString());
+	
 	return doc.toString();
 }
 
