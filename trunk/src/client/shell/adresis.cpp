@@ -30,6 +30,8 @@ Adresis::Adresis(QObject * parent)
 	
 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
 	
+	connect ( m_connector, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *) ));
+	
 // 	connect ( m_connector, SIGNAL(fillModule(Logic::Module, const QList<XMLResults>&)), this, SIGNAL(requestFillModule(Logic::Module, const QList<XMLResults>&)) );
 	
 // 	connect( m_connector, SIGNAL(requestShowUser(const XMLResults& )), this, SLOT(createUser(const XMLResults& )));
@@ -54,31 +56,61 @@ Adresis::~Adresis()
 
 void Adresis::handleEvent(ADEvent * event)
 {
+	D_FUNCINFO;
 	if(event)
 	{
-		switch(event->module())
+		if(event->source() == ADEvent::Server)
 		{
-			case Logic::Users:
+			
+			switch(event->module())
 			{
-				
+				case Logic::Users:
+				{
+					dDebug() << "Users" << event->action();
+					
+					switch(event->action())
+					{
+						
+						case Logic::Info:
+						{
+							dDebug() << "Info";
+							m_user = qvariant_cast<ADUser> (event->data());
+							SHOW_VAR( m_user.name());
+							
+							
+						}
+						break;
+						
+					}
+				}
+				break;
+				case Logic::Audiovisuals:
+				{
+					
+				}
+				break;
+				case Logic::Reserves:
+				{
+					
+				}
+				break;
+				case Logic::Spaces:
+				{
+					
+				}
+				break;
 			}
-			break;
-			case Logic::Audiovisuals:
-			{
-				
-			}
-			break;
-			case Logic::Reserves:
-			{
-				
-			}
-			break;
-			case Logic::Spaces:
-			{
-				
-			}
-			break;
 		}
+		else
+		{
+			//CLiente 
+			//TODO: validar si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
+			m_connector->sendToServer(event->toString());
+		}
+	}
+	else
+	{
+		dFatal() << "no existe el evento";
 	}
 	
 	
@@ -117,7 +149,7 @@ void Adresis::autenticated(const XMLResults & values)
 // 		if(m_user.permissions()[module])
 // 		{
 			ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
-			m_connector->sendEvent(findAll);
+			m_connector->sendToServer( findAll.toString());
 // 		}
 	}
 // 	

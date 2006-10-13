@@ -47,7 +47,7 @@ class ADConnector : public ADConnectorBase
 		void login(const QString &user, const QString &passwd);
 		void sendQuery(Logic::TypeQuery type, const ADSelectPackage& select);
 		void sendPackage(const ADSqlPackageBase & package);
-		void sendEvent( const ADEvent & event );
+// 		void sendEvent( const ADEvent & event );
 		
 		
 	private slots:
@@ -65,6 +65,8 @@ class ADConnector : public ADConnectorBase
 		void requestShowListAudiovisual( const QList<XMLResults>& );
 		void requestListTypes( const QList<XMLResults>& );
 		void requestSchedule( const QList<XMLResults>& );
+		
+		void sendEvent( ADEvent * event);
 
 	private:
 		QXmlSimpleReader m_reader;

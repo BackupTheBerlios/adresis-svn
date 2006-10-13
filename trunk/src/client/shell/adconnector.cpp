@@ -29,6 +29,8 @@
 
 #include "global.h"
 
+#include "adeventfactory.h"
+
 ADConnector::ADConnector(QObject * parent) : ADConnectorBase(parent)
 {
 	m_parser = new ADPackageParser;
@@ -53,137 +55,48 @@ void ADConnector::readFromServer()
 			break;
 		}
 	}
-		
-	if ( m_readed.isEmpty() )
-	{
-		return;
-	}
 	
 	m_readed.remove(m_readed.lastIndexOf("%%"), 2);
 	
-	QXmlInputSource xmlsource;
-	xmlsource.setData(m_readed);
 	
-	dDebug() << "READED: " << m_readed;
-	bool parse =  m_reader.parse(&xmlsource);
-	SHOW_VAR(parse);
-	if ( parse )
+	
+	// 	QXmlInputSource xmlsource;
+// 	xmlsource.setData(m_readed);
+// 	dDebug() << "READED: " << m_readed;
+// 	bool parse =  m_reader.parse(&xmlsource);
+// 	SHOW_VAR(parse);
+	
+	if ( !m_readed.isEmpty() )
 	{
-		QString root = m_parser->root();
-		SHOW_VAR(root);
-		if ( root == "Results" )
+	
+		QDomDocument doc;
+		if ( doc.setContent(m_readed) )
 		{
-			QList<XMLResults> results = m_parser->results();
-
-			Logic::TypeQuery type = m_querys.dequeue();
-			if(!results.empty())
+			QString root = doc.documentElement().tagName();
+			
+			if(root =="Event")
 			{
-	#if 1
-				foreach(XMLResults r, results)
-				{
-					XMLResults::const_iterator it = r.begin();
-					while(it != r.end())
-					{
-						dDebug() << it.key() << " = " << it.value();
-						++it;
-					}
-				}
-	#endif
-				SHOW_VAR(type);
-				SHOW_VAR(m_querys.size());
-				switch(type)
-				{
-					case Logic::userAuthenticated:
-					{
-						dDebug() << "emit userAutenticated(results[0]);";
-// 						emit userAutenticated(results[0]);
-						break;
-					}
-					case Logic::fillUserModule:
-					{
-						dDebug() << "emit fillModule(Logic::users, results );";
-// 						emit fillModule(Logic::users, results );
-						break;
-					}
-					case Logic::fillSpaceModule:
-					{
-						dDebug() << "emit fillModule(Logic::spaces, results );";
-// 						emit fillModule(Logic::spaces, results );
-						break;
-					}
-					case Logic::fillAudiovisualModule:
-					{
-						dDebug() << "fillModule(Logic::audiovisuals, results );";
-// 						emit fillModule(Logic::audiovisuals, results );
-						break;
-					}
-					case Logic::fillReserveModule :
-					{
-						dDebug() << "fillModule(Logic::reserves, results );";
-// 						emit fillModule(Logic::reserves, results );
-						break;
-					}
-					case Logic::queryUser:
-					{
-						dDebug() << "requestShowUser(results )";
-// 						emit requestShowUser( results[0] );
-						break;
-					}
-					case Logic::queryAudiovisual:
-					{
-						dDebug() << "requestShowAudiovisual(results )";
-// 						emit requestShowAudiovisual( results[0] );
-						break;
-					}
-					case Logic::querySpace:
-					{
-						dDebug() << "requestShowSpace(results )";
-// 						emit requestShowSpace( results[0] );
-						break;
-					}
-					case Logic::queryListAudiovisual:
-					{
-						dDebug() << "requestShowListAudiovisual(results )";
-// 						emit requestShowListAudiovisual( results );
-						break;
-					}
-					case Logic::querytypes:
-					{
-						dDebug() << "requestListTypes( results )";
-// 						emit requestListTypes( results );
-						break;
-					}
-					case Logic::querySchedule:
-					{
-						dDebug() << "requestSchadule( results )"; 
-// 						emit requestSchedule( results );
-						break;
-					}
-					default:
-					{
-						emit message(Msg::Error, "Error: operacion no permitida" );
-						break;
-					}
-				}
+				ADEventFactory factory;
+				ADEvent *request = factory.build( m_readed );
+				emit sendEvent( request );
 			}
+			else if ( root == "Error" )
+			{
+				XMLResults result = m_parser->results()[0];
+				emit message(Msg::Error, "Error "+result["id"]+": "+result["message"] );
+			}
+			else if( root == "Success")
+			{
+	// 			emit readedModuleForms( m_parser->moduleForms() );
+				emit message(Msg::Info, m_parser->results()[0]["message"]);
+			}
+			m_readed = "";
 		}
-		else if ( root == "Error" )
-		{
-			XMLResults result = m_parser->results()[0];
-			emit message(Msg::Error, "Error "+result["id"]+": "+result["message"] );
-		}
-		else if( root == "Success")
-		{
-// 			emit readedModuleForms( m_parser->moduleForms() );
-			emit message(Msg::Info, m_parser->results()[0]["message"]);
-		}
-		m_readed = "";
 	}
 	else
 	{
 		dDebug() << "Error parsing: " << m_readed;
 	}
-	
 	if( canReadLine() ) emit readyRead(); // HACK: Si los mensajes son enviados muy rapido, el socket no lo detecta
 }
 
@@ -235,9 +148,9 @@ void ADConnector::sendPackage(const ADSqlPackageBase & package)
 	sendToServer( toSend);
 }
 
-void ADConnector::sendEvent( const ADEvent & event )
-{
-	QString toSend = event.toString();
-	sendToServer( toSend);
-	
-}
+// void ADConnector::sendEvent( const ADEvent & event )
+// {
+// 	QString toSend = event.toString();
+// 	sendToServer( toSend);
+// 	
+// }

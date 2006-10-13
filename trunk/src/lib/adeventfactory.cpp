@@ -21,6 +21,7 @@
 #include <ddebug.h>
 
 #include "adevent.h"
+#include "aduser.h"
 
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
@@ -57,6 +58,10 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	{
 		m_event->setModule(Logic::Module(atts.value("value").toInt()));
 	}
+	else if(qname == "Action")
+	{
+		m_event->setAction(Logic::Action(atts.value("value").toInt()));
+	}
 	else if(qname == "Data")
 	{
 		
@@ -64,6 +69,27 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	else if(qname == "Condition")
 	{
 		m_data = atts.value("value");
+	}
+	else if(qname == "user")
+	{
+		
+		QString strPermissions = atts.value("permissions");
+		QMap<Logic::Module, bool> permissions;
+		for(int i = 0; i < strPermissions.length (); i++)
+		{
+			strPermissions[i];
+			if(strPermissions[i] == '1')
+			{
+				permissions.insert(Logic::Module(i), true);
+			}
+			else
+			{
+				permissions.insert(Logic::Module(i), false);
+			}
+		}
+		ADUser user(atts.value("name"), atts.value("code"), atts.value("login"), "" ,  permissions  );
+		
+		m_data = QVariant::fromValue (user);
 	}
 	m_qname = qname;
 	

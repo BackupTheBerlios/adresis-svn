@@ -176,6 +176,8 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "permissionsuser" , "aduser");
 		infoUser.setWhere("loginuser="+SQLSTR(login));
 		SResultSet rs = SDBM->execQuery(&infoUser);
+		
+		
 		QMap<Logic::Module, bool> permissions;
 		dDebug() << rs.map().size();
 		QString strPermissions = rs.map()["permissionsuser"][0];
@@ -194,9 +196,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 // 		cnx->sendToClient( SSuccessPackage(tr("autenticado")));
 		ADUser user( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
 		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info, QVariant::fromValue (user)  );
-		dDebug() << "here";
-		event.toString();
-				dDebug() << "here2";
+
 		cnx->sendToClient( event.toString() );
 		
 // 		cnx->sendToClient( SDBM->execQuery(&user) );
