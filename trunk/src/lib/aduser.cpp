@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "aduser.h"
 #include "ddebug.h"
+
 ADUser::ADUser()
 	: ADObject()
 {
@@ -26,7 +27,7 @@ ADUser::ADUser()
 }
 
 
-ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions )
+ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions )
 	: ADObject(), m_name(name), m_code(code), m_login(login), m_passwd(passwd), m_permissions(permissions)
 {
 	m_valid = true;
@@ -87,25 +88,11 @@ QDomElement ADUser::toXml(QDomDocument &doc)
 {
 	QDomElement root = doc.createElement("user");
 	
-	QString strPermissions;
-	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
-	while(it != m_permissions.end())
-	{
-		if(it.value())
-		{
-			strPermissions += '1';
-		}else
-		{
-			strPermissions += '0';
-		}
-		++it;
-	}
-	
 	root.setAttribute( "name", m_name );
 	root.setAttribute( "code", m_code );
 	root.setAttribute( "login", m_login );
 	root.setAttribute( "passwd", m_passwd );
-	root.setAttribute( "permissions", strPermissions );
+	root.appendChild(m_permissions.toXml(doc));
 	
 	return root;
 }
@@ -120,29 +107,34 @@ void ADUser::fromXml(const QString & xml )
 	
 }
 
+
+bool ADUser::permission( Logic::Module mod, Logic::Action act)
+{
+	bool valor = m_permissions.value( mod, act);
+	return valor;
+}
+
+
+void ADUser::assignPermissions(ADPermission permissions)
+{
+	m_permissions = permissions;
+	
+// 	dDebug() << "ADUser::assignPermissions(ADPermission permissions)\n";
+// 	for(int i=0;i<5;i++)
+// 	{
+// 		Logic::Module module = Logic::Module(i);
+// 		dDebug() << "permiso    ===>"<<m_permissions.value(module, Logic::Find);
+// 	}
+}
+
+
 void ADUser::setValues(XMLResults values)
 {
 	m_name = values["nameuser"];
 	m_code = values["codeuser"];
 	m_login = values["loginuser"];
 	m_passwd = values["passwduser"];
-	
-	QString strPermissions;
-	
-	strPermissions = values["permissionsuser"];
-	dDebug() << m_name <<m_code << m_login<<m_passwd<<strPermissions;
-	for(int i = 0; i < strPermissions.length (); i++)
-	{
-		strPermissions[i];
-		if(strPermissions[i] == '1')
-		{
-			m_permissions.insert(Logic::Module(i), true);
-		}
-		else
-		{
-			m_permissions.insert(Logic::Module(i), false);
-		}
-	}
+
 	m_valid = true;
 }
 
@@ -154,8 +146,9 @@ bool ADUser::isValid() const
 	return m_valid;
 }
 
-QMap<Logic::Module, bool> ADUser::permissions() const
+ADPermission ADUser::permissions() const
 {
+
 	return  m_permissions;
 }
 

@@ -23,6 +23,7 @@
 #include <dtabbedmainwindow.h>
 #include <dactionmanager.h>
 
+#include "adeventhandler.h"
 #include "adusermodulelist.h"
 #include "adspacemodulelist.h"
 #include "adaudiovisualmodulelist.h"

@@ -21,6 +21,12 @@
 #define ADPERMISSION_H
 
 #include <adobject.h>
+#include <QDomDocument>
+#include <QString>
+#include <QMap>
+#include <QStringList>
+#include <ddebug.h>
+#include <QXmlAttributes>
 
 /**
 	@author Jorge Cuadrado <kuadrosx@kuadrosx>
@@ -28,25 +34,27 @@
 class ADPermission : public ADObject
 {
 	public:
-		ADPermission( Logic::Module, Logic::Action, bool value = true);
+		ADPermission();
 		~ADPermission();
-// 		ADInsertPackage insertPackage(){ };
-// 		ADUpdatePackage updatePackage(){};
-		void setValues(XMLResults values);
-		bool isValid()  const;
+		
 		QString toXml() const;
-		void fromXml(const QString &xml);
+		void fromXml(const QString&);
+		void setValues(const XMLResults values);
+		
+		QDomElement toXml(QDomDocument &doc) const;
+		void setValues(QMap<QString, QStringList> values);
+		void setValues(const QXmlAttributes& atts);
+		bool isValid()  const;
+		
 		
 		
 	public:
-		int module() const;
-		int action() const;
-		bool value() const;
+		bool value(Logic::Module module, Logic::Action action);
 		
 		
 	private:
-		Logic::Module m_module;
-		Logic::Action m_action;
+		QMap<QString,QString> permisos;
+		bool m_valid;
 		bool m_value;
 };
 

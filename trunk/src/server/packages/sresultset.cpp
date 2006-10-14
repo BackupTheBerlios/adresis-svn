@@ -57,14 +57,6 @@ void SResultSet::setRecord(const QStringList &fields, const QStringList &results
 			m_map[field] << results[counter];
 		}
 		
-		if ( !m_map.contains( field ) )
-		{
-			m_map.insert(field, QStringList() << results[counter]);
-		}
-		else
-		{
-			m_map[field] << results[counter];
-		}
 		counter++;
 	}
 	

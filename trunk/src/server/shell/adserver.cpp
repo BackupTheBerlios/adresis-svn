@@ -34,6 +34,7 @@
 
 #include "aduser.h"
 #include "adevent.h"
+#include "adpermission.h"
 
 
 ADServer::ADServer(QObject *parent) : QTcpServer(parent)
@@ -173,33 +174,25 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 // 	else
 	{
 		cnx->setLogin(login);
-		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "permissionsuser" , "aduser");
+// 		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "permissionsuser" , "aduser");
+
+		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "rol" , "aduser");
 		infoUser.setWhere("loginuser="+SQLSTR(login));
 		SResultSet rs = SDBM->execQuery(&infoUser);
 		
+		QString rol = rs.map()["rol"][0];
+		ADSelect permisos(QStringList() << "action" << "permission", "adrols");
+		permisos.setWhere("rol="+SQLSTR(rol));
+		SResultSet rsP = SDBM->execQuery(&permisos);
 		
-		QMap<Logic::Module, bool> permissions;
+		ADPermission permissions;
+		permissions.setValues( rsP.map() );
+		
 		dDebug() << rs.map().size();
-		QString strPermissions = rs.map()["permissionsuser"][0];
-		for(int i = 0; i < strPermissions.length (); i++)
-		{
-			strPermissions[i];
-			if(strPermissions[i] == '1')
-			{
-				permissions.insert(Logic::Module(i), true);
-			}
-			else
-			{
-				permissions.insert(Logic::Module(i), false);
-			}
-		}
-// 		cnx->sendToClient( SSuccessPackage(tr("autenticado")));
 		ADUser user( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
 		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info, QVariant::fromValue (user)  );
 
 		cnx->sendToClient( event.toString() );
-		
-// 		cnx->sendToClient( SDBM->execQuery(&user) );
 	}
 }
 

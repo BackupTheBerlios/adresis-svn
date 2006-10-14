@@ -12,7 +12,6 @@ SOURCES += adserverconnection.cpp \
            adserverclient.cpp \
            adspackageparser.cpp \
            adquery.cpp
-
 QT += xml network
 KDEV_QTVER = 4
 CONFIG += release \

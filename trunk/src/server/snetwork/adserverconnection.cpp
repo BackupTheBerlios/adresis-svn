@@ -97,6 +97,7 @@ void ADServerConnection::run()
 				}
 				else if(root == "Event")
 				{
+					dDebug() << "RECIBI EL EVENTO EN ADSERVERCONNECTION void ADServerConnection::run()";
 					ADEventFactory factory;
 					ADEvent *request = factory.build( readed );
 					

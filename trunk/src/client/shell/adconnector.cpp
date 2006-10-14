@@ -109,7 +109,7 @@ void ADConnector::login(const QString &user, const QString &passwd)
 
 void ADConnector::handleError(QAbstractSocket::SocketError error)
 {
-	dError() << "Error: " << error;
+	dError() << "ADConnector::handleError(QAbstractSocket::SocketError error)  Error: " << error;
 	switch(error)
 	{
 		case QAbstractSocket::RemoteHostClosedError:
@@ -129,6 +129,7 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 		break;
 		default:
 		{
+			dDebug() << "NO SABEMOS CUAL ES EL ERROR";
 			break;
 		}
 	}

@@ -24,6 +24,7 @@
 #include "adobject.h"
 #include <QMetaType>
 #include <QDomElement>
+#include "adpermission.h"
 
 /**
 *	@author Jorge Cuadrado <kuadrosx@gmail>
@@ -33,7 +34,7 @@ class ADUser : public ADObject
 {
 	public:
 		ADUser();
-		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, QMap<Logic::Module, bool>permissions );
+		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions);
 		ADUser(const ADUser & copy);
 		~ADUser();
 // 		ADInsertPackage insertPackage();
@@ -46,18 +47,20 @@ class ADUser : public ADObject
 		
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QMap<Logic::Module, bool> permissions() const;
+		bool permission(Logic::Module, Logic::Action);
+		ADPermission permissions() const;
 		QString name() const ; 
 		QString code() const;
 		QString login() const;
 		QString passwd() const;
+		void assignPermissions(ADPermission permissions);
 		
 	private:
 		QString m_name;
 		QString m_code;
 		QString m_login;
 		QString m_passwd;
-		QMap<Logic::Module, bool> m_permissions;
+		ADPermission m_permissions;
 		bool m_valid;
 };
 

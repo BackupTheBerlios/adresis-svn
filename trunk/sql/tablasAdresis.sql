@@ -1,32 +1,76 @@
 DROP TABLE AdUser CASCADE;
 DROP TABLE AdSpace CASCADE;
 DROP TABLE AdAudioVisual CASCADE;
---DROP TABLE AdSpaceWhitAV CASCADE;
 DROP TABLE AdSpaceReserve CASCADE;
 DROP TABLE AdAVReserve CASCADE;
---DROP TABLE AdSpaceCancelation CASCADE;
---DROP TABLE AdAVCancelation CASCADE;
-DROP TABLE AdScheduleAV CASCADE;
-DROP TABLE AdScheduleSpace CASCADE;
+DROP TABLE AdRols CASCADE;
+-- DROP TABLE AdScheduleAV CASCADE;
+-- DROP TABLE AdScheduleSpace CASCADE;
+
+
+CREATE TABLE AdRols(
+	rol integer,
+	action varchar(20),
+	permission integer, check(permission in (0,1))
+);
+
+INSERT INTO AdRols VaLUES(0,'gestionarUsuario',1);
+INSERT INTO AdRols VaLUES(0,'consultarUsuario',1);
+INSERT INTO AdRols VaLUES(0,'gestionarEspacio',1);
+INSERT INTO AdRols VaLUES(0,'consultarEspacio',1);
+INSERT INTO AdRols VaLUES(0,'gestionarAudiovisual',1);
+INSERT INTO AdRols VaLUES(0,'consultarAudiovisual',1);
+INSERT INTO AdRols VaLUES(0,'gestionarSemestral',1);
+INSERT INTO AdRols VaLUES(0,'gestionarTemporal',1);
+INSERT INTO AdRols VaLUES(0,'consultarReservas',1);
+INSERT INTO AdRols VaLUES(0,'gestionarReportes',1);
+INSERT INTO AdRols VaLUES(0,'consultarReportes',1);
+
+INSERT INTO AdRols VaLUES(1,'gestionarUsuario',0);
+INSERT INTO AdRols VaLUES(1,'consultarUsuario',0);
+INSERT INTO AdRols VaLUES(1,'gestionarEspacio',0);
+INSERT INTO AdRols VaLUES(1,'consultarEspacio',1);
+INSERT INTO AdRols VaLUES(1,'gestionarAudiovisual',0);
+INSERT INTO AdRols VaLUES(1,'consultarAudiovisual',1);
+INSERT INTO AdRols VaLUES(1,'gestionarSemestral',0);
+INSERT INTO AdRols VaLUES(1,'gestionarTemporal',1);
+INSERT INTO AdRols VaLUES(1,'consultarReservas',1);
+INSERT INTO AdRols VaLUES(1,'gestionarReportes',0);
+INSERT INTO AdRols VaLUES(1,'consultarReportes',1);
+
+INSERT INTO AdRols VaLUES(2,'gestionarUsuario',0);
+INSERT INTO AdRols VaLUES(2,'consultarUsuario',0);
+INSERT INTO AdRols VaLUES(2,'gestionarEspacio',0);
+INSERT INTO AdRols VaLUES(2,'consultarEspacio',1);
+INSERT INTO AdRols VaLUES(2,'gestionarAudiovisual',0);
+INSERT INTO AdRols VaLUES(2,'consultarAudiovisual',1);
+INSERT INTO AdRols VaLUES(2,'gestionarSemestral',0);
+INSERT INTO AdRols VaLUES(2,'gestionarTemporal',0);
+INSERT INTO AdRols VaLUES(2,'consultarReservas',1);
+INSERT INTO AdRols VaLUES(2,'gestionarReportes',0);
+INSERT INTO AdRols VaLUES(2,'consultarReportes',1);
+
+
+
 
 CREATE TABLE AdUser(
-	permissionsUser varchar(4), --check (permissionsUser('1111', '0000')),
+	rol integer,
 	nameUser varchar(30),
 	codeUser varchar(20),
 	loginUser varchar(20) PRIMARY KEY,
 	passwdUser varchar(20)
 );
 
-INSERT INTO AdUser VALUES('1111','charly','0330911','charagmz','charagmz');
-INSERT INTO AdUser VALUES('1111','juan','0330912','juank','juank');
-INSERT INTO AdUser VALUES('1111','carlos','0330913','carlosbor','carlosbor');
-INSERT INTO AdUser VALUES('1111','hector','0330914','hecfa','hecfa');
-INSERT INTO AdUser VALUES('1111','jorge','0330915','jorgecua','jorgecua');
-INSERT INTO AdUser VALUES('1111','humberto','0330916','humbertocu','humbertocu');
-INSERT INTO AdUser VALUES('1111','sebastian','0330917','sebrand','sebrand');
-INSERT INTO AdUser VALUES('1111','deisy','0330918','deisych','deisych');
-INSERT INTO AdUser VALUES('1111','rafael','0330919','rafaca','rafaca');
-INSERT INTO AdUser VALUES('1111','jhon','0330910','jhonmu','jhonmu');
+INSERT INTO AdUser VALUES(0,'charly','0330911','charagmz','charagmz');
+INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
+INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
+INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
+INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
+INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
+INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
+INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
+INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
+INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 
 CREATE TABLE AdSpace(
@@ -191,7 +235,7 @@ CREATE TABLE tablename (
     colname integer DEFAULT nextval('tablename_colname_seq') NOT NULL
 );*/
 
-
+DROP SEQUENCE adSpaceReserve_idReserve_seq;
 CREATE SEQUENCE adSpaceReserve_idReserve_seq;
 
 CREATE TABLE AdSpaceReserve
@@ -207,10 +251,10 @@ CREATE TABLE AdSpaceReserve
 	beginDate date,
 	endDate date,
 	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
-	destinationReserve varchar(80),
-	check(beginHour < endHour and beginDate <= endDate)
+	destinationReserve varchar(80), check(beginHour < endHour and beginDate <= endDate)
 );
 
+DROP SEQUENCE adavreserve_idreserve_seq;
 CREATE SEQUENCE adAvReserve_idReserve_seq;
 CREATE TABLE AdAvReserve
 (

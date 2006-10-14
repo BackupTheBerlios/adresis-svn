@@ -22,6 +22,7 @@
 
 #include <QObject>
 
+#include "adeventhandler.h"
 #include "adconnector.h"
 #include "global.h"
 #include "aduser.h"

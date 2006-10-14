@@ -57,6 +57,7 @@ Adresis::~Adresis()
 void Adresis::handleEvent(ADEvent * event)
 {
 	D_FUNCINFO;
+	
 	if(event)
 	{
 		if(event->source() == ADEvent::Server)
@@ -77,7 +78,17 @@ void Adresis::handleEvent(ADEvent * event)
 							m_user = qvariant_cast<ADUser> (event->data());
 							SHOW_VAR( m_user.name());
 							
-							
+							//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
+							for(int i=0; i < 5; i++)
+							{
+								Logic::Module module = Logic::Module(i);
+								dDebug() << "PERMISO SOBRE CONSULTAR " << m_user.permission(module, Logic::Find);
+								if(m_user.permission(module, Logic::Find))
+								{
+									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
+									m_connector->sendToServer( findAll.toString() );
+								}
+							}
 						}
 						break;
 						
@@ -103,6 +114,8 @@ void Adresis::handleEvent(ADEvent * event)
 		}
 		else
 		{
+			
+			
 			//CLiente 
 			//TODO: validar si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
 			m_connector->sendToServer(event->toString());
@@ -140,17 +153,4 @@ void Adresis::autenticated(const XMLResults & values)
 	
 	m_user.setValues(values);
  	Logic::Module module;
-// 	if(m_user.permissions()[Logic::administrador])
-// 	{
-	//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
-	for(int i=0; i < 5; i++)
-	{
-		Logic::Module module = Logic::Module(i);
-// 		if(m_user.permissions()[module])
-// 		{
-			ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
-			m_connector->sendToServer( findAll.toString());
-// 		}
-	}
-// 	
 }
