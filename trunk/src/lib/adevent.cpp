@@ -44,6 +44,7 @@ ADEvent::~ADEvent()
 
 QString ADEvent::toString() const
 {
+	D_FUNCINFO;
 	QDomDocument doc;
 	QDomElement root = doc.createElement ( "Event" );
 	doc.appendChild(root);
@@ -62,21 +63,27 @@ QString ADEvent::toString() const
 	
 	
 	QDomElement dataE = doc.createElement( "Data" );
+	SHOW_VAR(m_action);
 	switch(m_action)
 	{
 		case Logic::Find:
 		{
+			SHOW_VAR("in Find");
 			QDomElement conditionE = doc.createElement ( "Condition" );
 			conditionE.setAttribute("value", m_data.toString());
 			dataE.appendChild(conditionE);
+			
 		}
+		break;
 		case Logic::Info:
 		{
+			SHOW_VAR("in Info");
+			
 			if(m_module == Logic::Users)
 			{
-				dataE.appendChild( qvariant_cast<ADUser>( m_data ).toXml(doc) );
+				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
 			}
-		} 
+		}
 		break;
 		
 	}

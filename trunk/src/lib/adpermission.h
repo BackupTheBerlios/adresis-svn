@@ -53,7 +53,7 @@ class ADPermission : public ADObject
 		
 		
 	private:
-		QMap<QString,QString> permisos;
+		QMap<QString,QString> m_permisos;
 		bool m_valid;
 		bool m_value;
 };

@@ -110,8 +110,10 @@ void ADUser::fromXml(const QString & xml )
 
 bool ADUser::permission( Logic::Module mod, Logic::Action act)
 {
+	D_FUNCINFO;
 	bool valor = m_permissions.value( mod, act);
 	return valor;
+	
 }
 
 

@@ -74,23 +74,23 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	else if(qname == "user")
 	{
 		ADPermission permission;
-		ADUser user(atts.value("name"), atts.value("code"), atts.value("login"), "", permission);
+		ADUser *user = new ADUser(atts.value("name"), atts.value("code"), atts.value("login"), "", permission);
 		
-		m_data = QVariant::fromValue (user);
+		m_data = QVariant::fromValue(user);
 	}
 	
 	else if(qname == "permissions")
 	{
 		ADPermission permissions;
 		permissions.setValues(atts);
-		qvariant_cast<ADUser>(m_data).assignPermissions(permissions);
+		qvariant_cast<ADUser *>(m_data)->assignPermissions(permissions);
 		
 				
 		dDebug() << "EVENT FACTORY\n";
 		for(int i=0;i<5;i++)
 		{
 			Logic::Module module = Logic::Module(i);
-			dDebug() << "permiso    ===>"<<qvariant_cast<ADUser>(m_data).permission(module, Logic::Find);
+			dDebug() << "permiso    ===>"<<qvariant_cast<ADUser *>(m_data)->permission(module, Logic::Find);
 		}
 	}
 	m_qname = qname;

@@ -21,17 +21,17 @@
 
 ADPermission::ADPermission(): ADObject()
 {
-	permisos.insert("gestionarUsuario", "0");
-	permisos.insert("consultarUsuario", "0");
-	permisos.insert("gestionarEspacio", "0");
-	permisos.insert("consultarEspacio", "0");
-	permisos.insert("gestionarAudiovisual", "0");
-	permisos.insert("consultarAudiovisual", "0");
-	permisos.insert("gestionarSemestral", "0");
-	permisos.insert("gestionarTemporal", "0");
-	permisos.insert("consultarReservas", "0");
-	permisos.insert("gestionarReportes", "0");
-	permisos.insert("consultarReportes", "0");
+	m_permisos.insert("gestionarUsuario", "0");
+	m_permisos.insert("consultarUsuario", "0");
+	m_permisos.insert("gestionarEspacio", "0");
+	m_permisos.insert("consultarEspacio", "0");
+	m_permisos.insert("gestionarAudiovisual", "0");
+	m_permisos.insert("consultarAudiovisual", "0");
+	m_permisos.insert("gestionarSemestral", "0");
+	m_permisos.insert("gestionarTemporal", "0");
+	m_permisos.insert("consultarReservas", "0");
+	m_permisos.insert("gestionarReportes", "0");
+	m_permisos.insert("consultarReportes", "0");
 }
 
 
@@ -54,14 +54,14 @@ void ADPermission::setValues(QMap<QString, QStringList> vP)
 		
 	while(it1 != acciones.end())
 	{
-		permisos.insert((*it1),(*it2));
+		m_permisos.insert((*it1),(*it2));
 		it1++;
 		it2++;
 	}
 	
 	
-	QStringList a = permisos.keys();
-	QStringList v = permisos.values();
+	QStringList a = m_permisos.keys();
+	QStringList v = m_permisos.values();
 	for(int i=0;i < a.size();i++)
 	{
 		dDebug() << "a => "<< a.at(i) <<"  v=>"<< v.at(i);
@@ -73,17 +73,17 @@ void ADPermission::setValues(const QXmlAttributes& atts)
 {
 // 	dDebug() << "ADPermission::setValues(const QXmlAttributes& atts)       " <<atts.value("gestionarUsuario") << "  "<< atts.value("consultarUsuario")<< "  " << atts.value("gestionarEspacio") << " " << atts.value("consultarEspacio") << "  "<<  atts.value("gestionarAudiovisual")<< " " << atts.value("consultarAudiovisual") << "  " << atts.value("gestionarSemestral") << " "<<  atts.value("gestionarTemporal") <<"  " << atts.value("consultarReservas") << " " << atts.value("gestionarReportes") << "" << atts.value("consultarReportes");
 			
-	permisos.insert("gestionarUsuario", atts.value("gestionarUsuario"));
-	permisos.insert("consultarUsuario", atts.value("consultarUsuario"));
-	permisos.insert("gestionarEspacio", atts.value("gestionarEspacio"));
-	permisos.insert("consultarEspacio", atts.value("consultarEspacio"));
-	permisos.insert("gestionarAudiovisual", atts.value("gestionarAudiovisual"));
-	permisos.insert("consultarAudiovisual", atts.value("consultarAudiovisual"));
-	permisos.insert("gestionarSemestral", atts.value("gestionarSemestral"));
-	permisos.insert("gestionarTemporal", atts.value("gestionarTemporal"));
-	permisos.insert("consultarReservas", atts.value("consultarReservas"));
-	permisos.insert("gestionarReportes", atts.value("gestionarReportes"));
-	permisos.insert("consultarReportes", atts.value("consultarReportes"));
+	m_permisos.insert("gestionarUsuario", atts.value("gestionarUsuario"));
+	m_permisos.insert("consultarUsuario", atts.value("consultarUsuario"));
+	m_permisos.insert("gestionarEspacio", atts.value("gestionarEspacio"));
+	m_permisos.insert("consultarEspacio", atts.value("consultarEspacio"));
+	m_permisos.insert("gestionarAudiovisual", atts.value("gestionarAudiovisual"));
+	m_permisos.insert("consultarAudiovisual", atts.value("consultarAudiovisual"));
+	m_permisos.insert("gestionarSemestral", atts.value("gestionarSemestral"));
+	m_permisos.insert("gestionarTemporal", atts.value("gestionarTemporal"));
+	m_permisos.insert("consultarReservas", atts.value("consultarReservas"));
+	m_permisos.insert("gestionarReportes", atts.value("gestionarReportes"));
+	m_permisos.insert("consultarReportes", atts.value("consultarReportes"));
 
 }
 
@@ -107,8 +107,8 @@ QDomElement ADPermission::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("permissions");
 	
-	QStringList a = permisos.keys();
-	QStringList v = permisos.values();
+	QStringList a = m_permisos.keys();
+	QStringList v = m_permisos.values();
 	QStringList::const_iterator it1 = a.begin();
 	QStringList::const_iterator it2 = v.begin();
 
@@ -127,12 +127,14 @@ QDomElement ADPermission::toXml(QDomDocument &doc) const
 
 bool ADPermission::value(Logic::Module module, Logic::Action action)
 {
-	dDebug() << "ADPermission::value(Logic::Module module, Logic::Action action)    Modulo=> " << module << "   Accion => " << action;
+	D_FUNCINFO;
+	
+	dDebug() << "Modulo=> " << module << "   Accion => " << action;
 	m_value = false;
 	
 	if( module==Logic::Users && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
-		if(permisos.value("gestionarUsuario") == "1")
+		if(m_permisos.value("gestionarUsuario") == "1")
 		{
 			m_value=true;
 		}
@@ -140,7 +142,7 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module == Logic::Users && (action == Logic::Find))
 	{
-		if(permisos.value("consultarUsuario") == "1")
+		if(m_permisos.value("consultarUsuario") == "1")
 		{
 			m_value=true;
 		}
@@ -148,29 +150,28 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module==Logic::Spaces && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
-		if(permisos.value("gestionarEspacio") == "1")
+		if(m_permisos.value("gestionarEspacio") == "1")
 		{
 			m_value=true;
 		}
 	}
 	else if( module == Logic::Spaces && (action == Logic::Find))
 	{
-		if(permisos.value("consultarEspacio") == "1")
+		if(m_permisos.value("consultarEspacio") == "1")
 		{
 			m_value=true;
 		}
 	}
-	
 	else if( module==Logic::Audiovisuals && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
-		if(permisos.value("gestionarAudiovisual") == "1")
+		if(m_permisos.value("gestionarAudiovisual") == "1")
 		{
 			m_value=true;
 		}
 	}
 	else if( module == Logic::Audiovisuals && (action == Logic::Find))
 	{
-		if(permisos.value("consultarAudiovisual") == "1")
+		if(m_permisos.value("consultarAudiovisual") == "1")
 		{
 			m_value=true;
 		}
@@ -180,14 +181,14 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module==Logic::Reserves && action == Logic::RSemestral)
 	{
-		if(permisos.value("gestionarSemestral") == "1")
+		if(m_permisos.value("gestionarSemestral") == "1")
 		{
 			m_value=true;
 		}
 	}
 	else if( module==Logic::Reserves && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
-		if(permisos.value("gestionarTemporal") == "1")
+		if(m_permisos.value("gestionarTemporal") == "1")
 		{
 			m_value=true;
 		}
@@ -195,7 +196,7 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module == Logic::Reserves && (action == Logic::Find))
 	{
-		if(permisos.value("consultarReservas") == "1")
+		if(m_permisos.value("consultarReservas") == "1")
 		{
 			m_value=true;
 		}
@@ -203,7 +204,7 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module==Logic::Reports && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
-		if(permisos.value("gestionarReportes") == "1")
+		if(m_permisos.value("gestionarReportes") == "1")
 		{
 			m_value=true;
 		}
@@ -211,7 +212,7 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	
 	else if( module == Logic::Reports && (action == Logic::Find))
 	{
-		if(permisos.value("consultarReportes") == "1")
+		if(m_permisos.value("consultarReportes") == "1")
 		{
 			m_value=true;
 		}
@@ -220,6 +221,6 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	{
 		dDebug() << "NO ENCONTRE BAJO EL PERMISO Modulo=> " << module << "   Accion => " << action;
 	}
-	
+	dDebug() << "Termina " << m_value;
 	return m_value;
 }

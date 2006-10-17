@@ -51,7 +51,10 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		
 	private:
 		ADConnector *m_connector;
-		ADUser m_user;
+		ADUser *m_user;
+		
+	signals:
+		void requestShowMessage( Msg::Type, const QString&);
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

@@ -28,7 +28,7 @@ Adresis::Adresis(QObject * parent)
 	
 // 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
 	
-	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
+// 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
 	
 	connect ( m_connector, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *) ));
 	
@@ -67,7 +67,7 @@ void Adresis::handleEvent(ADEvent * event)
 			{
 				case Logic::Users:
 				{
-					dDebug() << "Users" << event->action();
+					dDebug() << "Users action =" << event->action();
 					
 					switch(event->action())
 					{
@@ -75,19 +75,23 @@ void Adresis::handleEvent(ADEvent * event)
 						case Logic::Info:
 						{
 							dDebug() << "Info";
-							m_user = qvariant_cast<ADUser> (event->data());
-							SHOW_VAR( m_user.name());
-							
+							m_user = qvariant_cast<ADUser *> (event->data());
+// 							SHOW_VAR( m_user->name());
+							requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
 							//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
 							for(int i=0; i < 5; i++)
 							{
 								Logic::Module module = Logic::Module(i);
-								dDebug() << "PERMISO SOBRE CONSULTAR " << m_user.permission(module, Logic::Find);
-								if(m_user.permission(module, Logic::Find))
-								{
+								
+								
+								
+// 								dDebug() << "PERMISO SOBRE CONSULTAR " << m_user->permission(module, Logic::Find);
+// 								if(m_user->permission(module, Logic::Find))
+// 								{
 									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
-									m_connector->sendToServer( findAll.toString() );
-								}
+									handleEvent(&findAll);
+// 									m_connector->sendToServer( findAll.toString() );
+// 								}
 							}
 						}
 						break;
@@ -118,7 +122,12 @@ void Adresis::handleEvent(ADEvent * event)
 			
 			//CLiente 
 			//TODO: validar si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
-			m_connector->sendToServer(event->toString());
+			dDebug()<< "antes de enviar el evento";
+			SHOW_VAR(event->toString());
+			if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+			{
+				m_connector->sendToServer(event->toString());
+			}
 		}
 	}
 	else
@@ -151,6 +160,6 @@ void Adresis::autenticated(const XMLResults & values)
 {
 	D_FUNCINFO;
 	
-	m_user.setValues(values);
+// 	m_user->setValues(values);
  	Logic::Module module;
 }

@@ -189,10 +189,12 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		permissions.setValues( rsP.map() );
 		
 		dDebug() << rs.map().size();
-		ADUser user( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
+		ADUser *user= new  ADUser( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
 		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info, QVariant::fromValue (user)  );
 
 		cnx->sendToClient( event.toString() );
+		
+		delete user;
 	}
 }
 

@@ -64,6 +64,6 @@ class ADUser : public ADObject
 		bool m_valid;
 };
 
-Q_DECLARE_METATYPE(ADUser);
+Q_DECLARE_METATYPE(ADUser *);
 
 #endif
