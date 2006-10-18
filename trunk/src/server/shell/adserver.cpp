@@ -235,5 +235,25 @@ void ADServer::doOperation(ADServerConnection *cnx, const ADQuery *query)
 	}
 }
 
-
+void ADServer::handleEvent(ADEvent * event )
+{
+	D_FUNCINFO;
+	if(event)
+	{
+		if(event->source() == ADEvent::Server)
+		{
+			
+			
+		}
+		else
+		{
+			//Server 
+			
+		}
+	}
+	else
+	{
+		dFatal() << "no existe el evento";
+	}
+}
 

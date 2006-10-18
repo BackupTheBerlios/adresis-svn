@@ -82,16 +82,8 @@ void Adresis::handleEvent(ADEvent * event)
 							for(int i=0; i < 5; i++)
 							{
 								Logic::Module module = Logic::Module(i);
-								
-								
-								
-// 								dDebug() << "PERMISO SOBRE CONSULTAR " << m_user->permission(module, Logic::Find);
-// 								if(m_user->permission(module, Logic::Find))
-// 								{
-									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
-									handleEvent(&findAll);
-// 									m_connector->sendToServer( findAll.toString() );
-// 								}
+								ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
+								handleEvent(&findAll);
 							}
 						}
 						break;
@@ -121,7 +113,7 @@ void Adresis::handleEvent(ADEvent * event)
 			
 			
 			//CLiente 
-			//TODO: validar si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
+			//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
 			dDebug()<< "antes de enviar el evento";
 			SHOW_VAR(event->toString());
 			if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
@@ -148,9 +140,6 @@ void Adresis::connectToHost( const QString & hostName, quint16 port)
 void Adresis::login(const QString &user, const QString &passwd)
 {
 	m_connector->login(user, passwd);
-// 	ADSelectPackage u(QStringList()<< "aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser");
-// 	u.setWhere( "loginuser='"+  user + "'" );
-// 	m_connector->sendQuery(Logic::userAuthenticated, u);
 	
 }
 

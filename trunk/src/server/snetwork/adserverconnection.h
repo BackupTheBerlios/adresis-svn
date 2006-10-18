@@ -30,6 +30,7 @@
 
 #include "adquery.h"
 
+#include "adevent.h"
 /**
  * Esta clase representa cada conexion de un cliente al servidor, es un hilo.
  * @author David Cuadrado <krawek@gmail.com>
@@ -63,6 +64,8 @@ class ADServerConnection : public QThread
 		void requestAuth(ADServerConnection *cnx, const QString &, const QString &);
 		
 		void requestOperation(ADServerConnection *cnx, const ADQuery *query);
+		
+		void requestEvent(ADEvent *event);
 		
 	private:
 		ADServerClient *m_client;

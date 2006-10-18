@@ -29,11 +29,13 @@
 
 #include "adsglobal.h"
 
+#include "adeventhandler.h"
+
 /**
  * Esta es la clase controladora, esta clase representa el servidor.
  * @author David Cuadrado <krawek@gmail.com>
  */
-class ADServer : public QTcpServer
+class ADServer : public QTcpServer, public ADAbstractEventHandler
 {
 	Q_OBJECT;
 	
@@ -49,6 +51,7 @@ class ADServer : public QTcpServer
 		void removeConnection(ADServerConnection *cnx);
 		void authenticate(ADServerConnection *cnx,const QString &login, const QString &password);
 		void doOperation(ADServerConnection *cnx, const ADQuery *query);
+		void handleEvent(ADEvent * event = 0);
 		
 	private:
 		void handle(const ADServerConnection *cnx);
