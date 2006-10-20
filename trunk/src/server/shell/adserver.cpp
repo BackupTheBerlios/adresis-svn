@@ -104,6 +104,7 @@ void ADServer::handle(const ADServerConnection *cnx)
 	connect(cnx, SIGNAL(finished()), cnx, SLOT(deleteLater()));
 	
 	connect(cnx, SIGNAL(requestSendToAll( const QString& )), this, SLOT(sendToAll( const QString& )));
+	
 	connect(cnx, SIGNAL(requestSendToAll( const QDomDocument& )), this, SLOT(sendToAll( const QDomDocument& )));
 	
 	connect(cnx, SIGNAL(requestRemoveConnection(ADServerConnection *)), this, SLOT(removeConnection(ADServerConnection *)));
@@ -111,6 +112,9 @@ void ADServer::handle(const ADServerConnection *cnx)
 	connect(cnx, SIGNAL(requestAuth(ADServerConnection *, const QString &, const QString &)), this, SLOT(authenticate(ADServerConnection *,const QString &, const QString &)));
 	
 	connect(cnx, SIGNAL(requestOperation( ADServerConnection *,const ADQuery* )), this, SLOT(doOperation(ADServerConnection *, const ADQuery* )));
+	
+	
+	connect(cnx, SIGNAL(requestEvent( ADEvent * )), this, SLOT(handleEvent(ADEvent * )));
 }
 
 
@@ -237,6 +241,7 @@ void ADServer::doOperation(ADServerConnection *cnx, const ADQuery *query)
 
 void ADServer::handleEvent(ADEvent * event )
 {
+
 	D_FUNCINFO;
 	if(event)
 	{

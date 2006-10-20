@@ -86,7 +86,6 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		permissions.setValues(atts);
 		qvariant_cast<ADUser *>(m_data)->assignPermissions(permissions);
 		
-				
 		dDebug() << "EVENT FACTORY\n";
 		for(int i=0;i<5;i++)
 		{
