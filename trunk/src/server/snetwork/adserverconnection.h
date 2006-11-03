@@ -65,7 +65,7 @@ class ADServerConnection : public QThread
 		
 		void requestOperation(ADServerConnection *cnx, const ADQuery *query);
 		
-		void requestEvent(ADEvent *event);
+		void requestEvent(ADServerConnection *cnx,ADEvent *event);
 		
 	private:
 		ADServerClient *m_client;

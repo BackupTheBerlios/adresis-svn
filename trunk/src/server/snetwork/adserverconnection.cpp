@@ -103,7 +103,7 @@ void ADServerConnection::run()
 					
 					if ( request )
 					{
-						emit requestEvent( request );
+						emit requestEvent(this, request );
 // 						m_server->sendToAll( KTRequestPackage(request) );
 // 						delete request;
 					}

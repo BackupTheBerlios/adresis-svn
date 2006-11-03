@@ -3,6 +3,7 @@
 
 
 #include "adobject.h"
+#include <QMetaType>
 
 /**
 @author Charly Aguirre Manzano,033091
@@ -47,6 +48,7 @@ class ADAudioVisual: public ADObject
 		bool m_valid;
 		
 };
+Q_DECLARE_METATYPE(ADAudioVisual *);
 
 #endif
 

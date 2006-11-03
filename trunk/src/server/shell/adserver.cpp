@@ -33,6 +33,9 @@
 #include "postgreserrorhandler.h"
 
 #include "aduser.h"
+#include "adspace.h"
+#include "adaudiovisual.h"
+#include "adreserve.h"
 #include "adevent.h"
 #include "adpermission.h"
 
@@ -239,7 +242,8 @@ void ADServer::doOperation(ADServerConnection *cnx, const ADQuery *query)
 	}
 }
 
-void ADServer::handleEvent(ADEvent * event )
+
+void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 {
 
 	D_FUNCINFO;
@@ -252,8 +256,187 @@ void ADServer::handleEvent(ADEvent * event )
 		}
 		else
 		{
-			//Server 
 			
+			switch(event->module())
+			{
+				//enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
+				case Logic::Users:
+				{
+					switch(event->action())
+					{
+						case Logic::Find:
+						{
+							ADSelect infoUser(QStringList() << "*" , "aduser");
+							SResultSet rs = SDBM->execQuery(&infoUser);
+							dDebug() << rs.toString();
+							QList<QVariant> listUsers;
+							
+							for(int pos =0; pos < rs.map().count(); pos++)
+							{	
+								QString rol = rs.map()["rol"][pos];
+								ADSelect permisos(QStringList() << "action" << "permission", "adrols");
+								permisos.setWhere("rol="+SQLSTR(rol));
+								SResultSet rsP = SDBM->execQuery(&permisos);
+				
+								ADPermission permissions;
+								permissions.setValues( rsP.map() );
+								
+								
+								ADUser *user= new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions);
+								
+								
+								listUsers.append(QVariant::fromValue (user));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Users, Logic::Find, listUsers);
+							cnx->sendToClient(event.toString());
+							break;
+						}
+					}
+					break;
+				}
+				
+				case Logic::Spaces:
+				{
+					
+					switch(event->action())
+					{
+						case Logic::Find:
+						{
+							ADSelect infoSpaces(QStringList() << "*" , "adspace");
+							SResultSet rs = SDBM->execQuery(&infoSpaces);
+							dDebug() << rs.toString();
+							QList<QVariant> listSpaces;
+							for(int pos =0; pos < rs.map().count(); pos++)
+							{	
+								bool ac;
+								if(rs.map()["coolairspace"][pos] == "t")
+								{
+									ac=true;
+								}
+								else
+								{
+									ac=false;	
+								}
+								
+								
+								ADSpace *space = new ADSpace( rs.map()["codespace"][pos], rs.map()["typespace"][pos], ac, rs.map()["capacityspace"][pos], rs.map()["namespace"][pos]);
+								
+								
+								listSpaces.append(QVariant::fromValue (space));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Spaces, Logic::Find, listSpaces);
+							cnx->sendToClient(event.toString());
+							
+							break;
+						}
+					}
+					break;
+				}
+				
+				
+				case Logic::Audiovisuals:
+				{
+					switch(event->action())
+					{
+						case Logic::Find:
+						{
+							ADSelect infoAv(QStringList() << "*" , "adaudiovisual");
+							SResultSet rs = SDBM->execQuery(&infoAv);
+							dDebug() << rs.toString();
+							QList<QVariant> listAvs;
+							
+							
+							for(int pos =0; pos < rs.map().count(); pos++)
+							{	
+		// 						ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace);
+								
+								
+								ADAudioVisual *av = new ADAudioVisual(rs.map()["typeav"][pos], rs.map()["marksequipmentav"][pos], rs.map()["estateav"][pos], rs.map()["numberinventoryav"][pos], rs.map()["codespace"][pos]);
+								
+								
+								listAvs.append(QVariant::fromValue (av));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Audiovisuals, Logic::Find, listAvs);
+							cnx->sendToClient(event.toString());
+							break;
+						}
+					}
+					break;
+				}
+				
+				
+				case Logic::Reserves:
+				{
+					switch(event->action())
+					{
+						case Logic::Find:
+						{	
+							ADSelect infoReservesAv(QStringList() << "*" , "adavreserve");
+							SResultSet rs = SDBM->execQuery(&infoReservesAv);
+							dDebug() << rs.toString();
+							QList<QVariant> listReserves;
+							
+							for(int pos =0; pos < rs.map().count(); pos++)
+							{	
+								bool active;
+								if(rs.map()["isactive"][pos] == "t")
+								{
+									active=true;
+								}
+								else
+								{
+									active=false;	
+								}
+								
+								ADReserve *avReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()[" idresource"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
+								
+								
+								listReserves.append(QVariant::fromValue (avReserve));
+							}
+							
+							
+							
+							
+							
+							ADSelect infoReservesSp(QStringList() << "*" , "adspacereserve");
+							rs = SDBM->execQuery(&infoReservesSp);
+							dDebug() << rs.toString();
+							
+							for(int pos =0; pos < rs.map().count(); pos++)
+							{
+								bool active;
+								if(rs.map()["isactive"][pos] == "t")
+								{
+									active=true;
+								}
+								else
+								{
+									active=false;	
+								}
+								
+								ADReserve *spaceReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()[" idresource"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
+								
+								
+								listReserves.append(QVariant::fromValue (spaceReserve));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Reserves, Logic::Find, listReserves);
+							cnx->sendToClient(event.toString());
+							
+							break;
+						}
+					}
+					break;
+				}
+				case Logic::Reports:
+				{
+					dDebug() << "REPORTES";
+					break;
+				}
+			}
 		}
 	}
 	else

@@ -21,6 +21,7 @@
 #define ADRESERVE_H
 
 #include "adobject.h"
+#include <QMetaType>
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
@@ -69,4 +70,5 @@ class ADReserve : public ADObject
 
 };
 
+Q_DECLARE_METATYPE(ADReserve *);
 #endif

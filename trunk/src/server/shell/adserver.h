@@ -35,7 +35,7 @@
  * Esta es la clase controladora, esta clase representa el servidor.
  * @author David Cuadrado <krawek@gmail.com>
  */
-class ADServer : public QTcpServer, public ADAbstractEventHandler
+class ADServer : public QTcpServer
 {
 	Q_OBJECT;
 	
@@ -51,7 +51,7 @@ class ADServer : public QTcpServer, public ADAbstractEventHandler
 		void removeConnection(ADServerConnection *cnx);
 		void authenticate(ADServerConnection *cnx,const QString &login, const QString &password);
 		void doOperation(ADServerConnection *cnx, const ADQuery *query);
-		void handleEvent(ADEvent * event = 0);
+		void handleEvent(ADServerConnection *cnx, ADEvent * event = 0);
 		
 	private:
 		void handle(const ADServerConnection *cnx);

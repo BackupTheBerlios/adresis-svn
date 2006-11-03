@@ -22,6 +22,7 @@
 
 #include "adobject.h"
 #include <QStringList>
+#include <QMetaType>
 
  
 /**
@@ -60,4 +61,5 @@ class ADSpace : public ADObject
 
 };
 
+Q_DECLARE_METATYPE(ADSpace *);
 #endif
