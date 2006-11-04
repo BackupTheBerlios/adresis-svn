@@ -117,7 +117,7 @@ void ADServer::handle(const ADServerConnection *cnx)
 	connect(cnx, SIGNAL(requestOperation( ADServerConnection *,const ADQuery* )), this, SLOT(doOperation(ADServerConnection *, const ADQuery* )));
 	
 	
-	connect(cnx, SIGNAL(requestEvent( ADEvent * )), this, SLOT(handleEvent(ADEvent * )));
+	connect(cnx, SIGNAL(requestEvent( ADServerConnection *,ADEvent * )), this, SLOT(handleEvent(ADServerConnection *,ADEvent * )));
 }
 
 
@@ -256,7 +256,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 		}
 		else
 		{
-			
 			switch(event->module())
 			{
 				//enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
@@ -266,7 +265,14 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Find:
 						{
+							
 							ADSelect infoUser(QStringList() << "*" , "aduser");
+							if(event->data() !="all" )
+							{
+								QString condition = qvariant_cast<QString>(event->data());
+								infoUser.setWhere(condition);
+							}
+							
 							SResultSet rs = SDBM->execQuery(&infoUser);
 							dDebug() << rs.toString();
 							QList<QVariant> listUsers;
@@ -304,6 +310,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						case Logic::Find:
 						{
 							ADSelect infoSpaces(QStringList() << "*" , "adspace");
+							if(event->data() !="all" )
+							{
+								QString condition = qvariant_cast<QString>(event->data());
+								infoSpaces.setWhere(condition);
+							}
+							
 							SResultSet rs = SDBM->execQuery(&infoSpaces);
 							dDebug() << rs.toString();
 							QList<QVariant> listSpaces;
@@ -343,6 +355,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						case Logic::Find:
 						{
 							ADSelect infoAv(QStringList() << "*" , "adaudiovisual");
+							if(event->data() !="all" )
+							{
+								QString condition = qvariant_cast<QString>(event->data());
+								infoAv.setWhere(condition);
+							}
+							
 							SResultSet rs = SDBM->execQuery(&infoAv);
 							dDebug() << rs.toString();
 							QList<QVariant> listAvs;
@@ -374,8 +392,14 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Find:
 						{	
-							ADSelect infoReservesAv(QStringList() << "*" , "adavreserve");
-							SResultSet rs = SDBM->execQuery(&infoReservesAv);
+							ADSelect infoReserves(QStringList() << "*", "adreserve");
+							if(event->data() !="all" )
+							{
+								QString condition = qvariant_cast<QString>(event->data());
+								infoReserves.setWhere(condition);
+							}
+							
+							SResultSet rs = SDBM->execQuery(&infoReserves);
 							dDebug() << rs.toString();
 							QList<QVariant> listReserves;
 							
@@ -395,32 +419,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								
 								
 								listReserves.append(QVariant::fromValue (avReserve));
-							}
-							
-							
-							
-							
-							
-							ADSelect infoReservesSp(QStringList() << "*" , "adspacereserve");
-							rs = SDBM->execQuery(&infoReservesSp);
-							dDebug() << rs.toString();
-							
-							for(int pos =0; pos < rs.map().count(); pos++)
-							{
-								bool active;
-								if(rs.map()["isactive"][pos] == "t")
-								{
-									active=true;
-								}
-								else
-								{
-									active=false;	
-								}
-								
-								ADReserve *spaceReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()[" idresource"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
-								
-								
-								listReserves.append(QVariant::fromValue (spaceReserve));
 							}
 							
 							ADEvent event(ADEvent::Server,Logic::Reserves, Logic::Find, listReserves);
