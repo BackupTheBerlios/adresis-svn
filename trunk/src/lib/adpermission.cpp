@@ -62,10 +62,10 @@ void ADPermission::setValues(QMap<QString, QStringList> vP)
 	
 	QStringList a = m_permisos.keys();
 	QStringList v = m_permisos.values();
-	for(int i=0;i < a.size();i++)
-	{
-		dDebug() << "a => "<< a.at(i) <<"  v=>"<< v.at(i);
-	}	
+// 	for(int i=0;i < a.size();i++)
+// 	{
+// 		dDebug() << "a => "<< a.at(i) <<"  v=>"<< v.at(i);
+// 	}
 }
 
 

@@ -30,7 +30,8 @@ class ADReserve : public ADObject
 {
 	public:
 		ADReserve();
-		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idResource, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
+// idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
+		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
 		~ADReserve();
 // 		ADInsertPackage insertPackage();
 // 		ADInsertPackage insertPackage(const QString&);
@@ -44,7 +45,8 @@ class ADReserve : public ADObject
 		QString typeReserve() const;
 		QString iduserreserve() const;
 		QString iduserresponsable() const;
-		QString idresource() const;
+		QString idaudiovisual() const;
+		QString idspace() const;
 		QString day() const;
 		QString beginhour() const;
 		QString endhour() const;
@@ -57,7 +59,8 @@ class ADReserve : public ADObject
 		QString m_typereserve;
 		QString m_iduserreserve;
 		QString m_iduserresponsable;
-		QString m_idresource;
+		QString m_idaudiovisual;
+		QString m_idspace;
 		QString m_day;
 		QString m_beginhour;
 		QString m_endhour;

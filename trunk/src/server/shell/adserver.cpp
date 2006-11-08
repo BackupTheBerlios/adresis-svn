@@ -274,11 +274,13 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoUser);
-							dDebug() << rs.toString();
+// 							dDebug() << rs.toString();
 							QList<QVariant> listUsers;
 							
-							for(int pos =0; pos < rs.map().count(); pos++)
+							for(int pos =0; pos < rs.map()["nameuser"].count(); pos++)
 							{	
+// 								dDebug() << "UUUUUUSSSSSSSUUUUUUUAAAAARRRRIIIIIIOOOOOSSSSS CONSULTA   "<<rs.map()["nameuser"][pos] <<" "<< rs.map()["codeuser"][pos] <<" "<< rs.map()["loginuser"][pos];
+
 								QString rol = rs.map()["rol"][pos];
 								ADSelect permisos(QStringList() << "action" << "permission", "adrols");
 								permisos.setWhere("rol="+SQLSTR(rol));
@@ -287,13 +289,18 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								ADPermission permissions;
 								permissions.setValues( rsP.map() );
 								
-								
-								ADUser *user= new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions);
+								ADUser *user = new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions);
 								
 								
 								listUsers.append(QVariant::fromValue (user));
 							}
 							
+// 							for (int i=0; i< listUsers.count();i++)
+// 							{
+// 								ADUser *tmp   = qvariant_cast<ADUser *>(listUsers.at(i));
+// 								dDebug() << "UUUUUUSSSSSSSUUUUUUUAAAAARRRRIIIIIIOOOOOSSSSS LISTA   "<<tmp->name()<<"  "<< tmp->code()<<" " << tmp->login();
+// 							}
+
 							ADEvent event(ADEvent::Server,Logic::Users, Logic::Find, listUsers);
 							cnx->sendToClient(event.toString());
 							break;
@@ -317,9 +324,9 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoSpaces);
-							dDebug() << rs.toString();
+// 							dDebug() << rs.toString();
 							QList<QVariant> listSpaces;
-							for(int pos =0; pos < rs.map().count(); pos++)
+							for(int pos =0; pos < rs.map()["codespace"].count(); pos++)
 							{	
 								bool ac;
 								if(rs.map()["coolairspace"][pos] == "t")
@@ -362,11 +369,11 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoAv);
-							dDebug() << rs.toString();
+// 							dDebug() << rs.toString();
 							QList<QVariant> listAvs;
 							
 							
-							for(int pos =0; pos < rs.map().count(); pos++)
+							for(int pos =0; pos < rs.map()["numberinventoryav"].count(); pos++)
 							{	
 		// 						ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace);
 								
@@ -400,10 +407,10 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoReserves);
-							dDebug() << rs.toString();
+// 							dDebug() << rs.toString();
 							QList<QVariant> listReserves;
 							
-							for(int pos =0; pos < rs.map().count(); pos++)
+							for(int pos =0; pos < rs.map()["typereserve"].count(); pos++)
 							{	
 								bool active;
 								if(rs.map()["isactive"][pos] == "t")
@@ -414,8 +421,9 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								{
 									active=false;	
 								}
-								
-								ADReserve *avReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()[" idresource"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
+
+// idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
+								ADReserve *avReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
 								
 								
 								listReserves.append(QVariant::fromValue (avReserve));

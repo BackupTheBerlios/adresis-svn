@@ -118,7 +118,7 @@ INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '2
 
 
 
-/*
+
 
 
 -- CREATE TABLE AdSpaceCancelation(
@@ -142,14 +142,14 @@ INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '2
 -- );
 
 
-/*****************************************************
-***********EJEMPLO DE COMO CREAR UNA SEQUENCIA********
-******************************************************
+--*****************************************************
+--***********EJEMPLO DE COMO CREAR UNA SEQUENCIA********
+--******************************************************
 
-CREATE SEQUENCE tablename_colname_seq;
-CREATE TABLE tablename (
-    colname integer DEFAULT nextval('tablename_colname_seq') NOT NULL
-);*/
+--CREATE SEQUENCE tablename_colname_seq;
+--CREATE TABLE tablename (
+    --colname integer DEFAULT nextval('tablename_colname_seq') NOT NULL
+--);
 
 --DROP SEQUENCE adSpaceReserve_idReserve_seq;
 --CREATE SEQUENCE adSpaceReserve_idReserve_seq;

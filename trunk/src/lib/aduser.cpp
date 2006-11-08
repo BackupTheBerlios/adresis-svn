@@ -162,7 +162,7 @@ QString ADUser::name() const
 
 QString ADUser::code() const
 {
-	return m_passwd;
+	return m_code;
 }
 
 QString  ADUser::login() const
