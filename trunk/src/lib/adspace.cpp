@@ -35,47 +35,30 @@ ADSpace::ADSpace(const QString & codeSpace, const QString & typeSpace, const boo
 ADSpace::~ADSpace()
 {
 }
-/*
-ADInsertPackage ADSpace::insertPackage()
+
+QDomElement ADSpace::toXml(QDomDocument &doc)
 {
+	QDomElement root = doc.createElement("space");
 	
-	QString strAireSpace;
+	root.setAttribute( "codespace", m_codeSpace );
+	root.setAttribute( "typespace", m_typeSpace );
 	if(m_coolAirSpace)
 	{
-		strAireSpace = "true";
+		root.setAttribute( "coolairspace", "true");
 	}
 	else
 	{
-		strAireSpace = "false";
+		root.setAttribute( "coolairspace", "false");
 	}
-
-	ADInsertPackage insert("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace) << SQLSTR(m_typeSpace) << strAireSpace << SQLSTR(m_capacitySpace) << SQLSTR(m_nameSpace));
+	root.setAttribute( "capacityspace", m_capacitySpace );
+	root.setAttribute( "namespace", m_nameSpace );
 	
-	dDebug() << insert.toString();
-	return insert;
+	return root;
 }
 
-
-ADUpdatePackage ADSpace::updatePackage()
-{
-	QString strAireSpace;
-	if(m_coolAirSpace)
-	{
-		strAireSpace = "true";
-	}
-	else
-	{
-		strAireSpace = "false";
-	}
-	ADUpdatePackage update("adspace", QStringList() << "codespace" << "typespace" << "coolairspace" << "capacityspace" << "namespace", QStringList() << SQLSTR(m_codeSpace) << SQLSTR(m_typeSpace) << strAireSpace << SQLSTR(m_capacitySpace) << SQLSTR(m_nameSpace) );
-	
-	dDebug() << update.toString();
-	return update;
-}
-*/
 QString ADSpace::toXml() const
 {
-	
+	return "";
 }
 
 void ADSpace::fromXml(const QString & xml )

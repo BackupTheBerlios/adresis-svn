@@ -41,48 +41,7 @@ ADUser::ADUser(const ADUser & copy): ADObject(), m_name(copy.m_name), m_code(cop
 ADUser::~ADUser()
 {
 }
-/*
-ADInsertPackage ADUser::insertPackage() 
-{
-	QString strPermissions;
-	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
-	while(it != m_permissions.end())
-	{
-		if(it.value())
-		{
-			strPermissions += '1';
-		}else
-		{
-			strPermissions += '0';
-		}
-		++it;
-	}
-	
-	ADInsertPackage insert("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser", QStringList() <<  SQLSTR(m_name)<< SQLSTR(m_code)<< SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
-	
-	dDebug() << insert.toString();
-	return insert;
-}
 
-ADUpdatePackage ADUser::updatePackage() 
-{
-	QString strPermissions;
-	QMap<Logic::Module, bool>::const_iterator it = m_permissions.begin();
-	while(it != m_permissions.end())
-	{
-		if(it.value())
-		{
-			strPermissions += '1';
-		}else
-		{
-			strPermissions += '0';
-		}
-		++it;
-	}
-	ADUpdatePackage update("aduser", QStringList() << "nameuser" << "codeuser" << "loginuser"<< "passwduser" << "permissionsuser",QStringList() <<  SQLSTR(m_name)<< SQLSTR(m_code) << SQLSTR(m_login)<< SQLSTR(m_passwd)<< SQLSTR(strPermissions) );
-	return update;
-}
-*/
 
 QDomElement ADUser::toXml(QDomDocument &doc)
 {
@@ -120,13 +79,6 @@ bool ADUser::permission( Logic::Module mod, Logic::Action act)
 void ADUser::assignPermissions(ADPermission permissions)
 {
 	m_permissions = permissions;
-	
-// 	dDebug() << "ADUser::assignPermissions(ADPermission permissions)\n";
-// 	for(int i=0;i<5;i++)
-// 	{
-// 		Logic::Module module = Logic::Module(i);
-// 		dDebug() << "permiso    ===>"<<m_permissions.value(module, Logic::Find);
-// 	}
 }
 
 

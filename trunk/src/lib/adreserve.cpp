@@ -37,44 +37,41 @@ ADReserve::ADReserve(const QString& typeReserve, const QString& idUserReserve, c
 ADReserve::~ADReserve()
 {
 }
-/*
-ADInsertPackage ADReserve::insertPackage()
-{
-	ADInsertPackage insert("",QStringList(),QStringList());
-	return insert;
-}
 
-ADInsertPackage ADReserve::insertPackage(const QString& table)
+QDomElement ADReserve::toXml(QDomDocument &doc)
 {
-	QString strIsActive;
+	QDomElement root = doc.createElement("space");
+	/*
+	idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
+
+	*/
+	root.setAttribute( "typereserve", m_typereserve );
+	root.setAttribute( "iduserreserve", m_iduserreserve );
+	root.setAttribute( "iduserresponsable", m_iduserresponsable );
+	root.setAttribute( "idaudiovisual", m_idaudiovisual );
+	root.setAttribute( "idspace", m_idspace );
+	root.setAttribute( "day", m_day );
+	root.setAttribute( "beginhour", m_beginhour );
+	root.setAttribute( "endhour", m_endhour );
+	root.setAttribute( "begindate", m_begindate );
+	root.setAttribute( "enddate", m_enddate );
+	
 	if(m_isactive)
 	{
-		strIsActive="true";
+		root.setAttribute( "isactive", "true");
 	}
 	else
 	{
-		strIsActive="false";
+		root.setAttribute( "isactive", "false");
 	}
+	root.setAttribute( "destinationreserve", m_destinationreserve );
 	
-	ADInsertPackage insert(table, QStringList() << "typereserve" << "iduserreserve" << "iduserresponsable" << "idresource" << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(m_typereserve) << SQLSTR(m_iduserreserve) << SQLSTR(m_iduserresponsable) << SQLSTR(m_idresource) << SQLSTR(m_day)<< SQLSTR(m_beginhour) << SQLSTR(m_endhour) << SQLSTR(m_begindate) << SQLSTR(m_enddate) << strIsActive << SQLSTR(m_destinationreserve));
-	
-	dDebug() << insert.toString();
-	return insert;
+	return root;
 }
 
-
-ADUpdatePackage ADReserve::updatePackage()
-{
-// 	ADUpdatePackage update("ad"+tipo+"reserve", QStringList() << "typeReserve" << "iduser" << "idresource" << "beginhour" << "endhour" << "begindate" << "enddate" << "destinationreserve", QStringList() << SQLSTR(m_typereserve) << SQLSTR(m_iduser) << SQLSTR(m_idresource) << SQLSTR(m_beginhour) << SQLSTR(m_endhour) << SQLSTR(m_begindate) << SQLSTR(m_enddate) << SQLSTR(m_destinationreserve));
-	
-	ADUpdatePackage update("", QStringList(), QStringList());
-	dDebug() << update.toString();
-	return update;
-}
-*/
 QString ADReserve::toXml() const
 {
-	
+	return "";
 }
 
 void ADReserve::fromXml(const QString & xml )

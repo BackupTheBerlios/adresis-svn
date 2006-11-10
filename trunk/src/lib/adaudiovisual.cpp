@@ -16,23 +16,26 @@ ADAudioVisual::ADAudioVisual(const QString & type, const QString & marksEquipmen
 ADAudioVisual::~ADAudioVisual()
 {
 }
-/*
-ADInsertPackage ADAudioVisual::insertPackage()
+
+QDomElement ADAudioVisual::toXml(QDomDocument &doc)
 {
-	ADInsertPackage insert("adaudiovisual", QStringList() << "typeav" << "marksequipmentav" << "estateav"<< "numberinventoryav" << "codespace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
+	QDomElement root = doc.createElement("space");
 	
-	dDebug() << insert.toString();
-	return insert;
+	root.setAttribute( "typeav", m_type );
+	root.setAttribute( "marksequipmentav", m_marksEquipment );
+	root.setAttribute( "estateav", m_estate );
+	root.setAttribute( "numberInventoryav", m_numberInventory );
+	root.setAttribute( "codespace", m_codeSpace );
 	
+	return root;
 }
 
-ADUpdatePackage ADAudioVisual::updatePackage() 
+QString ADAudioVisual::toXml() const
 {
-	ADUpdatePackage update("adaudiovisual", QStringList() << "typeav" << "marksEquipmentav" << "estateav" << "numberinventoryav" << "codeSpace", QStringList() << SQLSTR(m_type) << SQLSTR(m_marksEquipment) << SQLSTR(m_estate) << SQLSTR(m_numberInventory) << SQLSTR(m_codeSpace) );
-	
-	return update;
+	return "";
 }
-*/
+
+
 void ADAudioVisual::setValues(XMLResults values)
 {
 	m_type = values["typeav"];
@@ -49,10 +52,6 @@ void ADAudioVisual::setValues(XMLResults values)
 	m_valid = true;
 }
 
-QString ADAudioVisual::toXml() const
-{
-	
-}
 
 void ADAudioVisual::fromXml(const QString & xml )
 {

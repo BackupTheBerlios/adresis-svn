@@ -37,8 +37,6 @@ class ADUser : public ADObject
 		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions);
 		ADUser(const ADUser & copy);
 		~ADUser();
-// 		ADInsertPackage insertPackage();
-// 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
 		QDomElement toXml(QDomDocument &doc);

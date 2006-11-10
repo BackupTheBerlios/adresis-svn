@@ -23,6 +23,7 @@
 #include "adobject.h"
 #include <QStringList>
 #include <QMetaType>
+#include <QDomElement>
 
  
 /**
@@ -34,10 +35,10 @@ class ADSpace : public ADObject
 		ADSpace();
 		ADSpace(const QString & codeSpace, const QString & typeSpace, const bool & coolAirSpace, const QString & capacitySpace, const QString & nameSpace);
 		~ADSpace();
-// 		ADInsertPackage insertPackage();
-// 		ADUpdatePackage updatePackage();
+	
 		
 		QString toXml() const;
+		QDomElement toXml(QDomDocument &doc);
 		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);

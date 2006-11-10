@@ -4,6 +4,7 @@
 
 #include "adobject.h"
 #include <QMetaType>
+#include <QDomElement>
 
 /**
 @author Charly Aguirre Manzano,033091
@@ -28,6 +29,7 @@ class ADAudioVisual: public ADObject
 // 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
+		QDomElement toXml(QDomDocument &doc);
 		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);

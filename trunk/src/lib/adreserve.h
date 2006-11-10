@@ -22,6 +22,7 @@
 
 #include "adobject.h"
 #include <QMetaType>
+#include <QDomElement>
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
@@ -33,11 +34,10 @@ class ADReserve : public ADObject
 // idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
 		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
 		~ADReserve();
-// 		ADInsertPackage insertPackage();
-// 		ADInsertPackage insertPackage(const QString&);
-// 		ADUpdatePackage updatePackage();
 		
 		QString toXml() const;
+		QDomElement toXml(QDomDocument &doc);
+		
 		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);
