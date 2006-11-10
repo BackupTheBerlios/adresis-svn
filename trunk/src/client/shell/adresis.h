@@ -47,7 +47,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
-		void autenticated(const XMLResults& values);
+		void authenticated(const XMLResults& values);
 		
 	private:
 		ADConnector *m_connector;

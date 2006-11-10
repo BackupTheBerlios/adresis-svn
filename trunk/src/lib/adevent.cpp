@@ -23,6 +23,10 @@
 #include <ddebug.h>
 
 #include "aduser.h"
+#include "adaudiovisual.h"
+#include "adreserve.h"
+#include "adspace.h"
+
 
 #include <QVariant>
 
@@ -64,28 +68,86 @@ QString ADEvent::toString() const
 	
 	QDomElement dataE = doc.createElement( "Data" );
 	SHOW_VAR(m_action);
-	switch(m_action)
+	if(m_source == Client)
 	{
-		case Logic::Find:
+		switch(m_action)
 		{
-			SHOW_VAR("in Find");
-			QDomElement conditionE = doc.createElement ( "Condition" );
-			conditionE.setAttribute("value", m_data.toString());
-			dataE.appendChild(conditionE);
-			
-		}
-		break;
-		case Logic::Info:
-		{
-			SHOW_VAR("in Info");
-			
-			if(m_module == Logic::Users)
+			case Logic::Find:
 			{
-				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+// 				SHOW_VAR("in Find");
+				QDomElement conditionE = doc.createElement ( "Condition" );
+				conditionE.setAttribute("value", m_data.toString());
+				dataE.appendChild(conditionE);
 			}
+			break;
+			case Logic::Info:
+			{
+// 				SHOW_VAR("in Info");
+// 				foreach(QVariant var, m_data.toList() )
+// 				{
+// 					if(m_module == Logic::Users)
+// 					{
+// 						dataE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
+// 					}
+// 				}
+			}
+			break;
+			case Logic::Authenticate:
+			{
+				dDebug() << "authenticate";
+				dataE.setAttribute("user", m_data.toList()[0].toString());
+				dataE.setAttribute("passwd", m_data.toList()[1].toString());
+			}
+			break;
+			
 		}
-		break;
-		
+	}
+	else
+	{
+		switch(m_action)
+		{
+			case Logic::Find:
+			{
+				
+				dDebug() << "server Find";
+				foreach(QVariant var, m_data.toList() )
+				{
+					switch(m_module)
+					{
+						case Logic::Users:
+						{
+							dataE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
+						}
+						break;
+						case Logic::Audiovisuals:
+						{
+							dataE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
+						}
+						break;
+						case Logic::Reserves:
+						{
+							dataE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
+						}
+						break;
+						case Logic::Spaces:
+						{
+							dataE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
+						}
+						break;
+					}
+				}
+				
+				break;
+			}
+			case Logic::Authenticate:
+			{
+				dDebug() << "server authenticate";
+				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+				
+				break;
+			}
+			
+		}
 	}
 	root.appendChild(dataE);
 	

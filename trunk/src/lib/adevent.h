@@ -53,7 +53,6 @@ class ADEvent : public QObject
 		Logic::Module m_module;
 		Logic::Action m_action;
 		QVariant m_data;
-		
 		bool m_valid;
 		
 	public slots:

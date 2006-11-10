@@ -197,7 +197,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		
 		dDebug() << rs.map().size();
 		ADUser *user= new  ADUser( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
-		ADEvent event(ADEvent::Server, Logic::Users, Logic::Info, QVariant::fromValue (user)  );
+		ADEvent event(ADEvent::Server, Logic::Users, Logic::Authenticate, QVariant::fromValue (user));
 
 		cnx->sendToClient( event.toString() );
 		
@@ -247,6 +247,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 {
 
 	D_FUNCINFO;
+	
 	if(event)
 	{
 		if(event->source() == ADEvent::Server)
@@ -261,6 +262,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 				//enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
 				case Logic::Users:
 				{
+					
 					switch(event->action())
 					{
 						case Logic::Find:
@@ -305,6 +307,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							cnx->sendToClient(event.toString());
 							break;
 						}
+						case Logic::Authenticate:
+						{
+							
+							authenticate(cnx, event->data().toList()[0].toString(),event->data().toList()[1].toString());
+						}
+						break;
 					}
 					break;
 				}

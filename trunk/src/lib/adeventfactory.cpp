@@ -21,11 +21,14 @@
 #include "adeventfactory.h"
 #include <ddebug.h>
 
+
+
 #include "adevent.h"
 #include "aduser.h"
 
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
+// 
 #include "adpermission.h"
 
 
@@ -42,7 +45,7 @@ ADEventFactory::~ADEventFactory()
 
 bool ADEventFactory::startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts)
 {
-	
+	dDebug() <<  qname;
 	if (!m_isParsing)
 	{
 		m_isParsing = true;
@@ -66,7 +69,15 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "Data")
 	{
-		
+		SHOW_VAR(m_event->action());
+		if(m_event->action() == Logic::Authenticate)
+		{
+			dDebug() << "creando lista";
+			QList<QVariant> data;
+			data << atts.value("user") << atts.value("passwd");
+// 			m_event->setData(  data );
+			m_data = data;
+		}
 	}
 	else if(qname == "Condition")
 	{
@@ -79,7 +90,6 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		
 		m_data = QVariant::fromValue(user);
 	}
-	
 	else if(qname == "permissions")
 	{
 		ADPermission permissions;
@@ -90,7 +100,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		for(int i=0;i<5;i++)
 		{
 			Logic::Module module = Logic::Module(i);
-			dDebug() << "permiso    ===>"<<qvariant_cast<ADUser *>(m_data)->permission(module, Logic::Find);
+			dDebug() << "permiso ===>"<<qvariant_cast<ADUser *>(m_data)->permission(module, Logic::Find);
 		}
 	}
 	m_qname = qname;

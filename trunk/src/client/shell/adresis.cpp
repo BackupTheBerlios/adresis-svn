@@ -26,26 +26,7 @@ Adresis::Adresis(QObject * parent)
 {
 	m_connector = new ADConnector(this);
 	
-// 	connect ( m_connector, SIGNAL(message(Msg::Type , const QString &)), this, SIGNAL(requestShowMessage( Msg::Type, const QString& )));
-	
-// 	connect ( m_connector, SIGNAL(userAutenticated(const XMLResults&)) , this, SLOT(autenticated(const XMLResults&) ));
-	
 	connect ( m_connector, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *) ));
-	
-// 	connect ( m_connector, SIGNAL(fillModule(Logic::Module, const QList<XMLResults>&)), this, SIGNAL(requestFillModule(Logic::Module, const QList<XMLResults>&)) );
-	
-// 	connect( m_connector, SIGNAL(requestShowUser(const XMLResults& )), this, SLOT(createUser(const XMLResults& )));
-	
-// 	connect( m_connector, SIGNAL(requestShowSpace(const XMLResults& )), this, SLOT(createSpace(const XMLResults& )));
-	
-// 	connect( m_connector,SIGNAL(requestShowAudiovisual(const XMLResults& )),this,SLOT(createAudiovisual(const XMLResults& )));
-
-// 	connect ( m_connector, SIGNAL(requestShowListAudiovisual(const QList<XMLResults>&)), this, SIGNAL (requestShowListAudioVisualAD( const QList<XMLResults>&)) );
-	
-// 	connect ( m_connector, SIGNAL(requestListTypes(const QList<XMLResults>&)), this, SIGNAL (requestListTypesAD( const QList<XMLResults>&)) );
-
-// 	connect ( m_connector, SIGNAL(requestSchedule (const QList<XMLResults>&)), this, SIGNAL (requestScheduleAD( const QList<XMLResults>&)) );
-	
 	DINIT;
 }
 
@@ -74,9 +55,13 @@ void Adresis::handleEvent(ADEvent * event)
 						
 						case Logic::Info:
 						{
+						
+						}
+						break;
+						case Logic::Authenticate:
+						{
 							dDebug() << "Info";
 							m_user = qvariant_cast<ADUser *> (event->data());
-// 							SHOW_VAR( m_user->name());
 							requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
 							//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
 							for(int i=0; i < 5; i++)
@@ -87,7 +72,6 @@ void Adresis::handleEvent(ADEvent * event)
 							}
 						}
 						break;
-						
 					}
 				}
 				break;
@@ -106,6 +90,7 @@ void Adresis::handleEvent(ADEvent * event)
 					
 				}
 				break;
+				
 			}
 		}
 		else
@@ -139,13 +124,13 @@ void Adresis::connectToHost( const QString & hostName, quint16 port)
 //slots
 void Adresis::login(const QString &user, const QString &passwd)
 {
-	m_connector->login(user, passwd);
-	
+	QList<QVariant> data;
+	data << user << passwd;
+	ADEvent event(ADEvent::Client, Logic::Users, Logic::Authenticate, data );
+	m_connector->sendToServer( event.toString() );
 }
 
-
-
-void Adresis::autenticated(const XMLResults & values)
+void Adresis::authenticated(const XMLResults & values)
 {
 	D_FUNCINFO;
 	

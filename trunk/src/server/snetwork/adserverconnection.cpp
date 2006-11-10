@@ -72,39 +72,15 @@ void ADServerConnection::run()
 				QString root = doc.documentElement().tagName();
 				
 				dDebug() << root;
-				if ( root == "Connection" )
+				if(root == "Event")
 				{
-					QString login, passwd;
-					QDomElement docElem = doc.documentElement();
-					QDomNode n = docElem.firstChild();
-					while(!n.isNull()) {
-						QDomElement e = n.toElement();
-						if(!e.isNull())
-						{
-							QString str = e.tagName();
-							if(str == "Login")
-							{
-								login = e.attribute ( "value" );
-							}
-							if(str == "Password")
-							{
-								passwd = e.attribute ( "value" );
-							}
-						}
-						n = n.nextSibling();
-					}
-					emit requestAuth(this, login,passwd);
-				}
-				else if(root == "Event")
-				{
-					dDebug() << "RECIBI EL EVENTO EN ADSERVERCONNECTION void ADServerConnection::run()";
+// 					dDebug() << "RECIBI EL EVENTO EN ADSERVERCONNECTION void ADServerConnection::run()";
 					ADEventFactory factory;
 					ADEvent *request = factory.build( readed );
 					
 					if ( request )
 					{
 						emit requestEvent(this, request );
-// 						m_server->sendToAll( KTRequestPackage(request) );
 // 						delete request;
 					}
 				}

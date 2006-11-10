@@ -148,10 +148,3 @@ void ADConnector::sendPackage(const ADSqlPackageBase & package)
 	QString toSend = package.toString();
 	sendToServer( toSend);
 }
-
-// void ADConnector::sendEvent( const ADEvent & event )
-// {
-// 	QString toSend = event.toString();
-// 	sendToServer( toSend);
-// 	
-// }
