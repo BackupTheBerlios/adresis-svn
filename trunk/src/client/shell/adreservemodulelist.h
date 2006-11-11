@@ -35,9 +35,9 @@ class ADReserveModuleList : public ADCModuleList
 		ADReserveModuleList(QWidget *parent=0);
 		~ADReserveModuleList();
 		
-		void fill( const QList<XMLResults>&results);
+		void fill( const QList<XMLResults>&results );
 		void clean();
-	
+		
 	private slots:
 		void requestAction(int action);
 		

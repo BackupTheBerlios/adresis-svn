@@ -92,7 +92,7 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void about();
 		void changeTheme();
 		void configSchooll();
-
+		void showModule(Logic::Module module,const QList<QVariant> &);
 		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);

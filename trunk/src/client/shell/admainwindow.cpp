@@ -55,7 +55,7 @@ ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 	
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	
-	
+	connect(m_adresis, SIGNAL(requestShowModule( Logic::Module, const QList<QVariant> &)), this, SLOT(showModule( Msg::Type, const QList<QVariant> & )));
 	
 	
 	DCONFIG->beginGroup("TipOfDay");
@@ -121,6 +121,11 @@ void ADMainWindow::configSchooll()
 {
 	ADConfigSchoollModule *config = new ADConfigSchoollModule(0);
 	config->show();
+}
+
+void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &)
+{
+	
 }
 
 

@@ -48,7 +48,6 @@ class Adresis : public QObject, public ADAbstractEventHandler
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
-		void authenticated(const XMLResults& values);
 		
 	private:
 		ADConnector *m_connector;
@@ -58,6 +57,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);
+		void requestShowModule( Logic::Module module,const QList<QVariant> &);
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

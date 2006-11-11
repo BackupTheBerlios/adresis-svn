@@ -44,85 +44,59 @@ void Adresis::handleEvent(ADEvent * event)
 		if(event->source() == ADEvent::Server)
 		{
 			dDebug() << event->toString();
-			switch(event->module())
+			
+			if(event->action() == Logic::Find)
 			{
-				case Logic::Users:
+				dWarning() << "llego info";
+				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
+				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
+			}
+			else
+			{
+				switch(event->module())
 				{
-					dDebug() << "Users action =" << event->action();
-					
-					switch(event->action())
+					case Logic::Users:
 					{
+// 						dDebug() << "Users action =" << event->action();
 						
-						case Logic::Info:
+						switch(event->action())
 						{
-// 							dDebug() << "llego la info";
-// 							dDebug() << event->data().canConvert(QVariant::List);
-							m_infoModules.insert(Logic::Users, event->data().toList());
-						}
-						break;
-						case Logic::Authenticate:
-						{
-							dDebug() << "Info";
-							m_user = qvariant_cast<ADUser *> (event->data());
-							requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
-							//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
-							for(int i=0; i < 5; i++)
+							case Logic::Authenticate:
 							{
-								Logic::Module module = Logic::Module(i);
-								ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
-								handleEvent(&findAll);
+								dDebug() << "Info";
+								m_user = qvariant_cast<ADUser *> (event->data());
+								requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
+								//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
+								for(int i=0; i < 5; i++)
+								{
+									Logic::Module module = Logic::Module(i);
+									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
+									handleEvent(&findAll);
+								}
 							}
+							break;
 						}
-						break;
 					}
-				}
-				break;
-				case Logic::Audiovisuals:
-				{
-					switch(event->action())
+					break;
+					case Logic::Audiovisuals:
+					{
+					}
+					break;
+					case Logic::Reserves:
+					{
+					}
+					break;
+					case Logic::Spaces:
 					{
 						
-						case Logic::Info:
-						{
-							m_infoModules.insert(Logic::Audiovisuals, event->data().toList());
-						}
-						break;
 					}
+					break;
+					
 				}
-				break;
-				case Logic::Reserves:
-				{
-					switch(event->action())
-					{
-						
-						case Logic::Info:
-						{
-							m_infoModules.insert(Logic::Reserves, event->data().toList());
-						}
-						break;
-					}
-				}
-				break;
-				case Logic::Spaces:
-				{
-					switch(event->action())
-					{
-						
-						case Logic::Info:
-						{
-							m_infoModules.insert(Logic::Spaces, event->data().toList());
-						}
-						break;
-					}
-				}
-				break;
-				
 			}
 		}
 		else
 		{
-			
-			
 			//CLiente 
 			//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
 			dDebug()<< "antes de enviar el evento";
@@ -132,6 +106,7 @@ void Adresis::handleEvent(ADEvent * event)
 				m_connector->sendToServer(event->toString());
 			}
 		}
+		
 	}
 	else
 	{
@@ -156,10 +131,4 @@ void Adresis::login(const QString &user, const QString &passwd)
 	m_connector->sendToServer( event.toString() );
 }
 
-void Adresis::authenticated(const XMLResults & values)
-{
-	D_FUNCINFO;
-	
-// 	m_user->setValues(values);
-//  	Logic::Module module;
-}
+

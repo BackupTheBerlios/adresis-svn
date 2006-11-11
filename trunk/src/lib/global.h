@@ -52,8 +52,6 @@ namespace Logic
 }
 
 
-
-
 typedef QHash<QString, QString> XMLResults;
 Q_DECLARE_METATYPE( XMLResults * );
 typedef QMap <Logic::TypeUser, bool> permissions;

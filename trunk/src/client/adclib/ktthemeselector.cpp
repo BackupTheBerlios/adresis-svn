@@ -173,7 +173,7 @@ void KTThemeSelector::setupChooseColor()
 	new DSeparator(this);
 	new QLabel(tr("Style"), this);
 	DStyleComboBox *styleComboBox = new DStyleComboBox(this);
-	
+	Q_UNUSED(styleComboBox);
 	new DSeparator(this);
 	m_useColors = new QCheckBox(tr("Use this colors"), this);
 	
