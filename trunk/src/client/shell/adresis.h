@@ -21,6 +21,7 @@
 #define ADRESIS_H
 
 #include <QObject>
+#include <QHash>
 
 #include "adeventhandler.h"
 #include "adconnector.h"
@@ -52,6 +53,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 	private:
 		ADConnector *m_connector;
 		ADUser *m_user;
+		QHash<Logic::Module, QList<QVariant> > m_infoModules;
+		
 		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);

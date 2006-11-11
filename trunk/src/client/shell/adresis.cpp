@@ -55,8 +55,9 @@ void Adresis::handleEvent(ADEvent * event)
 						
 						case Logic::Info:
 						{
-							dDebug() << "llego la info";
-							dDebug() << event->data().canConvert(QVariant::List);
+// 							dDebug() << "llego la info";
+// 							dDebug() << event->data().canConvert(QVariant::List);
+							m_infoModules.insert(Logic::Users, event->data().toList());
 						}
 						break;
 						case Logic::Authenticate:
@@ -78,17 +79,41 @@ void Adresis::handleEvent(ADEvent * event)
 				break;
 				case Logic::Audiovisuals:
 				{
-					
+					switch(event->action())
+					{
+						
+						case Logic::Info:
+						{
+							m_infoModules.insert(Logic::Audiovisuals, event->data().toList());
+						}
+						break;
+					}
 				}
 				break;
 				case Logic::Reserves:
 				{
-					
+					switch(event->action())
+					{
+						
+						case Logic::Info:
+						{
+							m_infoModules.insert(Logic::Reserves, event->data().toList());
+						}
+						break;
+					}
 				}
 				break;
 				case Logic::Spaces:
 				{
-					
+					switch(event->action())
+					{
+						
+						case Logic::Info:
+						{
+							m_infoModules.insert(Logic::Spaces, event->data().toList());
+						}
+						break;
+					}
 				}
 				break;
 				
