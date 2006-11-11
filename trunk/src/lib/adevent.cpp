@@ -108,40 +108,40 @@ QString ADEvent::toString() const
 		{
 			case Logic::Find:
 			{
-				
-				dDebug() << "server Find";
+				QDomElement listE = doc.createElement ( "List" );
 				foreach(QVariant var, m_data.toList() )
 				{
 					switch(m_module)
 					{
 						case Logic::Users:
 						{
-							dataE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
+							listE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
 						}
 						break;
 						case Logic::Audiovisuals:
 						{
-							dataE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
+							listE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
 						}
 						break;
 						case Logic::Reserves:
 						{
-							dataE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
+							listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
 						}
 						break;
 						case Logic::Spaces:
 						{
-							dataE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
+							listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
 						}
 						break;
+						
 					}
 				}
-				
-				break;
+				dataE.appendChild(listE);
 			}
+			break;
 			case Logic::Authenticate:
 			{
-				dDebug() << "server authenticate";
+// 				dDebug() << "server authenticate";
 				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
 				
 				break;

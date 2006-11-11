@@ -27,7 +27,7 @@
 
  
 /**
-@author Charly Aguirre Manzano,0330911
+ * @author Charly Aguirre Manzano,0330911
 */
 class ADSpace : public ADObject
 {

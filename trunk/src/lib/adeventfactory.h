@@ -52,7 +52,7 @@ class ADEventFactory : public QXmlDefaultHandler
 		bool m_readCharacters;
 		ADEvent *m_event;
 		QVariant m_data;
-		
+		QList<QVariant> m_list;
 		QString m_root;
 };
 

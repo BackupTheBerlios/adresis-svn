@@ -19,7 +19,7 @@ ADAudioVisual::~ADAudioVisual()
 
 QDomElement ADAudioVisual::toXml(QDomDocument &doc)
 {
-	QDomElement root = doc.createElement("space");
+	QDomElement root = doc.createElement("audiovisual");
 	
 	root.setAttribute( "typeav", m_type );
 	root.setAttribute( "marksequipmentav", m_marksEquipment );

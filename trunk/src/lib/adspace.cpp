@@ -42,14 +42,9 @@ QDomElement ADSpace::toXml(QDomDocument &doc)
 	
 	root.setAttribute( "codespace", m_codeSpace );
 	root.setAttribute( "typespace", m_typeSpace );
-	if(m_coolAirSpace)
-	{
-		root.setAttribute( "coolairspace", "true");
-	}
-	else
-	{
-		root.setAttribute( "coolairspace", "false");
-	}
+
+	root.setAttribute( "coolairspace", m_coolAirSpace);
+	root.setAttribute( "coolairspace", m_coolAirSpace);
 	root.setAttribute( "capacityspace", m_capacitySpace );
 	root.setAttribute( "namespace", m_nameSpace );
 	

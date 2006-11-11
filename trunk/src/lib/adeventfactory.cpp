@@ -25,10 +25,13 @@
 
 #include "adevent.h"
 #include "aduser.h"
+#include "adspace.h"
+#include "adaudiovisual.h"
+#include "adreserve.h"
+
 
 #include <QXmlSimpleReader>
 #include <QXmlInputSource>
-// 
 #include "adpermission.h"
 
 
@@ -45,7 +48,6 @@ ADEventFactory::~ADEventFactory()
 
 bool ADEventFactory::startElement(const QString& , const QString& , const QString& qname, const QXmlAttributes& atts)
 {
-	dDebug() <<  qname;
 	if (!m_isParsing)
 	{
 		m_isParsing = true;
@@ -72,12 +74,14 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		SHOW_VAR(m_event->action());
 		if(m_event->action() == Logic::Authenticate)
 		{
-			dDebug() << "creando lista";
 			QList<QVariant> data;
 			data << atts.value("user") << atts.value("passwd");
-// 			m_event->setData(  data );
 			m_data = data;
 		}
+	}
+	else if(qname == "List")
+	{
+		m_list = QList<QVariant>();
 	}
 	else if(qname == "Condition")
 	{
@@ -87,8 +91,38 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	{
 		ADPermission permission;
 		ADUser *user = new ADUser(atts.value("name"), atts.value("code"), atts.value("login"), "", permission);
-		
 		m_data = QVariant::fromValue(user);
+		
+	}
+	else if(qname == "space")
+	{
+		ADSpace *space = new ADSpace(atts.value("codespace"), atts.value("typeSpace"), bool(atts.value("coolAirSpace").toInt()), atts.value("capacitySpace"), atts.value("nameSpace"));
+		m_data = QVariant::fromValue(space);
+	}
+	else if(qname == "audiovisual")
+	{
+		ADAudioVisual *audiovisual = new ADAudioVisual(atts.value("typeav"), atts.value("marksequipmentav"), atts.value("estateav"), atts.value( "numberInventoryav"), atts.value( "codespace"));
+		m_data = QVariant::fromValue(audiovisual);
+	}
+	else if(qname == "reserve")
+	{
+		
+		
+		ADReserve *reserve = new ADReserve(
+				atts.value( "typereserve" ),
+				atts.value( "iduserreserve"),
+				atts.value( "iduserresponsable"),
+				atts.value( "idaudiovisual"),
+				atts.value( "idspace"),
+				atts.value( "day"),
+				atts.value( "beginhour"),
+				atts.value( "endhour"),
+				atts.value( "begindate"),
+				atts.value( "enddate"),
+				bool(atts.value( "isactive").toInt()),
+				atts.value( "destinationreserve"));
+		m_data = QVariant::fromValue(reserve);
+		
 	}
 	else if(qname == "permissions")
 	{
@@ -113,8 +147,19 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	if ( qname == "Data" )
 	{
 		m_event->setData(m_data);
-// 		m_isParsing = false;
 	}
+	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve" )
+	{
+		if(m_event->action() == Logic::Find)
+		{
+			m_list << m_data;
+		}
+	}
+	else if(qname == "List")
+	{
+		m_data = m_list;
+	}
+	
 	return true;
 }
 

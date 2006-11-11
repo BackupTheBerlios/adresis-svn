@@ -43,7 +43,7 @@ void Adresis::handleEvent(ADEvent * event)
 	{
 		if(event->source() == ADEvent::Server)
 		{
-			
+			dDebug() << event->toString();
 			switch(event->module())
 			{
 				case Logic::Users:
@@ -55,7 +55,8 @@ void Adresis::handleEvent(ADEvent * event)
 						
 						case Logic::Info:
 						{
-						
+							dDebug() << "llego la info";
+							dDebug() << event->data().canConvert(QVariant::List);
 						}
 						break;
 						case Logic::Authenticate:
@@ -135,5 +136,5 @@ void Adresis::authenticated(const XMLResults & values)
 	D_FUNCINFO;
 	
 // 	m_user->setValues(values);
- 	Logic::Module module;
+//  	Logic::Module module;
 }

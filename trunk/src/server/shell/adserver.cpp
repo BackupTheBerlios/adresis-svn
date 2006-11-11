@@ -267,7 +267,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Find:
 						{
-							
 							ADSelect infoUser(QStringList() << "*" , "aduser");
 							if(event->data() !="all" )
 							{
@@ -311,6 +310,11 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						{
 							
 							authenticate(cnx, event->data().toList()[0].toString(),event->data().toList()[1].toString());
+						}
+						break;
+						case Logic::Add:
+						{
+							
 						}
 						break;
 					}
@@ -419,7 +423,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							QList<QVariant> listReserves;
 							
 							for(int pos =0; pos < rs.map()["typereserve"].count(); pos++)
-							{	
+							{
 								bool active;
 								if(rs.map()["isactive"][pos] == "t")
 								{

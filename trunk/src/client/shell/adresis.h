@@ -58,7 +58,6 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);
-		
 };
 
 #endif

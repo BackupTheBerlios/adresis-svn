@@ -146,5 +146,5 @@ void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select
 void ADConnector::sendPackage(const ADSqlPackageBase & package)
 {
 	QString toSend = package.toString();
-	sendToServer( toSend);
+	sendToServer( toSend );
 }

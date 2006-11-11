@@ -40,11 +40,11 @@ ADReserve::~ADReserve()
 
 QDomElement ADReserve::toXml(QDomDocument &doc)
 {
-	QDomElement root = doc.createElement("space");
+	QDomElement root = doc.createElement("reserve");
 	/*
 	idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
-
 	*/
+	
 	root.setAttribute( "typereserve", m_typereserve );
 	root.setAttribute( "iduserreserve", m_iduserreserve );
 	root.setAttribute( "iduserresponsable", m_iduserresponsable );
@@ -55,17 +55,9 @@ QDomElement ADReserve::toXml(QDomDocument &doc)
 	root.setAttribute( "endhour", m_endhour );
 	root.setAttribute( "begindate", m_begindate );
 	root.setAttribute( "enddate", m_enddate );
-	
-	if(m_isactive)
-	{
-		root.setAttribute( "isactive", "true");
-	}
-	else
-	{
-		root.setAttribute( "isactive", "false");
-	}
+	root.setAttribute( "isactive", m_isactive);
+	root.setAttribute( "isactive", m_isactive);
 	root.setAttribute( "destinationreserve", m_destinationreserve );
-	
 	return root;
 }
 
