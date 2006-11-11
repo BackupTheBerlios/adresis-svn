@@ -35,8 +35,7 @@ class ADReserve : public ADObject
 		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
 		~ADReserve();
 		
-		QString toXml() const;
-		QDomElement toXml(QDomDocument &doc);
+		QDomElement toXml(QDomDocument &doc) const;
 		
 		void fromXml(const QString & xml );
 		

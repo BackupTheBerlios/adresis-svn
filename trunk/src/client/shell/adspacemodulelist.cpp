@@ -22,7 +22,7 @@
 #include <dconfig.h>
 #include <doptionaldialog.h>
 
-ADSpaceModuleList::ADSpaceModuleList(QWidget *parent): ADCModuleList("adspace", QStringList() << "codeSpace"<<"typeSpace"<<"nameSpace", parent )
+ADSpaceModuleList::ADSpaceModuleList(QWidget *parent): ADCModuleList(Logic::Spaces, parent )
 {
 
 }

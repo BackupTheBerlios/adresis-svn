@@ -7,8 +7,8 @@ ADAudioVisual::ADAudioVisual()
 	m_valid = false;
 }
 
-ADAudioVisual::ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace) 
-	: ADObject(), m_type(type), m_marksEquipment(marksEquipment), m_estate(estate), m_numberInventory(numberInventory), m_codeSpace(codeSpace)
+ADAudioVisual::ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & state, const QString & numberInventory, const QString & codeSpace) 
+	: ADObject(), m_type(type), m_marksEquipment(marksEquipment), m_estate(state), m_numberInventory(numberInventory), m_codeSpace(codeSpace)
 {
 	m_valid = true;
 }
@@ -17,7 +17,7 @@ ADAudioVisual::~ADAudioVisual()
 {
 }
 
-QDomElement ADAudioVisual::toXml(QDomDocument &doc)
+QDomElement ADAudioVisual::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("audiovisual");
 	
@@ -30,10 +30,6 @@ QDomElement ADAudioVisual::toXml(QDomDocument &doc)
 	return root;
 }
 
-QString ADAudioVisual::toXml() const
-{
-	return "";
-}
 
 
 void ADAudioVisual::setValues(XMLResults values)
@@ -50,12 +46,6 @@ void ADAudioVisual::setValues(XMLResults values)
 	}
 
 	m_valid = true;
-}
-
-
-void ADAudioVisual::fromXml(const QString & xml )
-{
-	
 }
 
 bool ADAudioVisual::isValid() const
@@ -88,8 +78,4 @@ QString ADAudioVisual::codeSpace() const
 	return m_codeSpace;
 }
 
-
-QString toXml() ;
-
-void fromXml(const QString & xml );
 

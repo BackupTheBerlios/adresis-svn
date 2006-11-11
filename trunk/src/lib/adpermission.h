@@ -37,16 +37,12 @@ class ADPermission : public ADObject
 		ADPermission();
 		~ADPermission();
 		
-		QString toXml() const;
-		void fromXml(const QString&);
 		void setValues(const XMLResults values);
 		
 		QDomElement toXml(QDomDocument &doc) const;
 		void setValues(QMap<QString, QStringList> values);
 		void setValues(const QXmlAttributes& atts);
 		bool isValid()  const;
-		
-		
 		
 	public:
 		bool value(Logic::Module module, Logic::Action action);

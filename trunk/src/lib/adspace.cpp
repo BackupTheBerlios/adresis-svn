@@ -36,7 +36,7 @@ ADSpace::~ADSpace()
 {
 }
 
-QDomElement ADSpace::toXml(QDomDocument &doc)
+QDomElement ADSpace::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("space");
 	
@@ -51,15 +51,6 @@ QDomElement ADSpace::toXml(QDomDocument &doc)
 	return root;
 }
 
-QString ADSpace::toXml() const
-{
-	return "";
-}
-
-void ADSpace::fromXml(const QString & xml )
-{
-	
-}
 
 void ADSpace::setValues(XMLResults values)
 {

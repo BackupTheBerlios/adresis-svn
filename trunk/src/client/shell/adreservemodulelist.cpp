@@ -24,7 +24,7 @@
 #include <doptionaldialog.h>
 
 
-ADReserveModuleList::ADReserveModuleList(QWidget *parent): ADCModuleList("adreserves", QStringList()<<"name"<<"id" <<"type", parent )
+ADReserveModuleList::ADReserveModuleList(QWidget *parent): ADCModuleList(Logic::Reserves, parent )
 {
 }
 

@@ -43,7 +43,7 @@ ADUser::~ADUser()
 }
 
 
-QDomElement ADUser::toXml(QDomDocument &doc)
+QDomElement ADUser::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("user");
 	
@@ -54,16 +54,6 @@ QDomElement ADUser::toXml(QDomDocument &doc)
 	root.appendChild(m_permissions.toXml(doc));
 	
 	return root;
-}
-
-QString ADUser::toXml() const
-{
-	return "";
-}
-
-void ADUser::fromXml(const QString & xml )
-{
-	
 }
 
 
@@ -93,8 +83,6 @@ void ADUser::setValues(XMLResults values)
 }
 
 
-
-
 bool ADUser::isValid() const
 {
 	return m_valid;
@@ -112,15 +100,18 @@ QString ADUser::name() const
 	return m_name;
 }
 
+
 QString ADUser::code() const
 {
 	return m_code;
 }
 
+
 QString  ADUser::login() const
 {
 	return m_login;
 }
+
 
 QString  ADUser::passwd() const
 {

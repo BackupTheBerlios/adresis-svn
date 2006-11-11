@@ -23,7 +23,7 @@
 #include <doptionaldialog.h>
 
 
-ADAudiovisualModuleList::ADAudiovisualModuleList(QWidget *parent): ADCModuleList("adaudiovisual", QStringList() << "typeAV"<<"numberinventoryAV", parent )
+ADAudiovisualModuleList::ADAudiovisualModuleList(QWidget *parent): ADCModuleList(Logic::Audiovisuals, parent )
 {
 }
 

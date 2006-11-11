@@ -22,7 +22,7 @@
 #include <dconfig.h>
 #include <doptionaldialog.h>
 
-ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList("aduser", QStringList() << "login"<< "name", parent )
+ADUserModuleList::ADUserModuleList(QWidget *parent): ADCModuleList(Logic::Users, parent )
 {
 	
 }
@@ -32,19 +32,23 @@ ADUserModuleList::~ADUserModuleList()
 {
 }
 
-void ADUserModuleList::fill( const QList<XMLResults>&results)
+void ADUserModuleList::fill( const QList<QVariant> & list)
 {
 	D_FUNCINFO;
-	QList<XMLResults>::const_iterator it= results.begin();
-	
-	while( it != results.end() )
+	foreach(QVariant u, list)
 	{
-		
-		QStringList list;
-		list << (*it)["loginuser"] << (*it)["nameuser"];
-		addItem( list );
-		++it;
+// 		addItem();
 	}
+// 	QList<XMLResults>::const_iterator it= results.begin();
+	
+// 	while( it != results.end() )
+// 	{
+		
+// 		QStringList list;
+// 		list << (*it)["loginuser"] << (*it)["nameuser"];
+// 		addItem( list );
+// 		++it;
+// 	}
 }
 
 void ADUserModuleList::clean()

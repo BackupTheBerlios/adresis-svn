@@ -40,22 +40,23 @@ class ADCModuleList: public QWidget
 {
 	Q_OBJECT
 	public:
-		ADCModuleList(const QString& moduleName, const QStringList& list, QWidget *parent );
+		ADCModuleList(Logic::Module module,  QWidget *parent 
+		= 0 );
 		virtual ~ADCModuleList();
-		virtual void fill( const QList<XMLResults>&results) = 0;
-		virtual void clean() = 0;
+		virtual void fill( const QList<QVariant> );
+		virtual void clean();
 		ADModuleButtonBar *addButtonBar(int flags);
 		QBoxLayout *boxLayout();
 		void addItem(const QStringList &cols);
 		
 		
 	protected slots:
-		virtual void requestAction(int action) = 0;
+		virtual void requestAction(int action);
 		
 	protected:
 		QTreeWidget *m_pTree;
 		DTreeWidgetSearchLine *m_pSearch;
-		
+		Logic::Module m_pModule;
 };
 
 #endif

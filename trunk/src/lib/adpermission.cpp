@@ -94,15 +94,6 @@ bool ADPermission::isValid()  const
 	return m_valid;
 }
 
-QString ADPermission::toXml() const
-{
-	return "";
-}
-
-void ADPermission::fromXml(const QString&)
-{
-}
-
 QDomElement ADPermission::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("permissions");

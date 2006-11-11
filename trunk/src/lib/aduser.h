@@ -38,10 +38,8 @@ class ADUser : public ADObject
 		ADUser(const ADUser & copy);
 		~ADUser();
 		
-		QString toXml() const;
-		QDomElement toXml(QDomDocument &doc);
+		QDomElement toXml(QDomDocument &doc) const;
 		
-		void fromXml(const QString & xml );
 		
 		void setValues(XMLResults values);
 		bool isValid() const;

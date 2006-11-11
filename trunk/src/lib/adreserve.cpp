@@ -38,7 +38,7 @@ ADReserve::~ADReserve()
 {
 }
 
-QDomElement ADReserve::toXml(QDomDocument &doc)
+QDomElement ADReserve::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("reserve");
 	/*
@@ -61,15 +61,6 @@ QDomElement ADReserve::toXml(QDomDocument &doc)
 	return root;
 }
 
-QString ADReserve::toXml() const
-{
-	return "";
-}
-
-void ADReserve::fromXml(const QString & xml )
-{
-	
-}
 
 void ADReserve::setValues(XMLResults values)
 {

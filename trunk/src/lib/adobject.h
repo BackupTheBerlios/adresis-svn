@@ -24,6 +24,7 @@
  * @author Jorge Cuadrado <kuadrosx@gmail.com>
 */
 // #include<QObject>
+#include<QDomElement>
 #include "global.h"
 // #include "adinsertpackage.h"
 // #include "adupdatepackage.h"
@@ -41,12 +42,7 @@ class ADObject /*: public QObject*/
 		 * Cualquier objeto tiene que poderse convertir en un string xml
 		 * @return 
 		 */
-		virtual QString toXml()const = 0;
-		/**
-		 * Cualquier objeto tiene que poder objeter sus datos de un xml
-		 * @param xml 
-		 */
-		virtual void fromXml(const QString & xml ) = 0;
+		virtual QDomElement toXml(QDomDocument &doc)const = 0;
 };
 
 #endif

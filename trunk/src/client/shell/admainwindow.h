@@ -47,6 +47,7 @@
 
 
 #include "adeventhandler.h"
+#include "dtoolview.h"
 
 /**
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
@@ -84,7 +85,6 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void setupMenu();
 		void setupToolbar();
 		void createActions();
-		
 		
 	private slots:
 		void showTipDialog();

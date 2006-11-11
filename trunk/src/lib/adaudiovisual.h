@@ -13,26 +13,13 @@ class ADAudioVisual: public ADObject
 {
 	public:
 		ADAudioVisual();
-		ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace);
+		ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & state, const QString & numberInventory, const QString & codeSpace);
 		~ADAudioVisual();
 		
-		/**
-		 * deprecada
-		 * @return 
-		 */
-// 		ADInsertPackage insertPackage();
-		/**
-		 * deprecada
-		 *
-		 * @return 
-		 */
-// 		ADUpdatePackage updatePackage();
 		
-		QString toXml() const;
-		QDomElement toXml(QDomDocument &doc);
-		void fromXml(const QString & xml );
-		
+		QDomElement toXml(QDomDocument &doc) const;
 		void setValues(XMLResults values);
+		
 		bool isValid() const;
 		
 		QString type() const;

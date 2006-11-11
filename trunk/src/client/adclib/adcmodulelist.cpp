@@ -25,14 +25,17 @@
 #include <QHeaderView>
 #include <QTimer>
 
+#include "aduser.h"
+#include "adaudiovisual.h"
+#include "adspace.h"
 
 #include <dtreewidgetsearchline.h>
 
 #include "global.h"
 #include <ddebug.h>
 
-ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& titles, QWidget *parent )
-	:QWidget(parent)
+ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
+	:QWidget(parent), m_pModule(module)
 {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	setLayout(layout);
@@ -45,6 +48,40 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	search->addWidget(button);
 	m_pTree = new  QTreeWidget;
 // 	m_pTree = new DTreeListWidget;
+	QStringList titles;
+	switch(m_pModule)
+	{
+		case Logic::Users:
+		{
+			titles << tr("Code") << tr("Name") << tr("Login");
+			setWindowTitle ( "Users");
+		}
+		break;
+		case Logic::Audiovisuals:
+		{
+			titles << tr("Type") << tr("Mark") << tr("State") << tr("Inventory") << tr("Space");
+			setWindowTitle ( "Audiovisuals");
+		}
+		break;
+		case Logic::Reserves:
+		{
+			titles << tr("Type") << tr("User reserver") << tr("User responsible ") <<  tr("Audiovisual") << tr("Id") << tr("active") << tr("Destination");
+			setWindowTitle ( "Reserves");
+		}
+		break;
+		case Logic::Spaces:
+		{
+			titles << tr("Code") << tr("Type") << tr("Cool Air") << tr("Capacity") << tr("Name");
+			setWindowTitle ( "Spaces");
+		}
+		break;
+		case Logic::Reports:
+		{
+			setWindowTitle ( "Reports");
+		}
+		break;
+	}
+	
 	
 	m_pTree->setHeaderLabels ( titles );
 	m_pTree->header()->show();
@@ -59,16 +96,98 @@ ADCModuleList::ADCModuleList(const QString& moduleName, const QStringList& title
 	
 	layout->addWidget(m_pTree);
 	
-	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
 	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify );
 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
-
 ADCModuleList::~ADCModuleList()
 {
 	
+}
+
+void ADCModuleList::fill( const QList<QVariant> list)
+{
+	switch(m_pModule)
+	{
+		case Logic::Users:
+		{
+			foreach(QVariant u, list)
+			{
+				ADUser *user = qVariantValue<ADUser *>(u);
+				QList<QString> strs;
+				strs << user->code();
+				strs << user->name();
+				strs << user->login();
+				
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+		}
+		break;
+		case Logic::Audiovisuals:
+		{
+			foreach(QVariant a, list)
+			{
+				ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(a);
+				QList<QString> strs;
+				strs << audiovisual->type() << audiovisual->marksEquipment() << audiovisual->estate() << audiovisual->numberInventory() << audiovisual->codeSpace();
+				
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+		}
+		break;
+		case Logic::Reserves:
+		{
+		}
+		break;
+		case Logic::Spaces:
+		{
+			foreach(QVariant s, list)
+			{
+				ADSpace *space = qVariantValue<ADSpace *>(s);
+				QList<QString> strs;
+				
+				strs << space->codeSpace(); 
+				strs << space->typeSpace(); 
+				if(space->coolAirSpace())
+				{
+					strs << tr("Yes");
+				}
+				else
+				{
+					strs << tr("No");
+				}
+				strs << space->capacitySpace();
+				strs << space->nameSpace();
+				
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+		}
+		break;
+		case Logic::Reports:
+		{
+			
+		}
+		break;
+	}
 }
 
 ADModuleButtonBar *ADCModuleList::addButtonBar(int flags)
@@ -95,7 +214,13 @@ void ADCModuleList::addItem(const QStringList &cols)
 	}
 }
 
+void ADCModuleList::requestAction(int action)
+{
+	
+}
 
-
-
+void ADCModuleList::clean()
+{
+	
+}
 
