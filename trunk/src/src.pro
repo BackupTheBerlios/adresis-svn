@@ -3,13 +3,12 @@
 # Subdir relative project main directory: ./src
 # Target is a subdirs project 
 
+KDEV_QTVER = 4 
+TARGET = ../bin/adresis 
+CONFIG += release \
+          warn_on 
+TEMPLATE = subdirs 
 SUBDIRS += dlib \
            lib \
            server \
-           client
-KDEV_QTVER = 4
-TARGET = ../bin/adresis
-CONFIG += release \
-warn_on
-TEMPLATE = subdirs
-
+           client 

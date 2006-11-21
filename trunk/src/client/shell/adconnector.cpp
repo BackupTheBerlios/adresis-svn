@@ -135,16 +135,3 @@ void ADConnector::handleError(QAbstractSocket::SocketError error)
 	}
 }
 
-void ADConnector::sendQuery(Logic::TypeQuery type, const ADSelectPackage& select)
-{
-	D_FUNCINFO;
-// 	SHOW_VAR(type);
-	m_querys.enqueue ( type );
-	sendPackage(select);
-}
-
-void ADConnector::sendPackage(const ADSqlPackageBase & package)
-{
-	QString toSend = package.toString();
-	sendToServer( toSend );
-}

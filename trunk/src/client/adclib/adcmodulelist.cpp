@@ -28,6 +28,7 @@
 #include "aduser.h"
 #include "adaudiovisual.h"
 #include "adspace.h"
+#include "adreserve.h"
 
 #include <dtreewidgetsearchline.h>
 
@@ -65,7 +66,9 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		break;
 		case Logic::Reserves:
 		{
-			titles << tr("Type") << tr("User reserver") << tr("User responsible ") <<  tr("Audiovisual") << tr("Id") << tr("active") << tr("Destination");
+// typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
+			
+			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("Name Resource")<< tr("day");
 			setWindowTitle ( "Reserves");
 		}
 		break;
@@ -130,6 +133,7 @@ void ADCModuleList::fill( const QList<QVariant> list)
 			}
 		}
 		break;
+
 		case Logic::Audiovisuals:
 		{
 			foreach(QVariant a, list)
@@ -148,36 +152,68 @@ void ADCModuleList::fill( const QList<QVariant> list)
 			}
 		}
 		break;
+
 		case Logic::Reserves:
 		{
-		}
-		break;
-		case Logic::Spaces:
-		{
-			foreach(QVariant s, list)
+			foreach(QVariant r, list)
 			{
-				ADSpace *space = qVariantValue<ADSpace *>(s);
+				ADReserve *reserve = qVariantValue<ADReserve *>(r);
 				QList<QString> strs;
-				
-				strs << space->codeSpace(); 
-				strs << space->typeSpace(); 
-				if(space->coolAirSpace())
+				strs << ""; //Identficador de la reserva;
+				strs << reserve->typeReserve();
+				strs << reserve->iduserreserve();
+				strs << reserve->iduserresponsable();
+				if( reserve->idspace() != "" )
 				{
-					strs << tr("Yes");
+					strs << reserve->idspace();
 				}
 				else
 				{
-					strs << tr("No");
+					strs << reserve->idaudiovisual();
 				}
-				strs << space->capacitySpace();
-				strs << space->nameSpace();
-				
+				strs << ""; //Nombre del recurso;
+				strs << reserve->day();
+
 				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
 				int count = 0;
 				foreach(QString str, strs)
 				{
 					item->setText(count, str);
 					count++;
+				}
+			}
+		}
+		break;
+
+		case Logic::Spaces:
+		{
+			foreach(QVariant s, list)
+			{
+				ADSpace *space = qVariantValue<ADSpace *>(s);
+				
+				if( (space->codeSpace()) != "null" )	
+				{
+					QList<QString> strs;	
+					strs << space->codeSpace(); 
+					strs << space->typeSpace();
+					if(space->coolAirSpace())
+					{
+						strs << tr("Yes");
+					}
+					else
+					{
+						strs << tr("No");
+					}
+					strs << space->capacitySpace();
+					strs << space->nameSpace();
+					
+					QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+					int count = 0;
+					foreach(QString str, strs)
+					{
+						item->setText(count, str);
+						count++;
+					}
 				}
 			}
 		}

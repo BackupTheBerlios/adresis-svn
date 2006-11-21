@@ -73,13 +73,9 @@ void  ADSpaceForm::fill()
 }
 
 
-
-
 void ADSpaceForm::emitInsertSpace()
 {
-	
 	bool opcion;
-	
 	if(acC->checkState() == Qt::Checked)
 	{
 		opcion=true;
@@ -110,7 +106,6 @@ void ADSpaceForm::emitInsertSpace()
 		static_cast<QLineEdit*>(m_inputs[tr("capacidad")])->text(),
 		static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
 		);
-
 		checkListsToSave();
 	}
 }
@@ -159,8 +154,6 @@ void ADSpaceForm::listChangedSF(const QString & lista, int pos)
 	}
 }
 
-
-
 void ADSpaceForm::insertListTypes(const QList<XMLResults>& results)
 {
 	QList<XMLResults>::const_iterator it= results.begin();
@@ -170,7 +163,6 @@ void ADSpaceForm::insertListTypes(const QList<XMLResults>& results)
 		tipos << ((*it)["type"]);
 		++it;
 	}
-
 	tiposC->addItems(tipos);
 
 	if(!m_inserter)
@@ -181,12 +173,10 @@ void ADSpaceForm::insertListTypes(const QList<XMLResults>& results)
 
 
 
-
 void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 {
 
 	QList<XMLResults>::const_iterator it= results.begin();
-
 	
 	//Con la variable m_list quiero representar cual de las listas estoy obteniendo, si m_list es true es porque estoy hablando de la listas de ayudas libres, si es false es la lista de ayudas asignadas a este espacio
 
@@ -236,18 +226,14 @@ void ADSpaceForm::insertListAudiovisual(const QList<XMLResults>& results)
 
 				m_listAudiovisualL.append(listaDeListas);
 				++it;
-				
 			}
 		
 			QStringList lista = takeListKeys("libres");
-			
 			listSelect->addListToLeft(lista);
 			m_list=false;
-
 		}
 		else
 		{
-
 			while( it != results.end() )
 			{
 				int pos=0;

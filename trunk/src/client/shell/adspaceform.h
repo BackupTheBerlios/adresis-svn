@@ -44,14 +44,11 @@ class ADSpaceForm : public ADFormBase
 	private:
 		ADSpace *adSpace;
 		QMap<QString, QWidget*> m_inputs;
-
 		QList< QStringList > m_listAudiovisualL;
 		QList< QStringList > m_listAudiovisualE;
-		
 		QStringList typeSpace;
 		QStringList tipos;
 		QComboBox *tiposC;
-
 		void fill();
 		void setup();
 		QCheckBox *acC;
@@ -61,7 +58,6 @@ class ADSpaceForm : public ADFormBase
 		void checkListsToSave();
 		QStringList takeListKeys(const QString &list);
 
-		
 	signals:
 		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
 		

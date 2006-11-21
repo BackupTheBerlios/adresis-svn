@@ -47,8 +47,9 @@ void Adresis::handleEvent(ADEvent * event)
 			
 			if(event->action() == Logic::Find)
 			{
-				dWarning() << "llego info";
+				dWarning() << "llego info a ADRESIS";
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
+				
 				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
 			}
 			else

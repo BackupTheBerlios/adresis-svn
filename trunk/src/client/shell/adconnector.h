@@ -45,8 +45,6 @@ class ADConnector : public ADConnectorBase
 		ADConnector(QObject * parent = 0);
 		~ADConnector();
 		void login(const QString &user, const QString &passwd);
-		void sendQuery(Logic::TypeQuery type, const ADSelectPackage& select);
-		void sendPackage(const ADSqlPackageBase & package);
 		
 		
 	private slots:
@@ -54,17 +52,7 @@ class ADConnector : public ADConnectorBase
 		void handleError(QAbstractSocket::SocketError error);
 		
 	signals:
-// 		void chatMessage(const QString &login, const QString &msg);
 		void message(Msg::Type t, const QString &message);
-		void userAutenticated(const XMLResults&);
-		void fillModule(Logic::Module, const QList<XMLResults>&);
-		void requestShowUser(const XMLResults & values);
-		void requestShowSpace(const XMLResults & values);
-		void requestShowAudiovisual(const XMLResults & values);
-		void requestShowListAudiovisual( const QList<XMLResults>& );
-		void requestListTypes( const QList<XMLResults>& );
-		void requestSchedule( const QList<XMLResults>& );
-		
 		void sendEvent( ADEvent * event);
 
 	private:

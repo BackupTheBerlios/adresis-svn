@@ -36,9 +36,7 @@ class ADReserve : public ADObject
 		~ADReserve();
 		
 		QDomElement toXml(QDomDocument &doc) const;
-		
 		void fromXml(const QString & xml );
-		
 		void setValues(XMLResults values);
 		bool isValid() const;
 		QString typeReserve() const;

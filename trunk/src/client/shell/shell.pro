@@ -3,8 +3,13 @@
 # Subdir relative project main directory: ./src/client/shell
 # Target is an application:  ../../../bin/adclient.bin
 
+KDEV_QTVER = 4 
 INSTALLS += target 
 target.path = /bin/ 
+TARGET = ../../../bin/adclient.bin 
+CONFIG += release \
+          warn_on 
+TEMPLATE = app 
 HEADERS += adcapplication.h \
            adresis.h \
            adconnector.h \
@@ -38,7 +43,4 @@ SOURCES += main_cliente.cpp \
            adreserveform.cpp \
            adconfigschoollmodule.cpp \
            adinsertresource.cpp 
-KDEV_QTVER = 4
 include(shell_config.pri)
-TARGET = ../../../bin/adclient.bin
-TEMPLATE = app

@@ -96,7 +96,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "space")
 	{
-		ADSpace *space = new ADSpace(atts.value("codespace"), atts.value("typeSpace"), bool(atts.value("coolAirSpace").toInt()), atts.value("capacitySpace"), atts.value("nameSpace"));
+		ADSpace *space = new ADSpace(atts.value("codespace"), atts.value("typespace"), bool(atts.value("coolAirSpace").toInt()), atts.value("capacityspace"), atts.value("namespace"));
 		m_data = QVariant::fromValue(space);
 	}
 	else if(qname == "audiovisual")

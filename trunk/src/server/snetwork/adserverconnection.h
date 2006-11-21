@@ -43,10 +43,8 @@ class ADServerConnection : public QThread
 		ADServerConnection(int socketDescriptor, QObject *parent);
 		~ADServerConnection();
 		void run();
-		
 		void close();
 		void setLogin(const QString &login);
-		
 		bool isLogged() const;
 		
 	private:
@@ -62,18 +60,14 @@ class ADServerConnection : public QThread
 		void requestRemoveConnection(ADServerConnection *self);
 		
 		void requestAuth(ADServerConnection *cnx, const QString &, const QString &);
-		
 		void requestOperation(ADServerConnection *cnx, const ADQuery *query);
-		
 		void requestEvent(ADServerConnection *cnx,ADEvent *event);
 		
 	private:
 		ADServerClient *m_client;
-		
 		QXmlSimpleReader m_reader;
 		ADSPackageParser *m_parser;
 		QString m_login;
-		
 		bool m_isLogged;
 };
 
