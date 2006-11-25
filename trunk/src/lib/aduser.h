@@ -27,7 +27,7 @@
 #include "adpermission.h"
 
 /**
-*	@author Jorge Cuadrado <kuadrosx@gmail>
+*	@author Jorge Cuadrado <kuadrosx@gmail.com>
 */
 
 class ADUser : public ADObject

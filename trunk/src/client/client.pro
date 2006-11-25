@@ -5,7 +5,6 @@
 
 SUBDIRS += theme \
            adclib \
-           cnetwork \
            shell 
 KDEV_QTVER = 4
 CONFIG += release \

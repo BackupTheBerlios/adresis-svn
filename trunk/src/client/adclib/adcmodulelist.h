@@ -53,6 +53,9 @@ class ADCModuleList: public QWidget
 	protected slots:
 		virtual void requestAction(int action);
 		
+	signals:
+		void requestShowForm(Logic::Module module);
+		
 	protected:
 		QTreeWidget *m_pTree;
 		DTreeWidgetSearchLine *m_pSearch;

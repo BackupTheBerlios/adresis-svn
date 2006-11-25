@@ -63,7 +63,7 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 	private:
 		Adresis *m_adresis;
 		DActionManager *m_actionManager;
-		QMap<Logic::Module, ADCModuleList*>m_modules;
+		QMap<Logic::Module, ADCModuleList*> m_modules;
 		QString tipo;
 		QString typeRequest;
 		
@@ -94,9 +94,11 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void configSchooll();
 		void showModule(Logic::Module module,const QList<QVariant> &);
 		
+		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void addForm(ADFormBase * form, const QString & title);
+		void showForm(Logic::Module module);
 };
 
 #endif

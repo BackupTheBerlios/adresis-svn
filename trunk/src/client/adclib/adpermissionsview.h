@@ -24,21 +24,22 @@
 #include <QMap>
 #include <QCheckBox>
 #include "global.h"
+#include "adpermission.h"
 
 /**
- * @author Jorge Cuadrado <kuadrosx@kuadrosx>
+ * @author Jorge Cuadrado <kuadrosx@gmail.com>
 */
 class ADPermissionsView : public QGroupBox
 {
 	public:
 		ADPermissionsView(QWidget *parent= 0);
 		~ADPermissionsView();
-		QMap<Logic::Module, bool> permissions();
-		void setPermissions(const QMap<Logic::TypeUser, bool> & permissions );
+		ADPermission permissions();
+		void setPermissions(const ADPermission& permissions);
 		
 	private:
 		QMap<QString,QCheckBox* > m_checks;
-		
+		ADPermission m_permission;
 };
 
 #endif

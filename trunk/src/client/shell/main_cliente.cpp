@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	
 	app.setStyle("plastique");
 	
-// 	app.setPalette(app.style()->standardPalette());
+// 	app.setPalette(app.style()->standardPalette()); 
 	app.setApplicationName("adresis_client");
 	
 	DCONFIG->beginGroup("General");

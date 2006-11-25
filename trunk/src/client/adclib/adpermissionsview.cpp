@@ -20,19 +20,37 @@
 #include "adpermissionsview.h"
 #include <QVBoxLayout>
 #include <QCheckBox>
+#include <QLabel>
+#include <QGridLayout>
 #include <ddebug.h>
 
 ADPermissionsView::ADPermissionsView(QWidget * parent)
 	: QGroupBox(tr("Permissions"), parent)
 {
 	setSizePolicy ( QSizePolicy::Expanding ,QSizePolicy::Fixed);
+	QGridLayout *layout = new QGridLayout(this);
+	QStringList actions;
 	
-	QVBoxLayout *layout = new QVBoxLayout(this);
-	QCheckBox *checkB;
-	
-	checkB = new QCheckBox("Administrador", this);
-	layout->addWidget(checkB);
-	m_checks.insert("administrador" , checkB);
+	actions << tr("Gestionar usuario")
+			<< tr("Consultar usuario")
+			<< tr("Gestionar espacio")
+			<< tr("Consultar espacio")
+			<< tr("Gestionar audiovisual")
+			<< tr("Consultar audiovisual")
+			<< tr("Gestionar semestral")
+			<< tr("Gestionar temporal")
+			<< tr("Consultar reservas")
+			<< tr("Gestionar reportes")
+			<< tr("Consultar reportes");
+	int count = 0;
+	foreach(QString action, actions)
+	{
+		layout->addWidget(new QLabel(action, this), count,0);
+		QCheckBox *check = new QCheckBox(this);
+		layout->addWidget(check, count, 1);
+		m_checks.insert(action, check);
+		count++;
+	}
 }
 
 
@@ -40,14 +58,13 @@ ADPermissionsView::~ADPermissionsView()
 {
 }
 
-QMap<Logic::Module, bool> ADPermissionsView::permissions() 
+ADPermission ADPermissionsView::permissions()
 {
-	dDebug() << "QMap<Logic::TypeUser, bool> ADPermissionsView::permissions() ";
-	QMap<Logic::Module, bool> per;
-	for(int i =0; i < 5; i++)
-	{
-		per.insert(Logic::Module(i), true);
-	}
+// 	QMap<Logic::Module, bool> per;
+// 	for(int i =0; i < 5; i++)
+// 	{
+// 		per.insert(Logic::Module(i), true);
+// 	}
 // 	if( m_checks[tr("administrador")]->checkState()  == Qt::Checked)
 // 	{
 // 		dDebug() << true;
@@ -65,34 +82,17 @@ QMap<Logic::Module, bool> ADPermissionsView::permissions()
 		dDebug() << "permissions()" << it.value();
 		++it;
 	}*/
-	return per;
+// 	return per;
+	return m_permission;
 }
 
-// typedef  mapa;
-
-
-void ADPermissionsView::setPermissions(const QMap<Logic::TypeUser, bool> & permissions )
+void ADPermissionsView::setPermissions(const ADPermission& permissions)
 {
-	QMap<Logic::TypeUser, bool>::const_iterator it = permissions.begin();
-	while(it != permissions.end())
+// 	m_permission = permissions;
+	for(int i = 0; i < 6; i++)
 	{
-		switch(it.key())
-		{
-			case Logic::administrador:
-			{
-				if(it.value())
-				{
-					m_checks[tr("administrador")]->setCheckState ( Qt::Checked);
-				}
-				else
-				{
-					m_checks[tr("administrador")]->setCheckState ( Qt::Unchecked);
-				}
-				break;
-			}
-		}
-		++it;
+		
+// 	if(value(Logic::Module(i), Logic::Action());
 	}
-
 }
 

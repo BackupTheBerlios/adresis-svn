@@ -113,9 +113,6 @@ QDomElement ADPermission::toXml(QDomDocument &doc) const
 	return root;
 }
 
-
-
-
 bool ADPermission::value(Logic::Module module, Logic::Action action)
 {
 	D_FUNCINFO;

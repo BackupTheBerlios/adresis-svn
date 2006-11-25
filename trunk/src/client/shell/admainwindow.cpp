@@ -129,7 +129,9 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	ADCModuleList *list = new ADCModuleList(module);
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
-// 	list->show();
+	
+	connect(list, SIGNAL(requestShowForm( Logic::Module )), this, SLOT(showForm( Logic::Module )));
+	
 }
 
 
@@ -195,12 +197,25 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 {
 	D_FUNCINFO;
+	form->show();
 	if ( form )
 	{
 		form->setTitle(title);
-// 		addWidget( form, title, false);
-		addToPerspective(form );
+		addWidget(form);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
+	}
+}
+
+void ADMainWindow::showForm( Logic::Module module )
+{
+	switch( module )
+	{
+		case Logic::Users:
+		{
+			ADFormBase * form = new ADUserForm;
+			addForm(form, tr("Add user"));
+		}
+		break;
 	}
 }
 

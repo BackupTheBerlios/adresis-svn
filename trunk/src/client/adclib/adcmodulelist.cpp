@@ -89,8 +89,13 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	m_pTree->setHeaderLabels ( titles );
 	m_pTree->header()->show();
 	m_pSearch = new DTreeWidgetSearchLine(this, m_pTree);
+	QList<int> columns;
+	for(int i = 0; i < titles.count(); i++)
+	{
+		columns << i;
+	}
 	
-	
+	m_pSearch->setSearchColumns(columns);
 	search->addWidget( m_pSearch );
 	
 	m_pSearch->setSearchColumns(QList<int>() << 0 );
@@ -252,7 +257,15 @@ void ADCModuleList::addItem(const QStringList &cols)
 
 void ADCModuleList::requestAction(int action)
 {
-	
+		
+		switch(ADModuleButtonBar::Button(action))
+	{
+		case ADModuleButtonBar::Add:
+		{
+			emit requestShowForm(m_pModule);
+		}
+		break;
+	};
 }
 
 void ADCModuleList::clean()
