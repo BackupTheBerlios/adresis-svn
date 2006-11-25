@@ -48,7 +48,7 @@ ADPermissionsView::ADPermissionsView(QWidget * parent)
 		layout->addWidget(new QLabel(action, this), count,0);
 		QCheckBox *check = new QCheckBox(this);
 		layout->addWidget(check, count, 1);
-		m_checks.insert(action, check);
+// 		m_checks.insert(check);
 		count++;
 	}
 }
@@ -60,6 +60,9 @@ ADPermissionsView::~ADPermissionsView()
 
 ADPermission ADPermissionsView::permissions()
 {
+	ADPermission per;
+// 	foreach(  );
+	
 // 	QMap<Logic::Module, bool> per;
 // 	for(int i =0; i < 5; i++)
 // 	{

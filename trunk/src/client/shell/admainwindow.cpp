@@ -208,11 +208,12 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 
 void ADMainWindow::showForm( Logic::Module module )
 {
+	ADFormBase * form;
 	switch( module )
 	{
 		case Logic::Users:
 		{
-			ADFormBase * form = new ADUserForm;
+		form = new ADUserForm;
 			addForm(form, tr("Add user"));
 		}
 		break;
