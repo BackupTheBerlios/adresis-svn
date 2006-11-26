@@ -45,12 +45,9 @@ void Adresis::handleEvent(ADEvent * event)
 			
 			if(event->action() == Logic::Find)
 			{
-				dWarning() << "llego info a ADRESIS";
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
 				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
 			}
-
-
 			else
 			{
 				switch(event->module())
@@ -78,6 +75,15 @@ void Adresis::handleEvent(ADEvent * event)
 										handleEvent(&findType);
 									}
 								}
+							}
+							break;
+							case Logic::Add:
+							{
+								SHOW_VAR(event->toString());
+								
+								m_infoModules[Logic::Users] << (event->data());
+								emit requestAddDataToModule(Logic::Users , event->data());
+								
 							}
 							break;
 						}
@@ -122,22 +128,17 @@ void Adresis::handleEvent(ADEvent * event)
 		{
 			//CLiente 
 			//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
-			dDebug()<< "antes de enviar el evento";
 			SHOW_VAR(event->toString());
 			if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 			{
 				m_connector->sendToServer(event->toString());
 			}
 		}
-		
 	}
 	else
 	{
 		dFatal() << "no existe el evento";
 	}
-	
-	
-	
 }
 
 void Adresis::connectToHost( const QString & hostName, quint16 port)
@@ -153,5 +154,4 @@ void Adresis::login(const QString &user, const QString &passwd)
 	ADEvent event(ADEvent::Client, Logic::Users, Logic::Authenticate, data );
 	m_connector->sendToServer( event.toString() );
 }
-
 

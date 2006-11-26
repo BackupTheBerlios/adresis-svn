@@ -49,6 +49,8 @@ class ADCModuleList: public QWidget
 		QBoxLayout *boxLayout();
 		void addItem(const QStringList &cols);
 		
+	public slots:
+		void addData(Logic::Module module, const QVariant & data );
 		
 	protected slots:
 		virtual void requestAction(int action);

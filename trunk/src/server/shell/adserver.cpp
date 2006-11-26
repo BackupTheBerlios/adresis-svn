@@ -262,13 +262,18 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 				//enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
 				case Logic::Users:
 				{
-					
 					switch(event->action())
 					{
 						case Logic::Add:
 						{
-// 							ADInsert insert();
+							SHOW_VAR(event->toString());
 							
+							ADUser *user = qvariant_cast<ADUser *>(event->data());
+							ADInsert insert("aduser", QStringList()<< "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() << SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()) );
+							SDBM->execQuery(&insert);
+							
+							ADEvent e( ADEvent::Server, Logic::Users, Logic::Add, event->data());
+							sendToAll(e.toString());
 						}
 						break;
 						case Logic::Find:
@@ -289,22 +294,15 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								ADSelect permisos(QStringList() << "action" << "permission", "adrols");
 								permisos.setWhere("rol="+SQLSTR(rol));
 								SResultSet rsP = SDBM->execQuery(&permisos);
-				
+								
+								
 								ADPermission permissions;
 								permissions.setValues( rsP.map() );
 								
 								ADUser *user = new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions);
 								
-								
 								listUsers.append(QVariant::fromValue (user));
 							}
-							
-// 							for (int i=0; i< listUsers.count();i++)
-// 							{
-// 								ADUser *tmp   = qvariant_cast<ADUser *>(listUsers.at(i));
-// 								dDebug() << "UUUUUUSSSSSSSUUUUUUUAAAAARRRRIIIIIIOOOOOSSSSS LISTA   "<<tmp->name()<<"  "<< tmp->code()<<" " << tmp->login();
-// 							}
-
 							ADEvent event(ADEvent::Server,Logic::Users, Logic::Find, listUsers);
 							cnx->sendToClient(event.toString());
 						}
@@ -376,12 +374,9 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							cnx->sendToClient(event.toString());
 							break;
 						}
-						
 					}
 					break;
 				}
-				
-				
 				case Logic::Audiovisuals:
 				{
 					switch(event->action())
@@ -401,13 +396,9 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							
 							
 							for(int pos =0; pos < rs.map()["numberinventoryav"].count(); pos++)
-							{	
-		// 						ADAudioVisual(const QString & type, const QString & marksEquipment, const QString & estate, const QString & numberInventory, const QString & codeSpace);
-								
+							{
 								
 								ADAudioVisual *av = new ADAudioVisual(rs.map()["typeav"][pos], rs.map()["marksequipmentav"][pos], rs.map()["estateav"][pos], rs.map()["numberinventoryav"][pos], rs.map()["codespace"][pos]);
-								
-								
 								listAvs.append(QVariant::fromValue (av));
 							}
 							
@@ -435,8 +426,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					}
 					break;
 				}
-				
-				
 				case Logic::ReservesF:
 				{
 					switch(event->action())

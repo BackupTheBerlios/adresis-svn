@@ -265,15 +265,36 @@ ADInsert::ADInsert(const QString &table, const QStringList &fields, const QStrin
 		++fieldIt;
 	}
 	
-	m_query += " values ( ";;
+	m_query += " values ( ";
 	
-	for (int i = 0; i < values.count(); i++)
+	QStringList::const_iterator it = values.begin();
+	
+	while( it != values.end() )
 	{
-		if ( i == values.count() - 1)
-			m_query += values[i];
+		if ( it == values.end() - 1)
+		{
+			m_query += *it;
+		}
 		else
-			m_query += values[i] + ",";
+		{
+			m_query += *it + ",";
+		}
+		
+		++it;
 	}
+	
+	
+// 	for (int i = 0; i < values.count(); i++)
+// 	{
+// 		if ( i == values.count() - 2)
+// 		{
+// 			m_query += values[i];
+// 		}
+// 		else
+// 		{
+// 			m_query += values[i] + ",";
+// 		}
+// 	}
 	
 	m_query += " )";
 }

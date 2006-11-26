@@ -65,7 +65,6 @@ QString ADEvent::toString() const
 	actionE.setAttribute("value", int(action()));
 	root.appendChild(actionE);
 	
-	
 	QDomElement dataE = doc.createElement( "Data" );
 	SHOW_VAR(m_action);
 	if(m_source == Client)
@@ -100,8 +99,6 @@ QString ADEvent::toString() const
 			case Logic::Add:
 			{
 				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
-// 				listE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
-				
 			}
 			break;
 		}
@@ -155,6 +152,17 @@ QString ADEvent::toString() const
 				
 				break;
 			}
+			case Logic::Add:
+			{
+				switch(m_module)
+				{
+					case Logic::Users:
+					{
+						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+					}
+				}
+			}
+			break;
 		}
 	}
 	root.appendChild(dataE);

@@ -58,7 +58,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);
-		void requestShowModule( Logic::Module module,const QList<QVariant> &);
+		void requestShowModule( Logic::Module module, const QList<QVariant> &);
+		void requestAddDataToModule( Logic::Module module, const QVariant & );
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

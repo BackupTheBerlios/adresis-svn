@@ -129,21 +129,18 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	ADCModuleList *list = new ADCModuleList(module);
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
-	
+	m_modules.insert( module, list );
 	connect(list, SIGNAL(requestShowForm( Logic::Module )), this, SLOT(showForm( Logic::Module )));
-	
+	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
 }
-
-
 
 void ADMainWindow::setupMenu()
 {
-
 	fileMenu = menuBar()->addMenu(tr("&File"));
-        fileMenu->addAction(exitAct);
+	fileMenu->addAction(exitAct);
 	fileMenu->addAction(conect);
 
-        preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
+	preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
 	preferencesMenu->addAction(theme);
 	
 	configureMenu = menuBar()->addMenu(tr("&Configure"));
@@ -221,13 +218,13 @@ void ADMainWindow::showForm( Logic::Module module )
 		case Logic::Spaces:
 		{
 			form = new ADSpaceForm;
-			addForm(form, tr("Add Space"));
+			addForm(form, tr("Add space"));
 		}
 		break;
 		case Logic::Audiovisuals:
 		{
 			form = new ADAudiovisualForm;
-			addForm(form, tr("Add Audiovisual"));
+			addForm(form, tr("Add audiovisual"));
 		}
 		break;
 		case Logic::ReservesT:
@@ -242,7 +239,6 @@ void ADMainWindow::showForm( Logic::Module module )
 			addForm(form, tr("Add Reserve Semestral"));
 		}
 		break;
-		
 	}
 }
 
