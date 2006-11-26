@@ -30,6 +30,7 @@
 #include "adaudiovisual.h"
 #include "adspace.h"
 #include "adreserve.h"
+#include "adreservefform.h"
 
 
 #include "adeventhandler.h"
@@ -60,6 +61,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void requestShowMessage( Msg::Type, const QString&);
 		void requestShowModule( Logic::Module module, const QList<QVariant> &);
 		void requestAddDataToModule( Logic::Module module, const QVariant & );
+		void sendEventToForm(ADEvent *);
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

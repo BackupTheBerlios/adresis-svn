@@ -152,6 +152,35 @@ QString ADEvent::toString() const
 				
 				break;
 			}
+			case Logic::GetTypes:
+			{
+				QDomElement listE = doc.createElement ( "List" );
+				foreach(QVariant var, m_data.toList() )
+				{
+					switch(m_module)
+					{
+						
+						case Logic::Audiovisuals:
+						{
+							QDomElement root = doc.createElement("types");
+							root.setAttribute( "type", qvariant_cast<QString>( var ) );
+							
+							listE.appendChild(root);
+						}
+						break;
+						case Logic::Spaces:
+						{
+							QDomElement root = doc.createElement("types");
+							root.setAttribute( "type", qvariant_cast<QString>( var ) );
+							
+							listE.appendChild(root);
+						}
+						break;
+						
+					}
+				}
+				dataE.appendChild(listE);
+			}
 			case Logic::Add:
 			{
 				switch(m_module)
@@ -166,9 +195,7 @@ QString ADEvent::toString() const
 		}
 	}
 	root.appendChild(dataE);
-	
 	SHOW_VAR(doc.toString());
-	
 	return doc.toString();
 }
 

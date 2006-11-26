@@ -201,6 +201,7 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 		addWidget(form);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 		connect(form, SIGNAL(sendEvent(ADEvent *)), m_adresis, SLOT(handleEvent(ADEvent *)));
+// 		connect(m_adresis, SIGNAL( sendEventToForm(ADEvent *)), form, SLOT(receiveEvent( ADEvent *event)));
 	}
 }
 

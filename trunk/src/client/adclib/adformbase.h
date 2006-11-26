@@ -48,6 +48,9 @@ class ADFormBase : public QFrame
 		void requestClose();
 		void requestDone();
 		void sendEvent( ADEvent *event );
+		
+	public slots:
+		 void receiveEvent( ADEvent *event);
 };
 
 #endif

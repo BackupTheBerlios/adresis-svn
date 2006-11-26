@@ -46,23 +46,31 @@ class ADReserveFForm : public ADFormBase
 		~ADReserveFForm();
 		
 	private:
-		QMap<QString, QWidget*> m_inputs;
-		QMap< QString, QString> nameResources;
-		QList<QMap<QString, QString> > listSchedules;
-		QComboBox *tipoRecC, *recursosC, *resourcesNameC;
+		QComboBox *typeResourceC, *resourceC, *resourcesNameC;
 		QTextEdit *areaTexto;
-		
-		bool m_inserter, m_reserve;
+		ADSchedule *horario;
 		QString m_responsable, destinationReserve;
-		QStringList recursosEsp, recursosAud;
+		QStringList typeSpaces, typeAudiovisual;
+		QStringList resourcesSpaces, resourcesAud;
+		QMap< QString, QString> nameResources;	//El primer String es el nombre y el segundo es la clave principal en la BD.
+		QMap<QString, QWidget*> m_inputs;
 		
 		void fill();
 		void setup();
-		int list;
 		bool valite();
-		ADSchedule *horario;
+		bool m_inserter, m_reserve;
+		//////////////
+		
+		QList<QMap<QString, QString> > listSchedules;
+		
+		
+		
+		
 		
 	signals:
+		void sendEvent( ADEvent *);
+		
+		/////////////////////////////////
 		void requestInsertReserve(const QString& table, const QString& typeR, const QString& userReserve, const QString& userResponsable, const QString& idRecurso, const QString& day, const QString& beginhour, const QString& endhour, const QString& begindate, const QString& enddate, const bool& isactive, const QString& destinationReserve);
 		
 		void requestUpdateReserve(const QString& typeR, const QString& recurso, const QString& resposable);
@@ -71,11 +79,16 @@ class ADReserveFForm : public ADFormBase
 		void consultSchedule(const QString& table, const QString& resource);
 		
 	public slots:
+		void receiveEvent(ADEvent *);
+		void changeTypeResource(int);
+		void insertListTypes();
+		
+		/////////////////////77
 		void emitInsertReserve();
-		void insertListTypes(const QList<XMLResults>& results);
+		
 		void insertListNameResources(const QList<XMLResults>& results);
 // 		void changeTypeReserve(int);
-		void changeTypeResource(int);
+		
 		void changeResource(QString);
 		void changeNameSpace(const QString&);
 // 		void permisos(const QString &login, const bool permiso);
@@ -83,4 +96,5 @@ class ADReserveFForm : public ADFormBase
 		
 };
 
+Q_DECLARE_METATYPE(ADReserveFForm *);
 #endif

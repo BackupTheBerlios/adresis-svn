@@ -39,6 +39,7 @@ void Adresis::handleEvent(ADEvent * event)
 	
 	if(event)
 	{
+		/** ***************************************** S  E  R  V  I  D  O  R ********************************************** */
 		if(event->source() == ADEvent::Server)
 		{
 			dDebug() << event->toString();
@@ -95,6 +96,7 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::GetTypes:
 							{
+								dDebug() << "GGGEEETTT TTYYYPPPEEESS de SPACES";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
@@ -107,6 +109,7 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::GetTypes:
 							{
+								dDebug() << "GGGEEETTT TTYYYPPPEEESS de AUDIOVISUAL";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
@@ -124,14 +127,79 @@ void Adresis::handleEvent(ADEvent * event)
 				}
 			}
 		}
+		/** ************************ C  L  I  E  N  T  E ************************** */
 		else
 		{
-			//CLiente 
-			//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
-			SHOW_VAR(event->toString());
-			if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+			if( event->action() == Logic::Find)
 			{
-				m_connector->sendToServer(event->toString());
+				//CLiente 
+				//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
+				dDebug()<< "ANTES DE ENVIAR EL EVENTO";
+				SHOW_VAR(event->toString());
+				if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+				{
+					m_connector->sendToServer(event->toString());
+				}
+			}
+			else
+			{
+				switch(event->module())
+				{
+					case Logic::Users:
+					{
+					}
+					break;
+					
+					case Logic::Spaces:
+					{
+						switch(event->action())
+						{
+							case Logic::GetTypes:
+							{
+								m_connector->sendToServer(event->toString());
+							}
+							break;
+						}
+					}
+					break;
+					
+					case Logic::Audiovisuals:
+					{
+						switch(event->action())
+						{	
+							case Logic::GetTypes:
+							{
+								m_connector->sendToServer(event->toString());
+							}
+							break;
+						}
+					}
+					break;
+					case Logic::ReservesF:
+					{
+						switch(event->action())
+						{
+							case Logic::GetTypes:
+							{
+								dDebug() << "DE TIPO HAY " << m_listTypes.count() << " LISTAS";
+								// Lo hice con Qmap porque lo aceptaba de una como QVariant
+								QMap<QString, QList<QVariant> > types;
+								types.insert("type_spaces", m_listTypes.values(Logic::Spaces)[0]);
+								types.insert("type_audiovisual", m_listTypes.values(Logic::Audiovisuals)[0]);
+									
+								ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes , QVariant(&types));
+								(qvariant_cast<ADReserveFForm *>(event->data()))->receiveEvent(&listTypes);
+							}
+							break;
+						}
+					}
+					break;
+					
+					case Logic::ReservesT:
+					{
+					}
+					break;
+				}
 			}
 		}
 	}

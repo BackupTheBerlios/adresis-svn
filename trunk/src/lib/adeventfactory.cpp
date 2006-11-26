@@ -125,6 +125,11 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		m_data = QVariant::fromValue(reserve);
 		
 	}
+	else if(qname == "types")
+	{
+		QString d = atts.value("type");
+		m_data = QVariant(d);
+	}
 	else if(qname == "permissions")
 	{
 		ADPermission permissions;
@@ -149,12 +154,16 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	{
 		m_event->setData(m_data);
 	}
-	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve" )
+	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve")
 	{
 		if(m_event->action() == Logic::Find)
 		{
 			m_list << m_data;
 		}
+	}
+	else if(qname =="types" && m_event->action() == Logic::GetTypes )
+	{
+		m_list << m_data;
 	}
 	else if(qname == "List")
 	{

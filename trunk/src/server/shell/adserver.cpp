@@ -367,7 +367,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							QList<QVariant> listTypeSpaces;
 							for(int pos =0; pos < rs.map()["type"].count(); pos++)
 							{	
-								listTypeSpaces.append(QVariant::fromValue (rs.map()["type"][pos]));
+								listTypeSpaces.append(QVariant(rs.map()["type"][pos]));
 							}
 							
 							ADEvent event(ADEvent::Server,Logic::Spaces, Logic::GetTypes, listTypeSpaces);
@@ -415,10 +415,10 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							QList<QVariant> listTypeAudiovisual;
 							for(int pos =0; pos < rs.map()["type"].count(); pos++)
 							{	
-								listTypeAudiovisual.append(QVariant::fromValue (rs.map()["type"][pos]));
+								listTypeAudiovisual.append(QVariant(rs.map()["type"][pos]));
 							}
 							
-							ADEvent event(ADEvent::Server,Logic::Spaces, Logic::GetTypes, listTypeAudiovisual);
+							ADEvent event(ADEvent::Server,Logic::Audiovisuals, Logic::GetTypes, listTypeAudiovisual);
 							cnx->sendToClient(event.toString());
 							break;
 						}

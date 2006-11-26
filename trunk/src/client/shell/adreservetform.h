@@ -78,5 +78,6 @@ class ADReserveTForm : public ADFormBase
 		void requestSchedule( const QList<XMLResults>& results );
 		
 };
+Q_DECLARE_METATYPE(ADReserveTForm *);
 
 #endif
