@@ -91,7 +91,7 @@ QString ADEvent::toString() const
 			break;
 			case Logic::Authenticate:
 			{
-				dDebug() << "authenticate";
+// 				dDebug() << "authenticate";
 				dataE.setAttribute("user", m_data.toList()[0].toString());
 				dataE.setAttribute("passwd", m_data.toList()[1].toString());
 			}
@@ -99,6 +99,11 @@ QString ADEvent::toString() const
 			case Logic::Add:
 			{
 				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+			}
+			break;
+			case Logic::Del:
+			{
+				dataE.setAttribute("key",m_data.toString());
 			}
 			break;
 		}

@@ -20,7 +20,6 @@
 #ifndef ADCMODULELIST_H
 #define ADCMODULELIST_H
 
-
 #include <qwidget.h>
 
 #include <QTreeWidget>
@@ -28,6 +27,8 @@
 
 #include "admodulebuttonbar.h"
 #include "global.h"
+
+#include "adevent.h"
 
 
 class DTreeWidgetSearchLine;
@@ -57,6 +58,8 @@ class ADCModuleList: public QWidget
 		
 	signals:
 		void requestShowForm(Logic::Module module);
+		void sendEvent(ADEvent * event);
+		
 		
 	protected:
 		QTreeWidget *m_pTree;

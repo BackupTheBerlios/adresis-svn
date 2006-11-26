@@ -35,6 +35,8 @@
 #include "global.h"
 #include <ddebug.h>
 
+#include "adevent.h"
+
 ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	:QWidget(parent), m_pModule(module)
 {
@@ -168,9 +170,13 @@ void ADCModuleList::requestAction(int action)
 		{
 			//Confirmar si desea borrar
 			QTreeWidgetItem *current = m_pTree->currentItem();
-			
-// 			current-> text ( int column );
-// 			emit requestShowForm(m_pModule);
+			if(current)
+			{
+				QString key = current-> text ( 0 );
+				ADEvent event(ADEvent::Server, Logic::Users, Logic::Del, key );
+				
+				emit sendEvent(&event);
+			}
 		}
 		break;
 	};

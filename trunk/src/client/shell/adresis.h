@@ -56,7 +56,6 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		QHash<Logic::Module, QList<QVariant> > m_infoModules;
 		QHash<Logic::Module, QList<QVariant> > m_listTypes;
 		
-		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);
 		void requestShowModule( Logic::Module module, const QList<QVariant> &);
