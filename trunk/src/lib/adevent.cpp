@@ -127,7 +127,12 @@ QString ADEvent::toString() const
 							listE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
 						}
 						break;
-						case Logic::Reserves:
+						case Logic::ReservesT:
+						{
+							listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
+						}
+						break;
+						case Logic::ReservesF:
 						{
 							listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
 						}
@@ -150,7 +155,6 @@ QString ADEvent::toString() const
 				
 				break;
 			}
-			
 		}
 	}
 	root.appendChild(dataE);

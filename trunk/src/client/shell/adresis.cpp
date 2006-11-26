@@ -49,9 +49,10 @@ void Adresis::handleEvent(ADEvent * event)
 			{
 				dWarning() << "llego info a ADRESIS";
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
-				
 				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
 			}
+
+
 			else
 			{
 				switch(event->module())
@@ -59,7 +60,6 @@ void Adresis::handleEvent(ADEvent * event)
 					case Logic::Users:
 					{
 // 						dDebug() << "Users action =" << event->action();
-						
 						switch(event->action())
 						{
 							case Logic::Authenticate:
@@ -68,12 +68,30 @@ void Adresis::handleEvent(ADEvent * event)
 								m_user = qvariant_cast<ADUser *> (event->data());
 								requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
 								//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
-								for(int i=0; i < 5; i++)
+								for(int i=0; i < 6; i++)
 								{
 									Logic::Module module = Logic::Module(i);
 									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
 									handleEvent(&findAll);
+	
+									if(Logic::Module(i) == Logic::Spaces || Logic::Module(i) == Logic::Audiovisuals)
+									{
+										ADEvent findType(ADEvent::Client, module, Logic::GetTypes, "");
+										handleEvent(&findType);
+									}
 								}
+							}
+							break;
+						}
+					}
+					break;
+					case Logic::Spaces:
+					{
+						switch(event->action())
+						{
+							case Logic::GetTypes:
+							{
+								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
 						}
@@ -81,18 +99,24 @@ void Adresis::handleEvent(ADEvent * event)
 					break;
 					case Logic::Audiovisuals:
 					{
+						switch(event->action())
+						{
+							case Logic::GetTypes:
+							{
+								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
+							}
+							break;
+						}
 					}
 					break;
-					case Logic::Reserves:
+					case Logic::ReservesF:
 					{
 					}
 					break;
-					case Logic::Spaces:
+					case Logic::ReservesT:
 					{
-						
 					}
 					break;
-					
 				}
 			}
 		}

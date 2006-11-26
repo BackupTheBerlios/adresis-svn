@@ -64,12 +64,20 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 			setWindowTitle ( "Audiovisuals");
 		}
 		break;
-		case Logic::Reserves:
+		case Logic::ReservesF:
 		{
 // typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
 			
 			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("Name Resource")<< tr("day");
-			setWindowTitle ( "Reserves");
+			setWindowTitle ( "Reserves Semestral");
+		}
+		break;
+		case Logic::ReservesT:
+		{
+// typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
+			
+			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("Name Resource")<< tr("day");
+			setWindowTitle ( "Reserves Temporal");
 		}
 		break;
 		case Logic::Spaces:
@@ -158,7 +166,38 @@ void ADCModuleList::fill( const QList<QVariant> list)
 		}
 		break;
 
-		case Logic::Reserves:
+		case Logic::ReservesF:
+		{
+			foreach(QVariant r, list)
+			{
+				ADReserve *reserve = qVariantValue<ADReserve *>(r);
+				QList<QString> strs;
+				strs << ""; //Identficador de la reserva;
+				strs << reserve->typeReserve();
+				strs << reserve->iduserreserve();
+				strs << reserve->iduserresponsable();
+				if( reserve->idspace() != "" )
+				{
+					strs << reserve->idspace();
+				}
+				else
+				{
+					strs << reserve->idaudiovisual();
+				}
+				strs << ""; //Nombre del recurso;
+				strs << reserve->day();
+
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+		}
+		break;
+		case Logic::ReservesT:
 		{
 			foreach(QVariant r, list)
 			{
@@ -257,8 +296,7 @@ void ADCModuleList::addItem(const QStringList &cols)
 
 void ADCModuleList::requestAction(int action)
 {
-		
-		switch(ADModuleButtonBar::Button(action))
+	switch(ADModuleButtonBar::Button(action))
 	{
 		case ADModuleButtonBar::Add:
 		{

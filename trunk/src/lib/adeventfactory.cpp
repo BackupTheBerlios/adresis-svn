@@ -107,16 +107,19 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	else if(qname == "reserve")
 	{
 		ADReserve *reserve = new ADReserve(
+				atts.value( "idreserve" ),
 				atts.value( "typereserve" ),
 				atts.value( "iduserreserve"),
 				atts.value( "iduserresponsable"),
 				atts.value( "idaudiovisual"),
 				atts.value( "idspace"),
 				atts.value( "day"),
-				atts.value( "beginhour"),
-				atts.value( "endhour"),
-				atts.value( "begindate"),
-				atts.value( "enddate"),
+// 				atts.value( "beginhour"),
+// 				atts.value( "endhour"),
+// 				atts.value( "begindate"),
+// 				atts.value( "enddate"),
+				QDateTime( QDate::fromString( atts.value("begindate")), QTime::fromString( atts.value("beginhour"))),
+				QDateTime( QDate::fromString( atts.value("enddate")), QTime::fromString( atts.value("endhour")) ),
 				bool(atts.value( "isactive").toInt()),
 				atts.value( "destinationreserve"));
 		m_data = QVariant::fromValue(reserve);

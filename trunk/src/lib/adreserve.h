@@ -23,6 +23,7 @@
 #include "adobject.h"
 #include <QMetaType>
 #include <QDomElement>
+#include <QDateTime>
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
@@ -32,37 +33,40 @@ class ADReserve : public ADObject
 	public:
 		ADReserve();
 // idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
-		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
+
+/** PENDIENTE PARA  BORRAR **/
+// 		ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve);
+
+		ADReserve(const QString idReserve, const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QDateTime& beginDateTime, const QDateTime& endDateTime, const bool isActive, const QString& destinationreserve);
+
 		~ADReserve();
 		
 		QDomElement toXml(QDomDocument &doc) const;
 		void fromXml(const QString & xml );
 		void setValues(XMLResults values);
 		bool isValid() const;
+		QString idReserve() const;
 		QString typeReserve() const;
 		QString iduserreserve() const;
 		QString iduserresponsable() const;
 		QString idaudiovisual() const;
 		QString idspace() const;
 		QString day() const;
-		QString beginhour() const;
-		QString endhour() const;
-		QString begindate() const;
-		QString enddate() const;
+		QDateTime beginDateTime() const;
+		QDateTime endDateTime() const;
 		bool isActive() const;
 		QString destinationreserve() const;
 		
 	private:
+		QString m_idReserve;
 		QString m_typereserve;
 		QString m_iduserreserve;
 		QString m_iduserresponsable;
 		QString m_idaudiovisual;
 		QString m_idspace;
 		QString m_day;
-		QString m_beginhour;
-		QString m_endhour;
-		QString m_begindate;
-		QString m_enddate;
+		QDateTime m_beginDateTime;
+		QDateTime m_endDateTime;
 		bool m_isactive;
 		QString m_destinationreserve;
 		bool m_valid;

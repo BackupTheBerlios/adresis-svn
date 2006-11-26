@@ -27,7 +27,7 @@
 #include <QPushButton>
 
 //cambios
-#include "adaudiovisual.h"
+#include "adreserve.h"
 #include "adschedule.h"
 
 /**
@@ -39,12 +39,15 @@ class ADReserveForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADReserveForm(QWidget *parent = 0);
-		ADReserveForm(const ADAudioVisual & audiovisual, QWidget *parent = 0);
+		ADReserveForm(int type, QWidget *parent = 0);
+		ADReserveForm(const ADReserve & reserve, QWidget *parent = 0);
 		~ADReserveForm();
+		enum TypeReserve{Semestral, Temporal};
+		
 		
 		
 	private:
+		int typeReserve;
 		QMap<QString, QWidget*> m_inputs;
 		QMap< QString, QString> nameResources;
 		QList<QMap<QString, QString> > listSchedules;
@@ -52,7 +55,6 @@ class ADReserveForm : public ADFormBase
 		bool m_inserter, m_reserve;
 		QString m_responsable, destinationReserve;
 		QStringList recursosEsp, recursosAud;
-		ADAudioVisual *adAudiovisual;
 		
 		void fill();
 		void setup();
@@ -72,7 +74,7 @@ class ADReserveForm : public ADFormBase
 		void emitInsertReserve();
 		void insertListTypes(const QList<XMLResults>& results);
 		void insertListNameResources(const QList<XMLResults>& results);
-		void changeTypeReserve(int);
+// 		void changeTypeReserve(int);
 		void changeTypeResource(int);
 		void changeTypeSpace(QString);
 		void changeNameSpace(const QString&);

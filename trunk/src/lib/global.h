@@ -46,9 +46,11 @@ namespace Msg
 namespace Logic
 {
 	enum TypeQuery{userAuthenticated=0, fillUserModule, fillSpaceModule, fillAudiovisualModule, fillReserveModule, queryUser, queryAudiovisual, querySpace, queryListAudiovisual, querytypes, querySchedule};
-	enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
-	enum Action{Add = 0, Del, Update, Find, Info, RSemestral, Authenticate};
+// 	enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
+// 	enum Action{Add = 0, Del, Update, Find, Info, RSemestral, Authenticate};
 	enum TypeUser{administrador=0};
+	enum Module{Users=0, Spaces, Audiovisuals, ReservesF, ReservesT, Reports};
+	enum Action{Add = 0, Del, Update, Find, Info, Authenticate, GetTypes};
 }
 
 

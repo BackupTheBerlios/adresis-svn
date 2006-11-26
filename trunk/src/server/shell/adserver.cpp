@@ -360,6 +360,23 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							
 							break;
 						}
+
+						case Logic::GetTypes:
+						{
+							ADSelect typesSpaces(QStringList() << "*" , "adspacetype");
+							SResultSet rs = SDBM->execQuery(&typesSpaces);
+	
+							QList<QVariant> listTypeSpaces;
+							for(int pos =0; pos < rs.map()["type"].count(); pos++)
+							{	
+								listTypeSpaces.append(QVariant::fromValue (rs.map()["type"][pos]));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Spaces, Logic::GetTypes, listTypeSpaces);
+							cnx->sendToClient(event.toString());
+							break;
+						}
+						
 					}
 					break;
 				}
@@ -398,12 +415,29 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							cnx->sendToClient(event.toString());
 							break;
 						}
+						
+						case Logic::GetTypes:
+						{
+							ADSelect typesAudioVisual(QStringList() << "*" , "adaudiovisualtype");
+							SResultSet rs = SDBM->execQuery(&typesAudioVisual);
+	
+							QList<QVariant> listTypeAudiovisual;
+							for(int pos =0; pos < rs.map()["type"].count(); pos++)
+							{	
+								listTypeAudiovisual.append(QVariant::fromValue (rs.map()["type"][pos]));
+							}
+							
+							ADEvent event(ADEvent::Server,Logic::Spaces, Logic::GetTypes, listTypeAudiovisual);
+							cnx->sendToClient(event.toString());
+							break;
+						}
+						
 					}
 					break;
 				}
 				
 				
-				case Logic::Reserves:
+				case Logic::ReservesF:
 				{
 					switch(event->action())
 					{
@@ -412,13 +446,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							ADSelect infoReserves(QStringList() << "*", "adreserve");
 							if(event->data() !="all" )
 							{
-								QString condition = qvariant_cast<QString>(event->data());
+								QString condition = "typereserve = 'semestral' and isactive = true";
 								infoReserves.setWhere(condition);
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoReserves);
-// 							dDebug() << rs.toString();
-							QList<QVariant> listReserves;
+							QList<QVariant> listReservesF;
 							
 							for(int pos =0; pos < rs.map()["typereserve"].count(); pos++)
 							{
@@ -433,13 +466,57 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								}
 
 // idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
-								ADReserve *avReserve = new ADReserve(rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos], active, rs.map()["destinationreserve"][pos]);
+								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], /*rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos]*/	QDateTime( QDate::fromString( rs.map()["begindate"][pos] ), QTime::fromString( rs.map()["beginhour"][pos])),	QDateTime( QDate::fromString( rs.map()["enddate"][pos]), QTime::fromString( rs.map()["endhour"][pos]) ), active, rs.map()["destinationreserve"][pos]);
 								
 								
-								listReserves.append(QVariant::fromValue (avReserve));
+								listReservesF.append(QVariant::fromValue (avReserve));
 							}
 							
-							ADEvent event(ADEvent::Server,Logic::Reserves, Logic::Find, listReserves);
+							ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Find, listReservesF);
+							cnx->sendToClient(event.toString());
+							
+							break;
+						}
+					}
+					break;
+				}
+
+				case Logic::ReservesT:
+				{
+					switch(event->action())
+					{
+						case Logic::Find:
+						{	
+							ADSelect infoReserves(QStringList() << "*", "adreserve");
+							if(event->data() !="all" )
+							{
+								QString condition = "typereserve = 'temporal' and isactive = true";
+								infoReserves.setWhere(condition);
+							}
+							
+							SResultSet rs = SDBM->execQuery(&infoReserves);
+							QList<QVariant> listReservesT;
+							
+							for(int pos =0; pos < rs.map()["typereserve"].count(); pos++)
+							{
+								bool active;
+								if(rs.map()["isactive"][pos] == "t")
+								{
+									active=true;
+								}
+								else
+								{
+									active=false;	
+								}
+
+// idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
+								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], /*rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos]*/	QDateTime( QDate::fromString( rs.map()["begindate"][pos] ), QTime::fromString( rs.map()["beginhour"][pos])),	QDateTime( QDate::fromString( rs.map()["enddate"][pos]), QTime::fromString( rs.map()["endhour"][pos]) ), active, rs.map()["destinationreserve"][pos]);
+								
+								
+								listReservesT.append(QVariant::fromValue (avReserve));
+							}
+							
+							ADEvent event(ADEvent::Server, Logic::ReservesT, Logic::Find, listReservesT);
 							cnx->sendToClient(event.toString());
 							
 							break;

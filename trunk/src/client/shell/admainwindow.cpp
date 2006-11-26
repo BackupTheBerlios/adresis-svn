@@ -218,6 +218,31 @@ void ADMainWindow::showForm( Logic::Module module )
 			addForm(form, tr("Add user"));
 		}
 		break;
+		case Logic::Spaces:
+		{
+			form = new ADSpaceForm;
+			addForm(form, tr("Add Space"));
+		}
+		break;
+		case Logic::Audiovisuals:
+		{
+			form = new ADAudiovisualForm;
+			addForm(form, tr("Add Audiovisual"));
+		}
+		break;
+		case Logic::ReservesT:
+		{
+			form = new ADReserveForm( ADReserveForm::Temporal );
+			addForm(form, tr("Add Reserve Temporal"));
+		}
+		break;
+		case Logic::ReservesF:
+		{
+			form = new ADReserveForm( ADReserveForm::Semestral );
+			addForm(form, tr("Add Reserve Semestral"));
+		}
+		break;
+		
 	}
 }
 
@@ -239,7 +264,11 @@ void ADMainWindow::handleEvent(ADEvent * event)
 			{
 			}
 			break;
-			case Logic::Reserves:
+			case Logic::ReservesF:
+			{
+			}
+			break;
+			case Logic::ReservesT:
 			{
 			}
 			break;
@@ -261,7 +290,11 @@ void ADMainWindow::handleEvent(ADEvent * event)
 			{
 			}
 			break;
-			case Logic::Reserves:
+			case Logic::ReservesF:
+			{
+			}
+			break;
+			case Logic::ReservesT:
 			{
 			}
 			break;

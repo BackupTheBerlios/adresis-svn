@@ -53,6 +53,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		ADConnector *m_connector;
 		ADUser *m_user;
 		QHash<Logic::Module, QList<QVariant> > m_infoModules;
+		QHash<Logic::Module, QList<QVariant> > m_listTypes;
 		
 		
 	signals:

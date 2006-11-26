@@ -28,9 +28,10 @@
 #include <QMessageBox>
 
 
-ADReserveForm::ADReserveForm(QWidget *parent)
+ADReserveForm::ADReserveForm(int type, QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
 {
+	typeReserve = type;
 	list=1;
 	m_inserter = true;
 	destinationReserve="";
@@ -43,7 +44,7 @@ ADReserveForm::~ADReserveForm()
 }
 
 
-ADReserveForm::ADReserveForm(const ADAudioVisual & audiovisual, QWidget * parent)
+ADReserveForm::ADReserveForm(const ADReserve & reserve, QWidget * parent)
 {
 	D_FUNCINFO;
 	setup();
@@ -55,8 +56,6 @@ ADReserveForm::ADReserveForm(const ADAudioVisual & audiovisual, QWidget * parent
 
 void ADReserveForm::changeTypeResource(int opcion)
 {
-	QStringList tipoRes;
-
 // 	opcion = 0 -> Espacios
 //	opcion = 1 -> audiovisual
 
@@ -64,45 +63,34 @@ void ADReserveForm::changeTypeResource(int opcion)
 	{
 		recursosC->clear();
 		recursosC->addItems(recursosEsp);
-
-		// Con la variable m_reserve estoy manejando si el usuario actual tiene permisos de crear reservas semestrales.
-		if(m_reserve)
-		{
-			tipoRes << tr("Semestral");
-			changeTypeReserve(0);
-		}
 	}
 
 	else if(opcion == 1)
 	{
 		recursosC->clear();
 		recursosC->addItems(recursosAud);
-		changeTypeReserve(1);
+// 		changeTypeReserve(1);
 	}
-
-	tipoRes << tr("Temporal");
-	tipoResC->clear();
-	tipoResC->addItems(tipoRes);
 }
 
 // Este metodo se encarga de tomar el tipo de reserva en el momento en que sea cambiado en el comboBox y de acuerdo a esto construir una tabla horario, ademas cuando se cambia el tipo de reserva si el otro comboBox( resourcesNameC ) tiene activado un nombre valido, se llamara al metodo fill de horario para que llene las reservas de este tipo.
-void ADReserveForm::changeTypeReserve(int opcion)
-{
-	if(opcion == 0)
-	{
-		horario->makeTable( true );
-	}
-	else if(opcion == 1)
-	{
-		horario->makeTable( false );
-	}
-	
-	if( (resourcesNameC->currentText()) !=("Escoja uno de los Recursos") && (resourcesNameC->currentText()) !=("") )
-	{
-		horario->assignTypeReserve( tipoResC->currentText() );
-		horario->fill();
-	}
-}
+// void ADReserveForm::changeTypeReserve(int opcion)
+// {
+// 	if(opcion == 0)
+// 	{
+// 		horario->makeTable( true );
+// 	}
+// 	else if(opcion == 1)
+// 	{
+// 		horario->makeTable( false );
+// 	}
+// 	
+// 	if( (resourcesNameC->currentText()) !=("Escoja uno de los Recursos") && (resourcesNameC->currentText()) !=("") )
+// 	{
+// 		horario->assignTypeReserve( tipoResC->currentText() );
+// 		horario->fill();
+// 	}
+// }
 
 
 void ADReserveForm::insertListTypes(const QList<XMLResults>& results)
@@ -150,8 +138,8 @@ void ADReserveForm::insertListTypes(const QList<XMLResults>& results)
 
 void ADReserveForm::fill()
 {
-	if(adAudiovisual->isValid())
-	{
+// 	if(adAudiovisual->isValid())
+// 	{
 // 		tipoResC->setCurrentIndex(tiposRC->findText(adAudiovisual->type())); 
 // 		static_cast<QLineEdit*>(m_inputs[tr("marca")])->setText(adAudiovisual->marksEquipment());
 // 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->estate()));
@@ -163,7 +151,7 @@ void ADReserveForm::fill()
 // 		static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
 // 		static_cast<QLineEdit*>(m_inputs[tr("login")])->text()
 		
-	}
+// 	}
 }
 
 void ADReserveForm::changeTypeSpace(QString typeR)
@@ -287,27 +275,27 @@ void ADReserveForm::setup()
 
 	horario->makeTable( true );
 	
-	titles << tr("Tipo Recurso") << tr("Tipo Reserva") << tr("Recurso") << tr("Espacio")<< tr("Responsable");
+	titles << tr("Tipo Recurso") << /*tr("Tipo Reserva") <<*/ tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable");
 
 	layout->addWidget(new QLabel(titles[0]),0,0);
 	layout->addWidget(tipoRecC,0,1);
 	m_inputs.insert(titles[0].toLower () , tipoRecC);
 	
+// 	layout->addWidget(new QLabel(titles[1]),1,0);
+// 	layout->addWidget(tipoResC,1,1);
+// 	m_inputs.insert(titles[1].toLower () , tipoResC);
+	
 	layout->addWidget(new QLabel(titles[1]),1,0);
-	layout->addWidget(tipoResC,1,1);
-	m_inputs.insert(titles[1].toLower () , tipoResC);
+	layout->addWidget(recursosC,1,1);
+	m_inputs.insert(titles[1].toLower () , recursosC);
 	
-	layout->addWidget(new QLabel(titles[2]),2,0);
-	layout->addWidget(recursosC,2,1);
-	m_inputs.insert(titles[2].toLower () , recursosC);
+	layout->addWidget(resourcesNameC ,2,1);
+	m_inputs.insert(titles[2].toLower () , resourcesNameC);
 	
-	layout->addWidget(resourcesNameC ,3,1);
-	m_inputs.insert(titles[3].toLower () , resourcesNameC);
-	
-	layout->addWidget(new QLabel(titles[4]),4,0);
+	layout->addWidget(new QLabel(titles[3]),3,0);
 	edits = new QLineEdit();
-	layout->addWidget(edits, 4, 1);
-	m_inputs.insert( titles[4].toLower () , edits );
+	layout->addWidget(edits, 3, 1);
+	m_inputs.insert( titles[3].toLower () , edits );
 	
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
