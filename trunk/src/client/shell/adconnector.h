@@ -31,8 +31,6 @@
 
 #include "adevent.h"
 
-#include "adselectpackage.h"
-class ADPackageParser;
 
 /**
  * Maneja las conexiones al servidor, asi mismo tambien maneja los errores de conexion
@@ -56,8 +54,6 @@ class ADConnector : public ADConnectorBase
 		void sendEvent( ADEvent * event);
 
 	private:
-		QXmlSimpleReader m_reader;
-		ADPackageParser *m_parser;
 		QString m_readed;
 		QQueue<Logic::TypeQuery> m_querys;
 };

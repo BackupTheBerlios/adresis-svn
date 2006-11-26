@@ -24,8 +24,8 @@
 
 #include <ddebug.h>
 
-#include "adconnectpackage.h"
-#include "adpackageparser.h"
+#include <QDomDocument>
+
 
 #include "global.h"
 
@@ -33,9 +33,6 @@
 
 ADConnector::ADConnector(QObject * parent) : ADConnectorBase(parent)
 {
-	m_parser = new ADPackageParser;
-	m_reader.setContentHandler(m_parser);
-	m_reader.setErrorHandler(m_parser);
 }
 
 
@@ -82,13 +79,13 @@ void ADConnector::readFromServer()
 			}
 			else if ( root == "Error" )
 			{
-				XMLResults result = m_parser->results()[0];
-				emit message(Msg::Error, "Error "+result["id"]+": "+result["message"] );
+// 				XMLResults result = m_parser->results()[0];
+// 				emit message(Msg::Error, "Error "+result["id"]+": "+result["message"] );
 			}
 			else if( root == "Success")
 			{
 	// 			emit readedModuleForms( m_parser->moduleForms() );
-				emit message(Msg::Info, m_parser->results()[0]["message"]);
+// 				emit message(Msg::Info, m_parser->results()[0]["message"]);
 			}
 			m_readed = "";
 		}
@@ -102,9 +99,9 @@ void ADConnector::readFromServer()
 
 void ADConnector::login(const QString &user, const QString &passwd)
 {
-	QString toSend = ADConnectPackage(user, passwd).toString();
-	toSend.remove('\n');
-	sendToServer( toSend );
+// 	QString toSend = ADConnectPackage(user, passwd).toString();
+// 	toSend.remove('\n');
+// 	sendToServer( toSend );
 }
 
 void ADConnector::handleError(QAbstractSocket::SocketError error)
