@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADRESERVEFORM_H
-#define ADRESERVEFORM_H
+#ifndef ADRESERVETFORM_H
+#define ADRESERVETFORM_H
 
 #include "adformbase.h"
 #include <QMap>
@@ -35,19 +35,15 @@
 */
 
 
-class ADReserveForm : public ADFormBase
+class ADReserveTForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADReserveForm(int type, QWidget *parent = 0);
-		ADReserveForm(const ADReserve & reserve, QWidget *parent = 0);
-		~ADReserveForm();
-		enum TypeReserve{Semestral, Temporal};
-		
-		
-		
+		ADReserveTForm(QWidget *parent = 0);
+		ADReserveTForm(const ADReserve & reserve, QWidget *parent = 0);
+		~ADReserveTForm();
+	
 	private:
-		int typeReserve;
 		QMap<QString, QWidget*> m_inputs;
 		QMap< QString, QString> nameResources;
 		QList<QMap<QString, QString> > listSchedules;

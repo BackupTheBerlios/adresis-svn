@@ -14,9 +14,10 @@ HEADERS += adcapplication.h \
            adlistselect.h \
            adspaceform.h \
            admainwindow.h \
-           adreserveform.h \
            adconfigschoollmodule.h \
-           adinsertresource.h 
+           adinsertresource.h \
+           adreservetform.h \
+           adreservefform.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
@@ -27,9 +28,10 @@ SOURCES += main_cliente.cpp \
            adlistselect.cpp \
            adspaceform.cpp \
            admainwindow.cpp \
-           adreserveform.cpp \
            adconfigschoollmodule.cpp \
-           adinsertresource.cpp 
+           adinsertresource.cpp \
+           adreservetform.cpp \
+           adreservefform.cpp 
 KDEV_QTVER = 4
 TARGET = ../../../bin/adclient.bin
 CONFIG += release \

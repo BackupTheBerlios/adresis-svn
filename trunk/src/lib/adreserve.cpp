@@ -101,42 +101,42 @@ void ADReserve::setValues(XMLResults values)
 	m_valid = true;
 }
 
-bool ADReserve::isValid()const
+bool ADReserve::isValid() const
 {
 	return m_valid;
 }
 
-QString ADReserve::idReserve()const
+QString ADReserve::idReserve() const
 {
 	return m_idReserve;
 }
 
-QString ADReserve::typeReserve()const
+QString ADReserve::typeReserve() const
 {
 	return m_typereserve;
 }
 
-QString ADReserve::iduserreserve()const
+QString ADReserve::iduserreserve() const
 {
 	return m_iduserreserve;
 }
 
-QString ADReserve::iduserresponsable()const
+QString ADReserve::iduserresponsable() const
 {
 	return m_iduserresponsable;
 }
 
-QString ADReserve::idaudiovisual()const
+QString ADReserve::idaudiovisual() const
 {
 	return m_idaudiovisual;
 }
 
-QString ADReserve::idspace()const
+QString ADReserve::idspace() const
 {
 	return m_idspace;
 }
 
-QString ADReserve::day()const
+QString ADReserve::day() const
 {
 	return m_day;
 }
@@ -171,12 +171,12 @@ QDateTime ADReserve::endDateTime() const
 	return m_endDateTime;
 }
 
-bool ADReserve::isActive()const
+bool ADReserve::isActive() const
 {
 	return m_isactive;
 }
 
-QString ADReserve::destinationreserve()const
+QString ADReserve::destinationreserve() const
 {
 	return m_destinationreserve;
 }

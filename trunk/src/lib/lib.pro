@@ -8,29 +8,27 @@ target.path = /lib
 HEADERS += adevent.h \
            adeventhandler.h \
            global.h \
-	   adobject.h \
-	   adaudiovisual.h \
-	   adreserve.h \
-	   adpermission.h \
-	   adschedule.h \
-	   adspace.h \
-	   aduser.h \
-           adeventfactory.h 
+           adobject.h \
+           adaudiovisual.h \
+           adpermission.h \
+           adschedule.h \
+           adspace.h \
+           aduser.h \
+           adeventfactory.h \
+           adreserve.h 
 SOURCES += adevent.cpp \
            adeventhandler.cpp \
            adobject.cpp \
            adaudiovisual.cpp \
-           adreserve.cpp \
            adpermission.cpp \
            adschedule.cpp \
            adspace.cpp \
            aduser.cpp \
-           adeventfactory.cpp 
+           adeventfactory.cpp \
+           adreserve.cpp 
 TARGET = adlib
 CONFIG += release \
 warn_on \
 dll
 TEMPLATE = lib
-
 include(lib_config.pri)
-

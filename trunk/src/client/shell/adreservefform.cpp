@@ -17,7 +17,7 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "adreserveform.h"
+#include "adreservefform.h"
 #include <QLineEdit>
 #include <QLabel>
 #include <QGroupBox>
@@ -28,10 +28,9 @@
 #include <QMessageBox>
 
 
-ADReserveForm::ADReserveForm(int type, QWidget *parent)
+ADReserveFForm::ADReserveFForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
 {
-	typeReserve = type;
 	list=1;
 	m_inserter = true;
 	destinationReserve="";
@@ -39,22 +38,21 @@ ADReserveForm::ADReserveForm(int type, QWidget *parent)
 }
 
 
-ADReserveForm::~ADReserveForm()
+ADReserveFForm::~ADReserveFForm()
 {
 }
 
 
-ADReserveForm::ADReserveForm(const ADReserve & reserve, QWidget * parent)
+ADReserveFForm::ADReserveFForm(const ADReserve & reserve, QWidget * parent)
 {
 	D_FUNCINFO;
 	setup();
 	m_inserter = false;
 	list=1;
-//	adAudiovisual = new ADAudioVisual(audiovisual.type(), audiovisual.marksEquipment(), audiovisual.estate(), audiovisual.numberInventory(), audiovisual.codeSpace());
 }
 
 
-void ADReserveForm::changeTypeResource(int opcion)
+void ADReserveFForm::changeTypeResource(int opcion)
 {
 // 	opcion = 0 -> Espacios
 //	opcion = 1 -> audiovisual
@@ -62,6 +60,7 @@ void ADReserveForm::changeTypeResource(int opcion)
 	if(opcion == 0)
 	{
 		recursosC->clear();
+		ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::Find, "spaces");
 		recursosC->addItems(recursosEsp);
 	}
 
@@ -69,12 +68,11 @@ void ADReserveForm::changeTypeResource(int opcion)
 	{
 		recursosC->clear();
 		recursosC->addItems(recursosAud);
-// 		changeTypeReserve(1);
 	}
 }
 
 // Este metodo se encarga de tomar el tipo de reserva en el momento en que sea cambiado en el comboBox y de acuerdo a esto construir una tabla horario, ademas cuando se cambia el tipo de reserva si el otro comboBox( resourcesNameC ) tiene activado un nombre valido, se llamara al metodo fill de horario para que llene las reservas de este tipo.
-// void ADReserveForm::changeTypeReserve(int opcion)
+// void ADReserveFForm::changeTypeReserve(int opcion)
 // {
 // 	if(opcion == 0)
 // 	{
@@ -93,7 +91,7 @@ void ADReserveForm::changeTypeResource(int opcion)
 // }
 
 
-void ADReserveForm::insertListTypes(const QList<XMLResults>& results)
+void ADReserveFForm::insertListTypes(const QList<XMLResults>& results)
 {
 	QList<XMLResults>::const_iterator it= results.begin();
 	
@@ -136,7 +134,7 @@ void ADReserveForm::insertListTypes(const QList<XMLResults>& results)
 }
 
 
-void ADReserveForm::fill()
+void ADReserveFForm::fill()
 {
 // 	if(adAudiovisual->isValid())
 // 	{
@@ -154,7 +152,7 @@ void ADReserveForm::fill()
 // 	}
 }
 
-void ADReserveForm::changeTypeSpace(QString typeR)
+void ADReserveFForm::changeResource( QString typeR)
 {
 	QString table;
 	if((tipoRecC->currentText()).toLower() ==("espacios"))
@@ -177,7 +175,7 @@ void ADReserveForm::changeTypeSpace(QString typeR)
 
 
 // Este metodo se encarga de tomar la informacion del comboBox de los nombres de los espacios, en el momento en es modificado, y manda a pedir todas las reservas que hayan sobre ese espacio.
-void ADReserveForm::changeNameSpace(const QString& name)
+void ADReserveFForm::changeNameSpace(const QString& name)
 {
 	QString table;
 	QString resource;
@@ -198,20 +196,19 @@ void ADReserveForm::changeNameSpace(const QString& name)
 		dDebug() << "changeNameSpace changeNameSpace";
 		dDebug() << "TABLE >>>> " << table << "   RESOURCE >>>> " << resource;
 		emit consultSchedule(table, resource );
-		horario->assignTypeReserve( tipoResC->currentText() );
 		horario->clear();
 	}
 }
 
 // Cuando el metodo anterior haya mandado a pedir las reservas de un espacio, este metodo se encargara de recibirlos y luego reenviarselos a horario que es la tabla donde se muestra la informacion de los horarios, y luego ejecuta el metodo fill (horario) pasandole por parametro el tipo de reserva para llenar la tabla con las reservas de este tipo.
-void ADReserveForm::requestSchedule( const QList<XMLResults>& results )
+void ADReserveFForm::requestSchedule( const QList<XMLResults>& results )
 {
 	horario->receiveSchedule( results );
 	horario->fill();
 }
 
 
-void ADReserveForm::insertListNameResources(const QList<XMLResults>& results)
+void ADReserveFForm::insertListNameResources(const QList<XMLResults>& results)
 {
 	QList<XMLResults>::const_iterator it= results.begin();
 	QStringList resources;
@@ -236,15 +233,15 @@ void ADReserveForm::insertListNameResources(const QList<XMLResults>& results)
 	resourcesNameC->addItems( resources );
 }
 
-
-void ADReserveForm::permisos(const QString &login, const bool permiso)
+/*
+void ADReserveFForm::permisos(const QString &login, const bool permiso)
 {
 	m_responsable=login;
 	m_reserve=permiso;
-}
+}*/
 
 
-void ADReserveForm::setup()
+void ADReserveFForm::setup()
 {
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
@@ -264,31 +261,25 @@ void ADReserveForm::setup()
 	tipoRecC->addItems(tipoRec);
 	connect(tipoRecC, SIGNAL(activated (int) ), this , SLOT(changeTypeResource ( int )));
 
-	tipoResC = new QComboBox;
-	connect(tipoResC, SIGNAL(activated (int) ), this , SLOT(changeTypeReserve ( int )));
-
 	recursosC = new QComboBox;
-	connect(recursosC, SIGNAL(activated (QString) ), this , SLOT(changeTypeSpace ( QString )));
+	connect(recursosC, SIGNAL(activated (QString) ), this , SLOT(changeResource ( QString )));
 	
 	resourcesNameC = new QComboBox;
 	connect(resourcesNameC, SIGNAL(activated (QString) ), this , SLOT(changeNameSpace ( QString )));
 
 	horario->makeTable( true );
 	
-	titles << tr("Tipo Recurso") << /*tr("Tipo Reserva") <<*/ tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable");
+	titles << tr("Tipo Recurso") << tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable") << tr("Motivo");
 
 	layout->addWidget(new QLabel(titles[0]),0,0);
 	layout->addWidget(tipoRecC,0,1);
 	m_inputs.insert(titles[0].toLower () , tipoRecC);
-	
-// 	layout->addWidget(new QLabel(titles[1]),1,0);
-// 	layout->addWidget(tipoResC,1,1);
-// 	m_inputs.insert(titles[1].toLower () , tipoResC);
-	
+
 	layout->addWidget(new QLabel(titles[1]),1,0);
 	layout->addWidget(recursosC,1,1);
 	m_inputs.insert(titles[1].toLower () , recursosC);
 	
+	layout->addWidget(new QLabel(titles[2]),2,0);
 	layout->addWidget(resourcesNameC ,2,1);
 	m_inputs.insert(titles[2].toLower () , resourcesNameC);
 	
@@ -297,12 +288,16 @@ void ADReserveForm::setup()
 	layout->addWidget(edits, 3, 1);
 	m_inputs.insert( titles[3].toLower () , edits );
 	
+	layout->addWidget(new QLabel(titles[4]),4,0);
+	areaTexto = new QTextEdit;
+	layout->addWidget(areaTexto,4,1);
+	
 	setForm(base);
-	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
+// 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
 }
 
 
-void ADReserveForm::emitInsertReserve()
+void ADReserveFForm::emitInsertReserve()
 {
 	QString table;
 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
@@ -353,7 +348,7 @@ void ADReserveForm::emitInsertReserve()
 	
 }
 
-bool ADReserveForm::valite()
+bool ADReserveFForm::valite()
 {
 	bool isValid = true;
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();

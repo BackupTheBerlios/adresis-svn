@@ -42,7 +42,8 @@
 #include "aduserform.h"
 #include "adaudiovisualform.h"
 #include "adspaceform.h"
-#include "adreserveform.h"
+#include "adreservefform.h"
+#include "adreservetform.h"
 #include "ddockwindow.h"
 
 

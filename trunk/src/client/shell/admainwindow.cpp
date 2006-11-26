@@ -232,13 +232,13 @@ void ADMainWindow::showForm( Logic::Module module )
 		break;
 		case Logic::ReservesT:
 		{
-			form = new ADReserveForm( ADReserveForm::Temporal );
+			form = new ADReserveTForm();
 			addForm(form, tr("Add Reserve Temporal"));
 		}
 		break;
 		case Logic::ReservesF:
 		{
-			form = new ADReserveForm( ADReserveForm::Semestral );
+			form = new ADReserveFForm();
 			addForm(form, tr("Add Reserve Semestral"));
 		}
 		break;
