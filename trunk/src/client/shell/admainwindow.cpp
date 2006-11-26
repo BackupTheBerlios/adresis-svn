@@ -203,6 +203,7 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 		form->setTitle(title);
 		addWidget(form);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
+		connect(form, SIGNAL(sendEvent(ADEvent *)), m_adresis, SLOT(handleEvent(ADEvent *)));
 	}
 }
 
@@ -213,7 +214,7 @@ void ADMainWindow::showForm( Logic::Module module )
 	{
 		case Logic::Users:
 		{
-		form = new ADUserForm;
+			form = new ADUserForm;
 			addForm(form, tr("Add user"));
 		}
 		break;

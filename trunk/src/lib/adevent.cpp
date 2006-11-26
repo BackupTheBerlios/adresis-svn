@@ -74,7 +74,6 @@ QString ADEvent::toString() const
 		{
 			case Logic::Find:
 			{
-// 				SHOW_VAR("in Find");
 				QDomElement conditionE = doc.createElement ( "Condition" );
 				conditionE.setAttribute("value", m_data.toString());
 				dataE.appendChild(conditionE);
@@ -82,7 +81,6 @@ QString ADEvent::toString() const
 			break;
 			case Logic::Info:
 			{
-// 				SHOW_VAR("in Info");
 // 				foreach(QVariant var, m_data.toList() )
 // 				{
 // 					if(m_module == Logic::Users)
@@ -99,7 +97,13 @@ QString ADEvent::toString() const
 				dataE.setAttribute("passwd", m_data.toList()[1].toString());
 			}
 			break;
-			
+			case Logic::Add:
+			{
+				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+// 				listE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
+				
+			}
+			break;
 		}
 	}
 	else

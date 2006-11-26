@@ -265,6 +265,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					
 					switch(event->action())
 					{
+						case Logic::Add:
+						{
+// 							ADInsert insert();
+							
+						}
+						break;
 						case Logic::Find:
 						{
 							ADSelect infoUser(QStringList() << "*" , "aduser");
@@ -275,13 +281,10 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoUser);
-// 							dDebug() << rs.toString();
 							QList<QVariant> listUsers;
 							
 							for(int pos =0; pos < rs.map()["nameuser"].count(); pos++)
-							{	
-// 								dDebug() << "UUUUUUSSSSSSSUUUUUUUAAAAARRRRIIIIIIOOOOOSSSSS CONSULTA   "<<rs.map()["nameuser"][pos] <<" "<< rs.map()["codeuser"][pos] <<" "<< rs.map()["loginuser"][pos];
-
+							{
 								QString rol = rs.map()["rol"][pos];
 								ADSelect permisos(QStringList() << "action" << "permission", "adrols");
 								permisos.setWhere("rol="+SQLSTR(rol));
@@ -304,17 +307,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 
 							ADEvent event(ADEvent::Server,Logic::Users, Logic::Find, listUsers);
 							cnx->sendToClient(event.toString());
-							break;
 						}
+						break;
 						case Logic::Authenticate:
 						{
 							
 							authenticate(cnx, event->data().toList()[0].toString(),event->data().toList()[1].toString());
-						}
-						break;
-						case Logic::Add:
-						{
-							
 						}
 						break;
 					}

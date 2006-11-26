@@ -31,24 +31,24 @@ ADPermissionsView::ADPermissionsView(QWidget * parent)
 	QGridLayout *layout = new QGridLayout(this);
 	QStringList actions;
 	
-	actions << tr("Gestionar usuario")
-			<< tr("Consultar usuario")
-			<< tr("Gestionar espacio")
-			<< tr("Consultar espacio")
-			<< tr("Gestionar audiovisual")
-			<< tr("Consultar audiovisual")
-			<< tr("Gestionar semestral")
-			<< tr("Gestionar temporal")
-			<< tr("Consultar reservas")
-			<< tr("Gestionar reportes")
-			<< tr("Consultar reportes");
+	actions << tr("Manage user")
+			<< tr("Consult usuario")
+			<< tr("Manage space")
+			<< tr("Consult space")
+			<< tr("Manage audiovisual")
+			<< tr("Consult audiovisual")
+			<< tr("Manage semester")
+			<< tr("Manage temporal")
+			<< tr("Consult reserves")
+			<< tr("Manage report")
+			<< tr("Consult report");
 	int count = 0;
+	QStringList act = ADPermission::actionList();
 	foreach(QString action, actions)
 	{
-		layout->addWidget(new QLabel(action, this), count,0);
-		QCheckBox *check = new QCheckBox(this);
+		QCheckBox *check = new QCheckBox(action,this);
 		layout->addWidget(check, count, 1);
-// 		m_checks.insert(check);
+		m_checks.insert(act[count], check);
 		count++;
 	}
 }
@@ -60,32 +60,19 @@ ADPermissionsView::~ADPermissionsView()
 
 ADPermission ADPermissionsView::permissions()
 {
+	QHash<QString, QCheckBox* >::iterator it = m_checks.begin();
 	ADPermission per;
-// 	foreach(  );
-	
-// 	QMap<Logic::Module, bool> per;
-// 	for(int i =0; i < 5; i++)
-// 	{
-// 		per.insert(Logic::Module(i), true);
-// 	}
-// 	if( m_checks[tr("administrador")]->checkState()  == Qt::Checked)
-// 	{
-// 		dDebug() << true;
-// 		per.insert(Logic::, true);
-// 	}
-// 	else
-// 	{
-// 		dDebug() << false;
-// 		per.insert(Logic::administrador, false);
-// 	}
-	
-/*	QMap<Logic::TypeUser, bool>::iterator it = per.begin();
-	while(it != per.end())
+	while(it != m_checks.end())
 	{
-		dDebug() << "permissions()" << it.value();
+		bool ok = true;
+		if(it.value()->checkState () == Qt::Unchecked)
+		{
+			ok = false;
+		}
+		per.setValue(it.key(), ok);
 		++it;
-	}*/
-// 	return per;
+	}
+	
 	return m_permission;
 }
 

@@ -84,7 +84,6 @@ void ADPermission::setValues(const QXmlAttributes& atts)
 	m_permisos.insert("consultarReservas", atts.value("consultarReservas"));
 	m_permisos.insert("gestionarReportes", atts.value("gestionarReportes"));
 	m_permisos.insert("consultarReportes", atts.value("consultarReportes"));
-
 }
 
 
@@ -117,7 +116,7 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 {
 	D_FUNCINFO;
 	
-	dDebug() << "Modulo=> " << module << "   Accion => " << action;
+// 	dDebug() << "Modulo=> " << module << "   Accion => " << action;
 	m_value = false;
 	
 	if( module==Logic::Users && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
@@ -207,8 +206,36 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 	}
 	else
 	{
-		dDebug() << "NO ENCONTRE BAJO EL PERMISO Modulo=> " << module << "   Accion => " << action;
+// 		dDebug() << "NO ENCONTRE BAJO EL PERMISO Modulo=> " << module << "   Accion => " << action;
 	}
-	dDebug() << "Termina " << m_value;
+// 	dDebug() << "Termina " << m_value;
 	return m_value;
+}
+
+
+void ADPermission::setValue(const QString & action, bool enable )
+{
+	//FIXME: CAMBIAR TODOS LOS "1" por bool(1)
+	QString t = "0";
+	if( enable )
+	{
+		t= "1";
+	}
+	m_permisos[action] = t;
+	
+}
+
+QStringList ADPermission::actionList()
+{
+	return QStringList() << "gestionarUsuario"
+		 << "consultarUsuario"
+		 << "gestionarEspacio"
+		 << "consultarEspacio"
+		 << "gestionarAudiovisual"
+		 << "consultarAudiovisual"
+		 << "gestionarSemestral"
+		 << "gestionarTemporal"
+		 << "consultarReservas"
+		 << "gestionarReportes"
+		 << "consultarReportes";
 }

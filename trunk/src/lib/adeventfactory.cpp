@@ -106,8 +106,6 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "reserve")
 	{
-		
-		
 		ADReserve *reserve = new ADReserve(
 				atts.value( "typereserve" ),
 				atts.value( "iduserreserve"),
@@ -130,11 +128,11 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 		permissions.setValues(atts);
 		qvariant_cast<ADUser *>(m_data)->assignPermissions(permissions);
 		
-		dDebug() << "EVENT FACTORY\n";
+// 		dDebug() << "EVENT FACTORY\n";
 		for(int i=0;i<5;i++)
 		{
 			Logic::Module module = Logic::Module(i);
-			dDebug() << "permiso ===>"<<qvariant_cast<ADUser *>(m_data)->permission(module, Logic::Find);
+// 			dDebug() << "permiso ===>"<<qvariant_cast<ADUser *>(m_data)->permission(module, Logic::Find);
 		}
 	}
 	m_qname = qname;
@@ -159,7 +157,6 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	{
 		m_data = m_list;
 	}
-	
 	return true;
 }
 

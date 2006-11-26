@@ -44,14 +44,18 @@ class ADPermission : public ADObject
 		void setValues(const QXmlAttributes& atts);
 		bool isValid()  const;
 		
+		void setValue(const QString & action, bool enable );
+		
 	public:
 		bool value(Logic::Module module, Logic::Action action);
-		
+		static QStringList actionList();
 		
 	private:
-		QMap<QString,QString> m_permisos;
+		QMap<QString, QString> m_permisos;
 		bool m_valid;
 		bool m_value;
+		
+		
 };
 
 #endif

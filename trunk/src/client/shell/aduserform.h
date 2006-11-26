@@ -25,6 +25,7 @@ class ADUserForm : public ADFormBase
 		
 	public slots:
 		void emitInsertUser();
+		
 };
 
 #endif

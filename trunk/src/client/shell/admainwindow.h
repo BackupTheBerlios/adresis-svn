@@ -94,7 +94,6 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void configSchooll();
 		void showModule(Logic::Module module,const QList<QVariant> &);
 		
-		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void addForm(ADFormBase * form, const QString & title);

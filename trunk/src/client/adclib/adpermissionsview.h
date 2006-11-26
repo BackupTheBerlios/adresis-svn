@@ -21,7 +21,7 @@
 #define ADPERMISSIONSVIEW_H
 
 #include <QGroupBox>
-#include <QMap>
+#include <QHash>
 #include <QCheckBox>
 #include "global.h"
 #include "adpermission.h"
@@ -38,7 +38,7 @@ class ADPermissionsView : public QGroupBox
 		void setPermissions(const ADPermission& permissions);
 		
 	private:
-		QMap<QString,QCheckBox* > m_checks;
+		QHash<QString, QCheckBox* > m_checks;
 		ADPermission m_permission;
 };
 
