@@ -272,8 +272,15 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							ADInsert insert("aduser", QStringList()<< "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() << SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()) );
 							SDBM->execQuery(&insert);
 							
-							ADEvent e( ADEvent::Server, Logic::Users, Logic::Add, event->data());
-							sendToAll(e.toString());
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Users, Logic::Add, event->data());
+								sendToAll(e.toString());
+							}
 						}
 						break;
 						case Logic::Find:

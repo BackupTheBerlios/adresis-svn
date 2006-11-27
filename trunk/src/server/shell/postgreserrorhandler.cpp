@@ -37,7 +37,7 @@ SErrorPackage PostgresErrorHandler::handle(const QSqlError &error)
 	
 	dDebug() << error.databaseText();
 	
-	QString mensaje;
+	QString mensaje = error.databaseText();
 // 	if("ERROR:  llave duplicada viola restricción unique \"aduser_pke\"" ==error.databaseText())
 // 	{
 // 	   	mensaje = "El usuario que usted ha intentado ingresar ya existe";
@@ -158,8 +158,8 @@ SErrorPackage PostgresErrorHandler::handle(const QSqlError &error)
 	// TODO: Analizar los textos!
 	
 	
-	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(error.databaseText()));
-// 	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(mensaje));
+// 	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(error.databaseText()));
+	SErrorPackage package(error.number(), QObject::tr("PostgresErrorHandler %1").arg(mensaje));
 	
 	
 	

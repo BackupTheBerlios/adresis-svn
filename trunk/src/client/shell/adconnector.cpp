@@ -55,14 +55,6 @@ void ADConnector::readFromServer()
 	
 	m_readed.remove(m_readed.lastIndexOf("%%"), 2);
 	
-	
-	
-	// 	QXmlInputSource xmlsource;
-// 	xmlsource.setData(m_readed);
-// 	dDebug() << "READED: " << m_readed;
-// 	bool parse =  m_reader.parse(&xmlsource);
-// 	SHOW_VAR(parse);
-	
 	if ( !m_readed.isEmpty() )
 	{
 	
@@ -79,11 +71,26 @@ void ADConnector::readFromServer()
 			}
 			else if ( root == "Error" )
 			{
-// 				XMLResults result = m_parser->results()[0];
-// 				emit message(Msg::Error, "Error "+result["id"]+": "+result["message"] );
+				QDomElement docElem = doc.documentElement();
+
+				QDomNode n = docElem.firstChild();
+				QString error;
+				while(!n.isNull()) {
+					QDomElement e = n.toElement(); // try to convert the node to an element.
+					if(!e.isNull()) {
+						if(e.tagName() == "Message")
+						{
+							error = e.attribute("value", tr("Error"));
+						}
+						
+					}
+					n = n.nextSibling();
+				}
+				emit message(Msg::Error, error  );
 			}
 			else if( root == "Success")
 			{
+				
 	// 			emit readedModuleForms( m_parser->moduleForms() );
 // 				emit message(Msg::Info, m_parser->results()[0]["message"]);
 			}

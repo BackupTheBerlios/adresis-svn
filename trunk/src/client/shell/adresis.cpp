@@ -25,6 +25,8 @@ Adresis::Adresis(QObject * parent)
 	m_connector = new ADConnector(this);
 	
 	connect ( m_connector, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *) ));
+	connect ( m_connector, SIGNAL(message(Msg::Type, const QString&)), this, SIGNAL(requestShowMessage(Msg::Type, const QString&) ));
+	
 	DINIT;
 }
 
@@ -62,7 +64,6 @@ void Adresis::handleEvent(ADEvent * event)
 							{
 								dDebug() << "Info";
 								m_user = qvariant_cast<ADUser *> (event->data());
-								requestShowMessage( Msg::Info ,tr("hola %1").arg(m_user->name()));
 								//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
 								for(int i=0; i < 6; i++)
 								{
@@ -147,6 +148,10 @@ void Adresis::handleEvent(ADEvent * event)
 				{
 					case Logic::Users:
 					{
+						if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+						{
+							m_connector->sendToServer(event->toString());
+						}
 					}
 					break;
 					
@@ -191,7 +196,6 @@ void Adresis::handleEvent(ADEvent * event)
 								
 							}
 							break;
-							
 							case Logic::Info:
 							{
 								QList<QVariant> datos = (event->data()).toList();
