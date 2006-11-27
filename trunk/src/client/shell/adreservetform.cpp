@@ -205,8 +205,8 @@ void ADReserveTForm::changeNameSpace(const QString& name)
 // Cuando el metodo anterior haya mandado a pedir las reservas de un espacio, este metodo se encargara de recibirlos y luego reenviarselos a horario que es la tabla donde se muestra la informacion de los horarios, y luego ejecuta el metodo fill (horario) pasandole por parametro el tipo de reserva para llenar la tabla con las reservas de este tipo.
 void ADReserveTForm::requestSchedule( const QList<XMLResults>& results )
 {
-	horario->receiveSchedule( results );
-	horario->fill();
+// 	horario->receiveSchedule( results );
+// 	horario->fill();
 }
 
 

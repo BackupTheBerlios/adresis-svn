@@ -37,7 +37,7 @@ ADSchedule::ADSchedule(QWidget *parent)
 	month->setHidden(true);
 	vBLayout->addWidget( month );
 
-	connect(month, SIGNAL(activated (int) ), this , SLOT( modifyNCols( int )));
+	connect(month, SIGNAL(activated (int) ), this , SLOT( modifyMonthReserve( int )));
 
 	m_table = new QTableWidget(this);
 
@@ -101,8 +101,6 @@ void ADSchedule::makeTable( bool semestral)
 
 	for(int j=0; j < m_table->columnCount(); j++)
 	{
-		m_table->setColumnWidth ( j, (int)(m_table->width()/7.5) );
-
 		for(int i=0; i < m_table->rowCount(); i++)
 		{
 			m_item = new QTableWidgetItem("");
@@ -116,11 +114,11 @@ void ADSchedule::makeTable( bool semestral)
 }
 
 
-void ADSchedule::modifyNCols( int value)
+void ADSchedule::modifyMonthReserve( int value)
 {
 	monthNo=value;
 	makeTable( false );
-	if(!m_schedule.isEmpty())
+	if(!reservasAnteriores.isEmpty())
 	{
 		m_reserve="temporal";
 		fill();
@@ -131,7 +129,7 @@ void ADSchedule::clear()
 {
 	dDebug() << "CLEAR CLEAR CLEAR CLEAR ";
 	clearSchedule();
-	m_schedule.clear();
+	reservasAnteriores.clear();
 	m_points.clear();
 	m_cellsReserved.clear();
 }
@@ -151,9 +149,9 @@ void ADSchedule::clearSchedule()
 }
 
 
-void ADSchedule::receiveSchedule( const QList<XMLResults>& results )
+void ADSchedule::receiveReserves( const QList<ADReserve *>& results )
 {
-	m_schedule = results;
+	reservasAnteriores = results;
 }
 
 
@@ -218,6 +216,7 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 	previousRow=currentRow;
 }
 
+
 void ADSchedule::assignTypeReserve(const QString typeReserve)
 {
 	m_reserve = typeReserve;
@@ -227,68 +226,69 @@ void ADSchedule::assignTypeReserve(const QString typeReserve)
 void ADSchedule::fill()
 {
 	clearSchedule();
-	QList<XMLResults>::const_iterator it= m_schedule.begin();
+	QList<ADReserve *>::const_iterator it = reservasAnteriores.begin();
 	QList<QTableWidgetItem *> selectedItems;
 	
 	int row1=0, row2=0;
 	QList<int> column;
 	dDebug() << "EN FILL M_RESERVE ES >> " << m_reserve;
 
-	while( it != m_schedule.end() )
+	while( it != reservasAnteriores.end() )
 	{
-		if( ((*it)["typereserve"]) ==(m_reserve) && (m_reserve.toLower()) ==("semestral") )
+		if( ((*it)->typeReserve().toLower()) == "semestral" && (m_reserve.toLower()) == "semestral" )
 		{
-			column << cols.indexOf( ( (*it)["day"] ).toUpper() );
-			row1 = rows.indexOf( ( (*it)["beginhour"] ).mid(0,5) );
-			row2 = rows.indexOf( ( (*it)["endhour"] ).mid(0,5) );
+			column << cols.indexOf( ( (*it)->day() ).toUpper() );
+			row1 = rows.indexOf( ((*it)->beginDateTime()).toString("hh:mm") );
+			row2 = rows.indexOf( ((*it)->endDateTime()).toString("hh:mm") );
 		}
 		
-		else if( ((*it)["typereserve"]) ==(m_reserve) && (m_reserve.toLower()) ==("temporal") && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 )
+		
+		else if( ((*it)->typeReserve().toLower()) == "temporal" && (m_reserve.toLower()) == "temporal" && monthNo == ((( (*it)->beginDateTime().date()).month())-1))
 		{
 			///En la siguiente linea, tomo el valor de el dia de la fecha de inicio ya que en una reserva temporal la fecha de inicio y la de finalizacion es la misma
-			column << ((( (*it)["begindate"] ).mid(8,2)).toInt())-1;
-			row1 = rows.indexOf( ( (*it)["beginhour"] ).mid(0,5) );
-			row2 = rows.indexOf( ( (*it)["endhour"] ).mid(0,5) );
+			column << (( (*it)->beginDateTime().date()).day())-1;
+			row1 = rows.indexOf( ((*it)->beginDateTime()).toString("hh:mm") );
+			row2 = rows.indexOf( ((*it)->endDateTime()).toString("hh:mm") );
 		}
 		
 		
-		
-		else if( ((*it)["typereserve"]) ==("Semestral") && (m_reserve.toLower()) ==("temporal") && monthNo >= (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo <= (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
+		else if( ((*it)->typeReserve().toLower()) == "semestral" && (m_reserve.toLower()) ==("temporal") && monthNo >= ((( (*it)->beginDateTime().date()).month())-1)	&&	monthNo <= ((( (*it)->endDateTime().date()).month())-1))
 		{
-			int diaIniRes = ((( (*it)["begindate"] ).mid(8,2)).toInt())-1;;
-			int diaFinRes = ((( (*it)["enddate"] ).mid(8,2)).toInt())-1;;
+			int diaIniRes = (( (*it)->beginDateTime().date()).day())-1;
+			int diaFinRes = (( (*it)->endDateTime().date()).day())-1;
 		
-			for(int c=0; c < m_table->columnCount (); c++)
+			for(int c = 0; c < m_table->columnCount(); c++)
 			{
 			///Este if maneja si el mes elegido y el mes inicial de la reserva son iguales, en tal caso descartara los dias que sean menores a el dia inicial de la reserva.
-				if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && c >= diaIniRes )
+				if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == (((*it)->day()).toUpper())	&&	monthNo == ((( (*it)->beginDateTime().date()).month())-1)	&&	c >= diaIniRes )
 				{
 					column << c;
 				}
 				
 			///Este else if maneja si el mes elegido y el mes final de la reserva son iguales, en tal caso descartara los dias que sean mayores a el dia final de la reserva.	
-				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo == (( (*it)["enddate"] ).mid(5,2)).toInt()-1 && c <= diaFinRes )
+				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == (((*it)->day()).toUpper()) &&	monthNo == ((( (*it)->endDateTime().date()).month())-1)	&&	c <= diaFinRes )
 				{
 					column << c;
 				}
 				
 			///Este else if maneja si el mes elegido y el mes de la reserva son diferentes, en ese caso no se descarta ningun dia.
-				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == ( ((*it)["day"] ).toUpper()) && monthNo != (( (*it)["begindate"] ).mid(5,2)).toInt()-1 && monthNo != (( (*it)["enddate"] ).mid(5,2)).toInt()-1)
+				else if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == (((*it)->day()).toUpper()) &&	monthNo != ((( (*it)->beginDateTime().date()).month())-1)	&&	monthNo != ((( (*it)->endDateTime().date()).month())-1) )
 				{
 					column << c;
 				}
 			}
 			
-			row1 = rows.indexOf( ( (*it)["beginhour"] ).mid(0,5) );
-			row2 = rows.indexOf( ( (*it)["endhour"] ).mid(0,5) );
+			row1 = rows.indexOf( ((*it)->beginDateTime()).toString("hh:mm") );
+			row2 = rows.indexOf( ((*it)->endDateTime()).toString("hh:mm") );
 		}
+		
 		
 		
 		for(int pos=0; pos < column.count(); pos++)
 		{
 			for( int i =row1; i < row2; i++ )
 			{
-				(m_table->item( i , column.at(pos)))->setText((*it)["nameuser"].toUpper() );
+				(m_table->item( i , column.at(pos)))->setText((*it)->iduserresponsable().toUpper() );
 				(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 				(m_table->item( i , column.at(pos)))->setToolTip( "Espacio ocupado en este horario" );
 				(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEditable );
@@ -335,13 +335,13 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 	organizePairs();
 	
 	QMap<QString, QString > map;
-	QList< QPair<int,int> >::const_iterator p = m_points.begin();
-	while( p != m_points.end() )
-	{
-		dDebug() << (*p).first <<"  "  << (*p).second;
-		p++;
-	}
-	dDebug() << "EL TIPO DE RESERVA ES >> " << m_reserve;
+// 	QList< QPair<int,int> >::const_iterator p = m_points.begin();
+// 	while( p != m_points.end() )
+// 	{
+// 		dDebug() << (*p).first <<"  "  << (*p).second;
+// 		p++;
+// 	}
+// 	dDebug() << "EL TIPO DE RESERVA ES >> " << m_reserve;
 	
 	for( int point=0; point < m_points.count(); point++ )
 	{

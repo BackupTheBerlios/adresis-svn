@@ -82,17 +82,16 @@ class ADReserveFForm : public ADFormBase
 		void receiveEvent(ADEvent *);
 		void changeTypeResource(int);
 		void insertListTypes();
+		void changeResource(QString);
+		void insertListNameResources();
+		void changeNameResource(const QString&);
+		void receiveReserves( const QList<ADReserve *>& results );
 		
 		/////////////////////77
 		void emitInsertReserve();
-		
-		void insertListNameResources(const QList<XMLResults>& results);
 // 		void changeTypeReserve(int);
-		
-		void changeResource(QString);
-		void changeNameSpace(const QString&);
 // 		void permisos(const QString &login, const bool permiso);
-		void requestSchedule( const QList<XMLResults>& results );
+		
 		
 };
 

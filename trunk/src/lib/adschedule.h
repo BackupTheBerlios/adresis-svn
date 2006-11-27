@@ -34,7 +34,8 @@
 #include <QComboBox>
 #include <QList>
 #include <QPair>
-
+#include "adreserve.h"
+		
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
 */
@@ -50,8 +51,8 @@ class ADSchedule : public QWidget
 	
 	public slots:
 		void makeTable(bool semestral);
-		void modifyNCols(int);
-		void receiveSchedule( const QList<XMLResults>& results );
+		void modifyMonthReserve(int);
+		void receiveReserves( const QList<ADReserve *>& results );
 		void assignTypeReserve(const QString typeReserve);
 		void fill();
 		void clear();
@@ -64,7 +65,7 @@ class ADSchedule : public QWidget
 		QStringList cols;
 		QStringList rows;
 		QStringList months;
-		QList<XMLResults> m_schedule;
+		QList<ADReserve *> reservasAnteriores;
 		QList< QPair<int,int> > m_points; // Aqui se guardan las posiciones de las celdas que seleccione el usuario.
 		QList< QPair<int,int> > m_cellsReserved; // Aqui se guardan las posiciones de las celdas con reservas ya hechas
 		QPair<int, int> pair;

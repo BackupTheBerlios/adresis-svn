@@ -181,17 +181,83 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::GetTypes:
 							{
-								dDebug() << "DE TIPO HAY " << m_listTypes.count() << " LISTAS";
-								// Lo hice con Qmap porque lo aceptaba de una como QVariant
-								QMap<QString, QList<QVariant> > types;
-								types.insert("type_spaces", m_listTypes.values(Logic::Spaces)[0]);
-								types.insert("type_audiovisual", m_listTypes.values(Logic::Audiovisuals)[0]);
-									
-								ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes , QVariant(&types));
+								QList<QVariant > types;
+								types.insert(0, QVariant(m_listTypes.values(Logic::Spaces)[0]));
+								types.insert(1, QVariant(m_listTypes.values(Logic::Audiovisuals)[0]));
+								
+								ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes, types);
+								
 								(qvariant_cast<ADReserveFForm *>(event->data()))->receiveEvent(&listTypes);
+								
+							}
+							break;
+							
+							case Logic::Info:
+							{
+								QList<QVariant> datos = (event->data()).toList();
+								
+								if((datos.at(0).toString()) == "nameResources")
+								{
+									QMap<QString, QVariant> nameResource;
+									QList<QVariant> list;
+									
+									if((datos.at(2).toString()) == "space")
+									{
+										list = m_infoModules.values(Logic::Spaces)[0];
+										for(int i=0; i < list.count();i++)
+										{
+											ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
+											if(space->typeSpace() == datos.at(3).toString())
+											{
+												nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
+											}
+										}
+									}
+									else
+									{
+										list = m_infoModules.values(Logic::Audiovisuals)[0];
+										int n = 1;
+										for(int i=0; i < list.count();i++)
+										{
+											ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
+											if(audiovisual->type() == datos.at(3).toString())
+											{
+												nameResource.insert(audiovisual->numberInventory(), QVariant(audiovisual->type()+" "+QString::number(n)));
+												n++;
+											}
+										}
+									}
+									QList<QVariant> listResult;
+									listResult << QVariant("nameResources") << QVariant(nameResource);
+									ADEvent names(ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
+									
+									(qvariant_cast<ADReserveFForm *>(datos.at(1)))->receiveEvent(&names);
+								}
+								
+								else if((datos.at(0).toString()) == "reservesResource")
+								{
+									QList<QVariant> listReserves;
+									
+									
+									QList<QVariant> list = m_infoModules.values(Logic::ReservesF)[0];
+									for(int i=0; i < list.count();i++)
+									{
+										ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
+										if(reserve->idspace() == datos.at(2).toString() || reserve->idaudiovisual() == datos.at(2).toString())
+										{
+											listReserves << list.at(i);
+										}
+									}
+									
+									QList<QVariant> listResult;
+									listResult << QVariant("reserveResource") << QVariant(listReserves);
+									ADEvent reserves (ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
+									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&reserves);
+								}
 							}
 							break;
 						}
+						
 					}
 					break;
 					

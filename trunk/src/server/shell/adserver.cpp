@@ -455,7 +455,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								}
 
 // idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
-								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], /*rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos]*/	QDateTime( QDate::fromString( rs.map()["begindate"][pos] ), QTime::fromString( rs.map()["beginhour"][pos])),	QDateTime( QDate::fromString( rs.map()["enddate"][pos]), QTime::fromString( rs.map()["endhour"][pos]) ), active, rs.map()["destinationreserve"][pos]);
+								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], /*rs.map()["beginhour"][pos], rs.map()["endhour"][pos], rs.map()["begindate"][pos], rs.map()["enddate"][pos]*/ QDateTime( QDate::fromString( rs.map()["begindate"][pos] ), QTime::fromString( rs.map()["beginhour"][pos]) ),QDateTime( QDate::fromString( rs.map()["enddate"][pos]), QTime::fromString( rs.map()["endhour"][pos]) ), active, rs.map()["destinationreserve"][pos]);
 								
 								
 								listReservesF.append(QVariant::fromValue (avReserve));
