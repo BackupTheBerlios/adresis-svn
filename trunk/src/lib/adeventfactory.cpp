@@ -118,10 +118,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 // 				atts.value( "endhour"),
 // 				atts.value( "begindate"),
 // 				atts.value( "enddate"),
-				QDateTime( QDate::fromString( atts.value("begindate")), QTime::fromString( atts.value("beginhour"))),
-				QDateTime( QDate::fromString( atts.value("enddate")), QTime::fromString( atts.value("endhour")) ),
-				bool(atts.value( "isactive").toInt()),
-				atts.value( "destinationreserve"));
+				QDateTime( QDate::fromString( atts.value("begindate"),"dd/MM/yyyy"), QTime::fromString( atts.value("beginhour"),"hh:mm:ss")), QDateTime( QDate::fromString( atts.value("enddate"),"dd/MM/yyyy"), QTime::fromString( atts.value("endhour"),"hh:mm:ss" ) ),  bool(atts.value( "isactive").toInt()), atts.value( "destinationreserve"));
 		m_data = QVariant::fromValue(reserve);
 		
 	}

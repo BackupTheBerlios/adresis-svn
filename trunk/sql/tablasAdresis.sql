@@ -172,7 +172,11 @@ CREATE TABLE AdReserve
 -- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','06/01/2006','06/08/2006',true,'Metodos Numericos'); 
 
 
-
+CREATE TABLE ConfigirationSchooll(
+	nameSchooll varchar(70),
+	beginDateSem	date,	--DD/MM/YY
+	endDateSem	date	--DD/MM/YY
+);
 
 -- CREATE TABLE AdSpaceCancelation(
 -- 	typeCancelation varchar(20),
