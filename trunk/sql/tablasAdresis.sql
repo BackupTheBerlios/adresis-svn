@@ -1,57 +1,10 @@
 DROP TABLE AdUser CASCADE;
-DROP TABLE AdSpace CASCADE;
-DROP TABLE AdAudioVisual CASCADE;
---DROP TABLE AdSpaceReserve CASCADE;
---DROP TABLE AdAVReserve CASCADE;
-DROP TABLE AdReserve CASCADE;
 DROP TABLE AdRols CASCADE;
--- DROP TABLE AdScheduleAV CASCADE;
--- DROP TABLE AdScheduleSpace CASCADE;
-
-
-CREATE TABLE AdRols(
-	rol integer,
-	action varchar(20),
-	permission integer, check(permission in (0,1))
-);
-
-INSERT INTO AdRols VaLUES(0,'gestionarUsuario',1);
-INSERT INTO AdRols VaLUES(0,'consultarUsuario',1);
-INSERT INTO AdRols VaLUES(0,'gestionarEspacio',1);
-INSERT INTO AdRols VaLUES(0,'consultarEspacio',1);
-INSERT INTO AdRols VaLUES(0,'gestionarAudiovisual',1);
-INSERT INTO AdRols VaLUES(0,'consultarAudiovisual',1);
-INSERT INTO AdRols VaLUES(0,'gestionarSemestral',1);
-INSERT INTO AdRols VaLUES(0,'gestionarTemporal',1);
-INSERT INTO AdRols VaLUES(0,'consultarReservas',1);
-INSERT INTO AdRols VaLUES(0,'gestionarReportes',1);
-INSERT INTO AdRols VaLUES(0,'consultarReportes',1);
-
-INSERT INTO AdRols VaLUES(1,'gestionarUsuario',0);
-INSERT INTO AdRols VaLUES(1,'consultarUsuario',0);
-INSERT INTO AdRols VaLUES(1,'gestionarEspacio',0);
-INSERT INTO AdRols VaLUES(1,'consultarEspacio',1);
-INSERT INTO AdRols VaLUES(1,'gestionarAudiovisual',0);
-INSERT INTO AdRols VaLUES(1,'consultarAudiovisual',1);
-INSERT INTO AdRols VaLUES(1,'gestionarSemestral',0);
-INSERT INTO AdRols VaLUES(1,'gestionarTemporal',1);
-INSERT INTO AdRols VaLUES(1,'consultarReservas',1);
-INSERT INTO AdRols VaLUES(1,'gestionarReportes',0);
-INSERT INTO AdRols VaLUES(1,'consultarReportes',1);
-
-INSERT INTO AdRols VaLUES(2,'gestionarUsuario',0);
-INSERT INTO AdRols VaLUES(2,'consultarUsuario',0);
-INSERT INTO AdRols VaLUES(2,'gestionarEspacio',0);
-INSERT INTO AdRols VaLUES(2,'consultarEspacio',1);
-INSERT INTO AdRols VaLUES(2,'gestionarAudiovisual',0);
-INSERT INTO AdRols VaLUES(2,'consultarAudiovisual',1);
-INSERT INTO AdRols VaLUES(2,'gestionarSemestral',0);
-INSERT INTO AdRols VaLUES(2,'gestionarTemporal',0);
-INSERT INTO AdRols VaLUES(2,'consultarReservas',1);
-INSERT INTO AdRols VaLUES(2,'gestionarReportes',0);
-INSERT INTO AdRols VaLUES(2,'consultarReportes',1);
-
-
+DROP TABLE AdAudioVisual CASCADE;
+DROP TABLE AdAudioVisualType CASCADE;
+DROP TABLE AdSpace CASCADE;
+DROP TABLE AdSpaceType CASCADE;
+DROP TABLE AdReserve CASCADE;
 
 
 CREATE TABLE AdUser(
@@ -74,25 +27,52 @@ INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
 INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 
-CREATE TABLE AdSpace(
-	codeSpace varchar(20) PRIMARY KEY,
-	typespace varchar(20),
-	coolAirSpace boolean,
-	capacitySpace integer,
-	nameSpace varchar(30)
+
+
+CREATE TABLE AdRols(
+	rol integer,
+	action varchar(20),
+	permission integer, check(permission in (0,1))
 );
 
-INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
-INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
-INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
-INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
-INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
-INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
-INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
-INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
-INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
-INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
-INSERT INTO AdSpace VALUES('null','null');
+INSERT INTO AdRols VALUES(0,'gestionarUsuario',1);
+INSERT INTO AdRols VALUES(0,'consultarUsuario',1);
+INSERT INTO AdRols VALUES(0,'gestionarEspacio',1);
+INSERT INTO AdRols VALUES(0,'consultarEspacio',1);
+INSERT INTO AdRols VALUES(0,'gestionarAudiovisual',1);
+INSERT INTO AdRols VALUES(0,'consultarAudiovisual',1);
+INSERT INTO AdRols VALUES(0,'gestionarSemestral',1);
+INSERT INTO AdRols VALUES(0,'gestionarTemporal',1);
+INSERT INTO AdRols VALUES(0,'consultarReservas',1);
+INSERT INTO AdRols VALUES(0,'gestionarReportes',1);
+INSERT INTO AdRols VALUES(0,'consultarReportes',1);
+
+INSERT INTO AdRols VALUES(1,'gestionarUsuario',0);
+INSERT INTO AdRols VALUES(1,'consultarUsuario',0);
+INSERT INTO AdRols VALUES(1,'gestionarEspacio',0);
+INSERT INTO AdRols VALUES(1,'consultarEspacio',1);
+INSERT INTO AdRols VALUES(1,'gestionarAudiovisual',0);
+INSERT INTO AdRols VALUES(1,'consultarAudiovisual',1);
+INSERT INTO AdRols VALUES(1,'gestionarSemestral',0);
+INSERT INTO AdRols VALUES(1,'gestionarTemporal',1);
+INSERT INTO AdRols VALUES(1,'consultarReservas',1);
+INSERT INTO AdRols VALUES(1,'gestionarReportes',0);
+INSERT INTO AdRols VALUES(1,'consultarReportes',1);
+
+INSERT INTO AdRols VALUES(2,'gestionarUsuario',0);
+INSERT INTO AdRols VALUES(2,'consultarUsuario',0);
+INSERT INTO AdRols VALUES(2,'gestionarEspacio',0);
+INSERT INTO AdRols VALUES(2,'consultarEspacio',1);
+INSERT INTO AdRols VALUES(2,'gestionarAudiovisual',0);
+INSERT INTO AdRols VALUES(2,'consultarAudiovisual',1);
+INSERT INTO AdRols VALUES(2,'gestionarSemestral',0);
+INSERT INTO AdRols VALUES(2,'gestionarTemporal',0);
+INSERT INTO AdRols VALUES(2,'consultarReservas',1);
+INSERT INTO AdRols VALUES(2,'gestionarReportes',0);
+INSERT INTO AdRols VALUES(2,'consultarReportes',1);
+
+
+
 
 
 CREATE TABLE AdAudioVisual(
@@ -118,6 +98,79 @@ INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '2
 
 
 
+CREATE TABLE ADAudioVisualType(
+	type varchar(20)
+);
+
+INSERT INTO ADAudioVisualType VALUES('computador portatil');
+INSERT INTO ADAudioVisualType VALUES('cpu');
+INSERT INTO ADAudioVisualType VALUES('proyector acetatos');
+INSERT INTO ADAudioVisualType VALUES('reproductor VHS');
+INSERT INTO ADAudioVisualType VALUES('televisor');
+INSERT INTO ADAudioVisualType VALUES('video beam');
+
+
+
+
+CREATE TABLE AdSpace(
+	codeSpace varchar(20) PRIMARY KEY,
+	typespace varchar(20),
+	coolAirSpace boolean,
+	capacitySpace integer,
+	nameSpace varchar(30)
+);
+
+INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
+INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
+INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
+INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
+INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
+INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
+INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
+INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
+INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
+INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
+INSERT INTO AdSpace VALUES('null','null');
+
+
+
+CREATE TABLE ADSpaceType(
+	type varchar(20)
+);
+
+INSERT INTO ADSpaceType VALUES('sala de sistemas');
+INSERT INTO ADSpaceType VALUES('sala de reuniones');
+INSERT INTO ADSpaceType VALUES('auditorio');
+INSERT INTO ADSpaceType VALUES('salon');
+
+
+
+--////////////////////////////// NOTA IMPORTANTISIMA \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  nill.
+DROP SEQUENCE adreserve_idreserve_seq;
+CREATE SEQUENCE adReserve_idReserve_seq;
+CREATE TABLE AdReserve
+(
+	idReserve integer default nextval('adReserve_idReserve_seq') not null,
+	typeReserve varchar(20),
+	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idAudiovisual varchar(20), FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
+	idSpace varchar(20), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
+	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
+	beginHour time ,
+	endHour time, 
+	beginDate date, -- DD/MM/YY
+	endDate date,	-- DD/MM/YY
+	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
+	destinationReserve varchar(80),
+	check(beginHour < endHour and beginDate <= endDate)
+);
+
+
+
+-- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','06/01/2006','06/08/2006',true,'Metodos Numericos'); 
+
 
 
 
@@ -142,78 +195,12 @@ INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '2
 -- );
 
 
---*****************************************************
---***********EJEMPLO DE COMO CREAR UNA SEQUENCIA********
---******************************************************
-
---CREATE SEQUENCE tablename_colname_seq;
---CREATE TABLE tablename (
-    --colname integer DEFAULT nextval('tablename_colname_seq') NOT NULL
---);
-
---DROP SEQUENCE adSpaceReserve_idReserve_seq;
---CREATE SEQUENCE adSpaceReserve_idReserve_seq;
-
--- CREATE TABLE AdSpaceReserve
--- (
--- 	idReserve integer default nextval('adSpaceReserve_idReserve_seq') not null,
--- 	typeReserve varchar(20),
--- 	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
--- 	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
--- 	idResource varchar(20), FOREIGN KEY (idResource) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE,
--- 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....)
--- 	beginHour time,
--- 	endHour time,
--- 	beginDate date,
--- 	endDate date,
--- 	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
--- 	destinationReserve varchar(80), check(beginHour < endHour and beginDate <= endDate)
--- );
-
--- DROP SEQUENCE adavreserve_idreserve_seq;
--- CREATE SEQUENCE adAvReserve_idReserve_seq;
--- CREATE TABLE AdAvReserve
--- (
--- 	idReserve integer default nextval('adAvReserve_idReserve_seq') not null,
--- 	typeReserve varchar(20),
--- 	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
--- 	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
--- 	idResource varchar(20), FOREIGN KEY (idResource) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
--- 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
--- 	beginHour time ,
--- 	endHour time, 
--- 	beginDate date,
--- 	endDate date,
--- 	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
--- 	destinationReserve varchar(80),
--- 	check(beginHour < endHour and beginDate <= endDate)
--- );
-
---////////////////////////////// NOTA IMPORTANTISIMA \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
--- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  nill.
 
 
-DROP SEQUENCE adreserve_idreserve_seq;
-CREATE SEQUENCE adReserve_idReserve_seq;
-CREATE TABLE AdReserve
-(
-	idReserve integer default nextval('adAvReserve_idReserve_seq') not null,
-	typeReserve varchar(20),
-	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
-	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
-	idAudiovisual varchar(20), FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
-	idSpace varchar(20), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
-	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
-	beginHour time ,
-	endHour time, 
-	beginDate date,
-	endDate date,
-	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
-	destinationReserve varchar(80),
-	check(beginHour < endHour and beginDate <= endDate)
-);
 
--- INSERT INTO adspacereserve (typereserve,iduser,idspace,day,beginhour,endhour,begindate,enddate,isactive) VALUES ('Semestral', 'hecfa', '211', 'lunes', '8:00','10:00','01/15/2006','08/15/2006',true); 
+
+
+
 
 
 
