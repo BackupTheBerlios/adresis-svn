@@ -81,8 +81,6 @@ void Adresis::handleEvent(ADEvent * event)
 							break;
 							case Logic::Add:
 							{
-								SHOW_VAR(event->toString());
-								
 								m_infoModules[Logic::Users] << (event->data());
 								emit requestAddDataToModule(Logic::Users , event->data());
 							}
@@ -98,8 +96,7 @@ void Adresis::handleEvent(ADEvent * event)
 									}
 									++it;
 								}
-								
-								SHOW_VAR(m_infoModules[Logic::Users].count());
+								emit requestRemoveDataToModule(Logic::Users , event->data().toString());
 							}
 							break;
 						}

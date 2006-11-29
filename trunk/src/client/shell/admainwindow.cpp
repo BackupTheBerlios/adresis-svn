@@ -134,6 +134,7 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	connect(list, SIGNAL(sendEvent(ADEvent * )), m_adresis, SLOT( handleEvent( ADEvent * )));
 	
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
+	connect(m_adresis, SIGNAL(requestRemoveDataToModule(Logic::Module, const QString & )), list, SLOT(removeData( Logic::Module, const QString & )));
 }
 
 void ADMainWindow::setupMenu()

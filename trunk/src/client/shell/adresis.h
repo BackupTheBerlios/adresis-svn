@@ -60,6 +60,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void requestShowMessage( Msg::Type, const QString&);
 		void requestShowModule( Logic::Module module, const QList<QVariant> &);
 		void requestAddDataToModule( Logic::Module module, const QVariant & );
+		void requestRemoveDataToModule( Logic::Module module, const QString & );
 		void sendEventToForm(ADEvent *);
 		
 	public slots:
