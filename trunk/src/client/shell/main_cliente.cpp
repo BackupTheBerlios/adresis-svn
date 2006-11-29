@@ -42,8 +42,8 @@ int main(int argc, char **argv)
 	dAppProp->setThemeDir(dAppProp->homeDir()+"/data/themes/default");
 	
 	ADMainWindow mainWindow;
-// 	mainWindow.show();
-	mainWindow.showMaximized();
+	mainWindow.show();
+// 	mainWindow.showMaximized();
 	
 	return app.exec();
 }

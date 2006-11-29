@@ -70,7 +70,7 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		{
 // typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
 			
-			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("Name Resource")<< tr("day");
+			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("day");
 			setWindowTitle ( "Reserves Semestral");
 		}
 		break;
@@ -78,7 +78,7 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		{
 // typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
 			
-			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("Name Resource")<< tr("day");
+			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("day");
 			setWindowTitle ( "Reserves Temporal");
 		}
 		break;
@@ -229,7 +229,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 		{
 			ADReserve *reserve = qVariantValue<ADReserve *>(data);
 			QList<QString> strs;
-			strs << ""; //Identficador de la reserva;
+			strs << reserve->idReserve(); //Identficador de la reserve
 			strs << reserve->typeReserve();
 			strs << reserve->iduserreserve();
 			strs << reserve->iduserresponsable();
@@ -241,7 +241,6 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			{
 				strs << reserve->idaudiovisual();
 			}
-			strs << ""; //Nombre del recurso;
 			strs << reserve->day();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
@@ -257,7 +256,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 		{
 			ADReserve *reserve = qVariantValue<ADReserve *>(data);
 			QList<QString> strs;
-			strs << ""; //Identficador de la reserva;
+			strs << reserve->idReserve();
 			strs << reserve->typeReserve();
 			strs << reserve->iduserreserve();
 			strs << reserve->iduserresponsable();
@@ -269,7 +268,6 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			{
 				strs << reserve->idaudiovisual();
 			}
-			strs << ""; //Nombre del recurso;
 			strs << reserve->day();
 
 			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);

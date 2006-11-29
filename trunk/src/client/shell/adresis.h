@@ -55,6 +55,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		ADUser *m_user;
 		QHash<Logic::Module, QList<QVariant> > m_infoModules;
 		QHash<Logic::Module, QList<QVariant> > m_listTypes;
+		QHash<QString, QList<QVariant> > m_dates;
 		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);

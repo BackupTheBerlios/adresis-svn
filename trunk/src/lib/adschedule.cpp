@@ -219,6 +219,7 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 
 void ADSchedule::assignTypeReserve(const QString typeReserve)
 {
+	dDebug() << "assignTypeReserve => " << typeReserve;
 	m_reserve = typeReserve;
 }
 
@@ -235,11 +236,21 @@ void ADSchedule::fill()
 
 	while( it != reservasAnteriores.end() )
 	{
+		dDebug() << "(*it)->typeReserve().toLower() >> " << (*it)->typeReserve().toLower() <<"   m_reserve =>"<< m_reserve;
+		dDebug() << "((( (*it)->beginDateTime().date()).month())-1) >> " << ((( (*it)->beginDateTime().date()).month())-1) << "   month => " << monthNo;
+		dDebug() << "((( (*it)->endDateTime().date()).month())-1) >> " << ((( (*it)->endDateTime().date()).month())-1) << "   month => " << monthNo;
+		
+		
+		
 		if( ((*it)->typeReserve().toLower()) == "semestral" && (m_reserve.toLower()) == "semestral" )
 		{
 			column << cols.indexOf( ( (*it)->day() ).toUpper() );
 			row1 = rows.indexOf( ((*it)->beginDateTime()).toString("hh:mm") );
 			row2 = rows.indexOf( ((*it)->endDateTime()).toString("hh:mm") );
+			
+			dDebug() << "((*it)->beginDateTime()).toString( hh:mm )" << ((*it)->beginDateTime()).toString("hh:mm") << " row1 " << row1;
+			dDebug() << "((*it)->endDateTime()).toString( hh:mm )" << ((*it)->endDateTime()).toString("hh:mm")<< "  row2 " << row2;
+			dDebug() << "( (*it)->day() ).toUpper()" << ( (*it)->day() ).toUpper() << "   columna " << cols.indexOf( ( (*it)->day() ).toUpper() );
 		}
 		
 		
@@ -259,6 +270,12 @@ void ADSchedule::fill()
 		
 			for(int c = 0; c < m_table->columnCount(); c++)
 			{
+				
+				
+				dDebug() << "(((*it)->day()).toUpper()" << (((*it)->day()).toUpper()) << "  (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) => " << (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper());
+				
+				
+				
 			///Este if maneja si el mes elegido y el mes inicial de la reserva son iguales, en tal caso descartara los dias que sean menores a el dia inicial de la reserva.
 				if( (((m_table->horizontalHeaderItem(c))->text()).section('\n',0,0).toUpper()) == (((*it)->day()).toUpper())	&&	monthNo == ((( (*it)->beginDateTime().date()).month())-1)	&&	c >= diaIniRes )
 				{
@@ -286,8 +303,11 @@ void ADSchedule::fill()
 		
 		for(int pos=0; pos < column.count(); pos++)
 		{
+			dDebug() << "col " << column.at(pos);
+			
 			for( int i =row1; i < row2; i++ )
 			{
+				dDebug() << "fila " << i;
 				(m_table->item( i , column.at(pos)))->setText((*it)->iduserresponsable().toUpper() );
 				(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 				(m_table->item( i , column.at(pos)))->setToolTip( "Espacio ocupado en este horario" );
@@ -346,7 +366,7 @@ QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 		if( (point) == 0 || (m_points.at(point).first)-1 != (m_points.at(point-1).first) )
 		{
 			column = ((m_table->horizontalHeaderItem(previousColumn))->text()).toLower();
-			dDebug() << "COLUMN ES >> " << column;
+			dDebug() << "COLUMN ES >> " << column << " " << m_reserve;
 			
 			if((m_reserve.toLower()) ==("semestral"))
 			{
@@ -381,20 +401,20 @@ QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 		}
 	
 	}
-/*	
-	QList< QMap<QString, QString> >::const_iterator po = listSchedule.begin();
 	
-	while( po != listSchedule.end() )
-	{
-		dDebug() << "ADSCHEDULE--ADSCHEDULE";
-		dDebug() << "typereserve "<< (*po)["typereserve"];
-		dDebug() << "day "<< (*po)["day"];
-		dDebug() << "beginhour "<< (*po)["beginhour"];
-		dDebug() << "endhour "<< (*po)["endhour"];
-		dDebug() << "beginDate "<< (*po)["begindate"];
-		dDebug() << "endDate " << (*po)["enddate"];
-		po++;
-	}*/
+// 	QList< QMap<QString, QString> >::const_iterator po = listSchedule.begin();
+// 	
+// 	while( po != listSchedule.end() )
+// 	{
+// 		dDebug() << "ADSCHEDULE--ADSCHEDULE";
+// 		dDebug() << "typereserve "<< (*po)["typereserve"];
+// 		dDebug() << "day "<< (*po)["day"];
+// 		dDebug() << "beginhour "<< (*po)["beginhour"];
+// 		dDebug() << "endhour "<< (*po)["endhour"];
+// 		dDebug() << "beginDate "<< (*po)["begindate"];
+// 		dDebug() << "endDate " << (*po)["enddate"];
+// 		po++;
+// 	}
 	
 	
 	return listSchedule;

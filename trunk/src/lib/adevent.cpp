@@ -98,7 +98,19 @@ QString ADEvent::toString() const
 			break;
 			case Logic::Add:
 			{
-				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+				switch( m_module )
+				{
+					case Logic::Users:
+					{
+						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+					}
+					break;
+					case Logic::ReservesF:
+					{
+						dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
+					}
+					break;
+				}
 			}
 			break;
 			case Logic::Del:
@@ -110,7 +122,7 @@ QString ADEvent::toString() const
 			break;
 		}
 	}
-	else
+	else	// SERVER
 	{
 		switch(m_action)
 		{
@@ -159,6 +171,28 @@ QString ADEvent::toString() const
 				
 				break;
 			}
+			case Logic::Dates:
+			{
+				QDomElement listE = doc.createElement ( "List" );
+				int n=0;
+				foreach(QVariant var, m_data.toList() )
+				{
+					switch(m_module)
+					{
+						case Logic::ReservesF:
+						{
+							QDomElement root = doc.createElement("dates");
+							root.setAttribute( "date", qvariant_cast<QString>( var ) );
+							
+							listE.appendChild(root);
+							n++;
+						}
+						break;
+					}
+				}
+				dataE.appendChild(listE);
+				break;
+			}
 			case Logic::GetTypes:
 			{
 				QDomElement listE = doc.createElement ( "List" );
@@ -196,6 +230,11 @@ QString ADEvent::toString() const
 					{
 						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
 					}
+					case Logic::ReservesF:
+					{
+						dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
+					}
+					break;
 				}
 			}
 			break;

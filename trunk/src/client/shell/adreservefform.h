@@ -55,15 +55,14 @@ class ADReserveFForm : public ADFormBase
 		QMap< QString, QString> nameResources;	//El primer String es la clave principal en la BD y el segundo es el nombre del recurso.
 		QMap<QString, QWidget*> m_inputs;
 		QMap<QString, QString> m_dateSemestral;
+		QList<QMap<QString, QString> > listSchedules;
+		bool m_inserter, m_reserve;
 		
 		void fill();
 		void setup();
 		bool valite();
-		bool m_inserter, m_reserve;
-		//////////////
-		
-		QList<QMap<QString, QString> > listSchedules;
-		
+		void requestDatesSemestral();
+		void requestLogin();
 		
 		
 		
@@ -91,7 +90,7 @@ class ADReserveFForm : public ADFormBase
 		/////////////////////77
 		
 // 		void changeTypeReserve(int);
-// 		void permisos(const QString &login, const bool permiso);
+// 		
 		
 		
 };

@@ -59,8 +59,8 @@ QDomElement ADReserve::toXml(QDomDocument &doc) const
 	root.setAttribute( "idaudiovisual", m_idaudiovisual );
 	root.setAttribute( "idspace", m_idspace );
 	root.setAttribute( "day", m_day );
-	root.setAttribute( "beginhour", m_beginDateTime.time().toString("H:m") );
-	root.setAttribute( "endhour", m_endDateTime.time().toString("H:m") );
+	root.setAttribute( "beginhour", m_beginDateTime.time().toString("hh:mm") );
+	root.setAttribute( "endhour", m_endDateTime.time().toString("hh:mm") );
 	root.setAttribute( "begindate", m_beginDateTime.date().toString("dd/MM/yyyy") );
 	root.setAttribute( "enddate", m_endDateTime.date().toString("dd/MM/yyyy") );
 	root.setAttribute( "isactive", m_isactive);
@@ -72,7 +72,9 @@ QDomElement ADReserve::toXml(QDomDocument &doc) const
 
 void ADReserve::setValues(XMLResults values)
 {
-	dDebug() << "here adspace";
+	dDebug() << "********************************************************************************";
+	dDebug() << "SETVALUES";
+	dDebug() << "********************************************************************************";
 	m_idReserve = values["idreserve"];
 	m_typereserve = values["typeReserve"];
 	m_iduserreserve = values["iduserreserve"];

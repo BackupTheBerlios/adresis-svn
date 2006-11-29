@@ -180,6 +180,8 @@ void ADReserveTForm::changeNameSpace(const QString& name)
 {
 	QString table;
 	QString resource;
+	dDebug() << "Tipo escogido en changeNameSpace => " << (tipoRecC->currentText()).toLower();
+	dDebug() << "Nombre Recurso => " << name;
 	
 	if((tipoRecC->currentText()).toLower() ==("espacios"))
 	{

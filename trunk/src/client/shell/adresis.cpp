@@ -76,6 +76,12 @@ void Adresis::handleEvent(ADEvent * event)
 										ADEvent findType(ADEvent::Client, module, Logic::GetTypes, "");
 										handleEvent(&findType);
 									}
+									
+									if(Logic::Module(i) == Logic::ReservesF)
+									{
+										ADEvent dates(ADEvent::Client, Logic::ReservesF, Logic::Dates , "");
+										handleEvent(&dates);
+									}
 								}
 							}
 							break;
@@ -130,6 +136,20 @@ void Adresis::handleEvent(ADEvent * event)
 					break;
 					case Logic::ReservesF:
 					{
+						switch(event->action())
+						{
+							case Logic::Dates:
+							{
+								m_dates.insert( "datesSem", event->data().toList() );
+							}
+							break;
+							case Logic::Add:
+							{
+								m_infoModules[Logic::ReservesF] << (event->data());
+								emit requestAddDataToModule(Logic::ReservesF , event->data());
+							}
+							break;
+						}
 					}
 					break;
 					case Logic::ReservesT:
@@ -193,6 +213,11 @@ void Adresis::handleEvent(ADEvent * event)
 					{
 						switch(event->action())
 						{
+							case Logic::Add:
+							{
+								m_connector->sendToServer(event->toString());
+								break;
+							}
 							case Logic::GetTypes:
 							{
 								QList<QVariant > types;
@@ -205,16 +230,23 @@ void Adresis::handleEvent(ADEvent * event)
 								
 							}
 							break;
+							
+							case Logic::Dates:
+							{
+								m_connector->sendToServer(event->toString());
+							}
+							break;
 							case Logic::Info:
 							{
 								QList<QVariant> datos = (event->data()).toList();
+								dDebug() <<"LLego solicitud de " << (datos.at(0).toString());
 								
 								if((datos.at(0).toString()) == "nameResources")
 								{
 									QMap<QString, QVariant> nameResource;
 									QList<QVariant> list;
 									
-									if((datos.at(2).toString()) == "space")
+									if((datos.at(2).toString()) == "space") //NAMES SPACES
 									{
 										list = m_infoModules.values(Logic::Spaces)[0];
 										for(int i=0; i < list.count();i++)
@@ -226,7 +258,7 @@ void Adresis::handleEvent(ADEvent * event)
 											}
 										}
 									}
-									else
+									else // NAMES AUDIOVISUAL
 									{
 										list = m_infoModules.values(Logic::Audiovisuals)[0];
 										int n = 1;
@@ -249,10 +281,10 @@ void Adresis::handleEvent(ADEvent * event)
 								
 								else if((datos.at(0).toString()) == "reservesResource")
 								{
+									dDebug() << "ADRESIS LLego ReserveResource";
 									QList<QVariant> listReserves;
-									
-									
 									QList<QVariant> list = m_infoModules.values(Logic::ReservesF)[0];
+									
 									for(int i=0; i < list.count();i++)
 									{
 										ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
@@ -263,9 +295,27 @@ void Adresis::handleEvent(ADEvent * event)
 									}
 									
 									QList<QVariant> listResult;
-									listResult << QVariant("reserveResource") << QVariant(listReserves);
+									listResult << QVariant("reservesResource") << QVariant(listReserves);
 									ADEvent reserves (ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
 									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&reserves);
+								}
+								
+								
+								else if((datos.at(0).toString()) == "datesSemestral")
+								{
+									QList<QVariant> listDates = m_dates.value("datesSem");
+										
+									ADEvent dates (ADEvent::Client, Logic::ReservesF, Logic::Dates, QVariant(listDates));
+									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&dates);
+								
+								}
+								else if((datos.at(0).toString()) == "infoUser")
+								{
+									dDebug() << "//////////////////////////";
+									dDebug() << "ADRESIS INFO USER";
+									dDebug() << "//////////////////////////";
+									ADEvent infoUser (ADEvent::Client, Logic::ReservesF, Logic::Info, QList<QVariant>() << QVariant("infoUser") << QVariant(m_user->login()));
+									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&infoUser);
 								}
 							}
 							break;

@@ -116,11 +116,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 				atts.value( "idaudiovisual"),
 				atts.value( "idspace"),
 				atts.value( "day"),
-// 				atts.value( "beginhour"),
-// 				atts.value( "endhour"),
-// 				atts.value( "begindate"),
-// 				atts.value( "enddate"),
-				QDateTime( QDate::fromString( atts.value("begindate"),"dd/MM/yyyy"), QTime::fromString( atts.value("beginhour"),"hh:mm:ss")), QDateTime( QDate::fromString( atts.value("enddate"),"dd/MM/yyyy"), QTime::fromString( atts.value("endhour"),"hh:mm:ss" ) ),  bool(atts.value( "isactive").toInt()), atts.value( "destinationreserve"));
+				QDateTime( QDate::fromString( atts.value("begindate"),"dd/MM/yyyy"), QTime::fromString( atts.value("beginhour"),"hh:mm")), QDateTime( QDate::fromString( atts.value("enddate"),"dd/MM/yyyy"), QTime::fromString( atts.value("endhour"),"hh:mm" ) ),  bool(atts.value( "isactive").toInt()), atts.value( "destinationreserve"));
 		m_data = QVariant::fromValue(reserve);
 		
 	}
@@ -128,6 +124,11 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	{
 		QString d = atts.value("type");
 		m_data = QVariant(d);
+	}
+	else if(qname == "dates")
+	{
+		QString dI = atts.value("date");
+		m_data = QVariant(dI);
 	}
 	else if(qname == "permissions")
 	{
@@ -162,6 +163,12 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	{
 		m_list << m_data;
 	}
+	
+	else if(qname =="dates" && m_event->action() == Logic::Dates )
+	{
+		m_list << m_data;
+	}
+	
 	else if(qname == "List")
 	{
 		m_data = m_list;

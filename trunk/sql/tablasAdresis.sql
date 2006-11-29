@@ -5,15 +5,16 @@ DROP TABLE AdAudioVisualType CASCADE;
 DROP TABLE AdSpace CASCADE;
 DROP TABLE AdSpaceType CASCADE;
 DROP TABLE AdReserve CASCADE;
+DROP TABLE ConfigurationSchooll CASCADE;
 
 
 CREATE TABLE AdUser(
 	rol integer,
 	nameUser varchar(30),
-	codeUser varchar(20),
-	loginUser varchar(20),
+	codeUser varchar(20) unique,
+	loginUser varchar(20) unique,
 	passwdUser varchar(20),
-	PRIMARY KEY(loginUser,codeUser)
+	PRIMARY KEY(loginUser, codeUser)
 );
 
 INSERT INTO AdUser VALUES(0,'charly','0330911','charagmz','charagmz');
@@ -75,6 +76,39 @@ INSERT INTO AdRols VALUES(2,'consultarReportes',1);
 
 
 
+CREATE TABLE AdSpace(
+	codeSpace varchar(20) PRIMARY KEY,
+	typespace varchar(20),
+	coolAirSpace boolean,
+	capacitySpace integer,
+	nameSpace varchar(30)
+);
+
+INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
+INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
+INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
+INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
+INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
+INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
+INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
+INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
+INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
+INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
+INSERT INTO AdSpace VALUES('null','null');
+
+
+
+CREATE TABLE ADSpaceType(
+	type varchar(20)
+);
+
+INSERT INTO ADSpaceType VALUES('sala de sistemas');
+INSERT INTO ADSpaceType VALUES('sala de reuniones');
+INSERT INTO ADSpaceType VALUES('auditorio');
+INSERT INTO ADSpaceType VALUES('salon');
+
+
+
 
 CREATE TABLE AdAudioVisual(
 	typeAV varchar(20),
@@ -113,36 +147,6 @@ INSERT INTO ADAudioVisualType VALUES('video beam');
 
 
 
-CREATE TABLE AdSpace(
-	codeSpace varchar(20) PRIMARY KEY,
-	typespace varchar(20),
-	coolAirSpace boolean,
-	capacitySpace integer,
-	nameSpace varchar(30)
-);
-
-INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
-INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
-INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
-INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
-INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
-INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
-INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
-INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
-INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
-INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
-INSERT INTO AdSpace VALUES('null','null');
-
-
-
-CREATE TABLE ADSpaceType(
-	type varchar(20)
-);
-
-INSERT INTO ADSpaceType VALUES('sala de sistemas');
-INSERT INTO ADSpaceType VALUES('sala de reuniones');
-INSERT INTO ADSpaceType VALUES('auditorio');
-INSERT INTO ADSpaceType VALUES('salon');
 
 
 
@@ -154,30 +158,31 @@ CREATE TABLE ADReserve
 (
 	idReserve integer default nextval('adReserve_idReserve_seq') not null,
 	typeReserve varchar(20),
-	idUserReserve varchar(20), FOREIGN KEY (idUserReserve) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
-	idUserResponsable varchar(20), FOREIGN KEY (idUserResponsable) REFERENCES AdUser(loginUser)ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idUserReserve varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
 	idAudiovisual varchar(20), FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
-	idSpace varchar(20), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
+	idSpace varchar(20) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
 	beginHour time ,
 	endHour time, 
 	beginDate date, -- DD/MM/YY
 	endDate date,	-- DD/MM/YY
 	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
-	destinationReserve varchar(80),
+	destinationReserve varchar(120),
 	check(beginHour < endHour and beginDate <= endDate)
 );
 
 
 
--- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','06/01/2006','06/08/2006',true,'Metodos Numericos'); 
+-- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','01/09/2006','15/12/2006','true','Metodos Numericos'); 
 
 
-CREATE TABLE ConfigirationSchooll(
-	nameSchooll varchar(70),
-	beginDateSem	date,	--DD/MM/YY
-	endDateSem	date	--DD/MM/YY
+CREATE TABLE ConfigurationSchooll(
+	beginDateSem date,	--DD/MM/YY
+	endDateSem date	--DD/MM/YY
 );
+
+INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 
 -- CREATE TABLE AdSpaceCancelation(
 -- 	typeCancelation varchar(20),

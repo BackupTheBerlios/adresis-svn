@@ -452,6 +452,39 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 				{
 					switch(event->action())
 					{
+						case Logic::Add:
+						{
+							dDebug() << "SHOWVARRRR";
+							event->toString();
+							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
+							
+							QString resourceField, resourceId;
+							if(reserve->idspace() != "")
+							{
+								resourceField = "idspace";
+								resourceId = reserve->idspace();
+							}
+							else if(reserve->idaudiovisual() != "")
+							{
+								resourceField = "idaudiovisual";
+								resourceId = reserve->idaudiovisual();
+							}
+							
+							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("dd/MM/yyyy")) << SQLSTR(reserve->endDateTime().date().toString("dd/MM/yyyy")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
+							SDBM->execQuery(&insert);
+							
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Add, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						
 						case Logic::Find:
 						{	
 							ADSelect infoReserves(QStringList() << "*", "adreserve");
@@ -487,6 +520,21 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Find, listReservesF);
 							cnx->sendToClient(event.toString());
 							
+							break;
+						}
+						case Logic::Dates:
+						{
+							ADSelect infoDatesSemestral(QStringList() << "begindateSem" << "enddatesem", "ConfigurationSchooll");
+							
+							SResultSet rs = SDBM->execQuery(&infoDatesSemestral);
+							dDebug() << "YA COMSULTE " << rs.map()["begindatesem"].count() << " " << rs.map()["enddatesem"].count();
+							QList<QVariant> listDatesSem;
+							listDatesSem.append(QVariant(rs.map()["begindatesem"][0]));
+							listDatesSem.append(QVariant(rs.map()["enddatesem"][0]));
+							dDebug() << "YA CONSULTE";
+							
+							ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Dates, listDatesSem);
+							cnx->sendToClient(event.toString());
 							break;
 						}
 					}

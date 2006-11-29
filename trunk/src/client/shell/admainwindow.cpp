@@ -197,14 +197,13 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 {
 	D_FUNCINFO;
-	form->show();
 	if ( form )
 	{
 		form->setTitle(title);
-		addWidget(form);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 		connect(form, SIGNAL(sendEvent(ADEvent *)), m_adresis, SLOT(handleEvent(ADEvent *)));
-// 		connect(m_adresis, SIGNAL( sendEventToForm(ADEvent *)), form, SLOT(receiveEvent( ADEvent *event)));
+		form->show();
+		addWidget(form);
 	}
 }
 
