@@ -56,7 +56,7 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	{
 		case Logic::Users:
 		{
-			titles << tr("Code") << tr("Name") << tr("Login");
+			titles << tr("Code")  <<  tr("Name") << tr("Login");
 			setWindowTitle ( "Users");
 		}
 		break;
@@ -169,11 +169,13 @@ void ADCModuleList::requestAction(int action)
 		case ADModuleButtonBar::Del:
 		{
 			//Confirmar si desea borrar
+			
 			QTreeWidgetItem *current = m_pTree->currentItem();
 			if(current)
 			{
 				QString key = current-> text ( 0 );
-				ADEvent event(ADEvent::Server, Logic::Users, Logic::Del, key );
+				
+				ADEvent event(ADEvent::Client, Logic::Users, Logic::Del, key );
 				
 				emit sendEvent(&event);
 			}

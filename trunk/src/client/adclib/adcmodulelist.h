@@ -60,7 +60,6 @@ class ADCModuleList: public QWidget
 		void requestShowForm(Logic::Module module);
 		void sendEvent(ADEvent * event);
 		
-		
 	protected:
 		QTreeWidget *m_pTree;
 		DTreeWidgetSearchLine *m_pSearch;

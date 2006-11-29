@@ -85,7 +85,21 @@ void Adresis::handleEvent(ADEvent * event)
 								
 								m_infoModules[Logic::Users] << (event->data());
 								emit requestAddDataToModule(Logic::Users , event->data());
+							}
+							case Logic::Del:
+							{
+								QList<QVariant>::iterator it = m_infoModules[Logic::Users].begin();
+								while(it != m_infoModules[Logic::Users].end())
+								{
+									if(qvariant_cast<ADUser *>(*it)->code() == event->data().toString())
+									{
+										m_infoModules[Logic::Users].erase ( it);
+										break;
+									}
+									++it;
+								}
 								
+								SHOW_VAR(m_infoModules[Logic::Users].count());
 							}
 							break;
 						}
@@ -135,8 +149,6 @@ void Adresis::handleEvent(ADEvent * event)
 			{
 				//CLiente 
 				//se valida si la accion la puede ejecutar m_user y si es asi entonces enviarsela a m_connector
-				dDebug()<< "ANTES DE ENVIAR EL EVENTO";
-				SHOW_VAR(event->toString());
 				if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 				{
 					m_connector->sendToServer(event->toString());

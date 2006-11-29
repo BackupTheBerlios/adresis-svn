@@ -57,9 +57,6 @@ ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 	
 	connect(m_adresis, SIGNAL(requestShowModule( Logic::Module, const QList<QVariant> &)), this, SLOT(showModule( Logic::Module, const QList<QVariant> & )));
 	
-	
-	
-	
 	DCONFIG->beginGroup("TipOfDay");
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
 	
@@ -137,11 +134,6 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	connect(list, SIGNAL(sendEvent(ADEvent * )), m_adresis, SLOT( handleEvent( ADEvent * )));
 	
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
-	
-	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
-	
-	
-	
 }
 
 void ADMainWindow::setupMenu()

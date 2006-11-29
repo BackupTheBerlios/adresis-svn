@@ -71,7 +71,6 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "Data")
 	{
-		SHOW_VAR(m_event->action());
 		if(m_event->action() == Logic::Authenticate)
 		{
 			QList<QVariant> data;
@@ -87,12 +86,15 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	{
 		m_data = atts.value("value");
 	}
+	else if(qname == "Key")
+	{
+		m_data = atts.value("value");
+	}
 	else if(qname == "user")
 	{
 		ADPermission permission;
 		ADUser *user = new ADUser(atts.value("name"), atts.value("code"), atts.value("login"), atts.value("passwd"), permission);
 		m_data = QVariant::fromValue(user);
-		
 	}
 	else if(qname == "space")
 	{

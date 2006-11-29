@@ -253,7 +253,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 		if(event->source() == ADEvent::Server)
 		{
 			
-			
 		}
 		else
 		{
@@ -279,6 +278,22 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							else
 							{
 								ADEvent e( ADEvent::Server, Logic::Users, Logic::Add, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						case Logic::Del:
+						{
+							ADDelete deleteUser("aduser");
+							deleteUser.setWhere( "codeUser = " + SQLSTR(event->data().toString()));
+							SDBM->execQuery(&deleteUser);
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Users, Logic::Del, event->data());
 								sendToAll(e.toString());
 							}
 						}

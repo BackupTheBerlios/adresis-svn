@@ -103,7 +103,9 @@ QString ADEvent::toString() const
 			break;
 			case Logic::Del:
 			{
-				dataE.setAttribute("key",m_data.toString());
+				QDomElement keyE = doc.createElement ( "Key" );
+				keyE.setAttribute("value", m_data.toString());
+				dataE.appendChild(keyE);
 			}
 			break;
 		}
@@ -195,6 +197,13 @@ QString ADEvent::toString() const
 						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
 					}
 				}
+			}
+			break;
+			case Logic::Del:
+			{
+				QDomElement keyE = doc.createElement ( "Key" );
+				keyE.setAttribute("value", m_data.toString());
+				dataE.appendChild(keyE);
 			}
 			break;
 		}
