@@ -52,8 +52,9 @@ class ADReserveFForm : public ADFormBase
 		QString m_responsable, destinationReserve;
 		QStringList typeSpaces, typeAudiovisual;
 		QStringList resourcesSpaces, resourcesAud;
-		QMap< QString, QString> nameResources;	//El primer String es el nombre y el segundo es la clave principal en la BD.
+		QMap< QString, QString> nameResources;	//El primer String es la clave principal en la BD y el segundo es el nombre del recurso.
 		QMap<QString, QWidget*> m_inputs;
+		QMap<QString, QString> m_dateSemestral;
 		
 		void fill();
 		void setup();
@@ -86,9 +87,9 @@ class ADReserveFForm : public ADFormBase
 		void insertListNameResources();
 		void changeNameResource(const QString&);
 		void receiveReserves( const QList<ADReserve *>& results );
-		
-		/////////////////////77
 		void emitInsertReserve();
+		/////////////////////77
+		
 // 		void changeTypeReserve(int);
 // 		void permisos(const QString &login, const bool permiso);
 		

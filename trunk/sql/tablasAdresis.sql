@@ -11,8 +11,9 @@ CREATE TABLE AdUser(
 	rol integer,
 	nameUser varchar(30),
 	codeUser varchar(20),
-	loginUser varchar(20) PRIMARY KEY,
-	passwdUser varchar(20)
+	loginUser varchar(20),
+	passwdUser varchar(20),
+	PRIMARY KEY(loginUser,codeUser)
 );
 
 INSERT INTO AdUser VALUES(0,'charly','0330911','charagmz','charagmz');
@@ -93,8 +94,8 @@ INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1166', '211');
 INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1177', '216');
 INSERT INTO AdAudioVisual VALUES('reproductor VHS','sony','bueno', '1188', '217');
 INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
-INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', '218');
-INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', '219');
+INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', 'null');
+INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', 'null');
 
 
 
@@ -149,7 +150,7 @@ INSERT INTO ADSpaceType VALUES('salon');
 -- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  nill.
 DROP SEQUENCE adreserve_idreserve_seq;
 CREATE SEQUENCE adReserve_idReserve_seq;
-CREATE TABLE AdReserve
+CREATE TABLE ADReserve
 (
 	idReserve integer default nextval('adReserve_idReserve_seq') not null,
 	typeReserve varchar(20),

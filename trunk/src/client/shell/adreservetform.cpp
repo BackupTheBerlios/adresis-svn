@@ -305,7 +305,7 @@ void ADReserveTForm::emitInsertReserve()
 {
 	QString table;
 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
-	listSchedules = horario->buildSchedule();
+	listSchedules = horario->returnSchedule();
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
 	
 	

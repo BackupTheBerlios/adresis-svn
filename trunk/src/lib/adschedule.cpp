@@ -326,12 +326,10 @@ void ADSchedule::organizePairs()
 
 }
 
-QList< QMap<QString, QString> > ADSchedule::buildSchedule()
+QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 {
 	QString column;
 	QList<QMap<QString, QString> > listSchedule;
-	
-	
 	organizePairs();
 	
 	QMap<QString, QString > map;
@@ -356,14 +354,6 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 				map.insert("typereserve", m_reserve);
 				map.insert("beginhour", ((m_table->verticalHeaderItem(m_points.at(point).first))->text()) );
 				
-				DCONFIG->beginGroup("ConfigurationOfSchooll");
-				QString day = (qvariant_cast<QString>(DCONFIG->value("dateIniSem")).section("/",0,0));
-				int month = (qvariant_cast<QString>(DCONFIG->value("dateIniSem" ))).section("/",1,1).toInt()+1;
-				map.insert("begindate", day+"/"+ QString::number(month)+"/"+QString::number(year) );
-				
-				day = (qvariant_cast<QString>(DCONFIG->value("dateFinSem")).section("/",0,0));
-				month = (qvariant_cast<QString>(DCONFIG->value("dateFinSem" ))).section("/",1,1).toInt()+1;
-				map.insert("enddate", day+"/"+ QString::number(month)+"/"+QString::number(year) );
 			}
 			else if ((m_reserve.toLower()) ==("temporal"))
 			{
@@ -375,7 +365,6 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 				map.insert("enddate",   ""+column+"/"+QString::number(monthNo+1)+"/"+QString::number(year));
 				map.insert("beginhour", ((m_table->verticalHeaderItem(m_points.at(point).first))->text()) );
 			}
-			
 		}
 		
 		if( (point) == (m_points.count()-1) || (m_points.at(point).first)+1 != (m_points.at(point+1).first) )
@@ -392,7 +381,7 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 		}
 	
 	}
-	
+/*	
 	QList< QMap<QString, QString> >::const_iterator po = listSchedule.begin();
 	
 	while( po != listSchedule.end() )
@@ -405,7 +394,7 @@ QList< QMap<QString, QString> > ADSchedule::buildSchedule()
 		dDebug() << "beginDate "<< (*po)["begindate"];
 		dDebug() << "endDate " << (*po)["enddate"];
 		po++;
-	}
+	}*/
 	
 	
 	return listSchedule;

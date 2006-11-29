@@ -32,7 +32,6 @@ ADReserveFForm::ADReserveFForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
 {
 	m_inserter = true;
-	destinationReserve="";
 	setup();
 }
 
@@ -58,7 +57,6 @@ void ADReserveFForm::changeTypeResource(int opcion)
 	resourceC->clear();
 	ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes , QVariant::fromValue(this));
 	emit sendEvent( &listTypes );
-
 }
 
 
@@ -259,54 +257,48 @@ void ADReserveFForm::setup()
 	layout->addWidget(new QLabel(titles[4]),4,0);
 	areaTexto = new QTextEdit;
 	layout->addWidget(areaTexto,4,1);
-	
-	
+	m_inputs.insert( titles[4].toLower () , areaTexto );
 	
 	setForm(base);
-// 	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
+	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
 }
 
 
 void ADReserveFForm::emitInsertReserve()
 {
-// 	QString table;
-// 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
-// 	listSchedules = horario->buildSchedule();
-// 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
-// 	
-// 	
-// 	if( typeResourceC->currentText() ==("Espacios") )
-// 	{
-// 		table="adspacereserve";
-// 	}
-// 	else
-// 	{
-// 		table="adavreserve";
-// 	}
-// 
-// 
-// 	if(m_inserter && valite())
-// 	{
-// 		while( it != listSchedules.end())
-// 		{
-// 			emit requestInsertReserve(
-// 				table,
-// 				(*it)["typereserve"],
-// 				m_responsable,
-// 				static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-// 				nameResources.key(static_cast<QComboBox*>(m_inputs[tr("espacio")])->currentText()),
-// 				(*it)["day"],
-// 				(*it)["beginhour"],
-// 				(*it)["endhour"],
-// 				(*it)["begindate"],
-// 				(*it)["enddate"],
-// 				true,
-// 				destinationReserve
-// 				
-// 			);
-// 			it++;
-// 		}
-// 	}
+	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
+	
+	listSchedules = horario->returnSchedule();
+	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
+	
+
+// 	const QString idReserve, const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QDateTime& beginDateTime, const QDateTime& endDateTime, const bool isActive, const QString& destinationreserve
+
+	if(m_inserter && valite())
+	{
+// 		QDateTime beginDateTime = QDateTime(QDate::fromString(,"dd/MM/yyyy"), QTime::fromString());
+		QDateTime beginDateTime;
+		QDateTime endDateTime;
+		
+		
+		while( it != listSchedules.end())
+		{
+			ADReserve(
+				"",
+				(*it)["typereserve"],
+				m_responsable,
+				static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
+				nameResources.key(resourcesNameC->currentText()), //Se supone que si no existe devuelve "",sino
+				nameResources.key(resourcesNameC->currentText()), //la PK osea que alguno de los dos da.
+				(*it)["day"],
+				beginDateTime,
+				endDateTime,
+				true,
+				(static_cast<QTextEdit *>(m_inputs[tr("motivo")])->document())->toPlainText()
+			);
+			it++;
+		}
+	}
 // // 	else
 // // 	{
 // // 		emit requestUpdateReserve(
@@ -321,16 +313,16 @@ void ADReserveFForm::emitInsertReserve()
 bool ADReserveFForm::valite()
 {
 	bool isValid = true;
-// 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
-// 	while( it != listSchedules.end())
-// 	{
-// 		if( (*it)["typereserve"].isEmpty() || m_responsable.isEmpty() || (static_cast<QLineEdit*> (m_inputs[tr("responsable")])->text()).isEmpty() || (nameResources.key(static_cast<QComboBox*> (m_inputs[tr("espacio")])->currentText())).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty() || ((*it)["begindate"]).isEmpty() || ((*it)["enddate"]).isEmpty())
-// 		{
-// 			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato\nes incorrecto", 0);
-// 			isValid=false;
-// 		}
-// 		it++;
-// 	}
-// 	
+	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
+	while( it != listSchedules.end())
+	{
+		if( (*it)["typereserve"].isEmpty() || m_responsable.isEmpty() || (static_cast<QLineEdit*> (m_inputs[tr("responsable")])->text()).isEmpty() || (nameResources.key(static_cast<QComboBox*> (m_inputs[tr("espacio")])->currentText())).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty())
+		{
+			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato\nes incorrecto", 0);
+			isValid=false;
+		}
+		it++;
+	}
+	
 	return isValid;
 }

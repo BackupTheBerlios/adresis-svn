@@ -35,6 +35,7 @@
 #include <QList>
 #include <QPair>
 #include "adreserve.h"
+
 		
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
@@ -46,7 +47,7 @@ class ADSchedule : public QWidget
 	public:
 		ADSchedule(QWidget *parent=0);
 		~ADSchedule();
-		QList< QMap<QString, QString> > buildSchedule();
+		QList< QMap<QString, QString> > returnSchedule();
 	
 	
 	public slots:
