@@ -67,7 +67,7 @@ QString ADEvent::toString() const
 	
 	QDomElement dataE = doc.createElement( "Data" );
 	SHOW_VAR(m_action); 
-	if(m_action == Logic::Add ||m_action == Logic::Update)
+	if(m_action == Logic::Add || m_action == Logic::Update)
 	{
 		switch( m_module )
 		{
@@ -85,153 +85,140 @@ QString ADEvent::toString() const
 	}
 	else
 	{
-	if(m_source == Client)
-	{
-		switch(m_action)
+		if(m_source == Client)
 		{
-			case Logic::Find:
+			switch(m_action)
 			{
-				QDomElement conditionE = doc.createElement ( "Condition" );
-				conditionE.setAttribute("value", m_data.toString());
-				dataE.appendChild(conditionE);
-			}
-			break;
-			case Logic::Info:
-			{
-// 				foreach(QVariant var, m_data.toList() )
-// 				{
-// 					if(m_module == Logic::Users)
-// 					{
-// 						dataE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
-// 					}
-// 				}
-			}
-			break;
-			case Logic::Authenticate:
-			{
-				dataE.setAttribute("user", m_data.toList()[0].toString());
-				dataE.setAttribute("passwd", m_data.toList()[1].toString());
-			}
-			break;
-			break;
-			case Logic::Del:
-			{
-				QDomElement keyE = doc.createElement ( "Key" );
-				keyE.setAttribute("value", m_data.toString());
-				dataE.appendChild(keyE);
-			}
-			break;
-		}
-	}
-	else	// SERVER
-	{
-		switch(m_action)
-		{
-			case Logic::Find:
-			{
-				QDomElement listE = doc.createElement ( "List" );
-				foreach(QVariant var, m_data.toList() )
+				case Logic::Find:
 				{
-					switch(m_module)
-					{
-						case Logic::Users:
-						{
-							listE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
-						}
-						break;
-						case Logic::Audiovisuals:
-						{
-							listE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
-						}
-						break;
-						case Logic::ReservesT:
-						{
-							listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
-						}
-						break;
-						case Logic::ReservesF:
-						{
-							listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
-						}
-						break;
-						case Logic::Spaces:
-						{
-							listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
-						}
-						break;
-						
-					}
+					QDomElement conditionE = doc.createElement ( "Condition" );
+					conditionE.setAttribute("value", m_data.toString());
+					dataE.appendChild(conditionE);
 				}
-				dataE.appendChild(listE);
-			}
-			break;
-			case Logic::Authenticate:
-			{
-// 				dDebug() << "server authenticate";
-				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+				break;
+				case Logic::Authenticate:
+				{
+					dataE.setAttribute("user", m_data.toList()[0].toString());
+					dataE.setAttribute("passwd", m_data.toList()[1].toString());
+				}
+				break;
+				case Logic::Del:
+				{
+					QDomElement keyE = doc.createElement ( "Key" );
+					keyE.setAttribute("value", m_data.toString());
+					dataE.appendChild(keyE);
+				}
 				break;
 			}
-			case Logic::Dates:
+		}
+		else	// SERVER
+		{
+			switch(m_action)
 			{
-				QDomElement listE = doc.createElement ( "List" );
-				int n=0;
-				foreach(QVariant var, m_data.toList() )
+				case Logic::Find:
 				{
-					switch(m_module)
+					QDomElement listE = doc.createElement ( "List" );
+					foreach(QVariant var, m_data.toList() )
 					{
-						case Logic::ReservesF:
+						switch(m_module)
 						{
-							QDomElement root = doc.createElement("dates");
-							root.setAttribute( "date", qvariant_cast<QString>( var ) );
+							case Logic::Users:
+							{
+								listE.appendChild( qvariant_cast<ADUser *>( var )->toXml(doc) );
+							}
+							break;
+							case Logic::Audiovisuals:
+							{
+								listE.appendChild( qvariant_cast<ADAudioVisual *>( var )->toXml(doc) );
+							}
+							break;
+							case Logic::ReservesT:
+							{
+								listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
+							}
+							break;
+							case Logic::ReservesF:
+							{
+								listE.appendChild( qvariant_cast<ADReserve*>( var )->toXml(doc) );
+							}
+							break;
+							case Logic::Spaces:
+							{
+								listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
+							}
+							break;
 							
-							listE.appendChild(root);
-							n++;
 						}
-						break;
 					}
+					dataE.appendChild(listE);
 				}
-				dataE.appendChild(listE);
+				break;
+				case Logic::Authenticate:
+				{
+					dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+					break;
+				}
+				case Logic::Dates:
+				{
+					QDomElement listE = doc.createElement ( "List" );
+					int n=0;
+					foreach(QVariant var, m_data.toList() )
+					{
+						switch(m_module)
+						{
+							case Logic::ReservesF:
+							{
+								QDomElement root = doc.createElement("dates");
+								root.setAttribute( "date", qvariant_cast<QString>( var ) );
+								
+								listE.appendChild(root);
+								n++;
+							}
+							break;
+						}
+					}
+					dataE.appendChild(listE);
+					break;
+				}
+				case Logic::GetTypes:
+				{
+					QDomElement listE = doc.createElement ( "List" );
+					foreach(QVariant var, m_data.toList() )
+					{
+						switch(m_module)
+						{
+							
+							case Logic::Audiovisuals:
+							{
+								QDomElement root = doc.createElement("types");
+								root.setAttribute( "type", qvariant_cast<QString>( var ) );
+								
+								listE.appendChild(root);
+							}
+							break;
+							case Logic::Spaces:
+							{
+								QDomElement root = doc.createElement("types");
+								root.setAttribute( "type", qvariant_cast<QString>( var ) );
+								
+								listE.appendChild(root);
+							}
+							break;
+							
+						}
+					}
+					dataE.appendChild(listE);
+				}
+				break;
+				case Logic::Del:
+				{
+					QDomElement keyE = doc.createElement ( "Key" );
+					keyE.setAttribute("value", m_data.toString());
+					dataE.appendChild(keyE);
+				}
 				break;
 			}
-			case Logic::GetTypes:
-			{
-				QDomElement listE = doc.createElement ( "List" );
-				foreach(QVariant var, m_data.toList() )
-				{
-					switch(m_module)
-					{
-						
-						case Logic::Audiovisuals:
-						{
-							QDomElement root = doc.createElement("types");
-							root.setAttribute( "type", qvariant_cast<QString>( var ) );
-							
-							listE.appendChild(root);
-						}
-						break;
-						case Logic::Spaces:
-						{
-							QDomElement root = doc.createElement("types");
-							root.setAttribute( "type", qvariant_cast<QString>( var ) );
-							
-							listE.appendChild(root);
-						}
-						break;
-						
-					}
-				}
-				dataE.appendChild(listE);
-			}
-			break;
-			case Logic::Del:
-			{
-				QDomElement keyE = doc.createElement ( "Key" );
-				keyE.setAttribute("value", m_data.toString());
-				dataE.appendChild(keyE);
-			}
-			break;
 		}
-	}
 	}
 	root.appendChild(dataE);
 	SHOW_VAR(doc.toString());

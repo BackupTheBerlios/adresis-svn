@@ -545,13 +545,17 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							
 							SResultSet rs = SDBM->execQuery(&infoDatesSemestral);
 							dDebug() << "YA COMSULTE " << rs.map()["begindatesem"].count() << " " << rs.map()["enddatesem"].count();
-							QList<QVariant> listDatesSem;
-							listDatesSem.append(QVariant(rs.map()["begindatesem"][0]));
-							listDatesSem.append(QVariant(rs.map()["enddatesem"][0]));
-							dDebug() << "YA CONSULTE";
+							if(!rs.map().isEmpty())
+							{
+								QList<QVariant> listDatesSem;
+								listDatesSem.append(QVariant(rs.map()["begindatesem"][0]));
+								listDatesSem.append(QVariant(rs.map()["enddatesem"][0]));
 							
-							ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Dates, listDatesSem);
-							cnx->sendToClient(event.toString());
+								dDebug() << "YA CONSULTE";
+								
+								ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Dates, listDatesSem);
+								cnx->sendToClient(event.toString());
+							}
 							break;
 						}
 					}
@@ -563,7 +567,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					switch(event->action())
 					{
 						case Logic::Find:
-						{	
+						{
 							ADSelect infoReserves(QStringList() << "*", "adreserve");
 							if(event->data() !="all" )
 							{
