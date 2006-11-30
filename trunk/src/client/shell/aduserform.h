@@ -7,14 +7,14 @@
 #include "adpermissionsview.h"
 #include "aduser.h"
 /**
-@author Charly Aguirre Manzano,033091
+ * @author Charly Aguirre Manzano,033091
 */
 class ADUserForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
 		ADUserForm(QWidget *parent = 0);
-		ADUserForm(const ADUser& user, QWidget *parent = 0);
+		ADUserForm(const ADUser * user, QWidget *parent = 0);
 		~ADUserForm();
 		void setup();
 		
@@ -24,7 +24,7 @@ class ADUserForm : public ADFormBase
 		bool m_inserter;
 		
 	public slots:
-		void emitInsertUser();
+		void emitEvent();
 		
 };
 

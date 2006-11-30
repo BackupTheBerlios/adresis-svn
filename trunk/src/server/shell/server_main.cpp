@@ -105,10 +105,10 @@ void write_test_config()
 	DCONFIG->beginGroup("Connection");
 	DCONFIG->setValue("Host", "localhost");
 	DCONFIG->beginGroup("Database");
-	DCONFIG->setValue("Name", "doms");
+	DCONFIG->setValue("Name", "adresis");
 	DCONFIG->setValue("Host", "localhost");
-	DCONFIG->setValue("Login", "domsadmin");
-	DCONFIG->setValue("Password", "domsadmin");
+	DCONFIG->setValue("Login", "jorhumcc");
+	DCONFIG->setValue("Password", "jorhumcc");
 	
 	DCONFIG->sync();
 	exit(0);

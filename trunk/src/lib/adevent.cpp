@@ -66,7 +66,25 @@ QString ADEvent::toString() const
 	root.appendChild(actionE);
 	
 	QDomElement dataE = doc.createElement( "Data" );
-	SHOW_VAR(m_action);
+	SHOW_VAR(m_action); 
+	if(m_action == Logic::Add ||m_action == Logic::Update)
+	{
+		switch( m_module )
+		{
+			case Logic::Users:
+			{
+				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
+			}
+			break;
+			case Logic::ReservesF:
+			{
+				dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
+			}
+			break;
+		}
+	}
+	else
+	{
 	if(m_source == Client)
 	{
 		switch(m_action)
@@ -91,27 +109,10 @@ QString ADEvent::toString() const
 			break;
 			case Logic::Authenticate:
 			{
-// 				dDebug() << "authenticate";
 				dataE.setAttribute("user", m_data.toList()[0].toString());
 				dataE.setAttribute("passwd", m_data.toList()[1].toString());
 			}
 			break;
-			case Logic::Add:
-			{
-				switch( m_module )
-				{
-					case Logic::Users:
-					{
-						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
-					}
-					break;
-					case Logic::ReservesF:
-					{
-						dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
-					}
-					break;
-				}
-			}
 			break;
 			case Logic::Del:
 			{
@@ -168,7 +169,6 @@ QString ADEvent::toString() const
 			{
 // 				dDebug() << "server authenticate";
 				dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
-				
 				break;
 			}
 			case Logic::Dates:
@@ -222,21 +222,6 @@ QString ADEvent::toString() const
 				}
 				dataE.appendChild(listE);
 			}
-			case Logic::Add:
-			{
-				switch(m_module)
-				{
-					case Logic::Users:
-					{
-						dataE.appendChild( qvariant_cast<ADUser *>( m_data )->toXml(doc) );
-					}
-					case Logic::ReservesF:
-					{
-						dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
-					}
-					break;
-				}
-			}
 			break;
 			case Logic::Del:
 			{
@@ -246,6 +231,7 @@ QString ADEvent::toString() const
 			}
 			break;
 		}
+	}
 	}
 	root.appendChild(dataE);
 	SHOW_VAR(doc.toString());

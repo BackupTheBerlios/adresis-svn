@@ -169,15 +169,22 @@ void ADCModuleList::requestAction(int action)
 		case ADModuleButtonBar::Del:
 		{
 			//Confirmar si desea borrar
-			
 			QTreeWidgetItem *current = m_pTree->currentItem();
 			if(current)
 			{
 				QString key = current-> text ( 0 );
-				
 				ADEvent event(ADEvent::Client, Logic::Users, Logic::Del, key );
-				
 				emit sendEvent(&event);
+			}
+		}
+		break;
+		case ADModuleButtonBar::Modify:
+		{
+			QTreeWidgetItem *current = m_pTree->currentItem();
+			if(current)
+			{
+				QString key = current-> text ( 0 );
+				emit requestShowForm(m_pModule, key);
 			}
 		}
 		break;
@@ -191,7 +198,7 @@ void ADCModuleList::clean()
 
 void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 {
-	D_FUNCINFO;
+// 	D_FUNCINFO;
 	switch(module)
 	{
 		case Logic::Users:
@@ -316,4 +323,37 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 	}
 }
 
+void ADCModuleList::removeData(Logic::Module module, const QString & key )
+{
+// 	D_FUNCINFO;
+	QTreeWidgetItemIterator it(m_pTree);
+	while( (*it) )
+	{
+		dDebug() << (*it)->text(0);
+		if( key == (*it)->text(0) )
+		{
+			delete (*it);
+			break;
+		}
+		++it;
+	}
+}
 
+void ADCModuleList::updateData(Logic::Module module, const QVariant & data )
+{
+	D_FUNCINFO;
+	switch(module)
+	{
+		case Logic::Users:
+		{
+			
+			ADUser * u = qvariant_cast<ADUser *>(data);
+			if (u)
+			{
+				removeData(module, u->code() );
+			}
+		}
+		break;
+	}
+	addData(module, data);
+}

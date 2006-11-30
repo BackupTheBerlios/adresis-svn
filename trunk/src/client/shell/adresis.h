@@ -50,6 +50,10 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
 		
+		ADObject * getObject( Logic::Module module,const QString key );
+		void removeObject(Logic::Module module,const QString key );
+		
+		
 	private:
 		ADConnector *m_connector;
 		ADUser *m_user;
@@ -62,6 +66,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void requestShowModule( Logic::Module module, const QList<QVariant> &);
 		void requestAddDataToModule( Logic::Module module, const QVariant & );
 		void requestRemoveDataToModule( Logic::Module module, const QString & );
+		void requestUpdateDataToModule( Logic::Module module, const QVariant & );
 		void sendEventToForm(ADEvent *);
 		
 	public slots:

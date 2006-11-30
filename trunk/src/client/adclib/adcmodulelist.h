@@ -52,12 +52,14 @@ class ADCModuleList: public QWidget
 		
 	public slots:
 		void addData(Logic::Module module, const QVariant & data );
+		void removeData(Logic::Module module, const QString & key );
+		void updateData(Logic::Module module, const QVariant & data );
 		
 	protected slots:
 		virtual void requestAction(int action);
 		
 	signals:
-		void requestShowForm(Logic::Module module);
+		void requestShowForm(Logic::Module module, const QString & key = QString::null);
 		void sendEvent(ADEvent * event);
 		
 	protected:

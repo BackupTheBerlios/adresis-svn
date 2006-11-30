@@ -129,12 +129,14 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
 	m_modules.insert( module, list );
-	connect(list, SIGNAL(requestShowForm( Logic::Module )), this, SLOT(showForm( Logic::Module )));
+	connect(list, SIGNAL(requestShowForm( Logic::Module , const  QString & )), this, SLOT(showForm( Logic::Module, const QString & )));
 	
 	connect(list, SIGNAL(sendEvent(ADEvent * )), m_adresis, SLOT( handleEvent( ADEvent * )));
 	
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
 	connect(m_adresis, SIGNAL(requestRemoveDataToModule(Logic::Module, const QString & )), list, SLOT(removeData( Logic::Module, const QString & )));
+	connect(m_adresis, SIGNAL(requestUpdateDataToModule(Logic::Module, const QVariant & )), list, SLOT(updateData( Logic::Module, const QVariant & )));
+	
 }
 
 void ADMainWindow::setupMenu()
@@ -207,15 +209,23 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 	}
 }
 
-void ADMainWindow::showForm( Logic::Module module )
+void ADMainWindow::showForm( Logic::Module module, const QString & key )
 {
 	ADFormBase * form;
 	switch( module )
 	{
 		case Logic::Users:
 		{
-			form = new ADUserForm;
-			addForm(form, tr("Add user"));
+			if(key.isNull())
+			{
+				form = new ADUserForm;
+				addForm(form, tr("Add user"));
+			}
+			else
+			{
+				form = new ADUserForm(static_cast<ADUser *>(m_adresis->getObject(Logic::Users, key ))) ;
+				addForm(form, tr("Modify user"));
+			}
 		}
 		break;
 		case Logic::Spaces:

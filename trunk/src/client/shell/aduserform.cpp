@@ -20,15 +20,18 @@ ADUserForm::ADUserForm(QWidget *parent)
 	setup();
 }
 
-ADUserForm::ADUserForm(const ADUser& user, QWidget *parent) : ADFormBase("<h1><b>User</b><h1>" , parent)
+ADUserForm::ADUserForm(const ADUser * user, QWidget *parent) : ADFormBase("<h1><b>User</b><h1>" , parent)
 {
-	D_FUNCINFO;
-	setup();
+	
 	m_inserter = false;
-	if(user.isValid())
+	setup();
+	if(user)
 	{
-
-		
+		static_cast<QLineEdit*>(m_inputs[tr("name")])->setText( user->name() );
+		static_cast<QLineEdit*>(m_inputs[tr("code")])->setText(user->code());
+		static_cast<QLineEdit*>(m_inputs[tr("login")])->setText(user->login());
+// 		static_cast<QLineEdit*>(m_inputs[tr("password")])->setText(user->passwd());
+		m_permission->setPermissions(user->permissions());
 	}
 }
 
@@ -66,18 +69,26 @@ void ADUserForm::setup()
 	m_permission  =new ADPermissionsView();
 	vBLayout->addWidget(m_permission);
 	setForm(base);
-	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertUser()));
+	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
+
 }
 
 
 
-void ADUserForm::emitInsertUser()
+void ADUserForm::emitEvent()
 {
 	ADUser user( static_cast<QLineEdit*>(m_inputs[tr("name")])->text(), static_cast<QLineEdit*>(m_inputs[tr("code")])->text(), static_cast<QLineEdit*>(m_inputs[tr("login")])->text(), static_cast<QLineEdit*>(m_inputs[tr("password")])->text(), m_permission->permissions());
+	Logic::Action action;
+	if(m_inserter)
+	{
+		action = Logic::Add;
+	}
+	else
+	{
+		action = Logic::Update;
+	}
+	ADEvent event( ADEvent::Client, Logic::Users, action, QVariant::fromValue(&user));
+	emit sendEvent(&event);
 	
-	ADEvent insertUser( ADEvent::Client, Logic::Users, Logic::Add, QVariant::fromValue(&user));
-	emit sendEvent(&insertUser);
 }
-
-
 

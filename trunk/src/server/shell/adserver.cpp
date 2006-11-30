@@ -298,6 +298,23 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 						}
 						break;
+						case Logic::Update:
+						{
+							ADUser *user = qvariant_cast<ADUser *>(event->data());
+							ADUpdate updateUser("aduser" ,QStringList()<< "nameuser" << "loginuser" << "passwduser", QStringList() << SQLSTR(user->name()) <<  SQLSTR(user->login()) << SQLSTR(user->passwd()) );
+							updateUser.setWhere( "codeUser = " + SQLSTR(user->code()));
+							SDBM->execQuery(&updateUser);
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Users, Logic::Update, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
 						case Logic::Find:
 						{
 							ADSelect infoUser(QStringList() << "*" , "aduser");

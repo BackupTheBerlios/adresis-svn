@@ -92,19 +92,25 @@ void Adresis::handleEvent(ADEvent * event)
 							}
 							case Logic::Del:
 							{
-								QList<QVariant>::iterator it = m_infoModules[Logic::Users].begin();
-								while(it != m_infoModules[Logic::Users].end())
-								{
-									if(qvariant_cast<ADUser *>(*it)->code() == event->data().toString())
-									{
-										m_infoModules[Logic::Users].erase ( it);
-										break;
-									}
-									++it;
-								}
+								removeObject( Logic::Users, event->data().toString()   );
 								emit requestRemoveDataToModule(Logic::Users , event->data().toString());
 							}
 							break;
+							case Logic::Update:
+							{
+								ADUser *user = qvariant_cast<ADUser *>(event->data()) ;
+								if(user)
+								{
+									removeObject( Logic::Users, user->code() );
+								
+									m_infoModules[Logic::Users] << (event->data());
+									emit requestUpdateDataToModule(Logic::Users, event->data());
+								}
+								else
+								{
+									dFatal() << "error";
+								}
+							}
 						}
 					}
 					break;
@@ -350,5 +356,50 @@ void Adresis::login(const QString &user, const QString &passwd)
 	data << user << passwd;
 	ADEvent event(ADEvent::Client, Logic::Users, Logic::Authenticate, data );
 	m_connector->sendToServer( event.toString() );
+}
+
+ADObject * Adresis::getObject( Logic::Module module,const QString key )
+{
+	QList<QVariant>::iterator it = m_infoModules[module].begin();
+	while(it != m_infoModules[module].end())
+	{
+		switch(module)
+		{
+			case Logic::Users:
+			{
+				if(qvariant_cast<ADUser *>(*it)->code() == key)
+				{
+					return qvariant_cast<ADUser *>(*it);
+				}
+			}
+			break;
+		}
+		++it;
+	}
+	return 0;
+}
+
+void Adresis::removeObject(Logic::Module module,const QString key )
+{
+	QList<QVariant>::iterator it = m_infoModules[module].begin();
+	while(it != m_infoModules[module].end())
+	{
+		switch(module)
+		{
+			case Logic::Users:
+			{
+				ADUser *u = qvariant_cast<ADUser *>(*it);
+				if(u)
+				{
+					if(u->code() == key)
+					{
+						m_infoModules[Logic::Users].erase ( it);
+					}
+				}
+			}
+			break;
+		}
+		++it;
+	}
 }
 
