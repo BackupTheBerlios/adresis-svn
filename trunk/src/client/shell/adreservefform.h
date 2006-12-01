@@ -42,7 +42,7 @@ class ADReserveFForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADReserveFForm(QWidget *parent = 0);
-		ADReserveFForm(const ADReserve & reserve, QWidget *parent = 0);
+		ADReserveFForm( ADReserve * reserve, QWidget *parent = 0);
 		~ADReserveFForm();
 		
 	private:
@@ -58,25 +58,17 @@ class ADReserveFForm : public ADFormBase
 		QList<QMap<QString, QString> > listSchedules;
 		bool m_inserter, m_reserve;
 		
-		void fill();
+		
 		void setup();
 		bool valite();
 		void requestDatesSemestral();
 		void requestLogin();
-		
-		
+		void requestResourceInfo(QString modulo,QString key);
 		
 		
 	signals:
 		void sendEvent( ADEvent *);
 		
-		/////////////////////////////////
-		void requestInsertReserve(const QString& table, const QString& typeR, const QString& userReserve, const QString& userResponsable, const QString& idRecurso, const QString& day, const QString& beginhour, const QString& endhour, const QString& begindate, const QString& enddate, const bool& isactive, const QString& destinationReserve);
-		
-		void requestUpdateReserve(const QString& typeR, const QString& recurso, const QString& resposable);
-		void requestTypeReserve(const QString& typeR);
-		void requestTypeResources(const QString& table, const QString& typeR);
-		void consultSchedule(const QString& table, const QString& resource);
 		
 	public slots:
 		void receiveEvent(ADEvent *);
@@ -86,11 +78,7 @@ class ADReserveFForm : public ADFormBase
 		void insertListNameResources();
 		void changeNameResource(const QString&);
 		void receiveReserves( const QList<ADReserve *>& results );
-		void emitInsertReserve();
-		/////////////////////77
-		
-// 		void changeTypeReserve(int);
-// 		
+		void emitEvent();
 		
 		
 };

@@ -217,10 +217,11 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 }
 
 
-void ADSchedule::assignTypeReserve(const QString typeReserve)
+void ADSchedule::assignTypeReserve(const QString typeReserve, bool inserter)
 {
 	dDebug() << "assignTypeReserve => " << typeReserve;
 	m_reserve = typeReserve;
+	m_inserter = inserter;
 }
 
 
@@ -311,9 +312,12 @@ void ADSchedule::fill()
 				(m_table->item( i , column.at(pos)))->setText((*it)->iduserresponsable().toUpper() );
 				(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 				(m_table->item( i , column.at(pos)))->setToolTip( "Espacio ocupado en este horario" );
-				(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEditable );
-				(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsSelectable );
-				(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEnabled );
+				if(m_inserter)
+				{
+					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEditable );
+					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsSelectable );
+					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEnabled );
+				}
 				(m_table->item( i , column.at(pos)))->setTextAlignment(Qt::AlignHCenter);
 				
 				m_cellsReserved.append( qMakePair(i,column.at(pos)) );

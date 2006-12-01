@@ -236,20 +236,36 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 		case Logic::Audiovisuals:
 		{
-			form = new ADAudiovisualForm;
-			addForm(form, tr("Add audiovisual"));
+			
 		}
 		break;
 		case Logic::ReservesT:
 		{
-			form = new ADReserveTForm();
-			addForm(form, tr("Add Reserve Temporal"));
+			if(key.isNull())
+			{
+				form = new ADReserveTForm();
+				addForm(form, tr("Add Reserve Temporal"));
+			}
+			else
+			{
+				form = new ADReserveTForm(static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ))) ;
+				addForm(form, tr("Modify Reserve Temporal"));
+			}
+			
 		}
 		break;
 		case Logic::ReservesF:
 		{
-			form = new ADReserveFForm();
-			addForm(form, tr("Add Reserve Semestral"));
+			if(key.isNull())
+			{
+				form = new ADReserveFForm();
+				addForm(form, tr("Add Reserve Semestral"));
+			}
+			else
+			{
+				form = new ADReserveFForm(static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ))) ;
+				addForm(form, tr("Modify Reserve Semestral"));
+			}
 		}
 		break;
 	}

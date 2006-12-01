@@ -54,7 +54,7 @@ class ADSchedule : public QWidget
 		void makeTable(bool semestral);
 		void modifyMonthReserve(int);
 		void receiveReserves( const QList<ADReserve *>& results );
-		void assignTypeReserve(const QString typeReserve);
+		void assignTypeReserve(const QString typeReserve, bool inserter);
 		void fill();
 		void clear();
 		void valiteColumn( int currentRow, int currentColumn);
@@ -75,6 +75,7 @@ class ADSchedule : public QWidget
 		int previousRow;
 		int year;
 		QString m_reserve;
+		bool m_inserter;
 		
 		void clearSchedule();
 		void organizePairs();

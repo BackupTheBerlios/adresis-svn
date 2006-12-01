@@ -40,7 +40,7 @@ class ADReserveTForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADReserveTForm(QWidget *parent = 0);
-		ADReserveTForm(const ADReserve & reserve, QWidget *parent = 0);
+		ADReserveTForm(const ADReserve * reserve, QWidget *parent = 0);
 		~ADReserveTForm();
 	
 	private:

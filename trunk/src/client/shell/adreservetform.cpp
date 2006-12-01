@@ -43,7 +43,7 @@ ADReserveTForm::~ADReserveTForm()
 }
 
 
-ADReserveTForm::ADReserveTForm(const ADReserve & reserve, QWidget * parent)
+ADReserveTForm::ADReserveTForm(const ADReserve * reserve, QWidget * parent)
 {
 	D_FUNCINFO;
 	setup();
@@ -199,7 +199,7 @@ void ADReserveTForm::changeNameSpace(const QString& name)
 		dDebug() << "changeNameSpace changeNameSpace";
 		dDebug() << "TABLE >>>> " << table << "   RESOURCE >>>> " << resource;
 		emit consultSchedule(table, resource );
-		horario->assignTypeReserve( tipoResC->currentText() );
+		horario->assignTypeReserve( tipoResC->currentText(), m_inserter );
 		horario->clear();
 	}
 }

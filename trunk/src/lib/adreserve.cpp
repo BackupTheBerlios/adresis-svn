@@ -82,11 +82,6 @@ void ADReserve::setValues(XMLResults values)
 	m_idaudiovisual = values["idaudiovisual"];
 	m_idspace = values["idspace"];
 	m_day = values["day"];
-// 	m_beginhour = values["beginhour"];
-// 	m_endhour = values["endhour"];
-// 	m_begindate = values["begindate"];
-// 	m_enddate = values["enddate"];
-	
 	m_beginDateTime = QDateTime( QDate::fromString( values["begindate"]), QTime::fromString(values["beginhour"]));
 	m_endDateTime = QDateTime( QDate::fromString(values["enddate"]), QTime::fromString(values["endhour"]) );
 
@@ -142,26 +137,6 @@ QString ADReserve::day() const
 {
 	return m_day;
 }
-
-// QString ADReserve::beginhour()const
-// {
-// 	return m_beginhour;
-// }
-// 
-// QString ADReserve::endhour()const
-// {
-// 	return m_endhour;
-// }
-// 
-// QString ADReserve::begindate()const
-// {
-// 	return m_begindate;
-// }
-// 
-// QString ADReserve::enddate()const
-// {
-// 	return m_enddate;
-// }
 
 QDateTime ADReserve::beginDateTime() const
 {

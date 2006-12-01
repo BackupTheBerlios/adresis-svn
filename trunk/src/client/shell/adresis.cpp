@@ -323,6 +323,45 @@ void Adresis::handleEvent(ADEvent * event)
 									ADEvent infoUser (ADEvent::Client, Logic::ReservesF, Logic::Info, QList<QVariant>() << QVariant("infoUser") << QVariant(m_user->login()));
 									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&infoUser);
 								}
+								
+								else if((datos.at(0).toString()) == "infoResources")
+								{
+									QList<QVariant> infoResource;
+									QList<QVariant> list;
+									
+									if((datos.at(2).toString()) == "space") //INFO SPACE
+									{
+										list = m_infoModules.values(Logic::Spaces)[0];
+										for(int i=0; i < list.count();i++)
+										{
+											ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
+											if(space->codeSpace() == datos.at(3).toString())
+											{
+												infoResource << (QVariant::fromValue(space));
+											}
+										}
+									}
+									else // INFO AUDIOVISUAL
+									{
+										list = m_infoModules.values(Logic::Audiovisuals)[0];
+										for(int i=0; i < list.count();i++)
+										{
+											ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
+											if(audiovisual->type() == datos.at(3).toString())
+											{
+												infoResource << (QVariant::fromValue(audiovisual));
+											}
+										}
+									}
+									QList<QVariant> listResult;
+									listResult << QVariant("infoResources") << QVariant(infoResource);
+									ADEvent info(ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
+									
+									(qvariant_cast<ADReserveFForm *>(datos.at(1)))->receiveEvent(&info);
+								}
+								
+								
+								
 							}
 							break;
 						}
@@ -370,6 +409,24 @@ ADObject * Adresis::getObject( Logic::Module module,const QString key )
 				if(qvariant_cast<ADUser *>(*it)->code() == key)
 				{
 					return qvariant_cast<ADUser *>(*it);
+				}
+			}
+			break;
+			
+			case Logic::ReservesF:
+			{
+				if(qvariant_cast<ADReserve *>(*it)->idReserve() == key)
+				{
+					return qvariant_cast<ADReserve *>(*it);
+				}
+			}
+			break;
+			
+			case Logic::ReservesT:
+			{
+				if(qvariant_cast<ADReserve *>(*it)->idReserve() == key)
+				{
+					return qvariant_cast<ADReserve *>(*it);
 				}
 			}
 			break;

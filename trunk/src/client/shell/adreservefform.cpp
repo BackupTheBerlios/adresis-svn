@@ -41,12 +41,58 @@ ADReserveFForm::~ADReserveFForm()
 }
 
 
-ADReserveFForm::ADReserveFForm(const ADReserve & reserve, QWidget * parent)
+ADReserveFForm::ADReserveFForm( ADReserve * reserve, QWidget * parent)
 {
 	D_FUNCINFO;
-	setup();
 	m_inserter = false;
+	setup();
+	QString modulo, key;
+	
+	if( reserve->idspace() != "" )
+	{
+		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
+		modulo = "space";
+		key = reserve->idspace();
+		
+	}
+	else
+	{
+		typeResourceC->setCurrentIndex(typeResourceC->findText("Audiovisual"));
+		modulo = "audiovisual";
+		key = reserve->idaudiovisual();
+	}
+	
+// 	requestResourceInfo( modulo, key);
+	
+	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(reserve->iduserresponsable());
+	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setReadOnly ( true );
+	static_cast<QTextEdit*>(m_inputs[tr("motivo")])-> setDocument( new QTextDocument(reserve->destinationreserve()) );
+	static_cast<QTextEdit*>(m_inputs[tr("motivo")])->setReadOnly ( true );
+	
+	horario->assignTypeReserve("semestral", m_inserter);
+	QList<ADReserve * > result;
+	result << reserve;
+	horario->receiveReserves( result );
+	horario->fill();
+	
+// 	estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->estate()));
+// 	static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(adAudiovisual->numberInventory());
+// 	static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(adAudiovisual->codeSpace());
+// 
+// 	tipoResC->currentText(),
+// 	resourceC->currentText(),
+// 	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
+// 	static_cast<QLineEdit*>(m_inputs[tr("login")])->text();
+	
 }
+
+
+void ADReserveFForm::requestResourceInfo( QString modulo, QString key)
+{
+	ADEvent listName(ADEvent::Client, Logic::ReservesF, Logic::Info , QList<QVariant>() << QVariant("infoResources") << QVariant::fromValue(this) << QVariant(modulo) << QVariant(key));
+	emit sendEvent( &listName );
+}
+
 
 
 void ADReserveFForm::changeTypeResource(int opcion)
@@ -126,6 +172,7 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 }
 
 
+
 void ADReserveFForm::insertListTypes()
 {
 	int opcion = typeResourceC->currentIndex();
@@ -160,23 +207,7 @@ void ADReserveFForm::requestDatesSemestral()
 
 
 
-void ADReserveFForm::fill()
-{
-// 	if(adAudiovisual->isValid())
-// 	{
-// 		tipoResC->setCurrentIndex(tiposRC->findText(adAudiovisual->type())); 
-// 		static_cast<QLineEdit*>(m_inputs[tr("marca")])->setText(adAudiovisual->marksEquipment());
-// 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->estate()));
-// 		static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(adAudiovisual->numberInventory());
-// 		static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(adAudiovisual->codeSpace());
-// 
-// 		tipoResC->currentText(),
-// 		resourceC->currentText(),
-// 		static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-// 		static_cast<QLineEdit*>(m_inputs[tr("login")])->text()
-		
-// 	}
-}
+
 
 void ADReserveFForm::changeResource( QString typeR)
 {
@@ -221,7 +252,7 @@ void ADReserveFForm::changeNameResource(const QString& name)
 void ADReserveFForm::receiveReserves( const QList<ADReserve *>& results )
 {
 	dDebug() << "receiveReserves " <<  resourcesNameC->currentText();
-	horario->assignTypeReserve("semestral");
+	horario->assignTypeReserve("semestral", m_inserter);
 	horario->receiveReserves( results );
 	horario->fill();
 }
@@ -291,11 +322,11 @@ void ADReserveFForm::setup()
 	m_inputs.insert( titles[4].toLower () , areaTexto );
 	
 	setForm(base);
-	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
+	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
 }
 
 
-void ADReserveFForm::emitInsertReserve()
+void ADReserveFForm::emitEvent()
 {
 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
 	
