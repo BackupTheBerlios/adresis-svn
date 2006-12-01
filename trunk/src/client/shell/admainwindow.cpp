@@ -223,7 +223,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			}
 			else
 			{
-				form = new ADUserForm(static_cast<ADUser *>(m_adresis->getObject(Logic::Users, key ))) ;
+				form = new ADUserForm(static_cast<ADUser *>(m_adresis->getObject(Logic::Users, key )));
 				addForm(form, tr("Modify user"));
 			}
 		}
@@ -248,7 +248,8 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			}
 			else
 			{
-				form = new ADReserveTForm(static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ))) ;
+				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ));
+				form = new ADReserveTForm( reserve);
 				addForm(form, tr("Modify Reserve Temporal"));
 			}
 			

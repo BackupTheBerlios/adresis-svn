@@ -45,46 +45,43 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QWidget * parent)
 {
 	D_FUNCINFO;
 	m_inserter = false;
+	m_reserve = reserve;
 	setup();
-	QString modulo, key;
 	
-	if( reserve->idspace() != "" )
+	QString modulo, key;
+	if( m_reserve->idspace() != "" )
 	{
 		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
 		modulo = "space";
-		key = reserve->idspace();
+		key = m_reserve->idspace();
 		
 	}
 	else
 	{
 		typeResourceC->setCurrentIndex(typeResourceC->findText("Audiovisual"));
 		modulo = "audiovisual";
-		key = reserve->idaudiovisual();
+		key = m_reserve->idaudiovisual();
 	}
-	
-// 	requestResourceInfo( modulo, key);
-	
-	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(reserve->iduserresponsable());
+	requestResourceInfo(modulo, key);
+}
+
+
+void  ADReserveFForm::fill()
+{
+	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(m_reserve->iduserresponsable());
 	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setReadOnly ( true );
-	static_cast<QTextEdit*>(m_inputs[tr("motivo")])-> setDocument( new QTextDocument(reserve->destinationreserve()) );
+	static_cast<QTextEdit*>(m_inputs[tr("motivo")])-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
 	static_cast<QTextEdit*>(m_inputs[tr("motivo")])->setReadOnly ( true );
 	
 	horario->assignTypeReserve("semestral", m_inserter);
 	QList<ADReserve * > result;
-	result << reserve;
+	result << m_reserve;
 	horario->receiveReserves( result );
 	horario->fill();
-	
-// 	estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->estate()));
-// 	static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(adAudiovisual->numberInventory());
-// 	static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(adAudiovisual->codeSpace());
-// 
-// 	tipoResC->currentText(),
-// 	resourceC->currentText(),
-// 	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-// 	static_cast<QLineEdit*>(m_inputs[tr("login")])->text();
-	
+
 }
+
+
 
 
 void ADReserveFForm::requestResourceInfo( QString modulo, QString key)
@@ -125,6 +122,7 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 		insertListTypes();
 	}
 	
+	
 	else if(e->action() == Logic::Info)
 	{
 		if( (((e->data()).toList())[0]).toString() == "nameResources")
@@ -161,6 +159,15 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 			m_responsable = (((e->data()).toList())[1]).toString();
 			
 		}
+		
+		else if( (((e->data()).toList())[0]).toString() == "infoResources" )
+		{
+			dDebug() <<"Recibi  infoResource";
+			resourceC->setItemText(0, ((((e->data()).toList())[1]).toList()[0]).toString());
+			resourcesNameC->setItemText(0, ((((e->data()).toList())[1]).toList()[0]).toString());
+			fill();
+		}
+		
 	}
 	
 	else if(e->action() == Logic::Dates)

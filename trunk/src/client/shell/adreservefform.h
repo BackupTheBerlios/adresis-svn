@@ -56,9 +56,10 @@ class ADReserveFForm : public ADFormBase
 		QMap<QString, QWidget*> m_inputs;
 		QMap<QString, QString> m_dateSemestral;
 		QList<QMap<QString, QString> > listSchedules;
-		bool m_inserter, m_reserve;
+		bool m_inserter;
 		
-		
+		ADReserve * m_reserve;
+		void fill();
 		void setup();
 		bool valite();
 		void requestDatesSemestral();
