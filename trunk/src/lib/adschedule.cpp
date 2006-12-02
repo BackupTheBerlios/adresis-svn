@@ -312,15 +312,23 @@ void ADSchedule::fill()
 				(m_table->item( i , column.at(pos)))->setText((*it)->iduserresponsable().toUpper() );
 				(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 				(m_table->item( i , column.at(pos)))->setToolTip( "Espacio ocupado en este horario" );
+				
 				if(m_inserter)
 				{
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEditable );
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsSelectable );
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEnabled );
+					m_cellsReserved.append( qMakePair(i,column.at(pos)) );
 				}
+				else
+				{
+					m_points.append(qMakePair(i,column.at(pos)));
+				}
+				
 				(m_table->item( i , column.at(pos)))->setTextAlignment(Qt::AlignHCenter);
 				
-				m_cellsReserved.append( qMakePair(i,column.at(pos)) );
+				
+				
 			}
 		}
 		
@@ -357,20 +365,13 @@ QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 	organizePairs();
 	
 	QMap<QString, QString > map;
-// 	QList< QPair<int,int> >::const_iterator p = m_points.begin();
-// 	while( p != m_points.end() )
-// 	{
-// 		dDebug() << (*p).first <<"  "  << (*p).second;
-// 		p++;
-// 	}
-// 	dDebug() << "EL TIPO DE RESERVA ES >> " << m_reserve;
+
 	
 	for( int point=0; point < m_points.count(); point++ )
 	{
 		if( (point) == 0 || (m_points.at(point).first)-1 != (m_points.at(point-1).first) )
 		{
 			column = ((m_table->horizontalHeaderItem(previousColumn))->text()).toLower();
-			dDebug() << "COLUMN ES >> " << column << " " << m_reserve;
 			
 			if((m_reserve.toLower()) ==("semestral"))
 			{
@@ -405,21 +406,6 @@ QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 		}
 	
 	}
-	
-// 	QList< QMap<QString, QString> >::const_iterator po = listSchedule.begin();
-// 	
-// 	while( po != listSchedule.end() )
-// 	{
-// 		dDebug() << "ADSCHEDULE--ADSCHEDULE";
-// 		dDebug() << "typereserve "<< (*po)["typereserve"];
-// 		dDebug() << "day "<< (*po)["day"];
-// 		dDebug() << "beginhour "<< (*po)["beginhour"];
-// 		dDebug() << "endhour "<< (*po)["endhour"];
-// 		dDebug() << "beginDate "<< (*po)["begindate"];
-// 		dDebug() << "endDate " << (*po)["enddate"];
-// 		po++;
-// 	}
-	
 	
 	return listSchedule;
 }

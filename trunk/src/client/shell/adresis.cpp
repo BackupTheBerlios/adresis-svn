@@ -222,8 +222,9 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Add:
 							{
 								m_connector->sendToServer(event->toString());
-								break;
+								
 							}
+							break;
 							case Logic::GetTypes:
 							{
 								QList<QVariant > types;
@@ -245,7 +246,8 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Info:
 							{
 								QList<QVariant> datos = (event->data()).toList();
-								dDebug() <<"LLego solicitud de " << (datos.at(0).toString());
+								dDebug() << "////////////////////////////////////////////////////////";
+								dDebug() << "LLego solicitud de " << (datos.at(0).toString());
 								
 								if((datos.at(0).toString()) == "nameResources")
 								{
@@ -324,30 +326,6 @@ void Adresis::handleEvent(ADEvent * event)
 									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&infoUser);
 								}
 								
-								else if((datos.at(0).toString()) == "infoResources")
-								{
-									dDebug() << "//////////////////////////";
-									dDebug() << "ADRESIS INFO RESOURCE";
-									dDebug() << "//////////////////////////";
-									QList<QVariant> infoResource;
-									QList<QVariant> list;
-									
-									if((datos.at(2).toString()) != "space") //INFO SPACE
-									{
-										ADSpace *space = static_cast<ADSpace *>(getObject(Logic::Spaces , (datos.at(3).toString()) ));
-										infoResource << QVariant(space->typeSpace()) << QVariant(space->nameSpace());
-									}
-									else // INFO AUDIOVISUAL
-									{
-										ADAudioVisual *audiovisual = static_cast<ADAudioVisual *>(getObject(Logic::Audiovisuals , (datos.at(3).toString()) ));
-										infoResource << QVariant(audiovisual->type());
-									}
-					
-									QList<QVariant> listResult;
-									listResult << QVariant("infoResources") << QVariant(infoResource);
-									ADEvent info(ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
-									(qvariant_cast<ADReserveFForm *>(datos.at(1)))->receiveEvent(&info);
-								}
 							}
 							break;
 						}

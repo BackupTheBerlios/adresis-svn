@@ -264,7 +264,21 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			}
 			else
 			{
-				form = new ADReserveFForm(static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ))) ;
+				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ));
+				
+				QList<QString> infoResource;
+				if(reserve->idspace() != "") //INFO SPACE
+				{
+					ADSpace *space = static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces , reserve->idspace() ));
+					infoResource << space->typeSpace() << space->nameSpace();
+				}
+				else // INFO AUDIOVISUAL
+				{
+					ADAudioVisual *audiovisual = static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals , reserve->idaudiovisual() ));
+					infoResource << audiovisual->type() << audiovisual->type();
+				}
+				
+				form = new ADReserveFForm( reserve, infoResource );
 				addForm(form, tr("Modify Reserve Semestral"));
 			}
 		}

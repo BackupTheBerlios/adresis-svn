@@ -42,7 +42,7 @@ class ADReserveFForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADReserveFForm(QWidget *parent = 0);
-		ADReserveFForm( ADReserve * reserve, QWidget *parent = 0);
+		ADReserveFForm( ADReserve * reserve, QList<QString> list,QWidget *parent = 0);
 		~ADReserveFForm();
 		
 	private:
@@ -58,14 +58,12 @@ class ADReserveFForm : public ADFormBase
 		QList<QMap<QString, QString> > listSchedules;
 		bool m_inserter;
 		
-		ADReserve * m_reserve;
-		void fill();
+		ADReserve *m_reserve;
 		void setup();
 		bool valite();
 		void requestDatesSemestral();
 		void requestLogin();
-		void requestResourceInfo(QString modulo,QString key);
-		
+				
 		
 	signals:
 		void sendEvent( ADEvent *);

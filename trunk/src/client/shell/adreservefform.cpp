@@ -41,7 +41,7 @@ ADReserveFForm::~ADReserveFForm()
 }
 
 
-ADReserveFForm::ADReserveFForm( ADReserve * reserve, QWidget * parent)
+ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource, QWidget * parent)
 {
 	D_FUNCINFO;
 	m_inserter = false;
@@ -54,7 +54,6 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QWidget * parent)
 		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
 		modulo = "space";
 		key = m_reserve->idspace();
-		
 	}
 	else
 	{
@@ -62,12 +61,12 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QWidget * parent)
 		modulo = "audiovisual";
 		key = m_reserve->idaudiovisual();
 	}
-	requestResourceInfo(modulo, key);
-}
-
-
-void  ADReserveFForm::fill()
-{
+	typeResourceC->setEnabled(false);
+	resourceC->addItem(infoResource[0]);
+	resourceC->setEnabled(false);
+	resourcesNameC->addItem(infoResource[1]);
+	resourcesNameC->setEnabled(false);
+	
 	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(m_reserve->iduserresponsable());
 	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setReadOnly ( true );
 	static_cast<QTextEdit*>(m_inputs[tr("motivo")])-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
@@ -78,18 +77,8 @@ void  ADReserveFForm::fill()
 	result << m_reserve;
 	horario->receiveReserves( result );
 	horario->fill();
-
+	
 }
-
-
-
-
-void ADReserveFForm::requestResourceInfo( QString modulo, QString key)
-{
-	ADEvent listName(ADEvent::Client, Logic::ReservesF, Logic::Info , QList<QVariant>() << QVariant("infoResources") << QVariant::fromValue(this) << QVariant(modulo) << QVariant(key));
-	emit sendEvent( &listName );
-}
-
 
 
 void ADReserveFForm::changeTypeResource(int opcion)
@@ -159,15 +148,6 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 			m_responsable = (((e->data()).toList())[1]).toString();
 			
 		}
-		
-		else if( (((e->data()).toList())[0]).toString() == "infoResources" )
-		{
-			dDebug() <<"Recibi  infoResource";
-			resourceC->setItemText(0, ((((e->data()).toList())[1]).toList()[0]).toString());
-			resourcesNameC->setItemText(0, ((((e->data()).toList())[1]).toList()[0]).toString());
-			fill();
-		}
-		
 	}
 	
 	else if(e->action() == Logic::Dates)
@@ -219,7 +199,6 @@ void ADReserveFForm::requestDatesSemestral()
 void ADReserveFForm::changeResource( QString typeR)
 {
 	QString modulo;
-	requestDatesSemestral();
 	if((typeResourceC->currentText()).toLower() ==("espacios"))
 	{
 		modulo = "space";
@@ -337,62 +316,78 @@ void ADReserveFForm::emitEvent()
 {
 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
 	
+	requestDatesSemestral();
 	listSchedules = horario->returnSchedule();
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
 	QString space, audiovisual;
 
-
-
-	if(m_inserter && valite())
+	if(typeResourceC->currentText() == "Espacios")
 	{
-		QDateTime beginDateTime = QDateTime(QDate::fromString(m_dateSemestral.value("dateI") ,"yyyy-MM-dd"), QTime::fromString((*it)["beginhour"],"hh:mm")) ;
+		space = nameResources.key(resourcesNameC->currentText());
+		audiovisual = "";
+	}
+	else
+	{
+		space = "";
+		audiovisual = nameResources.key(resourcesNameC->currentText());
+	}
+	
+	
+	while( it != listSchedules.end())
+	{
+		QDateTime beginDateTime = QDateTime(QDate::fromString(m_dateSemestral.value("dateI"),"yyyy-MM-dd"), QTime::fromString((*it)["beginhour"],"hh:mm"));
 		QDateTime endDateTime = QDateTime(QDate::fromString(m_dateSemestral.value("dateF") ,"yyyy-MM-dd"), QTime::fromString((*it)["endhour"],"hh:mm")) ;
-		
 		dDebug() << "FECHAS SON " << beginDateTime.toString("yyyy/MM/dd hh:mm") << " "<<endDateTime.toString("yyyy/MM/dd hh:mm");
-		if(typeResourceC->currentText() == "Espacios")
+	
+		
+		if(m_inserter && valite())
 		{
-			space = nameResources.key(resourcesNameC->currentText());
-			audiovisual = "";
-		}
-		else
-		{
-			space = "";
-			audiovisual = nameResources.key(resourcesNameC->currentText());
+			
+				m_reserve = new ADReserve( 
+					"",
+					(*it)["typereserve"],
+					m_responsable,
+					static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
+					audiovisual,
+					space,
+					(*it)["day"],
+					beginDateTime,
+					endDateTime,
+					true,
+					(static_cast<QTextEdit *>(m_inputs[tr("motivo")])->document())->toPlainText()
+				);
+				
+				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
+				it++;
+				
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Add, QVariant::fromValue(m_reserve));
+				dDebug() << "YA CREE EL EVENTO DE INSERCION DE RESERVAS";
+				emit sendEvent(&insertReserve);	
+				dDebug() << "YA ENVIE EL EVENTO DE INSERCION DE RESERVAS";
+			
 		}
 		
-		
-		while( it != listSchedules.end())
+		else if(m_inserter == false)
 		{
-			ADReserve reserve(
-				"",
-				(*it)["typereserve"],
-				m_responsable,
-				static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-				audiovisual,
-				space,
-				(*it)["day"],
-				beginDateTime,
-				endDateTime,
-				true,
-				(static_cast<QTextEdit *>(m_inputs[tr("motivo")])->document())->toPlainText()
+			m_reserve = new ADReserve(
+					m_reserve->idReserve(),
+					m_reserve->typeReserve(),
+					m_reserve->iduserreserve(),
+					m_reserve->iduserresponsable(),
+					m_reserve->idaudiovisual(),
+					m_reserve->idspace(),
+					(*it)["day"],
+					beginDateTime,
+					endDateTime,
+					m_reserve->isActive(),
+					m_reserve->destinationreserve()
 			);
-			dDebug() << reserve.idReserve() << " " << reserve.typeReserve() << " " << reserve.iduserreserve() << " " << reserve.iduserresponsable() << " " << reserve.idaudiovisual() << " " << reserve.idspace() << " " << reserve.day() << " " << reserve.isActive() << " " << reserve.destinationreserve();
+			
+			dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
 			it++;
 			
-			ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Add, QVariant::fromValue(&reserve));
-			dDebug() << "YA CREE EL EVENTO DE INSERCION DE RESERVAS";
-			emit sendEvent(&insertReserve);	
-			dDebug() << "YA ENVIE EL EVENTO DE INSERCION DE RESERVAS";
 		}
 	}
-// // 	else
-// // 	{
-// // 		emit requestUpdateReserve(
-// // 			tipoResC->currentText(),
-// // 			resourceC->currentText(),
-// // 			static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text()
-// // 		);
-// // 	}
 	
 }
 
