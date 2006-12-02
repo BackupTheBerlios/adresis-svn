@@ -62,7 +62,7 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		break;
 		case Logic::Audiovisuals:
 		{
-			titles << tr("Type") << tr("Mark") << tr("State") << tr("Inventory") << tr("Space");
+			titles << tr("Inventory") << tr("State") << tr("Type") << tr("Mark")   << tr("Space");
 			setWindowTitle ( "Audiovisuals");
 		}
 		break;
@@ -165,7 +165,7 @@ void ADCModuleList::requestAction(int action)
 			if(current)
 			{
 				QString key = current-> text ( 0 );
-				ADEvent event(ADEvent::Client, Logic::Users, Logic::Del, key );
+				ADEvent event(ADEvent::Client, m_pModule, Logic::Del, key );
 				emit sendEvent(&event);
 			}
 		}
@@ -190,8 +190,13 @@ void ADCModuleList::clean()
 
 void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 {
-	D_FUNCINFO;
-	dDebug() << module;
+	D_FUNCINFO << module;
+	
+	for(int i = 0; i < m_pTree->columnCount (); i++)
+	{
+		m_pTree->resizeColumnToContents ( i );
+	}
+	
 	if(module == m_pModule)
 	{
 		switch(module)
@@ -216,7 +221,14 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			{
 				ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(data);
 				QList<QString> strs;
-				strs << audiovisual->type() << audiovisual->marksEquipment() << audiovisual->state() << audiovisual->numberInventory() << audiovisual->codeSpace();
+				
+				QString code =  audiovisual->codeSpace();
+				if(code == "null")
+				{
+					code = tr("No signado");
+				}
+				
+				strs << audiovisual->numberInventory()  << audiovisual->state() <<  audiovisual->type() << audiovisual->marksEquipment() << code;
 				
 				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
 				int count = 0;
@@ -321,17 +333,18 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 
 void ADCModuleList::removeData(Logic::Module module, const QString & key )
 {
-// 	D_FUNCINFO;
-	QTreeWidgetItemIterator it(m_pTree);
-	while( (*it) )
+	if(module == m_pModule)
 	{
-		dDebug() << (*it)->text(0);
-		if( key == (*it)->text(0) )
+		QTreeWidgetItemIterator it(m_pTree);
+		while( (*it) )
 		{
-			delete (*it);
-			break;
+			if( key == (*it)->text(0) )
+			{
+				delete (*it);
+				break;
+			}
+			++it;
 		}
-		++it;
 	}
 }
 
@@ -342,11 +355,19 @@ void ADCModuleList::updateData(Logic::Module module, const QVariant & data )
 	{
 		case Logic::Users:
 		{
-			
 			ADUser * u = qvariant_cast<ADUser *>(data);
 			if (u)
 			{
 				removeData(module, u->code() );
+			}
+		}
+		break;
+		case Logic::Audiovisuals:
+		{
+			ADAudioVisual * a = qvariant_cast<ADAudioVisual *>(data);
+			if (a)
+			{
+				removeData(module, a->numberInventory() );
 			}
 		}
 		break;

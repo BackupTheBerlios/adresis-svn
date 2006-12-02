@@ -136,7 +136,6 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
 	connect(m_adresis, SIGNAL(requestRemoveDataToModule(Logic::Module, const QString & )), list, SLOT(removeData( Logic::Module, const QString & )));
 	connect(m_adresis, SIGNAL(requestUpdateDataToModule(Logic::Module, const QVariant & )), list, SLOT(updateData( Logic::Module, const QVariant & )));
-	
 }
 
 void ADMainWindow::setupMenu()
@@ -174,13 +173,18 @@ void ADMainWindow::showTipDialog()
 }
 
 
+/**
+ * Se conecta al servidor y autentica al usuario
+ */
 void ADMainWindow::connectToHost()
 {
 	CConnectionDialog connectionDialog;
 	if ( connectionDialog.exec() != QDialog::Rejected )
 	{
+		setUpdatesEnabled ( false);
 		m_adresis->connectToHost(connectionDialog.server(), connectionDialog.port());
 		m_adresis->login(connectionDialog.user(), connectionDialog.password());
+		setUpdatesEnabled ( true);
 	}
 }
 
@@ -213,6 +217,7 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 void ADMainWindow::showForm( Logic::Module module, const QString & key )
 {
 	ADFormBase * form;
+	QString title;
 	switch( module )
 	{
 		case Logic::Users:
@@ -220,25 +225,42 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADUserForm;
-				addForm(form, tr("Add user"));
+				title = tr("Add user");
 			}
 			else
 			{
 				form = new ADUserForm(static_cast<ADUser *>(m_adresis->getObject(Logic::Users, key )));
-				addForm(form, tr("Modify user"));
+				
+				title = tr("Modify user");
 			}
 		}
 		break;
 		case Logic::Spaces:
 		{
-			form = new ADSpaceForm;
-			addForm(form, tr("Add space"));
+			if(key.isNull())
+			{
+				form = new ADSpaceForm;
+				title = tr("Add space");
+			}
+			else
+			{
+				form = new ADSpaceForm;
+				title = tr("Modify space");
+			}
 		}
 		break;
 		case Logic::Audiovisuals:
 		{
-			form = new ADAudiovisualForm(m_adresis->getTypes(Logic::Audiovisuals));
-			addForm(form, tr("Add audiovisual"));
+			if(key.isNull())
+			{
+				form = new ADAudiovisualForm(m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
+				title = tr("Add audiovisual");
+			}
+			else
+			{
+				form = new ADAudiovisualForm(static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals, key )), m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
+				title = tr("Add audiovisual");
+			}
 		}
 		break;
 		case Logic::ReservesT:
@@ -246,13 +268,13 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADReserveTForm();
-				addForm(form, tr("Add Reserve Temporal"));
+				title = tr("Add Reserve Temporal");
 			}
 			else
 			{
 				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ));
 				form = new ADReserveTForm( reserve);
-				addForm(form, tr("Modify Reserve Temporal"));
+				title = tr("Modify Reserve Temporal");
 			}
 			
 		}
@@ -262,7 +284,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADReserveFForm();
-				addForm(form, tr("Add Reserve Semestral"));
+				title = tr("Add Reserve Semestral");
 			}
 			else
 			{
@@ -281,11 +303,12 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				}
 				
 				form = new ADReserveFForm( reserve, infoResource );
-				addForm(form, tr("Modify Reserve Semestral"));
+				title = tr("Modify Reserve Semestral");
 			}
 		}
 		break;
 	}
+	addForm( form, title );
 }
 
 /**

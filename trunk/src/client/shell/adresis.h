@@ -51,7 +51,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void login(const QString &user, const QString &passwd);
 		ADObject * getObject( Logic::Module module,const QString key );
 		void removeObject(Logic::Module module,const QString key );
-		QStringList getTypes( Logic::Module module);
+		QStringList getTypes( Logic::Module module );
+		QList<QVariant> getList( Logic::Module module );
 		
 	private:
 		ADConnector *m_connector;

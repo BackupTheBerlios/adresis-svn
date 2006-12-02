@@ -250,6 +250,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 	
 	if(event)
 	{
+		SHOW_VAR(event->toString());
 		if(event->source() == ADEvent::Server)
 		{
 			
@@ -265,7 +266,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Add:
 						{
-							SHOW_VAR(event->toString());
+							
 							
 							ADUser *user = qvariant_cast<ADUser *>(event->data());
 							ADInsert insert("aduser", QStringList()<< "rol" << "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() <<QString::number(user->rol() ) <<  SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()));
@@ -355,10 +356,8 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					}
 					break;
 				}
-				
 				case Logic::Spaces:
 				{
-					
 					switch(event->action())
 					{
 						case Logic::Find:
@@ -439,7 +438,44 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 						}
 						break;
-						
+						case Logic::Del:
+						{
+							dDebug() << "borrando";
+							ADDelete qdelete("adaudiovisual");
+							qdelete.setWhere( "numberinventoryav = " + SQLSTR(event->data().toString()));
+							SDBM->execQuery(&qdelete);
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Audiovisuals, Logic::Del, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						case Logic::Update:
+						{
+							SHOW_VAR(event->toString());
+							
+							ADAudioVisual *audiovisual = qvariant_cast<ADAudioVisual *>(event->data());
+							
+							ADUpdate update("adaudiovisual", QStringList()<< "typeav" << "marksequipmentav" << "estateav" << "numberinventoryav" << "codespace", QStringList() <<  SQLSTR(audiovisual->type()) <<  SQLSTR(audiovisual->marksEquipment()) <<  SQLSTR(audiovisual->state()) << SQLSTR(audiovisual->numberInventory()) << SQLSTR(audiovisual->codeSpace()));
+							update.setWhere( "numberinventoryav = " + SQLSTR(audiovisual->numberInventory()));
+							SDBM->execQuery(&update);
+							
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Audiovisuals, Logic::Update, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
 						case Logic::Find:
 						{
 							ADSelect infoAv(QStringList() << "*" , "adaudiovisual");

@@ -135,17 +135,38 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::Add:
 							{
-								m_infoModules[Logic::Users] << (event->data());
+								m_infoModules[Logic::Audiovisuals] << (event->data());
 								emit requestAddDataToModule(Logic::Audiovisuals , event->data());
 							}
 							break;
+							case Logic::Del:
+							{
+								removeObject( Logic::Audiovisuals, event->data().toString()   );
+								emit requestRemoveDataToModule(Logic::Audiovisuals , event->data().toString());
+							}
+							break;
+							case Logic::Update:
+							{
+								ADAudioVisual *a = qvariant_cast<ADAudioVisual *>(event->data()) ;
+								if(a)
+								{
+									removeObject( Logic::Module(event->module()), a->numberInventory() );
+									m_infoModules[Logic::Module(event->module())] << (event->data());
+									emit requestUpdateDataToModule(Logic::Module(event->module()), event->data());
+								}
+								else
+								{
+									dFatal() << "error";
+								}
+							}
+							break;
+						
 							case Logic::GetTypes:
 							{
 								dDebug() << "GGGEEETTT TTYYYPPPEEESS de AUDIOVISUAL";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
-							
 						}
 					}
 					break;
@@ -484,5 +505,10 @@ QStringList Adresis::getTypes( Logic::Module module)
 	}
 	
 	return QStringList();
+}
+
+QList<QVariant> Adresis::getList( Logic::Module module )
+{
+	return m_infoModules[module];
 }
 

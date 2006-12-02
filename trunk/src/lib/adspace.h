@@ -40,11 +40,11 @@ class ADSpace : public ADObject
 		
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QString codeSpace() const; 
-		QString typeSpace() const; 
-		bool coolAirSpace() const; 
-		QString capacitySpace() const; 
-		QString nameSpace() const; 
+		QString codeSpace() const;
+		QString typeSpace() const;
+		bool coolAirSpace() const;
+		QString capacitySpace() const;
+		QString nameSpace() const;
 		QStringList listAudioVisual() const;
 		
 	private:

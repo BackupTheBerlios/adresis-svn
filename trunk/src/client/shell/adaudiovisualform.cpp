@@ -26,12 +26,19 @@
 #include <QGridLayout>
 #include <QCheckBox>
 #include <ddebug.h>
+#include "adspace.h"
 
 
-ADAudiovisualForm::ADAudiovisualForm(const QStringList& types, QWidget *parent)
+ADAudiovisualForm::ADAudiovisualForm(const QList<QVariant> & spaces, const QStringList& types, QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent), m_types(types)
 {
 	m_inserter = true;
+	m_codesSpaces <<tr("Ninguno");
+	foreach(QVariant s, spaces)
+	{
+		QString code = qvariant_cast<ADSpace *>(s)->codeSpace();
+		m_codesSpaces << code;
+	}
 	setup();
 }
 
@@ -40,21 +47,32 @@ ADAudiovisualForm::~ADAudiovisualForm()
 {
 }
 
-
-// Este metodo  lo cambie debido a que los combobox no estaban tomando los datos reales, en especial el combobox tiposC que es el que me determina que tipo de ayuda es. Entonces de ahora en adelante lo que hago es en admainwindow creo un adspaceform cun una ayudaaudiovisual esa ayuda que me entra como parametro la guardo aqui en adAudiovisual y luego, cuando ya tenga los tipos de ayuda lo que hago es llenar los campos. con la ayuda que tengo actualmente guardada. 
-// Esto me toco hacerlo debido a que cuando yo hacia la peticion de la lista de tipos de ayudas siempre me creaba primero la forma y despues me llegaban los tipos, entonces dado esto ahora mas bien lo que hago es cuando ya me hallan llegado la lista de tipos de ayudas ahi si mando a rellenar los campos.
-
-ADAudiovisualForm::ADAudiovisualForm(const ADAudioVisual * audiovisual, QWidget * parent): ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
+ADAudiovisualForm::ADAudiovisualForm(const ADAudioVisual * audiovisual, const QList<QVariant>& spaces, const QStringList& types, QWidget * parent): ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent), m_types(types)
 {
 	D_FUNCINFO;
+	m_codesSpaces <<tr("Ninguno");
+	foreach(QVariant s, spaces)
+	{
+		QString code = qvariant_cast<ADSpace *>(s)->codeSpace();
+		m_codesSpaces << code;
+	}
 	setup();
 	m_inserter = false;
-	
-	m_typesC->setCurrentIndex(m_typesC->findText(adAudiovisual->type()));
-	m_marks->setText(audiovisual->marksEquipment());
-	m_state->setCurrentIndex(m_typesC->findText(adAudiovisual->type()));
-	m_numberInventory->setText(audiovisual->numberInventory());
-	m_codeSpace->setText(audiovisual->codeSpace());
+	if(audiovisual)
+	{
+		m_typesC->setCurrentIndex(m_typesC->findText(audiovisual->type()));
+		m_marks->setText(audiovisual->marksEquipment());
+		m_state->setCurrentIndex(m_state->findText(audiovisual->state()));
+		m_numberInventory->setText(audiovisual->numberInventory());
+		if(audiovisual->codeSpace() == "null")
+		{
+			m_codeSpace->setCurrentIndex(0);
+		}
+		else
+		{
+			m_codeSpace->setCurrentIndex(m_codeSpace->findText(audiovisual->codeSpace()));
+		}
+	}
 }
 
 
@@ -78,19 +96,13 @@ void ADAudiovisualForm::insertListTypes(const QList<XMLResults>& results)
 }
 
 
+/**
+ * elimiar esta funcion
+ */
 void ADAudiovisualForm::fill()
 {
 	if(adAudiovisual->isValid())
 	{
-// 		m_typesC->setCurrentIndex(m_typesC->findText(adAudiovisual->type())); 
-// 		m_typesC->currentText(), 
-
-		
-// 		m_typesC->setCurrentIndex(m_typesC->findText(adAudiovisual->type())); 
-// 		static_cast<QLineEdit*>(m_inputs[tr("mark")])->setText(adAudiovisual->marksEquipment());
-// 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->state()));
-// 		static_cast<QLineEdit*>(m_inputs[tr("number of inventory")])->setText(adAudiovisual->numberInventory());
-// 		static_cast<QLineEdit*>(m_inputs[tr("assing space")])->setText(adAudiovisual->codeSpace());
 	}
 }
 
@@ -101,16 +113,10 @@ void ADAudiovisualForm::setup()
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
 	QGroupBox *container = new QGroupBox("Informacion");
 	vBLayout->addWidget(container, Qt::AlignVCenter);
-	QLabel *label;
 	QStringList titles, titles2, estados;
 	QGridLayout *layout = new QGridLayout;
 	
 	container->setLayout(layout);
-	
-	label = new QLabel("NOTA: SI ESTA AYUDA NO ESTA ASIGNADO A NINGUN ESPACIO, DEJE EN BLANCO EL CAMPO \"ASIGNADO AL ESPACIO\"");
-
-	vBLayout->addWidget(label);
-
 	m_typesC = new QComboBox;
 	m_typesC->addItems(m_types);
 	
@@ -135,8 +141,9 @@ void ADAudiovisualForm::setup()
 	layout->addWidget(m_marks, 3,1);
 	m_marks->setToolTip(tr("Enter mark of audiovisual"));
 	
-	m_codeSpace = new QLineEdit();
+	m_codeSpace = new QComboBox();
 	layout->addWidget(new QLabel(tr("Assing space")),4,0);
+	m_codeSpace->addItems(m_codesSpaces);
 	layout->addWidget(m_codeSpace,4, 1);
 	
 	setForm(base);
@@ -146,12 +153,10 @@ void ADAudiovisualForm::setup()
 void ADAudiovisualForm::emitEvent()
 {
 	QString code = "null";
-	if(!m_codeSpace->text().isEmpty())
+	if(!(m_codeSpace->currentText() == tr("Ninguno")))
 	{
-		code = m_codeSpace->text();
+		code = m_codeSpace->currentText();
 	}
-	
-	
 	ADAudioVisual audiovisual( m_typesC->currentText(), m_marks->text(),
 										 m_state->currentText(),
 										 m_numberInventory->text(),

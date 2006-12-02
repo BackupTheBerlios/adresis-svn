@@ -34,25 +34,24 @@ class ADAudiovisualForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADAudiovisualForm(const QStringList& types , QWidget *parent = 0);
-		ADAudiovisualForm(const ADAudioVisual *audiovisual,QWidget *parent = 0);
+		ADAudiovisualForm(const QList<QVariant>& spaces, const QStringList& types, QWidget *parent = 0);
+		ADAudiovisualForm(const ADAudioVisual *audiovisual, const QList<QVariant>& spaces, const QStringList& types, QWidget *parent = 0);
 		~ADAudiovisualForm();
 		
 		
 	private:
-		QComboBox *m_state, *m_typesC;
+		QComboBox *m_state, *m_typesC, *m_codeSpace;
 		bool m_inserter;
 		QStringList tipos;
 		ADAudioVisual *adAudiovisual;
-		QLineEdit *m_marks, *m_numberInventory, *m_codeSpace;
-		QStringList m_types;
+		QLineEdit *m_marks, *m_numberInventory;
+		QStringList m_types, m_codesSpaces;
 		void fill();
 		void setup();
 		
 	public slots:
 		void emitEvent();
 		void insertListTypes(const QList<XMLResults>& results);
-		
 };
 
 #endif

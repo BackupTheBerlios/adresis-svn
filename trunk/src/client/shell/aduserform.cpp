@@ -53,7 +53,6 @@ void ADUserForm::setup()
 	QLabel *label;
 	QLineEdit *edits;
 	QStringList titles, titles2;
-	QCheckBox *checkB;
 	
 	titles << tr("Name") << tr("Code") << tr("Login") << tr("Password");
 	for(int i = 0; i < titles.count(); i++)
