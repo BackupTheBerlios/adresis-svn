@@ -30,8 +30,6 @@ QDomElement ADAudioVisual::toXml(QDomDocument &doc) const
 	return root;
 }
 
-
-
 void ADAudioVisual::setValues(XMLResults values)
 {
 	m_type = values["typeav"];
@@ -63,7 +61,7 @@ QString ADAudioVisual::marksEquipment() const
 	return m_marksEquipment;
 }
 
-QString ADAudioVisual::estate() const
+QString ADAudioVisual::state() const
 {
 	return m_estate;
 }
@@ -77,5 +75,3 @@ QString ADAudioVisual::codeSpace() const
 {
 	return m_codeSpace;
 }
-
-

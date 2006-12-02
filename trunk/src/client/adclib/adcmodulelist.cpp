@@ -99,16 +99,8 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	m_pTree->setHeaderLabels ( titles );
 	m_pTree->header()->show();
 	m_pSearch = new DTreeWidgetSearchLine(this, m_pTree);
-	QList<int> columns;
-	for(int i = 0; i < titles.count(); i++)
-	{
-		columns << i;
-	}
-	
-	m_pSearch->setSearchColumns(columns);
 	search->addWidget( m_pSearch );
 	
-	m_pSearch->setSearchColumns(QList<int>() << 0 );
 	
 	layout->addLayout(search);
 	
@@ -198,112 +190,33 @@ void ADCModuleList::clean()
 
 void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 {
-// 	D_FUNCINFO;
-	switch(module)
+	D_FUNCINFO;
+	dDebug() << module;
+	if(module == m_pModule)
 	{
-		case Logic::Users:
+		switch(module)
 		{
-			ADUser *user = qVariantValue<ADUser *>(data);
-			QList<QString> strs;
-			strs << user->code();
-			strs << user->name();
-			strs << user->login();
-			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-			int count = 0;
-			foreach(QString str, strs)
+			case Logic::Users:
 			{
-				item->setText(count, str);
-				count++;
-			}
-		}
-		break;
-		case Logic::Audiovisuals:
-		{
-			ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(data);
-			QList<QString> strs;
-			strs << audiovisual->type() << audiovisual->marksEquipment() << audiovisual->estate() << audiovisual->numberInventory() << audiovisual->codeSpace();
-			
-			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-			int count = 0;
-			foreach(QString str, strs)
-			{
-				item->setText(count, str);
-				count++;
-			}
-		}
-		break;
-		case Logic::ReservesF:
-		{
-			ADReserve *reserve = qVariantValue<ADReserve *>(data);
-			QList<QString> strs;
-			strs << reserve->idReserve(); //Identficador de la reserve
-			strs << reserve->typeReserve();
-			strs << reserve->iduserreserve();
-			strs << reserve->iduserresponsable();
-			if( reserve->idspace() != "" )
-			{
-				strs << reserve->idspace();
-			}
-			else
-			{
-				strs << reserve->idaudiovisual();
-			}
-			strs << reserve->day();
-
-			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-			int count = 0;
-			foreach(QString str, strs)
-			{
-				item->setText(count, str);
-				count++;
-			}
-		}
-		break;
-		case Logic::ReservesT:
-		{
-			ADReserve *reserve = qVariantValue<ADReserve *>(data);
-			QList<QString> strs;
-			strs << reserve->idReserve();
-			strs << reserve->typeReserve();
-			strs << reserve->iduserreserve();
-			strs << reserve->iduserresponsable();
-			if( reserve->idspace() != "" )
-			{
-				strs << reserve->idspace();
-			}
-			else
-			{
-				strs << reserve->idaudiovisual();
-			}
-			strs << reserve->day();
-
-			QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-			int count = 0;
-			foreach(QString str, strs)
-			{
-				item->setText(count, str);
-				count++;
-			}
-		}
-		break;
-		case Logic::Spaces:
-		{
-			ADSpace *space = qVariantValue<ADSpace *>(data);
-			if( (space->codeSpace()) != "null" )	
-			{
-				QList<QString> strs;	
-				strs << space->codeSpace(); 
-				strs << space->typeSpace();
-				if(space->coolAirSpace())
+				ADUser *user = qVariantValue<ADUser *>(data);
+				QList<QString> strs;
+				strs << user->code();
+				strs << user->name();
+				strs << user->login();
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
 				{
-					strs << tr("Yes");
+					item->setText(count, str);
+					count++;
 				}
-				else
-				{
-					strs << tr("No");
-				}
-				strs << space->capacitySpace();
-				strs << space->nameSpace();
+			}
+			break;
+			case Logic::Audiovisuals:
+			{
+				ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(data);
+				QList<QString> strs;
+				strs << audiovisual->type() << audiovisual->marksEquipment() << audiovisual->state() << audiovisual->numberInventory() << audiovisual->codeSpace();
 				
 				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
 				int count = 0;
@@ -313,13 +226,96 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 					count++;
 				}
 			}
+			break;
+			case Logic::ReservesF:
+			{
+				ADReserve *reserve = qVariantValue<ADReserve *>(data);
+				QList<QString> strs;
+				strs << reserve->idReserve(); //Identficador de la reserve
+				strs << reserve->typeReserve();
+				strs << reserve->iduserreserve();
+				strs << reserve->iduserresponsable();
+				if( reserve->idspace() != "" )
+				{
+					strs << reserve->idspace();
+				}
+				else
+				{
+					strs << reserve->idaudiovisual();
+				}
+				strs << reserve->day();
+	
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+			break;
+			case Logic::ReservesT:
+			{
+				ADReserve *reserve = qVariantValue<ADReserve *>(data);
+				QList<QString> strs;
+				strs << reserve->idReserve();
+				strs << reserve->typeReserve();
+				strs << reserve->iduserreserve();
+				strs << reserve->iduserresponsable();
+				if( reserve->idspace() != "" )
+				{
+					strs << reserve->idspace();
+				}
+				else
+				{
+					strs << reserve->idaudiovisual();
+				}
+				strs << reserve->day();
+	
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+			}
+			break;
+			case Logic::Spaces:
+			{
+				ADSpace *space = qVariantValue<ADSpace *>(data);
+				if( (space->codeSpace()) != "null" )	
+				{
+					QList<QString> strs;	
+					strs << space->codeSpace(); 
+					strs << space->typeSpace();
+					if(space->coolAirSpace())
+					{
+						strs << tr("Yes");
+					}
+					else
+					{
+						strs << tr("No");
+					}
+					strs << space->capacitySpace();
+					strs << space->nameSpace();
+					
+					QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+					int count = 0;
+					foreach(QString str, strs)
+					{
+						item->setText(count, str);
+						count++;
+					}
+				}
+			}
+			break;
+			case Logic::Reports:
+			{
+				
+			}
+			break;
 		}
-		break;
-		case Logic::Reports:
-		{
-			
-		}
-		break;
 	}
 }
 

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@zi0n   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                  *
+ *   kuadrosxx@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,8 +25,6 @@
 #include "global.h"
 #include <QComboBox>
 #include <QPushButton>
-
-//cambios
 #include "adaudiovisual.h"
 
 /**
@@ -36,26 +34,23 @@ class ADAudiovisualForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADAudiovisualForm(QWidget *parent = 0);
-		ADAudiovisualForm(const ADAudioVisual & audiovisual, QWidget *parent = 0);
+		ADAudiovisualForm(const QStringList& types , QWidget *parent = 0);
+		ADAudiovisualForm(const ADAudioVisual *audiovisual,QWidget *parent = 0);
 		~ADAudiovisualForm();
 		
 		
 	private:
-		QMap<QString, QWidget*> m_inputs;
-		QComboBox *estadoC, *tiposC;
+		QComboBox *m_state, *m_typesC;
 		bool m_inserter;
 		QStringList tipos;
 		ADAudioVisual *adAudiovisual;
+		QLineEdit *m_marks, *m_numberInventory, *m_codeSpace;
+		QStringList m_types;
 		void fill();
 		void setup();
 		
-	signals:
-		void requestInsertAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
-		void requestUpdateAudiovisual(const QString& typeav, const QString& marksEquipmentav,const QString& estateav,const QString& numberinventoryav, const QString& codeSpace);
-		
 	public slots:
-		void emitInsertAudiovisual();
+		void emitEvent();
 		void insertListTypes(const QList<XMLResults>& results);
 		
 };

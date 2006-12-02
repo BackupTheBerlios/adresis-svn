@@ -81,6 +81,11 @@ QString ADEvent::toString() const
 				dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
 			}
 			break;
+			case Logic::Audiovisuals:
+			{
+				dataE.appendChild( qvariant_cast<ADAudioVisual *>( m_data )->toXml(doc) );
+			}
+			break;
 		}
 	}
 	else

@@ -24,7 +24,7 @@ class ADAudioVisual: public ADObject
 		
 		QString type() const;
 		QString marksEquipment() const;
-		QString estate() const;
+		QString state() const;
 		QString numberInventory() const;
 		QString codeSpace() const;
 		

@@ -93,7 +93,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	else if(qname == "user")
 	{
 		ADPermission permission;
-		ADUser *user = new ADUser(atts.value("name"), atts.value("code"), atts.value("login"), atts.value("passwd"), permission);
+		ADUser *user = new ADUser(atts.value("name"), atts.value("code"), atts.value("login"), atts.value("passwd"), permission, atts.value("rol").toInt() );
 		m_data = QVariant::fromValue(user);
 	}
 	else if(qname == "space")

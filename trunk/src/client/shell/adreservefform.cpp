@@ -77,7 +77,6 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource
 	result << m_reserve;
 	horario->receiveReserves( result );
 	horario->fill();
-	
 }
 
 

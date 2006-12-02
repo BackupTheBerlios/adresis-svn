@@ -29,9 +29,9 @@ ADUserForm::ADUserForm(const ADUser * user, QWidget *parent) : ADFormBase("<h1><
 	{
 		static_cast<QLineEdit*>(m_inputs[tr("name")])->setText( user->name() );
 		static_cast<QLineEdit*>(m_inputs[tr("code")])->setText(user->code());
+		static_cast<QLineEdit*>(m_inputs[tr("code")])->setEnabled(false);
 		static_cast<QLineEdit*>(m_inputs[tr("login")])->setText(user->login());
-// 		static_cast<QLineEdit*>(m_inputs[tr("password")])->setText(user->passwd());
-		m_permission->setPermissions(user->permissions());
+		m_permission->setCurrentIndex(user->rol());
 	}
 }
 
@@ -66,18 +66,24 @@ void ADUserForm::setup()
 	}
 	static_cast<QLineEdit*>( m_inputs[tr("password")])->setEchoMode( QLineEdit::Password );
 	
-	m_permission  =new ADPermissionsView();
+	m_permission  =new QComboBox(this);
+	QMap<QString, int> rols = ADUser::rols();
+	QMap<QString, int>::iterator it = rols.begin();
+	while(it != rols.end())
+	{
+		m_permission-> insertItem (it.value(), it.key());
+		++it;
+	}
 	vBLayout->addWidget(m_permission);
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
-
 }
 
 
 
 void ADUserForm::emitEvent()
 {
-	ADUser user( static_cast<QLineEdit*>(m_inputs[tr("name")])->text(), static_cast<QLineEdit*>(m_inputs[tr("code")])->text(), static_cast<QLineEdit*>(m_inputs[tr("login")])->text(), static_cast<QLineEdit*>(m_inputs[tr("password")])->text(), m_permission->permissions());
+	ADUser user( static_cast<QLineEdit*>(m_inputs[tr("name")])->text(), static_cast<QLineEdit*>(m_inputs[tr("code")])->text(), static_cast<QLineEdit*>(m_inputs[tr("login")])->text(), static_cast<QLineEdit*>(m_inputs[tr("password")])->text(), ADPermission(), m_permission->currentIndex ());
 	Logic::Action action;
 	if(m_inserter)
 	{

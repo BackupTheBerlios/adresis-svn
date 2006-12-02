@@ -27,13 +27,13 @@ ADUser::ADUser()
 }
 
 
-ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions )
-	: ADObject(), m_name(name), m_code(code), m_login(login), m_passwd(passwd), m_permissions(permissions)
+ADUser::ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions, int rol )
+	: ADObject(), m_name(name), m_code(code), m_login(login), m_passwd(passwd), m_permissions(permissions), m_rol(rol)
 {
 	m_valid = true;
 }
 
-ADUser::ADUser(const ADUser & copy): ADObject(), m_name(copy.m_name), m_code(copy.m_code), m_login(copy.m_login), m_passwd(copy.m_passwd), m_permissions(copy.m_permissions)
+ADUser::ADUser(const ADUser & copy): ADObject(), m_name(copy.m_name), m_code(copy.m_code), m_login(copy.m_login), m_passwd(copy.m_passwd), m_permissions(copy.m_permissions), m_rol(copy.m_rol)
 {
 	m_valid = true;
 }
@@ -51,6 +51,7 @@ QDomElement ADUser::toXml(QDomDocument &doc) const
 	root.setAttribute( "code", m_code );
 	root.setAttribute( "login", m_login );
 	root.setAttribute( "passwd", m_passwd );
+	root.setAttribute( "rol", m_rol );
 	root.appendChild(m_permissions.toXml(doc));
 	
 	return root;
@@ -116,4 +117,28 @@ QString  ADUser::login() const
 QString  ADUser::passwd() const
 {
 	return m_passwd;
+}
+
+/**
+ * Retorna un diccionario que asocia el nombre del rol con su correspondiente id
+ * 
+*/
+
+QMap<QString, int> ADUser::rols()
+{
+	QMap<QString, int> dict;
+	dict.insert(QObject::tr("Admin"), 0);
+	dict.insert(QObject::tr("Profesor"), 1);
+	dict.insert(QObject::tr("Student"), 2);
+	return dict;
+}
+
+void ADUser::setRol( int id)
+{
+	m_rol = id;
+}
+
+int ADUser::rol() const
+{
+	return m_rol;
 }

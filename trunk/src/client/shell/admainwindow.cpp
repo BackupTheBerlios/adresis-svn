@@ -202,6 +202,7 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 	if ( form )
 	{
 		form->setTitle(title);
+		form->setWindowTitle(title);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 		connect(form, SIGNAL(sendEvent(ADEvent *)), m_adresis, SLOT(handleEvent(ADEvent *)));
 		form->show();
@@ -236,7 +237,8 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 		case Logic::Audiovisuals:
 		{
-			
+			form = new ADAudiovisualForm(m_adresis->getTypes(Logic::Audiovisuals));
+			addForm(form, tr("Add audiovisual"));
 		}
 		break;
 		case Logic::ReservesT:

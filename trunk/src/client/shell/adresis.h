@@ -49,10 +49,9 @@ class Adresis : public QObject, public ADAbstractEventHandler
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
-		
 		ADObject * getObject( Logic::Module module,const QString key );
 		void removeObject(Logic::Module module,const QString key );
-		
+		QStringList getTypes( Logic::Module module);
 		
 	private:
 		ADConnector *m_connector;

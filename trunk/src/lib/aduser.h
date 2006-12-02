@@ -34,7 +34,7 @@ class ADUser : public ADObject
 {
 	public:
 		ADUser();
-		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions);
+		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions, int rol = -1);
 		ADUser(const ADUser & copy);
 		~ADUser();
 		
@@ -50,6 +50,8 @@ class ADUser : public ADObject
 		QString login() const;
 		QString passwd() const;
 		void assignPermissions(ADPermission permissions);
+		void setRol( int id);
+		int rol() const;
 		
 	private:
 		QString m_name;
@@ -58,6 +60,10 @@ class ADUser : public ADObject
 		QString m_passwd;
 		ADPermission m_permissions;
 		bool m_valid;
+		int m_rol;
+		
+	public:
+		static QMap<QString, int> rols();
 };
 
 Q_DECLARE_METATYPE(ADUser *);

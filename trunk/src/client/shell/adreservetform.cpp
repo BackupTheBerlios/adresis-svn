@@ -49,7 +49,7 @@ ADReserveTForm::ADReserveTForm(const ADReserve * reserve, QWidget * parent)
 	setup();
 	m_inserter = false;
 	list=1;
-//	adAudiovisual = new ADAudioVisual(audiovisual.type(), audiovisual.marksEquipment(), audiovisual.estate(), audiovisual.numberInventory(), audiovisual.codeSpace());
+//	adAudiovisual = new ADAudioVisual(audiovisual.type(), audiovisual.marksEquipment(), audiovisual.state(), audiovisual.numberInventory(), audiovisual.codeSpace());
 }
 
 
@@ -141,7 +141,7 @@ void ADReserveTForm::fill()
 // 	{
 // 		tipoResC->setCurrentIndex(tiposRC->findText(adAudiovisual->type())); 
 // 		static_cast<QLineEdit*>(m_inputs[tr("marca")])->setText(adAudiovisual->marksEquipment());
-// 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->estate()));
+// 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->state()));
 // 		static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(adAudiovisual->numberInventory());
 // 		static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(adAudiovisual->codeSpace());
 // 

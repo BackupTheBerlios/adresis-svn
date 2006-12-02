@@ -90,6 +90,7 @@ void Adresis::handleEvent(ADEvent * event)
 								m_infoModules[Logic::Users] << (event->data());
 								emit requestAddDataToModule(Logic::Users , event->data());
 							}
+							break;
 							case Logic::Del:
 							{
 								removeObject( Logic::Users, event->data().toString()   );
@@ -111,6 +112,7 @@ void Adresis::handleEvent(ADEvent * event)
 									dFatal() << "error";
 								}
 							}
+							break;
 						}
 					}
 					break;
@@ -131,12 +133,19 @@ void Adresis::handleEvent(ADEvent * event)
 					{
 						switch(event->action())
 						{
+							case Logic::Add:
+							{
+								m_infoModules[Logic::Users] << (event->data());
+								emit requestAddDataToModule(Logic::Audiovisuals , event->data());
+							}
+							break;
 							case Logic::GetTypes:
 							{
 								dDebug() << "GGGEEETTT TTYYYPPPEEESS de AUDIOVISUAL";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
+							
 						}
 					}
 					break;
@@ -205,13 +214,13 @@ void Adresis::handleEvent(ADEvent * event)
 					
 					case Logic::Audiovisuals:
 					{
-						switch(event->action())
-						{	
-							case Logic::GetTypes:
-							{
-								m_connector->sendToServer(event->toString());
-							}
-							break;
+						if( event->action() == Logic::GetTypes )
+						{
+							m_connector->sendToServer(event->toString());
+						}
+						else if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+						{
+							m_connector->sendToServer(event->toString());
 						}
 					}
 					break;
@@ -425,12 +434,34 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 		{
 			case Logic::Users:
 			{
-				ADUser *u = qvariant_cast<ADUser *>(*it);
-				if(u)
+				if(qVariantCanConvert<ADUser*>( (*it) ))
 				{
-					if(u->code() == key)
+					ADUser *u = qvariant_cast<ADUser *>(*it);
+					if(u)
 					{
-						m_infoModules[Logic::Users].erase ( it);
+						if(u->code() == key)
+						{
+							m_infoModules[Logic::Users].erase(it);
+							delete u;
+							return;
+						}
+					}
+				}
+			}
+			break;
+			case Logic::Audiovisuals:
+			{
+				if(qVariantCanConvert<ADAudioVisual*>( (*it) ))
+				{
+					ADAudioVisual *a = qvariant_cast<ADAudioVisual *>(*it);
+					if(a)
+					{
+						if(a->numberInventory() == key)
+						{
+							m_infoModules[Logic::Audiovisuals].erase(it);
+							delete a;
+							return;
+						}
 					}
 				}
 			}
@@ -438,5 +469,20 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 		}
 		++it;
 	}
+}
+
+QStringList Adresis::getTypes( Logic::Module module)
+{
+	if(module == Logic::Audiovisuals)
+	{
+		QStringList list;
+		foreach( QVariant v, m_listTypes[Logic::Audiovisuals] )
+		{
+			list << v.toString();
+		}
+		return list;
+	}
+	
+	return QStringList();
 }
 

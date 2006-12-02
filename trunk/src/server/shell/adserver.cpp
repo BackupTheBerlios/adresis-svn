@@ -268,7 +268,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							SHOW_VAR(event->toString());
 							
 							ADUser *user = qvariant_cast<ADUser *>(event->data());
-							ADInsert insert("aduser", QStringList()<< "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() << SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()) );
+							ADInsert insert("aduser", QStringList()<< "rol" << "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() <<QString::number(user->rol() ) <<  SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()));
 							SDBM->execQuery(&insert);
 							
 							if ( SDBM->lastError().isValid() )
@@ -420,6 +420,26 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 				{
 					switch(event->action())
 					{
+						case Logic::Add:
+						{
+							SHOW_VAR(event->toString());
+							
+							ADAudioVisual *audiovisual = qvariant_cast<ADAudioVisual *>(event->data());
+							ADInsert insert("adaudiovisual", QStringList()<< "typeav" << "marksequipmentav" << "estateav" << "numberinventoryav" << "codespace", QStringList() <<  SQLSTR(audiovisual->type()) <<  SQLSTR(audiovisual->marksEquipment()) <<  SQLSTR(audiovisual->state()) << SQLSTR(audiovisual->numberInventory()) << SQLSTR(audiovisual->codeSpace()));
+							SDBM->execQuery(&insert);
+							
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Audiovisuals, Logic::Add, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						
 						case Logic::Find:
 						{
 							ADSelect infoAv(QStringList() << "*" , "adaudiovisual");
