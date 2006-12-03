@@ -252,7 +252,6 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Add:
 							{
 								m_connector->sendToServer(event->toString());
-								
 							}
 							break;
 							case Logic::GetTypes:
@@ -354,6 +353,25 @@ void Adresis::handleEvent(ADEvent * event)
 									dDebug() << "//////////////////////////";
 									ADEvent infoUser (ADEvent::Client, Logic::ReservesF, Logic::Info, QList<QVariant>() << QVariant("infoUser") << QVariant(m_user->login()));
 									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&infoUser);
+								}
+								
+								else if((datos.at(0).toString()) == "loginUsers")
+								{
+									dDebug() << "ADRESIS LLego loginUsers";
+									QList<QVariant> listUsers;
+									QList<QVariant> list = m_infoModules.values(Logic::Users)[0];
+									
+									for(int i=0; i < list.count();i++)
+									{
+										ADUser *user = qVariantValue<ADUser *>(list.at(i));
+										listUsers << QVariant(user->login());
+										
+									}
+									
+									QList<QVariant> listResult;
+									listResult << QVariant("loginUsers") << QVariant(listUsers);
+									ADEvent users (ADEvent::Client, Logic::ReservesF, Logic::Info, listResult);
+									(qvariant_cast<ADReserveFForm *> (datos.at(1)))->receiveEvent(&users);
 								}
 								
 							}

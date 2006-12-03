@@ -46,14 +46,13 @@ class ADReserveFForm : public ADFormBase
 		~ADReserveFForm();
 		
 	private:
-		QComboBox *typeResourceC, *resourceC, *resourcesNameC;
+		QComboBox *typeResourceC, *resourceC, *resourcesNameC, *loginC;
 		QTextEdit *areaTexto;
 		ADSchedule *horario;
 		QString m_responsable, destinationReserve;
 		QStringList typeSpaces, typeAudiovisual;
 		QStringList resourcesSpaces, resourcesAud;
 		QMap< QString, QString> nameResources;	//El primer String es la clave principal en la BD y el segundo es el nombre del recurso.
-		QMap<QString, QWidget*> m_inputs;
 		QMap<QString, QString> m_dateSemestral;
 		QList<QMap<QString, QString> > listSchedules;
 		bool m_inserter;
@@ -63,8 +62,9 @@ class ADReserveFForm : public ADFormBase
 		bool valite();
 		void requestDatesSemestral();
 		void requestLogin();
-				
-		
+		void requestLoginUsers();
+
+
 	signals:
 		void sendEvent( ADEvent *);
 		

@@ -67,10 +67,10 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource
 	resourcesNameC->addItem(infoResource[1]);
 	resourcesNameC->setEnabled(false);
 	
-	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(m_reserve->iduserresponsable());
-	static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setReadOnly ( true );
-	static_cast<QTextEdit*>(m_inputs[tr("motivo")])-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
-	static_cast<QTextEdit*>(m_inputs[tr("motivo")])->setReadOnly ( true );
+	loginC->addItem(m_reserve->iduserresponsable());
+	loginC->setEnabled( false );
+	areaTexto-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
+	areaTexto-> setReadOnly ( true );
 	
 	horario->assignTypeReserve("semestral", m_inserter);
 	QList<ADReserve * > result;
@@ -88,6 +88,12 @@ void ADReserveFForm::changeTypeResource(int opcion)
 	ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes , QVariant::fromValue(this));
 	emit sendEvent( &listTypes );
 	requestLogin();
+}
+
+void ADReserveFForm::requestLoginUsers()
+{
+	ADEvent infoLogin(ADEvent::Client, Logic::ReservesF, Logic::Info, QList<QVariant>() << QVariant("loginUsers") <<QVariant::fromValue(this));
+	emit sendEvent( &infoLogin );
 }
 
 
@@ -137,7 +143,7 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 				ADReserve *reserve = qVariantValue<ADReserve *>(variant);
 				listReserves << reserve;
 			}
-			dDebug() << "TamaÃ±o de la lista de reservas " << listReserves.count();
+			dDebug() << "Tamaño de la lista de reservas " << listReserves.count();
 			receiveReserves(listReserves);
 		}
 		
@@ -146,6 +152,17 @@ void ADReserveFForm:: receiveEvent( ADEvent * e)
 			dDebug() <<"Recibi  InfoUser";
 			m_responsable = (((e->data()).toList())[1]).toString();
 			
+		}
+		
+		else if( (((e->data()).toList())[0]).toString() == "loginUsers" )
+		{
+			dDebug() <<"Recibi  LoginUsers";
+			QList<QString> listLogins;
+			foreach( QVariant variant, (((e->data()).toList())[1]).toList() )
+			{
+				listLogins << variant.toString();
+			}
+			loginC->addItems( listLogins );
 		}
 	}
 	
@@ -163,7 +180,7 @@ void ADReserveFForm::insertListTypes()
 {
 	int opcion = typeResourceC->currentIndex();
 	resourceC->insertItem(0,"ESCOJA UN RECURSO");
-	
+	requestLoginUsers();
 	if(opcion == 0)
 	{
 		resourceC->insertItems(1,typeSpaces);
@@ -229,7 +246,6 @@ void ADReserveFForm::changeNameResource(const QString& name)
 		resource = nameResources.key(name);
 		ADEvent listName(ADEvent::Client, Logic::ReservesF, Logic::Info , QList<QVariant>() << QVariant("reservesResource") << QVariant::fromValue(this) << QVariant(resource));
 		emit sendEvent( &listName );
-		
 	}
 }
 
@@ -280,31 +296,28 @@ void ADReserveFForm::setup()
 	
 	resourcesNameC = new QComboBox;
 	connect(resourcesNameC, SIGNAL(activated (QString) ), this , SLOT(changeNameResource ( QString )));
+	
+	loginC = new QComboBox;
+	loginC->setAutoCompletion(true);
 
 	horario->makeTable( true );
 	titles << tr("Tipo Recurso") << tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable") << tr("Motivo");
 
 	layout->addWidget(new QLabel(titles[0]),0,0);
 	layout->addWidget(typeResourceC,0,1);
-	m_inputs.insert(titles[0].toLower () , typeResourceC);
 
 	layout->addWidget(new QLabel(titles[1]),1,0);
 	layout->addWidget(resourceC,1,1);
-	m_inputs.insert(titles[1].toLower () , resourceC);
 	
 	layout->addWidget(new QLabel(titles[2]),2,0);
 	layout->addWidget(resourcesNameC ,2,1);
-	m_inputs.insert(titles[2].toLower () , resourcesNameC);
 	
 	layout->addWidget(new QLabel(titles[3]),3,0);
-	edits = new QLineEdit();
-	layout->addWidget(edits, 3, 1);
-	m_inputs.insert( titles[3].toLower () , edits );
+	layout->addWidget(loginC, 3, 1);
 	
 	layout->addWidget(new QLabel(titles[4]),4,0);
 	areaTexto = new QTextEdit;
 	layout->addWidget(areaTexto,4,1);
-	m_inputs.insert( titles[4].toLower () , areaTexto );
 	
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
@@ -341,19 +354,18 @@ void ADReserveFForm::emitEvent()
 		
 		if(m_inserter && valite())
 		{
-			
 				m_reserve = new ADReserve( 
 					"",
 					(*it)["typereserve"],
 					m_responsable,
-					static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
+					loginC-> currentText(),
 					audiovisual,
 					space,
 					(*it)["day"],
 					beginDateTime,
 					endDateTime,
 					true,
-					(static_cast<QTextEdit *>(m_inputs[tr("motivo")])->document())->toPlainText()
+					(areaTexto->document())->toPlainText()
 				);
 				
 				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
@@ -363,10 +375,9 @@ void ADReserveFForm::emitEvent()
 				dDebug() << "YA CREE EL EVENTO DE INSERCION DE RESERVAS";
 				emit sendEvent(&insertReserve);	
 				dDebug() << "YA ENVIE EL EVENTO DE INSERCION DE RESERVAS";
-			
 		}
 		
-		else if(m_inserter == false)
+		else if(m_inserter == false && valite())
 		{
 			m_reserve = new ADReserve(
 					m_reserve->idReserve(),
@@ -386,8 +397,16 @@ void ADReserveFForm::emitEvent()
 			it++;
 			
 		}
+		
+		if(it != listSchedules.end() && valite())
+		{
+			dDebug() << "//////////////////////////////////////////////////";
+			dDebug() << "SE DEBERIA DE CERRARRRRRRRRRRRRRRRRRr";
+			dDebug() << "//////////////////////////////////////////////////";
+			emit requestClose();
+		}
 	}
-	
+		
 }
 
 
@@ -398,7 +417,7 @@ bool ADReserveFForm::valite()
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
 	while( it != listSchedules.end())
 	{
-		if( (*it)["typereserve"].isEmpty() || m_responsable.isEmpty() || (static_cast<QLineEdit*> (m_inputs[tr("responsable")])->text()).isEmpty() || (nameResources.key(static_cast<QComboBox*> (m_inputs[tr("nombre recurso")])->currentText())).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty())
+		if( (*it)["typereserve"].isEmpty() || m_responsable.isEmpty() || (loginC-> currentText()).isEmpty() || (nameResources.key(resourcesNameC->currentText())).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty())
 		{
 			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato\nes incorrecto", 0);
 			isValid=false;

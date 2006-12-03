@@ -214,6 +214,12 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 	}
 }
 
+void ADMainWindow::closeTab()
+{
+	closeCurrentTab();
+}
+
+
 void ADMainWindow::showForm( Logic::Module module, const QString & key )
 {
 	ADFormBase * form;

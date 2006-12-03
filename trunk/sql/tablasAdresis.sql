@@ -172,7 +172,48 @@ CREATE TABLE ADReserve
 	check(beginHour < endHour and beginDate <= endDate)
 );
 
+-- DROP TRIGGER check_dates_Adreserve
+-- CREATE TRIGGER check_dates_Adreserve
+-- BEFORE INSERT OR UPDATE ON ADReserve
+-- FOR EACH ROW
+-- EXECUTE PROCEDURE
+-- BEGIN
+-- 	IF (select count(idreserve) from ADReserve where (idAudiovisual = NEW.idAudiovisual or idspace = NEW.idspace) and beginDate = NEW.beginDate and endDate = NEW.endDate and day = NEW.day and ( SELECT (TIME NEW.beginHour, TIME NEW.endHour) overlaps (beginHour, endHour))) != 0 THEN
+-- 		RAISE EXCEPTION ''EL HORARIO DE ESTA RESERVA SE CRUZA CON UNA YA HECHA'';
+-- 	END IF
+-- END
 
+
+
+
+
+
+-- CREATE OR REPLACE TRIGGER check_dates_Adreserve BEFORE INSERT OR UPDATE ON ADReserve FOR EACH ROW 
+-- BEGIN 
+-- IF  (select count(idreserve) from ADReserve where (idAudiovisual = NEW.idAudiovisual or idspace = NEW.idspace) and beginDate = NEW.beginDate and endDate = NEW.endDate and day = NEW.day and ( SELECT (TIME NEW.beginHour, TIME NEW.endHour) overlaps (beginHour, endHour))) != 0 THEN 
+-- 	RAISE EXCEPTION 'EL HORARIO DE ESTA RESERVA SE CRUZA CON UNA YA HECHA';
+-- END;
+
+	
+--   -- Comprueba que se proporcionan nombre_empleado y salario
+--   IF NEW.nombre_empleado ISNULL THEN 
+--      RAISE EXCEPTION ''El nombre del empleado no puede ser un valor NULO''; 
+--   END IF; 
+-- 
+--   IF NEW.salario ISNULL THEN 
+--      RAISE EXCEPTION ''% no puede tener un salario NULO'', NEW.nombre_empleado; 
+--   END IF;
+-- 
+--   -- ¿Quién trabaja gratis?
+--   IF NEW.salario < 0 THEN 
+--      RAISE EXCEPTION ''% no puede tener un salario negativo'', NEW.nombre_empleado; 
+--   END IF;
+-- 
+--   -- Recuerda quién y cuándo hizo el cambio
+--   NEW.ultima_fecha   := ''now''; 
+--   NEW.ultimo_usuario := current_user; 
+--   RETURN NEW; 
+-- END; 
 
 -- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','01/09/2006','15/12/2006','true','Metodos Numericos'); 
 
@@ -183,6 +224,11 @@ CREATE TABLE ConfigurationSchooll(
 );
 
 INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
+
+
+
+
+
 
 -- CREATE TABLE AdSpaceCancelation(
 -- 	typeCancelation varchar(20),
