@@ -157,3 +157,9 @@ QString ADReserve::destinationreserve() const
 {
 	return m_destinationreserve;
 }
+
+void ADReserve::setIdReserve(QString id)
+{
+	m_idReserve = id;
+}
+

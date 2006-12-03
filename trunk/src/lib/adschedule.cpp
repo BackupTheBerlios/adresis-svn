@@ -184,12 +184,29 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 		}
 	}
 
-	/// En este else if se maneja el caso que se seleccione una celda de una misma columna lo que se hace es modificar el item.
+	/// En este else if se maneja el caso que se seleccione una celda de una misma columna lo que se hace es modificar el item pero si lo que se desea es hacer una nueva insercion. En el caso que sea una modificacion lo que se hace es mirar la celda marcadas este continua a las anteriores
 	else if(currentColumn == previousColumn && !m_cellsReserved.contains(qMakePair(currentRow, currentColumn)))
 	{
 		colorearItem = true;
+		
 	}
 
+	dDebug() << "COMPROBANDO QUE ESTEN JUNTOS ";
+	dDebug() << "HAY EN TOTAL " << m_points.count() << "  PUNTOS ";
+	if(!m_inserter && (m_points.count() >= 2))
+	{	
+		organizePairs();
+		for( int point = 1; point < m_points.count(); point++ )
+		{
+			if( ((m_points.at(point).first)-1) != (m_points.at(point-1).first) )
+			{
+				descolorearItems=true;
+				colorearItem = true;
+			}
+		}
+	}
+	dDebug() << "YA COMPROBE QUE ESTUVIERAN JUNTAS";
+	
 
 	if(descolorearItems)
 	{

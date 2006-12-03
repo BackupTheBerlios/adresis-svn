@@ -17,59 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADRESERVE_H
-#define ADRESERVE_H
+#ifndef ADCANCELLATION_H
+#define ADCANCELLATION_H
 
 #include "adobject.h"
 #include <QMetaType>
-#include <QDomElement>
 #include <QDateTime>
+#include <QDomElement>
+#include "adevent.h"
 
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
+	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
 */
-class ADReserve : public ADObject
+class ADCancellation: public ADObject
 {
 	public:
-		ADReserve();
-
-		ADReserve(const QString idReserve, const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QDateTime& beginDateTime, const QDateTime& endDateTime, const bool isActive, const QString& destinationreserve);
-
-		~ADReserve();
-		
+		ADCancellation();
+		ADCancellation(QString idCancellation, QDateTime dateCancellation, QString razonCancellation);
+		~ADCancellation();
+		QString idReserveCancellation();
+		QString idUserCancellation();
+		QDateTime dateTimeCancellation();
+		QString razonCancellation();
 		QDomElement toXml(QDomDocument &doc) const;
 		void fromXml(const QString & xml );
 		void setValues(XMLResults values);
 		bool isValid() const;
-		QString idReserve() const;
-		QString typeReserve() const;
-		QString iduserreserve() const;
-		QString iduserresponsable() const;
-		QString idaudiovisual() const;
-		QString idspace() const;
-		QString day() const;
-		QDateTime beginDateTime() const;
-		QDateTime endDateTime() const;
-		bool isActive() const;
-		QString destinationreserve() const;
-		void setIdReserve(QString id);
+		
+	signals:
+		void sendEventCancel(ADEvent *e);
+		
+	public slots:
+		void setRazonCancellation(QString r);
+		
+	
 		
 	private:
-		QString m_idReserve;
-		QString m_typereserve;
-		QString m_iduserreserve;
-		QString m_iduserresponsable;
-		QString m_idaudiovisual;
-		QString m_idspace;
-		QString m_day;
-		QDateTime m_beginDateTime;
-		QDateTime m_endDateTime;
-		bool m_isactive;
-		QString m_destinationreserve;
+		QString m_idReserveCancellation;
+		QDateTime m_dateTimeCancellation;
+		QString m_razonCancellation;
+		QString m_idUserCancellation;
 		bool m_valid;
-		QString tipo;
-
 };
 
-Q_DECLARE_METATYPE(ADReserve *);
+Q_DECLARE_METATYPE(ADCancellation *);
 #endif
+

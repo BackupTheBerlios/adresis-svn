@@ -6,6 +6,7 @@ DROP TABLE AdSpace CASCADE;
 DROP TABLE AdSpaceType CASCADE;
 DROP TABLE AdReserve CASCADE;
 DROP TABLE ConfigurationSchooll CASCADE;
+DROP TABLW ADCancellation CASCADE;
 
 
 CREATE TABLE AdUser(
@@ -163,7 +164,7 @@ CREATE TABLE ADReserve
 	idAudiovisual varchar(20), FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
 	idSpace varchar(20) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
-	beginHour time ,
+	beginHour time,
 	endHour time, 
 	beginDate date, -- DD/MM/YY
 	endDate date,	-- DD/MM/YY
@@ -204,12 +205,12 @@ CREATE TABLE ADReserve
 --      RAISE EXCEPTION ''% no puede tener un salario NULO'', NEW.nombre_empleado; 
 --   END IF;
 -- 
---   -- ¿Quién trabaja gratis?
+--   -- Quiï¿½ trabaja gratis?
 --   IF NEW.salario < 0 THEN 
 --      RAISE EXCEPTION ''% no puede tener un salario negativo'', NEW.nombre_empleado; 
 --   END IF;
 -- 
---   -- Recuerda quién y cuándo hizo el cambio
+--   -- Recuerda quiï¿½ y cuï¿½do hizo el cambio
 --   NEW.ultima_fecha   := ''now''; 
 --   NEW.ultimo_usuario := current_user; 
 --   RETURN NEW; 
@@ -226,12 +227,15 @@ CREATE TABLE ConfigurationSchooll(
 INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 
 
-
-
-
-
--- CREATE TABLE AdSpaceCancelation(
--- 	typeCancelation varchar(20),
+CREATE TABLE ADCancellation(
+	idcancellation integer REFERENCES ADReserve(idReserve) ON DELETE CASCADE ON UPDATE CASCADE,
+	idUserCancellation varchar(10) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE,
+	hourCancellation time,
+	dateCancellation date,
+	razonCancellation varchar(80)
+);
+	
+	
 -- 	tipoRecurso varchar(20),
 -- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
 -- 	idSpace varchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),
@@ -239,17 +243,6 @@ INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 -- 	cancelationDetails varchar(50),
 -- -- 	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
 -- );
--- 
--- CREATE TABLE AdAVCancelation(
--- 	typeCancelation varchar(20),
--- 	tipoRecurso varchar(20),
--- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
--- 	idAudioVisual varchar(10), FOREIGN KEY (idAudioVisual) REFERENCES AdAudioVisual(numberinventoryAV),
--- 	idScheduleAV varchar(10), FOREIGN KEY (idScheduleAV) REFERENCES AdScheduleAV(idScheduleAV), 
--- 	cancelationDetails varchar(50),
--- -- 	PRIMARY KEY(idUser, idAudioVisual, idScheduleAV)
--- );
-
 
 
 

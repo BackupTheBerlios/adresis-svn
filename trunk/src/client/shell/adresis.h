@@ -31,6 +31,7 @@
 #include "adspace.h"
 #include "adreserve.h"
 #include "adreservefform.h"
+#include "adcancellation.h"
 
 
 #include "adeventhandler.h"

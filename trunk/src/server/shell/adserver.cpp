@@ -457,7 +457,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						break;
 						case Logic::Update:
 						{
-							SHOW_VAR(event->toString());
+							event->toString();
 							
 							ADAudioVisual *audiovisual = qvariant_cast<ADAudioVisual *>(event->data());
 							
@@ -527,7 +527,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Add:
 						{
-							dDebug() << "SHOWVARRRR";
 							event->toString();
 							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
 							
@@ -543,7 +542,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								resourceId = reserve->idaudiovisual();
 							}
 							
-							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("dd/MM/yyyy")) << SQLSTR(reserve->endDateTime().date().toString("dd/MM/yyyy")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
+							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
 							SDBM->execQuery(&insert);
 							
 							if ( SDBM->lastError().isValid() )
@@ -552,7 +551,34 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							else
 							{
-								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Add, event->data());
+								ADSelect idReserve(QStringList() << "idreserve", "adreserve");
+								QString condition = "typereserve = 'semestral' and isactive = true and " + resourceField+" = "+SQLSTR(resourceId)+" and day = "+ SQLSTR(reserve->day()) + " and beginhour = "+SQLSTR(reserve->beginDateTime().time().toString("hh:mm"))+ " and endHour = "+SQLSTR(reserve->endDateTime().time().toString("hh:mm"));
+								idReserve.setWhere(condition);
+								
+								SResultSet rs = SDBM->execQuery(&idReserve);
+								reserve->setIdReserve(rs.map()["idreserve"][0]);
+								
+								
+								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Add, QVariant::fromValue(reserve));
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						
+						case Logic::Update:
+						{
+							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
+							ADUpdate updateReserve("adreserve",	QStringList() << "beginhour" << "endhour" << "begindate" << "enddate",  QStringList() << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")));
+							
+							updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
+							SDBM->execQuery(&updateReserve);
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Update, event->data());
 								sendToAll(e.toString());
 							}
 						}
@@ -614,6 +640,8 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							break;
 						}
+						
+						
 					}
 					break;
 				}

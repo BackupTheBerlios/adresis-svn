@@ -17,7 +17,9 @@ HEADERS += adcapplication.h \
            adconfigschoollmodule.h \
            adinsertresource.h \
            adreservetform.h \
-           adreservefform.h 
+           adreservefform.h \
+           adcancellationform.h \
+           adcancellationdetails.h 
 SOURCES += main_cliente.cpp \
            adcapplication.cpp \
            adresis.cpp \
@@ -31,7 +33,9 @@ SOURCES += main_cliente.cpp \
            adconfigschoollmodule.cpp \
            adinsertresource.cpp \
            adreservetform.cpp \
-           adreservefform.cpp 
+           adreservefform.cpp \
+           adcancellationform.cpp \
+           adcancellationdetails.cpp 
 KDEV_QTVER = 4
 TARGET = ../../../bin/adclient.bin
 CONFIG += release \
