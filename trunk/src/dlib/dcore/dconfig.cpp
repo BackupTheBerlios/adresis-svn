@@ -72,7 +72,6 @@ void DConfig::init()
 {
 	m_dconfig->setup();
 	m_isOk = m_dconfig->isOk();
-
 }
 
 bool DConfig::isOk()

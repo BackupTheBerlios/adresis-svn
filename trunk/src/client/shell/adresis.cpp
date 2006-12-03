@@ -19,8 +19,9 @@
  ***************************************************************************/
 #include "adresis.h"
 #include <ddebug.h>
+#include "dconfig.h"
 #include "adcancellationdetails.h"
-		
+
 Adresis::Adresis(QObject * parent)
 	: QObject(parent)
 {
@@ -59,7 +60,6 @@ void Adresis::handleEvent(ADEvent * event)
 				{
 					case Logic::Users:
 					{
-// 						dDebug() << "Users action =" << event->action();
 						switch(event->action())
 						{
 							case Logic::Authenticate:
@@ -84,6 +84,20 @@ void Adresis::handleEvent(ADEvent * event)
 										ADEvent dates(ADEvent::Client, Logic::ReservesF, Logic::Dates , "");
 										handleEvent(&dates);
 									}
+									
+									if(Logic::Module(i) == Logic::ReservesF)
+									{
+										ADEvent dates(ADEvent::Client, Logic::ReservesF, Logic::Dates , "");
+										handleEvent(&dates);
+									}
+									
+									if(Logic::Module(i) == Logic::Reports  )
+									{
+										emit requestShowModule( Logic::Module(i), QList<QVariant>() );
+										//cargar de la configuracion los la info de los reportes generados por el cliente y que estan grabados localmente
+										
+									}
+									
 								}
 							}
 							break;
@@ -289,12 +303,12 @@ void Adresis::handleEvent(ADEvent * event)
 	// 							QString idCancellation, QDateTime dateCancellation, QString razonCancellation
 								QDateTime dt(QDate::currentDate(), QTime::currentTime());
 								ADCancellation * cancel = new ADCancellation(event->data().toString(), dt, "");
-								ADCancellationDetails *cD;
-								cD->show();
+// 								ADCancellationDetails *cD;
+// 								cD->show();
 								
 // 							connect(cD, SIGNAL(text(QString)), cancel, SLOT(setRazonCancellation(QString)));
 							
-								connect(cancel, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
+// 								connect(cancel, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
 // 										cd.setFocus();
 										
 								}
@@ -454,6 +468,9 @@ void Adresis::handleEvent(ADEvent * event)
 					{
 					}
 					break;
+					
+					
+					
 				}
 			}
 		}
@@ -600,6 +617,7 @@ QStringList Adresis::getTypes( Logic::Module module)
 {
 	if(module == Logic::Audiovisuals)
 	{
+		
 		QStringList list;
 		foreach( QVariant v, m_listTypes[Logic::Audiovisuals] )
 		{

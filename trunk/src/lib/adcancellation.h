@@ -44,13 +44,11 @@ class ADCancellation: public ADObject
 		void setValues(XMLResults values);
 		bool isValid() const;
 		
-	signals:
-		void sendEventCancel(ADEvent *e);
-		
-	public slots:
-		void setRazonCancellation(QString r);
-		
-	
+// 	signals:
+// 		void sendEventCancel(ADEvent *e);
+// 		
+// 	public slots:
+// 		void setRazonCancellation(QString r);
 		
 	private:
 		QString m_idReserveCancellation;

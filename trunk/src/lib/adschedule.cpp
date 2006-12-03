@@ -343,9 +343,6 @@ void ADSchedule::fill()
 				}
 				
 				(m_table->item( i , column.at(pos)))->setTextAlignment(Qt::AlignHCenter);
-				
-				
-				
 			}
 		}
 		

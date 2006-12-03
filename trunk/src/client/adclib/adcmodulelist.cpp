@@ -91,6 +91,7 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		case Logic::Reports:
 		{
 			setWindowTitle ( "Reports");
+			titles << tr("Date time") << tr("Title");
 		}
 		break;
 	}

@@ -27,6 +27,8 @@
 #include <dalgorithm.h>
 #include <ktpreferences.h>
 
+
+
 //QT
 #include <QLabel>
 #include <QTimer>
@@ -37,9 +39,13 @@
 #include <QMessageBox>
 #include <QScrollArea>
 
+#include <QTextBrowser>
 
 //adresisLib
 #include "cconnectiondialog.h"
+#include "adreportgenerator.h"
+
+#include "adreportfrom.h"
 
 
 ADMainWindow::ADMainWindow() : DTabbedMainWindow()
@@ -125,6 +131,7 @@ void ADMainWindow::configSchooll()
 void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values)
 {
 	D_FUNCINFO;
+	setUpdatesEnabled(false);
 	ADCModuleList *list = new ADCModuleList(module);
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
@@ -136,6 +143,7 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
 	connect(m_adresis, SIGNAL(requestRemoveDataToModule(Logic::Module, const QString & )), list, SLOT(removeData( Logic::Module, const QString & )));
 	connect(m_adresis, SIGNAL(requestUpdateDataToModule(Logic::Module, const QVariant & )), list, SLOT(updateData( Logic::Module, const QVariant & )));
+	setUpdatesEnabled(true);
 }
 
 void ADMainWindow::setupMenu()
@@ -178,6 +186,7 @@ void ADMainWindow::showTipDialog()
  */
 void ADMainWindow::connectToHost()
 {
+	
 	CConnectionDialog connectionDialog;
 	if ( connectionDialog.exec() != QDialog::Rejected )
 	{
@@ -186,6 +195,7 @@ void ADMainWindow::connectToHost()
 		m_adresis->login(connectionDialog.user(), connectionDialog.password());
 		setUpdatesEnabled ( true);
 	}
+	
 }
 
 void ADMainWindow::showDialog(Msg::Type type, const QString& message)
@@ -265,7 +275,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			else
 			{
 				form = new ADAudiovisualForm(static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals, key )), m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
-				title = tr("Add audiovisual");
+				title = tr("Modify audiovisual");
 			}
 		}
 		break;
@@ -278,7 +288,11 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			}
 			else
 			{
+				
+				
 				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ));
+				
+
 				form = new ADReserveTForm( reserve);
 				title = tr("Modify Reserve Temporal");
 			}
@@ -291,10 +305,20 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			{
 				form = new ADReserveFForm();
 				title = tr("Add Reserve Semestral");
+				
+				
+				
 			}
 			else
 			{
 				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ));
+				
+				QTextBrowser *editor = new QTextBrowser;
+				int tmp = reserve->beginDateTime().date().year();
+				editor->setDocument( ADReportGenerator::generateSchedule( reserve->beginDateTime().date().weekNumber(&tmp ) , m_adresis->getList(Logic::ReservesF )));
+				
+				editor->show();
+				
 				
 				QList<QString> infoResource;
 				if(reserve->idspace() != "") //INFO SPACE
@@ -311,6 +335,12 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				form = new ADReserveFForm( reserve, infoResource );
 				title = tr("Modify Reserve Semestral");
 			}
+		}
+		break;
+		case Logic::Reports:
+		{
+			form = new ADReportFrom();
+			title = tr("Create Report");
 		}
 		break;
 	}

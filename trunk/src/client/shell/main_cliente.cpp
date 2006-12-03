@@ -8,7 +8,6 @@
 #include "admainwindow.h"
 #include "adcapplication.h"
 
-
 int main(int argc, char **argv)
 {
 	ADCApplication app(argc, argv);

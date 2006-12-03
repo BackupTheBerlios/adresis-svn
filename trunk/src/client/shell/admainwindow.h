@@ -93,14 +93,13 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void about();
 		void changeTheme();
 		void configSchooll();
-		void showModule(Logic::Module module,const QList<QVariant> &);
+		void showModule(Logic::Module module, const QList<QVariant> &);
 		void closeTab();
 		
 	public slots:
 		void showDialog(Msg::Type type, const QString& message);
 		void addForm(ADFormBase * form, const QString & title);
 		void showForm(Logic::Module module,const QString & key);
-		
 };
 
 #endif

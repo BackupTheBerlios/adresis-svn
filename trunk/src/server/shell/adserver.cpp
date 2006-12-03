@@ -181,8 +181,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 // 	else
 	{
 		cnx->setLogin(login);
-// 		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "permissionsuser" , "aduser");
-
+		
 		ADSelect infoUser(QStringList() << "loginuser" << "codeuser" << "nameuser" << "rol" , "aduser");
 		infoUser.setWhere("loginuser="+SQLSTR(login));
 		SResultSet rs = SDBM->execQuery(&infoUser);
@@ -370,7 +369,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoSpaces);
-// 							dDebug() << rs.toString();
 							QList<QVariant> listSpaces;
 							for(int pos =0; pos < rs.map()["codespace"].count(); pos++)
 							{	
@@ -486,7 +484,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoAv);
-// 							dDebug() << rs.toString();
 							QList<QVariant> listAvs;
 							
 							

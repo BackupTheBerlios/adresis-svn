@@ -81,13 +81,13 @@ bool ADCancellation::isValid() const
 	return m_valid;
 }
 
-void ADCancellation::setRazonCancellation( QString r)
-{
-	m_razonCancellation = r;
-	ADCancellation *c = new ADCancellation(m_idReserveCancellation, m_dateTimeCancellation, m_razonCancellation);
-	ADEvent event(ADEvent::Client, Logic::ReservesF, Logic::Del, QVariant::fromValue(c) );
-	emit sendEventCancel( &event );
-}
+// void ADCancellation::setRazonCancellation( QString r)
+// {
+// 	m_razonCancellation = r;
+// 	ADCancellation *c = new ADCancellation(m_idReserveCancellation, m_dateTimeCancellation, m_razonCancellation);
+// 	ADEvent event(ADEvent::Client, Logic::ReservesF, Logic::Del, QVariant::fromValue(c) );
+// // 	emit sendEventCancel( &event );
+// }
 
 
 
