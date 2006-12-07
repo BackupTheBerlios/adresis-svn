@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosx@gmail.com                                                    *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,46 +17,31 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
-#ifndef ADEVENT_H
-#define ADEVENT_H
+#ifndef ADREPORTFROM_H
+#define ADREPORTFROM_H
 
-#include <QVariant>
-#include <global.h>
+
+#include "adformbase.h"
+#include <QComboBox>
+#include "ddatepicker.h"
+
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADEvent : public QObject
+class ADReportFrom : public ADFormBase
 {
-	Q_OBJECT;
+	Q_OBJECT
 	public:
-		enum Source{Client = 0, Server };
-		ADEvent();
-		ADEvent(Source source, Logic::Module module, Logic::Action action, const QVariant & data);
-		~ADEvent();
-		int module() const;
-		int action() const;
-		int source() const;
-		
-		
-		void setSource(Source source);
-		void setModule(Logic::Module module);
-		void setAction(Logic::Action action);
-		
-		QString toString() const;
-		QVariant data() const;
-		
-		bool isValid() const;
+		ADReportFrom(QWidget *parent = 0);
+		~ADReportFrom();
 		
 	private:
-		Source m_source;
-		Logic::Module m_module;
-		Logic::Action m_action;
-		QVariant m_data;
-		bool m_valid;
-		
+		QComboBox *m_type, *m_consult;
+		DDatePicker *m_beginDate, *m_endDate;
+		QStringList m_consultList, consultHistogram;
+		bool m_inserter;
 	public slots:
-		void setData(const QVariant & data );
+		void emitEvent();
 };
 
 #endif

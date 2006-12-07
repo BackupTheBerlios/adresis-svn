@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2006 by Jorge Cuadrado   *
- *   kuadrosx@gmail.com   *
+ *   Copyright (C) 2006 by Jorge Cuadrado                                  *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,26 +23,22 @@
 /**
  * @author Jorge Cuadrado <kuadrosx@gmail.com>
 */
-// #include<QObject>
+
 #include<QDomElement>
 #include "global.h"
-// #include "adinsertpackage.h"
-// #include "adupdatepackage.h"
 
-class ADObject /*: public QObject*/
+class ADObject
 {
 	public:
 		ADObject();
 		virtual ~ADObject();
-// 		virtual ADInsertPackage insertPackage() = 0;
-// 		virtual ADUpdatePackage updatePackage() = 0;
 		virtual void setValues(XMLResults values) = 0;
 		virtual bool isValid()  const = 0;
 		/**
 		 * Cualquier objeto tiene que poderse convertir en un string xml
 		 * @return 
 		 */
-		virtual QDomElement toXml(QDomDocument &doc)const = 0;
+		virtual QDomElement toXml(QDomDocument &doc) const = 0;
 };
 
 #endif

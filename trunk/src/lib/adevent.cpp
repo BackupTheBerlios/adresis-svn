@@ -26,7 +26,7 @@
 #include "adaudiovisual.h"
 #include "adreserve.h"
 #include "adspace.h"
-
+#include "adreport.h"
 
 #include <QVariant>
 
@@ -84,6 +84,11 @@ QString ADEvent::toString() const
 			case Logic::Audiovisuals:
 			{
 				dataE.appendChild( qvariant_cast<ADAudioVisual *>( m_data )->toXml(doc) );
+			}
+			break;
+			case Logic::Reports:
+			{
+				dataE.appendChild( qvariant_cast<ADReport *>( m_data )->toXml(doc) );
 			}
 			break;
 		}
@@ -152,7 +157,6 @@ QString ADEvent::toString() const
 								listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
 							}
 							break;
-							
 						}
 					}
 					dataE.appendChild(listE);

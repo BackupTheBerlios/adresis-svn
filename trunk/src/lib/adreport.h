@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosx@gmail.com                                                    *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,46 +17,43 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
-#ifndef ADEVENT_H
-#define ADEVENT_H
+#ifndef ADREPORT_H
+#define ADREPORT_H
 
-#include <QVariant>
-#include <global.h>
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
+ * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADEvent : public QObject
+
+#include "adobject.h"
+#include <QDateTime>
+#include <QTextDocument>
+
+class ADReport : public ADObject
 {
-	Q_OBJECT;
 	public:
-		enum Source{Client = 0, Server };
-		ADEvent();
-		ADEvent(Source source, Logic::Module module, Logic::Action action, const QVariant & data);
-		~ADEvent();
-		int module() const;
-		int action() const;
-		int source() const;
+		enum TypeConsult{ TimeAudio = 0, TimeProfesor, Cancelations };
+		enum TypeReport{ List = 0, Histogram };
+		ADReport(TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate  );
+		~ADReport();
 		
+		virtual QDomElement toXml(QDomDocument &doc) const;
+		void setValues(XMLResults values);
+		bool isValid()  const;
 		
-		void setSource(Source source);
-		void setModule(Logic::Module module);
-		void setAction(Logic::Action action);
+		QTextDocument *text();
 		
-		QString toString() const;
-		QVariant data() const;
-		
-		bool isValid() const;
+		QDateTime created();
+		QDate dateBegin();
+		QDate dateEnd();
 		
 	private:
-		Source m_source;
-		Logic::Module m_module;
-		Logic::Action m_action;
-		QVariant m_data;
-		bool m_valid;
+		TypeConsult m_consult;
+		TypeReport m_type;
 		
-	public slots:
-		void setData(const QVariant & data );
+		QDateTime m_created, m_beginDate, m_endDate;
+		
 };
+
+Q_DECLARE_METATYPE(ADReport *);
 
 #endif

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosx@gmail.com                                                    *
+ *   kuadrosxx@gmail.com                                                   *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,46 +17,35 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
- 
-#ifndef ADEVENT_H
-#define ADEVENT_H
+#include "adreport.h"
 
-#include <QVariant>
-#include <global.h>
-/**
-	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
-*/
-class ADEvent : public QObject
+ADReport::ADReport(TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate  ) : m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate)
 {
-	Q_OBJECT;
-	public:
-		enum Source{Client = 0, Server };
-		ADEvent();
-		ADEvent(Source source, Logic::Module module, Logic::Action action, const QVariant & data);
-		~ADEvent();
-		int module() const;
-		int action() const;
-		int source() const;
-		
-		
-		void setSource(Source source);
-		void setModule(Logic::Module module);
-		void setAction(Logic::Action action);
-		
-		QString toString() const;
-		QVariant data() const;
-		
-		bool isValid() const;
-		
-	private:
-		Source m_source;
-		Logic::Module m_module;
-		Logic::Action m_action;
-		QVariant m_data;
-		bool m_valid;
-		
-	public slots:
-		void setData(const QVariant & data );
-};
+	m_created = QDateTime::currentDateTime();
+	
+}
 
-#endif
+
+ADReport::~ADReport()
+{
+}
+
+QDomElement ADReport::toXml(QDomDocument &doc) const
+{
+	QDomElement root = doc.createElement("report");
+	root.setAttribute( "type", m_type );
+	root.setAttribute( "consult", m_consult );
+	root.setAttribute( "beginDate",m_beginDate.toString(Qt::ISODate)  );
+	root.setAttribute( "endDate", m_endDate.toString(Qt::ISODate));
+	root.setAttribute( "createdDate", m_created.toString(Qt::ISODate) );
+	return root;
+}
+
+void ADReport::setValues(XMLResults values)
+{
+}
+
+bool ADReport::isValid()  const
+{
+	return true;
+}

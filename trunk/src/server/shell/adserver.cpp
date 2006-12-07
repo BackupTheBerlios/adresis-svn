@@ -637,12 +637,9 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							break;
 						}
-						
-						
 					}
 					break;
 				}
-
 				case Logic::ReservesT:
 				{
 					switch(event->action())
@@ -688,7 +685,15 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 				}
 				case Logic::Reports:
 				{
-					dDebug() << "REPORTES";
+					switch(event->action())
+					{
+						case Logic::Add:
+						{
+							
+							
+							
+						}
+					}
 					break;
 				}
 			}
