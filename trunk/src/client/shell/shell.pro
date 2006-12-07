@@ -34,7 +34,8 @@ SOURCES += main_cliente.cpp \
            adinsertresource.cpp \
            adreservetform.cpp \
            adreservefform.cpp \
-           adcancellationform.cpp 
+           adcancellationform.cpp \
+	   adreportfrom.cpp
 KDEV_QTVER = 4
 TARGET = ../../../bin/adclient.bin
 CONFIG += release \
