@@ -17,14 +17,14 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include "adreportfrom.h"
 
+#include<QGridLayout>
+#include "adreportfrom.h"
 #include "adreport.h"
 
 
-#include<QGridLayout>
-
-ADReportFrom::ADReportFrom(QWidget *parent): ADFormBase("Reportes", parent)
+ADReportFrom::ADReportFrom(QWidget *parent): 
+	ADFormBase("Reportes", parent)
 {
 	m_inserter = true;
 	m_consultList << "horas utilizadas de las ayudas audiovisuales" << "horas reservadas por un profesor" << "reporte de cancelaciones";
@@ -55,9 +55,8 @@ ADReportFrom::ADReportFrom(QWidget *parent): ADFormBase("Reportes", parent)
 	setForm(container);
 }
 
-ADReportFrom::~ADReportFrom()
+ADReportFrom::~ ADReportFrom()
 {
-	
 }
 
 void ADReportFrom::emitEvent()

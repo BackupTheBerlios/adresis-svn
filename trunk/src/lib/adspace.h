@@ -24,6 +24,8 @@
 #include <QStringList>
 #include <QMetaType>
 #include <QDomElement>
+#include <QXmlDefaultHandler>
+
 
  
 /**
@@ -38,7 +40,8 @@ class ADSpace : public ADObject
 	
 		QDomElement toXml(QDomDocument &doc) const;
 		
-		void setValues(XMLResults values);
+		void setValues(const XMLResults values);
+		void setValues(const QXmlAttributes& values);
 		bool isValid() const;
 		QString codeSpace() const;
 		QString typeSpace() const;

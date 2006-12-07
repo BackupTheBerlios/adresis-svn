@@ -16,7 +16,6 @@ HEADERS += adevent.h \
            aduser.h \
            adeventfactory.h \
            adreserve.h \
-           adreportgenerator.h \
            adcancellation.h \
            adreport.h 
 SOURCES += adevent.cpp \
@@ -29,7 +28,6 @@ SOURCES += adevent.cpp \
            aduser.cpp \
            adeventfactory.cpp \
            adreserve.cpp \
-           adreportgenerator.cpp \
            adcancellation.cpp \
            adreport.cpp 
 TARGET = adlib

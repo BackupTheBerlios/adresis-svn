@@ -25,14 +25,17 @@
 #include "global.h"
 #include <QComboBox>
 #include <QPushButton>
-
+#include <QTextEdit>
+#include <QDateTime>
+		
 //cambios
 #include "adreserve.h"
 #include "adschedule.h"
+#include "adevent.h"
 
 /**
-	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@gmail.com>
-*/
+		@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@gmail.com>
+ */
 
 
 class ADReserveTForm : public ADFormBase
@@ -40,44 +43,44 @@ class ADReserveTForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADReserveTForm(QWidget *parent = 0);
-		ADReserveTForm(const ADReserve * reserve, QWidget *parent = 0);
+		ADReserveTForm( ADReserve * reserve, QList<QString> infoResource, QList<ADReserve *> reservas,QWidget *parent = 0);
 		~ADReserveTForm();
-	
-	private:
-		QMap<QString, QWidget*> m_inputs;
-		QMap< QString, QString> nameResources;
-		QList<QMap<QString, QString> > listSchedules;
-		QComboBox *tipoRecC, *tipoResC, *recursosC, *resourcesNameC;
-		bool m_inserter, m_reserve;
-		QString m_responsable, destinationReserve;
-		QStringList recursosEsp, recursosAud;
 		
-		void fill();
-		void setup();
-		int list;
-		bool valite();
+	private:
+		QComboBox *typeResourceC, *resourceC, *resourcesNameC, *loginC;
+		QTextEdit *areaTexto;
 		ADSchedule *horario;
+		QString m_userReserve, destinationReserve;
+		QStringList typeSpaces, typeAudiovisual;
+		QStringList resourcesSpaces, resourcesAud;
+		QMap< QString, QString> nameResources;	//El primer String es la clave principal en la BD y el segundo es el nombre del recurso.
+		QList<QMap<QString, QString> > listSchedules;
+		bool m_inserter;
+		
+		void requestReserves(QString name);
+		ADReserve *m_reserve;
+		void setup();
+		bool valite();
+		void valiteUserAndResource(QString, QString);
+		void requestDatesSemestral();
+		void requestLogin();
 		
 	signals:
-		void requestInsertReserve(const QString& table, const QString& typeR, const QString& userReserve, const QString& userResponsable, const QString& idRecurso, const QString& day, const QString& beginhour, const QString& endhour, const QString& begindate, const QString& enddate, const bool& isactive, const QString& destinationReserve);
+		void sendEvent( ADEvent *);
 		
-		void requestUpdateReserve(const QString& typeR, const QString& recurso, const QString& resposable);
-		void requestTypeReserve(const QString& typeR);
-		void requestTypeResources(const QString& table, const QString& typeR);
-		void consultSchedule(const QString& table, const QString& resource);
 		
 	public slots:
-		void emitInsertReserve();
-		void insertListTypes(const QList<XMLResults>& results);
-		void insertListNameResources(const QList<XMLResults>& results);
-// 		void changeTypeReserve(int);
+		void receiveEvent(ADEvent *);
 		void changeTypeResource(int);
-		void changeTypeSpace(QString);
-		void changeNameSpace(const QString&);
-		void permisos(const QString &login, const bool permiso);
-		void requestSchedule( const QList<XMLResults>& results );
+		void insertListTypes();
+		void changeResource(QString);
+		void insertListNameResources();
+		void changeNameResource(const QString&);
+		void receiveReserves( const QList<ADReserve *>& results );
+		void emitEvent();
+		
 		
 };
-Q_DECLARE_METATYPE(ADReserveTForm *);
 
+Q_DECLARE_METATYPE(ADReserveTForm *);
 #endif

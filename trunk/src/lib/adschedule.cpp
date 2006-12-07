@@ -60,11 +60,12 @@ void ADSchedule::makeTable( bool semestral)
 	int numCols;
 	year = (QDate::currentDate()).year();
 	cols.clear();
-
+	daysWeek << "LUNES" << "MARTES" << "MIERCOLES" << "JUEVES" << "VIERNES" << "SABADO"<< "DOMINGO";
+	
 	if(semestral)
 	{
 		month->setHidden(true);
-		cols << "LUNES" << "MARTES" << "MIERCOLES" << "JUEVES" << "VIERNES" << "SABADO"<< "DOMINGO";
+		cols = daysWeek;
 		m_table->setColumnCount(7);
 	}
 	else
@@ -89,7 +90,8 @@ void ADSchedule::makeTable( bool semestral)
 
 		for(int n=1; n <= numCols; n++)
 		{
-			QString dia = QDate::longDayName( QDate( year, monthNo+1, n).dayOfWeek());
+			
+			QString dia = daysWeek[(QDate( year, monthNo+1, n).dayOfWeek())-1];
 			cols << dia+"\n"+QString::number(n);
 		}
 		m_table->setColumnCount(numCols);
@@ -224,9 +226,9 @@ void ADSchedule::valiteColumn( int currentRow, int currentColumn)
 	if(colorearItem)
 	{
 		(m_table->item( currentRow , currentColumn))->setText("RESERVAR");
- 		(m_table->item( currentRow , currentColumn))->setBackgroundColor( QColor(Qt::yellow) );
- 		(m_table->item( currentRow , currentColumn))->setToolTip( "Horario para mi reserva" );
- 		m_points.append(qMakePair(currentRow, currentColumn));
+		(m_table->item( currentRow , currentColumn))->setBackgroundColor( QColor(Qt::yellow) );
+		(m_table->item( currentRow , currentColumn))->setToolTip( "Horario para mi reserva" );
+		m_points.append(qMakePair(currentRow, currentColumn));
 	}
 
 	previousColumn=currentColumn;
@@ -254,7 +256,7 @@ void ADSchedule::fill()
 
 	while( it != reservasAnteriores.end() )
 	{
-		dDebug() << "(*it)->typeReserve().toLower() >> " << (*it)->typeReserve().toLower() <<"   m_reserve =>"<< m_reserve;
+		dDebug() << "typeReserve >> " << (*it)->typeReserve().toLower() <<"   m_reserve =>"<< m_reserve;
 		dDebug() << "((( (*it)->beginDateTime().date()).month())-1) >> " << ((( (*it)->beginDateTime().date()).month())-1) << "   month => " << monthNo;
 		dDebug() << "((( (*it)->endDateTime().date()).month())-1) >> " << ((( (*it)->endDateTime().date()).month())-1) << "   month => " << monthNo;
 		
@@ -327,22 +329,26 @@ void ADSchedule::fill()
 			{
 				dDebug() << "fila " << i;
 				(m_table->item( i , column.at(pos)))->setText((*it)->iduserresponsable().toUpper() );
-				(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 				(m_table->item( i , column.at(pos)))->setToolTip( "Espacio ocupado en este horario" );
 				
-				if(m_inserter)
+				if(m_inserter || (it != reservasAnteriores.begin()))
 				{
+					(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::blue) );
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEditable );
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsSelectable );
 					(m_table->item( i , column.at(pos)))->setFlags( !Qt::ItemIsEnabled );
 					m_cellsReserved.append( qMakePair(i,column.at(pos)) );
 				}
-				else
+				else if(!m_inserter && (it == reservasAnteriores.begin()))
 				{
+					(m_table->item( i , column.at(pos)))->setBackgroundColor( QColor(Qt::gray) );
 					m_points.append(qMakePair(i,column.at(pos)));
 				}
 				
 				(m_table->item( i , column.at(pos)))->setTextAlignment(Qt::AlignHCenter);
+				
+				
+				
 			}
 		}
 		
@@ -363,7 +369,7 @@ void ADSchedule::organizePairs()
 		while( j >= 0 && (m_points.at(j)).first > temp.first)
 		{
 			m_points.replace( j+1, (m_points.at(j)) );
-         		j--;
+			j--;
 		}
 		m_points.replace( j+1, temp );
 	}
@@ -400,9 +406,12 @@ QList< QMap<QString, QString> > ADSchedule::returnSchedule()
 				map.insert("typereserve", m_reserve);
 				
 				column = column.section('\n',1,1);
+				dDebug() << "COLUMN==>> " << column;
 				map.insert("begindate", ""+column+"/"+QString::number(monthNo+1)+"/"+QString::number(year));
 				map.insert("enddate",   ""+column+"/"+QString::number(monthNo+1)+"/"+QString::number(year));
 				map.insert("beginhour", ((m_table->verticalHeaderItem(m_points.at(point).first))->text()) );
+				
+// 				dDebug() << map["begindate"] << " " << map["enddate"];
 			}
 		}
 		

@@ -19,6 +19,7 @@
  ***************************************************************************/
 #include "adreservetform.h"
 #include <QLineEdit>
+#include <QLineEdit>
 #include <QLabel>
 #include <QGroupBox>
 
@@ -31,25 +32,54 @@
 ADReserveTForm::ADReserveTForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
 {
-	list=1;
 	m_inserter = true;
-	destinationReserve="";
 	setup();
 }
-
 
 ADReserveTForm::~ADReserveTForm()
 {
 }
 
 
-ADReserveTForm::ADReserveTForm(const ADReserve * reserve, QWidget * parent)
+ADReserveTForm::ADReserveTForm( ADReserve * reserve, QList<QString> infoResource, QList<ADReserve *> reservas, QWidget * parent)
 {
 	D_FUNCINFO;
-	setup();
 	m_inserter = false;
-	list=1;
-//	adAudiovisual = new ADAudioVisual(audiovisual.type(), audiovisual.marksEquipment(), audiovisual.state(), audiovisual.numberInventory(), audiovisual.codeSpace());
+	m_reserve = reserve;
+	setup();
+	
+	QString modulo, key;
+	if( m_reserve->idspace() != "" )
+	{
+		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
+		modulo = "space";
+		key = m_reserve->idspace();
+	}
+	else
+	{
+		typeResourceC->setCurrentIndex(typeResourceC->findText("Audiovisual"));
+		modulo = "audiovisual";
+		key = m_reserve->idaudiovisual();
+	}
+	
+	typeResourceC->setEnabled(false);
+	resourceC->addItem(infoResource[0]);
+	resourceC->setEnabled(false);
+	resourcesNameC->addItem(infoResource[1]);
+	resourcesNameC->setEnabled(false);
+	
+	loginC->addItem(m_reserve->iduserresponsable());
+	loginC->setEnabled( false );
+	
+	m_userReserve = (m_reserve->iduserreserve());
+	
+	areaTexto-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
+	areaTexto-> setReadOnly ( true );
+	
+	
+	horario->assignTypeReserve("temporal", m_inserter);
+	horario->receiveReserves( reservas );
+	horario->modifyMonthReserve(reserve->beginDateTime().date().month()-1);
 }
 
 
@@ -57,191 +87,183 @@ void ADReserveTForm::changeTypeResource(int opcion)
 {
 // 	opcion = 0 -> Espacios
 //	opcion = 1 -> audiovisual
+	resourceC->clear();
+	ADEvent listTypes(ADEvent::Client, Logic::ReservesT, Logic::GetTypes , QVariant::fromValue(this));
+	emit sendEvent( &listTypes );
+	requestLogin();
+}
 
+
+
+void ADReserveTForm:: receiveEvent( ADEvent * e)
+{
+	if(e->action() == Logic::GetTypes)
+	{
+		typeSpaces.clear();
+		typeAudiovisual.clear();
+		foreach(QVariant variant, ((e->data().toList())[0]).toList() )
+		{
+			typeSpaces << variant.toString();
+		}
+		
+		foreach(QVariant variant, ((e->data().toList())[1]).toList() )
+		{
+			typeAudiovisual << variant.toString();
+		}
+		
+		insertListTypes();
+	}
+	
+	
+	else if(e->action() == Logic::Info)
+	{
+		if( (((e->data()).toList())[0]).toString() == "nameResources")
+		{
+			dDebug() << "Tipo " << (e->data()).type();
+			QStringList id = ((((e->data()).toList())[1]).toMap()).keys();
+			QList<QVariant> name = ((((e->data()).toList())[1]).toMap()).values();
+			
+			dDebug() <<"QMAP IDS";
+			for(int i = 0; i < name.count(); i++)
+			{
+				dDebug() << id.at(i) <<"  "<< (name.at(i)).toString();
+				nameResources.insert( id.at(i), ((name.at(i)).toString()));
+			}
+			
+			insertListNameResources();
+		}
+		else if( (((e->data()).toList())[0]).toString() == "reservesResource" )
+		{
+			dDebug() <<"Recibi  ReservesResource";
+			QList<ADReserve *> listReserves;
+			foreach( QVariant variant, (((e->data()).toList())[1]).toList() )
+			{
+				ADReserve *reserve = qVariantValue<ADReserve *>(variant);
+				listReserves << reserve;
+			}
+			dDebug() << "Tamaño de la lista de reservas " << listReserves.count();
+			receiveReserves(listReserves);
+		}
+		
+		else if( (((e->data()).toList())[0]).toString() == "infoUser" )
+		{
+			dDebug() <<"Recibi  InfoUser";
+			m_userReserve = (((e->data()).toList())[1]).toString();
+			loginC->addItem(m_userReserve);
+		}
+	}
+	
+}
+
+
+
+void ADReserveTForm::insertListTypes()
+{
+	int opcion = typeResourceC->currentIndex();
+	resourceC->insertItem(0,"ESCOJA UN RECURSO");
 	if(opcion == 0)
 	{
-		recursosC->clear();
-		recursosC->addItems(recursosEsp);
-	}
-
-	else if(opcion == 1)
-	{
-		recursosC->clear();
-		recursosC->addItems(recursosAud);
-// 		changeTypeReserve(1);
-	}
-}
-
-// Este metodo se encarga de tomar el tipo de reserva en el momento en que sea cambiado en el comboBox y de acuerdo a esto construir una tabla horario, ademas cuando se cambia el tipo de reserva si el otro comboBox( resourcesNameC ) tiene activado un nombre valido, se llamara al metodo fill de horario para que llene las reservas de este tipo.
-// void ADReserveTForm::changeTypeReserve(int opcion)
-// {
-// 	if(opcion == 0)
-// 	{
-// 		horario->makeTable( true );
-// 	}
-// 	else if(opcion == 1)
-// 	{
-// 		horario->makeTable( false );
-// 	}
-// 	
-// 	if( (resourcesNameC->currentText()) !=("Escoja uno de los Recursos") && (resourcesNameC->currentText()) !=("") )
-// 	{
-// 		horario->assignTypeReserve( tipoResC->currentText() );
-// 		horario->fill();
-// 	}
-// }
-
-
-void ADReserveTForm::insertListTypes(const QList<XMLResults>& results)
-{
-	QList<XMLResults>::const_iterator it= results.begin();
-	
-	QStringList recursos;
-	recursos.insert(0, "ESCOJA UN RECURSO");
-	while( it != results.end() )
-	{
-		recursos << ((*it)["type"]);
-		++it;
-	}
-	
-	if(list == 1)
-	{
-		recursosEsp = recursos;
-	}
-
-	else if(list == 2)
-	{
-		dDebug() << "Llenar recursosAud";
-		recursosAud = recursos;
-
-		recursosC->addItems(recursosEsp);
-		changeTypeResource(0);
-		
-		//Con este condicional estoy manejando el caso en que la reserva la haga un usuario cualquiera o el administrador. si es administrador el campo responsable aparecera en blanco y editable para que el coloque el login de la persona a la cual le esta realizando la reserva. En caso que no sea administrador se colocara en responsable el login de el usuario. Nota:En la base de datos hay dos campos que son idUserReserve que es quien hace la reserva y el campo idUserResponsable es quien se reponsabiliza por la reserva, en caso de usuario es lo mismo, en caso de administrador son cosas diferentes.
-		if(!m_reserve)
-		{
-			static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setText(m_responsable);
-			static_cast<QLineEdit*>(m_inputs[tr("responsable")])->setReadOnly ( true );
-		}
-	}
-	
-	if(list==2 && !m_inserter)
-	{
-		dDebug() << "ENTRE A LLAMAR A FILL";
-		fill();
-	}
-
-	list++;
-}
-
-
-void ADReserveTForm::fill()
-{
-// 	if(adAudiovisual->isValid())
-// 	{
-// 		tipoResC->setCurrentIndex(tiposRC->findText(adAudiovisual->type())); 
-// 		static_cast<QLineEdit*>(m_inputs[tr("marca")])->setText(adAudiovisual->marksEquipment());
-// 		estadoC->setCurrentIndex(estadoC->findText(adAudiovisual->state()));
-// 		static_cast<QLineEdit*>(m_inputs[tr("numero de inventario")])->setText(adAudiovisual->numberInventory());
-// 		static_cast<QLineEdit*>(m_inputs[tr("asignado al espacio")])->setText(adAudiovisual->codeSpace());
-// 
-// 		tipoResC->currentText(),
-// 		recursosC->currentText(),
-// 		static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-// 		static_cast<QLineEdit*>(m_inputs[tr("login")])->text()
-		
-// 	}
-}
-
-void ADReserveTForm::changeTypeSpace(QString typeR)
-{
-	QString table;
-	if((tipoRecC->currentText()).toLower() ==("espacios"))
-	{
-		table="adspace";
+		resourceC->insertItems(1,typeSpaces);
 	}
 	else
 	{
-		table="adaudiovisual";
-	}
-	
-	
-	if( typeR !=( "ESCOJA UN RECURSO" ) )
-	{
-		nameResources.clear();
-		resourcesNameC->clear();
-		emit requestTypeResources(table, typeR);
+		resourceC->insertItems(1,typeAudiovisual);
 	}
 }
 
 
-// Este metodo se encarga de tomar la informacion del comboBox de los nombres de los espacios, en el momento en es modificado, y manda a pedir todas las reservas que hayan sobre ese espacio.
-void ADReserveTForm::changeNameSpace(const QString& name)
+
+void ADReserveTForm::insertListNameResources()
 {
-	QString table;
-	QString resource;
-	dDebug() << "Tipo escogido en changeNameSpace => " << (tipoRecC->currentText()).toLower();
-	dDebug() << "Nombre Recurso => " << name;
-	
-	if((tipoRecC->currentText()).toLower() ==("espacios"))
-	{
-		table="adspace";
-	}
-	else
-	{
-		table="adaudiovisual";
-	}
-
-	if( name !=( "Escoja uno de los Recursos" ) )
-	{
-		resource = nameResources.key(name);
-		
-		dDebug() << "changeNameSpace changeNameSpace";
-		dDebug() << "TABLE >>>> " << table << "   RESOURCE >>>> " << resource;
-		emit consultSchedule(table, resource );
-		horario->assignTypeReserve( tipoResC->currentText(), m_inserter );
-		horario->clear();
-	}
-}
-
-// Cuando el metodo anterior haya mandado a pedir las reservas de un espacio, este metodo se encargara de recibirlos y luego reenviarselos a horario que es la tabla donde se muestra la informacion de los horarios, y luego ejecuta el metodo fill (horario) pasandole por parametro el tipo de reserva para llenar la tabla con las reservas de este tipo.
-void ADReserveTForm::requestSchedule( const QList<XMLResults>& results )
-{
-// 	horario->receiveSchedule( results );
-// 	horario->fill();
-}
-
-
-void ADReserveTForm::insertListNameResources(const QList<XMLResults>& results)
-{
-	QList<XMLResults>::const_iterator it= results.begin();
-	QStringList resources;
-	int n=0;
-	
-	while( it != results.end() )
-	{
-		if(tipoRecC->currentText().toLower() ==("espacios"))
-		{
-			nameResources.insert( ((*it)["idresource"]) , ((*it)["nameresource"]));
-		}
-		else if(tipoRecC->currentText().toLower() ==("audiovisual"))
-		{
-			nameResources.insert( ((*it)["idresource"]), ""+recursosC->currentText()+" "+QString::number(n));
-			n++;
-		}
-		++it;
-	}
-
-	resources = QStringList(nameResources.values());
+	QStringList resources = QStringList(nameResources.values());
 	resources.insert(0,"Escoja uno de los Recursos");
 	resourcesNameC->addItems( resources );
 }
 
 
-void ADReserveTForm::permisos(const QString &login, const bool permiso)
+void ADReserveTForm::requestReserves( QString name)
 {
-	m_responsable=login;
-	m_reserve=permiso;
+	
+}
+
+
+void ADReserveTForm::changeResource( QString typeR)
+{
+	if( typeR !=( "ESCOJA UN RECURSO" ) )
+	{
+		QString modulo;
+	
+		if((typeResourceC->currentText()).toLower() ==("espacios"))
+		{
+			modulo = "space";
+		}
+		else
+		{
+			modulo = "audiovisual";
+		}
+		nameResources.clear();
+		resourcesNameC->clear();
+		
+		ADEvent listName(ADEvent::Client, Logic::ReservesT, Logic::Info , QList<QVariant>() << QVariant("nameResources") << QVariant::fromValue(this) << QVariant(modulo) << QVariant(typeR));
+		emit sendEvent( &listName );
+		
+	}
+}
+
+
+// Este metodo se encarga de tomar la informacion del comboBox de los nombres de los espacios, en el momento que es modificado, y manda a pedir todas las reservas que hayan sobre este Recurso
+void ADReserveTForm::changeNameResource(const QString& name)
+{
+	QString resource;
+	dDebug() << "CHANGENAMERESOURCE ===> " << name;
+	if( name !=( "Escoja uno de los Recursos" ) )
+	{
+		horario->clear();
+		resource = nameResources.key(name);
+		ADEvent listName(ADEvent::Client, Logic::ReservesT, Logic::Info , QList<QVariant>() << QVariant("reservesResource") << QVariant::fromValue(this) << QVariant(resource));
+		emit sendEvent( &listName );
+	}
+}
+
+// Cuando el metodo anterior haya mandado a pedir las reservas de un espacio, este metodo se encargara de recibirlos y luego reenviarselos a horario que es la tabla donde se muestra la informacion de los horarios, y luego ejecuta el metodo fill ( De la clase horario ) pasandole por parametro el tipo de reserva para llenar la tabla con las reservas de este tipo.
+void ADReserveTForm::receiveReserves( const QList<ADReserve *>& results )
+{
+	dDebug() << "receiveReserves " <<  resourcesNameC->currentText();
+	
+	horario->assignTypeReserve("temporal", m_inserter);
+// 	if(m_inserter)
+// 	{
+	horario->receiveReserves( results );
+// 	}
+// 	else
+// 	{
+// 		/// Inserto m_reserve(la cual es la que voy a modificar) al pirncipio ya que en ADSchedule la que este de primera en caso de ser una modificacion me la pintara de color diferente para distinguirla de las que estan fijas.
+	// 		
+// 		QList<ADReserve *> listOrdened;
+// 		listOrdened << m_reserve;
+	// 		
+// 		QList<ADReserve *>::const_iterator it = results.begin();
+// 		while(it != results.end())
+// 		{
+// 			if((*it)->idReserve() != m_reserve->idReserve())
+// 			{
+// 				listOrdened  << (*it);
+// 			}
+// 		}
+// 		horario->receiveReserves( listOrdened );
+// 	}
+	horario->fill();
+}
+
+
+
+void ADReserveTForm::requestLogin()
+{
+	dDebug() << "ADRESERVEFORM REQUESTLOGIN";
+	ADEvent infoU(ADEvent::Client, Logic::ReservesT, Logic::Info, QList<QVariant>() << QVariant("infoUser")<<QVariant::fromValue(this));
+	emit sendEvent( &infoU );
+	dDebug() << "ADRESERVEFORM REQUESTLOGIN";
+
 }
 
 
@@ -249,119 +271,168 @@ void ADReserveTForm::setup()
 {
 	QWidget * base = new QWidget();
 	QVBoxLayout *vBLayout = new QVBoxLayout(base);
+	
 	QGroupBox *container = new QGroupBox("Informacion");
+	QGridLayout *layout = new QGridLayout;
+	container->setLayout(layout);
 	vBLayout->addWidget(container, Qt::AlignVCenter);
+	
 	horario = new ADSchedule();
 	vBLayout->addWidget(horario);
 
 	QLineEdit *edits;
 	QStringList titles, tipoRec;
 
-	QGridLayout *layout = new QGridLayout;
-	container->setLayout(layout);
-	
 	tipoRec << tr("Espacios") << tr("Audiovisual");
-	tipoRecC = new QComboBox;
-	tipoRecC->addItems(tipoRec);
-	connect(tipoRecC, SIGNAL(activated (int) ), this , SLOT(changeTypeResource ( int )));
+	typeResourceC = new QComboBox;
+	typeResourceC->addItems(tipoRec);
+	connect(typeResourceC, SIGNAL(activated (int) ), this , SLOT(changeTypeResource ( int )));
 
-	tipoResC = new QComboBox;
-	connect(tipoResC, SIGNAL(activated (int) ), this , SLOT(changeTypeReserve ( int )));
-
-	recursosC = new QComboBox;
-	connect(recursosC, SIGNAL(activated (QString) ), this , SLOT(changeTypeSpace ( QString )));
+	resourceC = new QComboBox;
+	connect(resourceC, SIGNAL(activated (QString) ), this , SLOT(changeResource ( QString )));
 	
 	resourcesNameC = new QComboBox;
-	connect(resourcesNameC, SIGNAL(activated (QString) ), this , SLOT(changeNameSpace ( QString )));
-
-	horario->makeTable( true );
+	connect(resourcesNameC, SIGNAL(activated (QString) ), this , SLOT(changeNameResource ( QString )));
 	
-	titles << tr("Tipo Recurso") << /*tr("Tipo Reserva") <<*/ tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable");
+	loginC = new QComboBox;
+	loginC->setEnabled( false );
+	
+	horario->makeTable( false );
+	titles << tr("Tipo Recurso") << tr("Recurso") << tr("Nombre Recurso")<< tr("Responsable") << tr("Motivo");
 
 	layout->addWidget(new QLabel(titles[0]),0,0);
-	layout->addWidget(tipoRecC,0,1);
-	m_inputs.insert(titles[0].toLower () , tipoRecC);
-	
-// 	layout->addWidget(new QLabel(titles[1]),1,0);
-// 	layout->addWidget(tipoResC,1,1);
-// 	m_inputs.insert(titles[1].toLower () , tipoResC);
-	
+	layout->addWidget(typeResourceC,0,1);
+
 	layout->addWidget(new QLabel(titles[1]),1,0);
-	layout->addWidget(recursosC,1,1);
-	m_inputs.insert(titles[1].toLower () , recursosC);
+	layout->addWidget(resourceC,1,1);
 	
+	layout->addWidget(new QLabel(titles[2]),2,0);
 	layout->addWidget(resourcesNameC ,2,1);
-	m_inputs.insert(titles[2].toLower () , resourcesNameC);
 	
 	layout->addWidget(new QLabel(titles[3]),3,0);
-	edits = new QLineEdit();
-	layout->addWidget(edits, 3, 1);
-	m_inputs.insert( titles[3].toLower () , edits );
+	layout->addWidget(loginC, 3, 1);
+	
+	layout->addWidget(new QLabel(titles[4]),4,0);
+	areaTexto = new QTextEdit;
+	layout->addWidget(areaTexto,4,1);
 	
 	setForm(base);
-	connect(this, SIGNAL(requestDone()),this, SLOT(emitInsertReserve()));
+	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
 }
 
 
-void ADReserveTForm::emitInsertReserve()
+void ADReserveTForm::emitEvent()
 {
-	QString table;
 	dDebug() << "EMITINSERTRESERVE===EMITINSERTRESERVE";
+	
 	listSchedules = horario->returnSchedule();
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
-	
-	
-	if( tipoRecC->currentText() ==("Espacios") )
+	QString space, audiovisual;
+
+	if(typeResourceC->currentText() == "Espacios")
 	{
-		table="adspacereserve";
+		space = nameResources.key(resourcesNameC->currentText());
+		audiovisual = "";
 	}
 	else
 	{
-		table="adavreserve";
+		space = "";
+		audiovisual = nameResources.key(resourcesNameC->currentText());
 	}
-
-
-	if(m_inserter && valite())
+	
+	if(valite())
 	{
+		
+		dDebug() <<"EL NUMERO DE RESERVAS SON " << listSchedules.count();
 		while( it != listSchedules.end())
 		{
-			emit requestInsertReserve(
-				table,
+			dDebug() << "FEEEECCHHAASS "<<(*it)["begindate"] << " " << (*it)["enddate"];
+			
+			QDateTime beginDateTime = QDateTime( (QDate::fromString((*it)["begindate"],"d/M/yyyy")),
+					(QTime::fromString((*it)["beginhour"],"hh:mm")));
+			QDateTime endDateTime = QDateTime((QDate::fromString((*it)["enddate"],"d/M/yyyy")),
+					(QTime::fromString((*it)["endhour"],"hh:mm"))) ;
+			
+			dDebug() << "FECHAS SON " << beginDateTime.toString("yyyy/MM/dd hh:mm") << " "<<endDateTime.toString("yyyy/MM/dd hh:mm");
+		
+			
+			if(m_inserter)
+			{
+				m_reserve = new ADReserve( 
+						"",
 				(*it)["typereserve"],
-				m_responsable,
-				static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text(),
-				nameResources.key(static_cast<QComboBox*>(m_inputs[tr("espacio")])->currentText()),
+				m_userReserve,
+				loginC-> currentText(),
+				audiovisual,
+				space,
 				(*it)["day"],
-				(*it)["beginhour"],
-				(*it)["endhour"],
-				(*it)["begindate"],
-				(*it)["enddate"],
+				beginDateTime,
+				endDateTime,
 				true,
-				destinationReserve
+				(areaTexto->document())->toPlainText()
+							 );
 				
-			);
+				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
+				
+				
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesT, Logic::Add, QVariant::fromValue(m_reserve));
+				dDebug() << "YA CREE EL EVENTO DE INSERCION DE RESERVAS";
+				emit sendEvent(&insertReserve);	
+				dDebug() << "YA ENVIE EL EVENTO DE INSERCION DE RESERVAS";
+			}
+			
+			
+			
+			else if(m_inserter == false && valite())
+			{
+				m_reserve = new ADReserve(
+						m_reserve->idReserve(),
+				m_reserve->typeReserve(),
+				m_reserve->iduserreserve(),
+				m_reserve->iduserresponsable(),
+				m_reserve->idaudiovisual(),
+				m_reserve->idspace(),
+				(*it)["day"],
+				beginDateTime,
+				endDateTime,
+				m_reserve->isActive(),
+				m_reserve->destinationreserve());
+					
+				
+				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
+					
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesT, Logic::Update , QVariant::fromValue(m_reserve));
+				dDebug() << "YA CREE EL EVENTO DE ACTUALIZACION DE RESERVAS";
+				emit sendEvent(&insertReserve);	
+				dDebug() << "YA ENVIE EL EVENTO DE ACTUALIZACION DE RESERVAS";
+				
+			}
 			it++;
 		}
-	}
-// 	else
-// 	{
-// 		emit requestUpdateReserve(
-// 			tipoResC->currentText(),
-// 			recursosC->currentText(),
-// 			static_cast<QLineEdit*>(m_inputs[tr("responsable")])->text()
-// 		);
-// 	}
-	
+		emit requestClose();
+	}	
 }
+
+
 
 bool ADReserveTForm::valite()
 {
 	bool isValid = true;
 	QList<QMap<QString, QString> >::const_iterator it = listSchedules.begin();
+	if(listSchedules.count() == 0)
+	{
+		QMessageBox::information ( 0 , "ERROR", "No se ha seleccionado ningun horario", 0);
+		isValid=false;
+	}
+	
 	while( it != listSchedules.end())
 	{
-		if( (*it)["typereserve"].isEmpty() || m_responsable.isEmpty() || (static_cast<QLineEdit*> (m_inputs[tr("responsable")])->text()).isEmpty() || (nameResources.key(static_cast<QComboBox*> (m_inputs[tr("espacio")])->currentText())).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty() || ((*it)["begindate"]).isEmpty() || ((*it)["enddate"]).isEmpty())
+		if( (*it)["typereserve"].isEmpty() || m_userReserve.isEmpty() || (loginC-> currentText()).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty() || (areaTexto->document())->toPlainText().isEmpty())
 		{
+			
+			
+			dDebug() <<"ERROR===>>>> " << (*it)["typereserve"] << " " << m_userReserve << " " << (loginC-> currentText()) << " " << ((*it)["day"]) << " " << ((*it)["beginhour"]) << " " << ((*it)["endhour"]) <<" "<<(areaTexto->document())->toPlainText();
+			
 			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato\nes incorrecto", 0);
 			isValid=false;
 		}

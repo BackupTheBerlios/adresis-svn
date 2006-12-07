@@ -28,12 +28,12 @@
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
-*/
+ */
 class ADCancellation: public ADObject
 {
 	public:
 		ADCancellation();
-		ADCancellation(QString idCancellation, QDateTime dateCancellation, QString razonCancellation);
+		ADCancellation(QString idCancellation,QString iduser, QDateTime dateCancellation, QString razonCancellation);
 		~ADCancellation();
 		QString idReserveCancellation();
 		QString idUserCancellation();
@@ -43,12 +43,9 @@ class ADCancellation: public ADObject
 		void fromXml(const QString & xml );
 		void setValues(XMLResults values);
 		bool isValid() const;
+		void setRazonCancellation(QString r);
 		
-// 	signals:
-// 		void sendEventCancel(ADEvent *e);
-// 		
-// 	public slots:
-// 		void setRazonCancellation(QString r);
+	
 		
 	private:
 		QString m_idReserveCancellation;

@@ -49,7 +49,7 @@ namespace Logic
 // 	enum Module{Users=0, Spaces, Audiovisuals, Reserves, Reports};
 // 	enum Action{Add = 0, Del, Update, Find, Info, RSemestral, Authenticate};
 	enum TypeUser{administrador=0};
-	enum Module{Users=0, Spaces, Audiovisuals, ReservesF, ReservesT, Reports};
+	enum Module{Users=0, Spaces, Audiovisuals, ReservesF, ReservesT, Reports, Cancellation};
 	enum Action{Add = 0, Del, Update, Find, Info, Authenticate, GetTypes, Dates};
 }
 

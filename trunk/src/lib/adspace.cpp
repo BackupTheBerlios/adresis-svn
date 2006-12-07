@@ -50,12 +50,17 @@ QDomElement ADSpace::toXml(QDomDocument &doc) const
 }
 
 
-void ADSpace::setValues(XMLResults values)
+void ADSpace::setValues(XMLResults)
+{
+}
+
+
+void ADSpace::setValues(const QXmlAttributes& values)
 {
 	dDebug() << "here adspace";
-	m_codeSpace = values["codespace"];
-	m_typeSpace = values["typespace"];
-	if(values["coolairspace"] == "true")
+	m_codeSpace = values.value("codespace");
+	m_typeSpace = values.value("typespace");
+	if(values.value("coolairspace") == "true")
 	{
 		m_coolAirSpace = true;
 	}
@@ -63,8 +68,11 @@ void ADSpace::setValues(XMLResults values)
 	{
 		m_coolAirSpace = false;
 	}
-	m_capacitySpace = values["capacityspace"];
-	m_nameSpace = values["namespace"];
+	dDebug() << "*******************///////////////////";
+	dDebug() << "ADSpace::setValues(XMLResults values)";
+	dDebug() << "*******************///////////////////";
+	m_capacitySpace = values.value("capacityspace");
+	m_nameSpace = values.value("namespace");
 	m_valid = true;
 	
 }

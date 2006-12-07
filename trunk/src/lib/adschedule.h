@@ -39,7 +39,7 @@
 		
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hectorcaz@gmail.com>
-*/
+ */
 
 class ADSchedule : public QWidget
 {
@@ -63,6 +63,7 @@ class ADSchedule : public QWidget
 		QTableWidget *m_table;
 		QComboBox *month;
 		QTableWidgetItem *m_item;
+		QStringList daysWeek;
 		QStringList cols;
 		QStringList rows;
 		QStringList months;

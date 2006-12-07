@@ -23,8 +23,8 @@ ADCancellation::ADCancellation()
 {
 }
 
-ADCancellation::ADCancellation(QString idCancellation, QDateTime dateCancellation, QString razonCancellation)
- : ADObject(), m_idReserveCancellation(idCancellation), m_dateTimeCancellation(dateCancellation), m_razonCancellation(razonCancellation)
+ADCancellation::ADCancellation(QString idCancellation, QString idUser, QDateTime dateCancellation, QString razonCancellation)
+	: ADObject(), m_idReserveCancellation(idCancellation), m_idUserCancellation(idUser), m_dateTimeCancellation(dateCancellation), m_razonCancellation(razonCancellation)
 {
 	
 }
@@ -59,19 +59,19 @@ QDomElement ADCancellation::toXml(QDomDocument &doc) const
 	QDomElement root = doc.createElement("cancellation");
 	
 	root.setAttribute( "idcancellation", m_idReserveCancellation );
-	root.setAttribute( "idUserCancellation", m_idUserCancellation );
-	root.setAttribute( "hourCancellation", m_dateTimeCancellation.time().toString("hh:mm") );
-	root.setAttribute( "dateCancellation", m_dateTimeCancellation.date().toString("dd/MM/yyyy") );
-	root.setAttribute( "razonCancellation", m_razonCancellation );
+	root.setAttribute( "idusercancellation", m_idUserCancellation );
+	root.setAttribute( "hourcancellation", m_dateTimeCancellation.time().toString("hh:mm") );
+	root.setAttribute( "datecancellation", m_dateTimeCancellation.date().toString("dd/MM/yyyy") );
+	root.setAttribute( "razoncancellation", m_razonCancellation );
 	return root;
 }
 
 void ADCancellation::setValues(XMLResults values)
 {
 	m_idReserveCancellation = values["idcancellation"];
-	m_idUserCancellation = values["idUserCancellation"];
-	m_dateTimeCancellation = QDateTime( QDate::fromString( values["dateCancellation"]), QTime::fromString(values["hourCancellation"]));
-	m_razonCancellation = values["razonCancellation"];
+	m_idUserCancellation = values["idusercancellation"];
+	m_dateTimeCancellation = QDateTime( QDate::fromString( values["datecancellation"]), QTime::fromString(values["hourcancellation"]));
+	m_razonCancellation = values["razoncancellation"];
 	
 	m_valid = true;
 }
@@ -81,13 +81,10 @@ bool ADCancellation::isValid() const
 	return m_valid;
 }
 
-// void ADCancellation::setRazonCancellation( QString r)
-// {
-// 	m_razonCancellation = r;
-// 	ADCancellation *c = new ADCancellation(m_idReserveCancellation, m_dateTimeCancellation, m_razonCancellation);
-// 	ADEvent event(ADEvent::Client, Logic::ReservesF, Logic::Del, QVariant::fromValue(c) );
-// // 	emit sendEventCancel( &event );
-// }
+void ADCancellation::setRazonCancellation( QString r)
+{
+	m_razonCancellation = r;
+}
 
 
 

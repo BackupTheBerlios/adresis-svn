@@ -27,10 +27,11 @@
 #include <QLineEdit>
 #include "adcancellation.h"
 #include "global.h"
+#include <QMessageBox>
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
-*/
+ */
 class ADCancellationForm : public ADFormBase
 {
 	Q_OBJECT
@@ -38,11 +39,19 @@ class ADCancellationForm : public ADFormBase
 		ADCancellationForm( QWidget *parent = 0);
 		ADCancellationForm(ADCancellation *cancellation, QWidget *parent = 0);
 		~ADCancellationForm();
+		void setReadOnly(bool rOL);
+		
+	signals:
+		void sendEvent( ADEvent *);	
+		
+	private slots:
+		void valite();
 		
 	private:
 		void setup();
 		QMap<QString, QWidget*> m_inputs;
 		QTextEdit *areaTexto;
+		ADCancellation *m_cancel;
 };
 
 #endif

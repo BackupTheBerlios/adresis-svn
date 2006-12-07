@@ -26,6 +26,7 @@
 #include "adaudiovisual.h"
 #include "adreserve.h"
 #include "adspace.h"
+#include "adcancellation.h"
 #include "adreport.h"
 
 #include <QVariant>
@@ -81,9 +82,19 @@ QString ADEvent::toString() const
 				dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
 			}
 			break;
+			case Logic::ReservesT:
+			{
+				dataE.appendChild( qvariant_cast<ADReserve *>( m_data )->toXml(doc) );
+			}
+			break;
 			case Logic::Audiovisuals:
 			{
 				dataE.appendChild( qvariant_cast<ADAudioVisual *>( m_data )->toXml(doc) );
+			}
+			break;
+			case Logic::Spaces:
+			{
+				dataE.appendChild( qvariant_cast<ADSpace *>( m_data )->toXml(doc) );
 			}
 			break;
 			case Logic::Reports:
@@ -114,9 +125,17 @@ QString ADEvent::toString() const
 				break;
 				case Logic::Del:
 				{
-					QDomElement keyE = doc.createElement ( "Key" );
-					keyE.setAttribute("value", m_data.toString());
-					dataE.appendChild(keyE);
+					if(m_module == Logic::ReservesF || m_module == Logic::ReservesT)
+					{
+						dataE.appendChild( qvariant_cast<ADCancellation *>( m_data )->toXml(doc) );
+						
+					}
+					else
+					{
+						QDomElement keyE = doc.createElement ( "Key" );
+						keyE.setAttribute("value", m_data.toString());
+						dataE.appendChild(keyE);
+					}
 				}
 				break;
 			}
@@ -155,6 +174,11 @@ QString ADEvent::toString() const
 							case Logic::Spaces:
 							{
 								listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
+							}
+							break;
+							case Logic::Cancellation:
+							{
+								listE.appendChild( qvariant_cast<ADCancellation *>( var )->toXml(doc) );
 							}
 							break;
 						}
@@ -221,9 +245,17 @@ QString ADEvent::toString() const
 				break;
 				case Logic::Del:
 				{
-					QDomElement keyE = doc.createElement ( "Key" );
-					keyE.setAttribute("value", m_data.toString());
-					dataE.appendChild(keyE);
+					if(m_module == Logic::ReservesF || m_module == Logic::ReservesT)
+					{
+						dataE.appendChild( qvariant_cast<ADCancellation *>( m_data )->toXml(doc) );
+						
+					}
+					else
+					{
+						QDomElement keyE = doc.createElement ( "Key" );
+						keyE.setAttribute("value", m_data.toString());
+						dataE.appendChild(keyE);
+					}
 				}
 				break;
 			}

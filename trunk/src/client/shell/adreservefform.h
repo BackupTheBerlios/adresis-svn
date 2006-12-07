@@ -34,7 +34,7 @@
 
 /**
 	@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@gmail.com>
-*/
+ */
 
 
 class ADReserveFForm : public ADFormBase
@@ -42,7 +42,7 @@ class ADReserveFForm : public ADFormBase
 	Q_OBJECT
 	public:
 		ADReserveFForm(QWidget *parent = 0);
-		ADReserveFForm( ADReserve * reserve, QList<QString> list,QWidget *parent = 0);
+		ADReserveFForm( ADReserve * reserve, QList<QString> list, QList<ADReserve *> reservas, QWidget *parent = 0);
 		~ADReserveFForm();
 		
 	private:

@@ -44,7 +44,6 @@
 //adresisLib
 #include "cconnectiondialog.h"
 #include "adreportgenerator.h"
-
 #include "adreportfrom.h"
 
 
@@ -152,6 +151,9 @@ void ADMainWindow::setupMenu()
 	fileMenu->addAction(exitAct);
 	fileMenu->addAction(conect);
 
+	netMenu = menuBar()->addMenu(tr("&Net"));
+	netMenu->addAction(conect);
+	
 	preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
 	preferencesMenu->addAction(theme);
 	
@@ -232,7 +234,7 @@ void ADMainWindow::closeTab()
 
 void ADMainWindow::showForm( Logic::Module module, const QString & key )
 {
-	ADFormBase * form;
+	ADFormBase *form;
 	QString title;
 	switch( module )
 	{
@@ -255,12 +257,42 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		{
 			if(key.isNull())
 			{
-				form = new ADSpaceForm;
+				QList<QVariant> ayudas = m_adresis->getList(Logic::Audiovisuals);
+				QList<QVariant> ayudasLibres;
+				
+				foreach( QVariant variant, ayudas)
+				{
+					ADAudioVisual a = *(qvariant_cast<ADAudioVisual *>(variant));
+					if(a.codeSpace() == "null")
+					{
+						ayudasLibres << variant;
+					}
+				}
+				form = new ADSpaceForm(m_adresis->getTypes(Logic::Spaces), ayudasLibres);
 				title = tr("Add space");
 			}
 			else
 			{
-				form = new ADSpaceForm;
+				QList<QVariant> ayudas = m_adresis->getList(Logic::Audiovisuals);
+				QList<QVariant> ayudasLibres;
+				QList<QVariant> ayudasAsignadas;
+				
+				foreach( QVariant variant, ayudas)
+				{
+					ADAudioVisual a = *(qvariant_cast<ADAudioVisual *>(variant));
+					if(a.codeSpace() == "null")
+					{
+						ayudasLibres << variant;
+					}
+					else if(a.codeSpace() == key)
+					{
+						dDebug() << "ayuda asignada a " << a.codeSpace() << "  estoy buscando ayudas asignadas a " << key;
+						ayudasAsignadas << variant;
+						dDebug() << "asignadas = " << ayudasAsignadas.count();
+					}
+				}
+				ADSpace space = (*static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces, key )));
+				form = new ADSpaceForm(space, ayudasLibres, ayudasAsignadas);
 				title = tr("Modify space");
 			}
 		}
@@ -275,7 +307,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			else
 			{
 				form = new ADAudiovisualForm(static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals, key )), m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
-				title = tr("Modify audiovisual");
+				title = tr("Add audiovisual");
 			}
 		}
 		break;
@@ -288,12 +320,38 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			}
 			else
 			{
+				ADReserve *m_reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ));
+				/// INFORMACION DEL RECURSO
+				QList<QString> infoResource;
+				if(m_reserve->idspace() != "") //INFO SPACE
+				{
+					ADSpace *space = static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces , m_reserve->idspace() ));
+					infoResource << space->typeSpace() << space->nameSpace();
+				}
+				else // INFO AUDIOVISUAL
+				{
+					ADAudioVisual *audiovisual = static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals , m_reserve->idaudiovisual() ));
+					infoResource << audiovisual->type() << audiovisual->type();
+				}
 				
 				
-				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesT , key ));
+				/// LISTAS DE LAS RESERVAS
+				QList<ADReserve *> listReserves;
+				listReserves << m_reserve;
+				QList<QVariant> list = m_adresis->getList(Logic::ReservesF);
+				list << m_adresis->getList(Logic::ReservesT);
+									
+				for(int i=0; i < list.count();i++)
+				{
+					ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
+					if(reserve->idspace() == m_reserve->idspace() && reserve->idaudiovisual() == m_reserve->idaudiovisual() && reserve->idReserve() != m_reserve->idReserve() )
+					{
+						listReserves << reserve;
+					}
+				}
 				
-
-				form = new ADReserveTForm( reserve);
+				
+				form = new ADReserveTForm( m_reserve, infoResource, listReserves );
 				title = tr("Modify Reserve Temporal");
 			}
 			
@@ -305,42 +363,54 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			{
 				form = new ADReserveFForm();
 				title = tr("Add Reserve Semestral");
-				
-				
-				
 			}
 			else
 			{
-				ADReserve *reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ));
-				
-				QTextBrowser *editor = new QTextBrowser;
-				int tmp = reserve->beginDateTime().date().year();
-				editor->setDocument( ADReportGenerator::generateSchedule( reserve->beginDateTime().date().weekNumber(&tmp ) , m_adresis->getList(Logic::ReservesF )));
-				
-				editor->show();
-				
+				ADReserve *m_reserve = static_cast<ADReserve *>(m_adresis->getObject(Logic::ReservesF, key ));
 				
 				QList<QString> infoResource;
-				if(reserve->idspace() != "") //INFO SPACE
+				if(m_reserve->idspace() != "") //INFO SPACE
 				{
-					ADSpace *space = static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces , reserve->idspace() ));
+					ADSpace *space = static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces , m_reserve->idspace() ));
 					infoResource << space->typeSpace() << space->nameSpace();
 				}
 				else // INFO AUDIOVISUAL
 				{
-					ADAudioVisual *audiovisual = static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals , reserve->idaudiovisual() ));
+					ADAudioVisual *audiovisual = static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals , m_reserve->idaudiovisual() ));
 					infoResource << audiovisual->type() << audiovisual->type();
 				}
 				
-				form = new ADReserveFForm( reserve, infoResource );
+				/// LISTAS DE LAS RESERVAS
+				QList<ADReserve *> listReserves;
+				listReserves << m_reserve;
+				QList<QVariant> list = m_adresis->getList(Logic::ReservesF);
+				list << m_adresis->getList(Logic::ReservesT);
+									
+				for(int i=0; i < list.count();i++)
+				{
+					ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
+					if(reserve->idspace() == m_reserve->idspace() && reserve->idaudiovisual() == m_reserve->idaudiovisual() && reserve->idReserve() != m_reserve->idReserve() )
+					{
+						listReserves << reserve;
+					}
+				}
+				
+				form = new ADReserveFForm( m_reserve, infoResource, listReserves );
 				title = tr("Modify Reserve Semestral");
 			}
 		}
 		break;
+		case Logic::Cancellation:
+		{
+			ADCancellation *cancel = static_cast<ADCancellation *>(m_adresis->getObject(Logic::Cancellation, key ));
+			form = new ADCancellationForm( cancel );
+			title = tr("Informacion Cancelacion");
+		}
+		break;
 		case Logic::Reports:
 		{
-			form = new ADReportFrom();
-			title = tr("Create Report");
+// 			form = new ADReportFrom();
+// 			title = tr("Create Report");
 		}
 		break;
 	}

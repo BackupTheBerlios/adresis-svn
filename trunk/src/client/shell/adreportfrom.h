@@ -40,6 +40,7 @@ class ADReportFrom : public ADFormBase
 		DDatePicker *m_beginDate, *m_endDate;
 		QStringList m_consultList, consultHistogram;
 		bool m_inserter;
+		
 	public slots:
 		void emitEvent();
 };

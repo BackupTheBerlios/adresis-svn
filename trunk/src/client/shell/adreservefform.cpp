@@ -41,7 +41,7 @@ ADReserveFForm::~ADReserveFForm()
 }
 
 
-ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource, QWidget * parent)
+ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource, QList<ADReserve *> reservas, QWidget * parent)
 {
 	D_FUNCINFO;
 	m_inserter = false;
@@ -76,10 +76,9 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource
 	areaTexto-> setReadOnly ( true );
 	
 	horario->assignTypeReserve("semestral", m_inserter);
-	QList<ADReserve * > result;
-	result << m_reserve;
-	horario->receiveReserves( result );
+	horario->receiveReserves( reservas );
 	horario->fill();
+	
 }
 
 
@@ -361,18 +360,18 @@ void ADReserveFForm::emitEvent()
 			if(m_inserter)
 			{
 				m_reserve = new ADReserve( 
-					"",
-					(*it)["typereserve"],
-					m_userReserve,
-					loginC-> currentText(),
-					audiovisual,
-					space,
-					(*it)["day"],
-					beginDateTime,
-					endDateTime,
-					true,
-					(areaTexto->document())->toPlainText()
-				);
+						"",
+				(*it)["typereserve"],
+				m_userReserve,
+				loginC-> currentText(),
+				audiovisual,
+				space,
+				(*it)["day"],
+				beginDateTime,
+				endDateTime,
+				true,
+				(areaTexto->document())->toPlainText()
+							 );
 				
 				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
 				
@@ -388,18 +387,18 @@ void ADReserveFForm::emitEvent()
 			else if(m_inserter == false && valite())
 			{
 				m_reserve = new ADReserve(
-					m_reserve->idReserve(),
-					m_reserve->typeReserve(),
-					m_reserve->iduserreserve(),
-					m_reserve->iduserresponsable(),
-					m_reserve->idaudiovisual(),
-					m_reserve->idspace(),
-					(*it)["day"],
-					beginDateTime,
-					endDateTime,
-					m_reserve->isActive(),
-					m_reserve->destinationreserve()
-				);
+						m_reserve->idReserve(),
+				m_reserve->typeReserve(),
+				m_reserve->iduserreserve(),
+				m_reserve->iduserresponsable(),
+				m_reserve->idaudiovisual(),
+				m_reserve->idspace(),
+				(*it)["day"],
+				beginDateTime,
+				endDateTime,
+				m_reserve->isActive(),
+				m_reserve->destinationreserve()
+							 );
 				
 				dDebug() << m_reserve->idReserve() << " " << m_reserve->typeReserve() << " " << m_reserve->iduserreserve() << " " << m_reserve->iduserresponsable() << " " << m_reserve->idaudiovisual() << " " << m_reserve->idspace() << " " << m_reserve->day() << " " << m_reserve->isActive() << " " << m_reserve->destinationreserve();
 				

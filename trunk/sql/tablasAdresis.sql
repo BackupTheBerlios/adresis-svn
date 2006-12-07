@@ -6,7 +6,7 @@ DROP TABLE AdSpace CASCADE;
 DROP TABLE AdSpaceType CASCADE;
 DROP TABLE AdReserve CASCADE;
 DROP TABLE ConfigurationSchooll CASCADE;
-DROP TABLW ADCancellation CASCADE;
+DROP TABLE ADCancellation CASCADE;
 
 
 CREATE TABLE AdUser(
@@ -34,7 +34,7 @@ INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 CREATE TABLE AdRols(
 	rol integer,
-	action varchar(20),
+	action varchar(22),
 	permission integer, check(permission in (0,1))
 );
 
@@ -49,6 +49,7 @@ INSERT INTO AdRols VALUES(0,'gestionarTemporal',1);
 INSERT INTO AdRols VALUES(0,'consultarReservas',1);
 INSERT INTO AdRols VALUES(0,'gestionarReportes',1);
 INSERT INTO AdRols VALUES(0,'consultarReportes',1);
+INSERT INTO AdRols VALUES(0,'consultarCancelaciones',1);
 
 INSERT INTO AdRols VALUES(1,'gestionarUsuario',0);
 INSERT INTO AdRols VALUES(1,'consultarUsuario',0);
@@ -61,6 +62,7 @@ INSERT INTO AdRols VALUES(1,'gestionarTemporal',1);
 INSERT INTO AdRols VALUES(1,'consultarReservas',1);
 INSERT INTO AdRols VALUES(1,'gestionarReportes',0);
 INSERT INTO AdRols VALUES(1,'consultarReportes',1);
+INSERT INTO AdRols VALUES(1,'consultarCancelaciones',0);
 
 INSERT INTO AdRols VALUES(2,'gestionarUsuario',0);
 INSERT INTO AdRols VALUES(2,'consultarUsuario',0);
@@ -73,6 +75,7 @@ INSERT INTO AdRols VALUES(2,'gestionarTemporal',0);
 INSERT INTO AdRols VALUES(2,'consultarReservas',1);
 INSERT INTO AdRols VALUES(2,'gestionarReportes',0);
 INSERT INTO AdRols VALUES(2,'consultarReportes',1);
+INSERT INTO AdRols VALUES(2,'consultarCancelaciones',0);
 
 
 
@@ -116,7 +119,7 @@ CREATE TABLE AdAudioVisual(
 	marksEquipmentAV varchar(20),
 	estateAV varchar(50) check(estateAv in ('bueno', 'malo')),
 	numberinventoryAV varchar(20) PRIMARY KEY,
-	codeSpace varchar(20), FOREIGN KEY (codeSpace) REFERENCES AdSpace(codeSpace)
+	codeSpace varchar(20) DEFAULT 'null' REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE SET DEFAULT
 	--Si la ayuda no tiene espacio es Null
 	--este codigo se utiliza para determinar que ayudas tiene un espacio
 );
@@ -159,10 +162,10 @@ CREATE TABLE ADReserve
 (
 	idReserve integer default nextval('adReserve_idReserve_seq') not null,
 	typeReserve varchar(20),
-	idUserReserve varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
-	idUserResponsable varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
-	idAudiovisual varchar(20), FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
-	idSpace varchar(20) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
+	idUserReserve varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idAudiovisual varchar(20), --FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
+	idSpace varchar(20),-- REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
 	beginHour time,
 	endHour time, 
@@ -224,16 +227,17 @@ CREATE TABLE ConfigurationSchooll(
 	endDateSem date	--DD/MM/YY
 );
 
-INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
+INSERT INTO configurationschooll VALUES ('09/01/2006','12/15/2006');
 
 
 CREATE TABLE ADCancellation(
-	idcancellation integer REFERENCES ADReserve(idReserve) ON DELETE CASCADE ON UPDATE CASCADE,
+	idcancellation integer,
 	idUserCancellation varchar(10) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE,
 	hourCancellation time,
 	dateCancellation date,
-	razonCancellation varchar(80)
+	razonCancellation varchar(120)
 );
+INSERT INTO ADCancellation VALUES ('10','hecfa','08:00','2006-12-03','Por que si');
 	
 	
 -- 	tipoRecurso varchar(20),

@@ -44,6 +44,7 @@
 #include "adspaceform.h"
 #include "adreservefform.h"
 #include "adreservetform.h"
+#include "adcancellationform.h"
 #include "ddockwindow.h"
 
 
@@ -69,6 +70,7 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		QString typeRequest;
 		
 		QMenu *fileMenu;
+		QMenu *netMenu;
 		QMenu *preferencesMenu;
 		QMenu *configureMenu;
 		QMenu *helpMenu;

@@ -24,12 +24,13 @@
 #include <ddebug.h>
 #include <global.h>
 #include <QMessageBox>
+#include <QLabel>
 
 ADListSelect::ADListSelect(QWidget *parent)
- : QWidget(parent)
+	: QWidget(parent)
 {
-	QHBoxLayout *hBLayout = new QHBoxLayout(this);
-	QVBoxLayout *vBLayout = new QVBoxLayout(this);
+	QGridLayout *hBLayout = new QGridLayout;
+	QVBoxLayout *vBLayout = new QVBoxLayout;
 	listWidgetLeft = new QListWidget(this);
 	listWidgetLeft->setDragEnabled (true);
 	listWidgetLeft->setAcceptDrops ( true );
@@ -47,13 +48,18 @@ ADListSelect::ADListSelect(QWidget *parent)
 	qTButtonRight->setIcon( QIcon(THEME_DIR+"/icons/next.png"));
 	QObject::connect(qTButtonRight,SIGNAL(clicked()),this, SLOT(addItemToRight()));
 	
-	hBLayout->addWidget(listWidgetLeft);
+	hBLayout->addWidget(new QLabel("Ayudas Libres"),0,0);
+	hBLayout->addWidget(listWidgetLeft,1,0);
 	
 	vBLayout->addWidget(qTButtonRight);
 	vBLayout->addWidget(qTButtonLeft);
-	hBLayout->addLayout(vBLayout);
+	hBLayout->addLayout(vBLayout,1,1);
 	
-	hBLayout->addWidget(listWidgetRight);
+	hBLayout->addWidget(new QLabel("Ayudas Asignadas"),0,2);
+	hBLayout->addWidget(listWidgetRight,1,2);
+		
+	delete layout();
+	setLayout(hBLayout);
 }
 
 
@@ -76,7 +82,8 @@ void ADListSelect::addItemToLeft()
 
 }
 
-
+/// En el momento en que se ingresa una ayuda a la lista de las ayudas asignadas el va a revisar si el tipo de ayuda a asignar no esta en el espacio. 
+/// En el caso que no se encuentre Tomara la ayuda de la izquierda a la derecha. En caso contrario Sacara un mensaje de error.
 void ADListSelect::addItemToRight()
 {
 	int pos = listWidgetLeft->currentRow();
@@ -87,7 +94,6 @@ void ADListSelect::addItemToRight()
 		if(!check("derecha", itemTmp))
 		{
 			listWidgetRight->addItem(itemTmp);
-	
 			listChanged("derecha", pos);
 		}
 		else
@@ -99,29 +105,31 @@ void ADListSelect::addItemToRight()
 }
 
 
+/// Cuando se va aser una insercion a la lista de ayudas asignadas se necesita mirar que el tipo de la ayuda no este asignado ya, este metodo se encarga de verificar eso, que el tipo no se encuentre repetido en la lista de ayudas asignadas.
 bool ADListSelect::check(const QString& lista, const QListWidgetItem *item)
 {
 	bool find=false;
-	int pos=0;
 	QStringList stringlist;
 
-	if(lista ==("derecha"))
-	{
-		stringlist = takeList("derecha");
-	}
+// 	if(lista ==("derecha"))
+// 	{
+	stringlist = takeList("derecha");
+	find = stringlist.contains(item->text());
+	/*}
 	else
 	{
-		stringlist = takeList("izquierda");
-	}
+	stringlist = takeList("izquierda");
+}
 	
-	while(pos < stringlist.count() && !find)
-	{
-		if( (item->text()) ==(stringlist.at(pos)) )
-		{
-			find=true;
-		}
-		pos++;
-	}
+	*/
+// 	while(pos < stringlist.count() && !find)
+// 	{
+// 		if( (item->text()) ==(stringlist.at(pos)) )
+// 		{
+// 			find=true;
+// 		}
+// 		pos++;
+// 	}
 
 	return find;
 }
@@ -141,7 +149,7 @@ void ADListSelect::addListToRight(const QStringList &list)
 	listWidgetRight->addItems(list);
 }
 
-
+/// TakeList devulve una lista de strings de los tipos de ayudas que hay en una lista.
 QStringList ADListSelect::takeList(const QString &listWidget)
 {
 	QStringList lista;
@@ -151,7 +159,6 @@ QStringList ADListSelect::takeList(const QString &listWidget)
 		{
 			lista << (listWidgetRight->item(i))->text();
 		}
-// 		dDebug() << "tamaño ==>"<< lista.count();
 	}
 	else
 	{
@@ -159,7 +166,6 @@ QStringList ADListSelect::takeList(const QString &listWidget)
 		{
 			lista << (listWidgetLeft->item(i))->text();
 		}
-// 		dDebug() << "tamaño ==>"<< lista.count();
 	}
 
 

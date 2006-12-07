@@ -28,6 +28,7 @@ ADCancellationForm::ADCancellationForm(QWidget * parent)
 
 ADCancellationForm::ADCancellationForm(ADCancellation * cancellation, QWidget * parent)
 {
+	m_cancel = cancellation;
 	setup();
 	static_cast<QLineEdit*>(m_inputs[tr("id cancelacion")])->setText( cancellation->idReserveCancellation() );
 	static_cast<QLineEdit*>(m_inputs[tr("usuario")])->setText( cancellation->idUserCancellation() );
@@ -39,6 +40,11 @@ ADCancellationForm::ADCancellationForm(ADCancellation * cancellation, QWidget * 
 
 ADCancellationForm::~ADCancellationForm()
 {
+}
+
+void ADCancellationForm::setReadOnly( bool rOL)
+{
+	areaTexto-> setReadOnly ( rOL );
 }
 
 void ADCancellationForm::setup()
@@ -87,5 +93,21 @@ void ADCancellationForm::setup()
 	
 	
 	setForm(base);
-	connect(this, SIGNAL(requestDone()),this, SIGNAL(requestClose()));
+	connect(this, SIGNAL(requestDone()),this, SLOT(valite()));
+	connect(this, SIGNAL(requestClose()), this, SLOT(close()));
+}
+
+void ADCancellationForm::valite()
+{
+	if((areaTexto->document()->toPlainText()).isEmpty() )
+	{
+		QMessageBox::information ( 0 , "Message", "El motivo de cancelacion no deberia estar vacio", 0);
+	}
+	else
+	{
+		m_cancel->setRazonCancellation( areaTexto->document()->toPlainText() );
+		ADEvent event(ADEvent::Client, Logic::ReservesF, Logic::Del, QVariant::fromValue(m_cancel) );
+		emit sendEvent( &event );
+		close();
+	}
 }

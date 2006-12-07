@@ -20,14 +20,12 @@
  
 #include "adeventfactory.h"
 #include <ddebug.h>
-
-
-
 #include "adevent.h"
 #include "aduser.h"
 #include "adspace.h"
 #include "adaudiovisual.h"
 #include "adreserve.h"
+#include "adcancellation.h"
 
 
 #include <QXmlSimpleReader>
@@ -37,7 +35,6 @@
 
 ADEventFactory::ADEventFactory(): QXmlDefaultHandler()
 {
-	
 }
 
 
@@ -98,7 +95,8 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "space")
 	{
-		ADSpace *space = new ADSpace(atts.value("codespace"), atts.value("typespace"), bool(atts.value("coolAirSpace").toInt()), atts.value("capacityspace"), atts.value("namespace"));
+		ADSpace * space = new ADSpace();
+		space->setValues(atts);
 		m_data = QVariant::fromValue(space);
 	}
 	else if(qname == "audiovisual")
@@ -119,6 +117,15 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 				QDateTime( QDate::fromString( atts.value("begindate"),"dd/MM/yyyy"), QTime::fromString( atts.value("beginhour"),"hh:mm")), QDateTime( QDate::fromString( atts.value("enddate"),"dd/MM/yyyy"), QTime::fromString( atts.value("endhour"),"hh:mm" ) ),  bool(atts.value( "isactive").toInt()), atts.value( "destinationreserve"));
 		m_data = QVariant::fromValue(reserve);
 		
+	}
+	else if(qname == "cancellation")
+	{
+		ADCancellation *cancel = new ADCancellation(
+				atts.value( "idcancellation"),
+				atts.value( "idusercancellation"),
+				QDateTime( QDate::fromString( atts.value("datecancellation"),"dd/MM/yyyy"), QTime::fromString( atts.value("hourcancellation"),"hh:mm")), 
+				atts.value( "razoncancellation"));
+		m_data = QVariant::fromValue(cancel);
 	}
 	else if(qname == "types")
 	{
@@ -152,7 +159,7 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	{
 		m_event->setData(m_data);
 	}
-	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve")
+	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve" || qname == "cancellation")
 	{
 		if(m_event->action() == Logic::Find)
 		{

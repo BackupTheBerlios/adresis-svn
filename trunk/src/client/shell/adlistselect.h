@@ -27,7 +27,7 @@
 
 /**
 @author Hector Fabio Cruz Mosquera,0329876
-*/
+ */
 class ADListSelect : public QWidget
 {
 	Q_OBJECT

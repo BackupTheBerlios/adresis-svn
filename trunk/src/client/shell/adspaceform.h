@@ -26,50 +26,51 @@
 #include <QCheckBox>
 #include "adlistselect.h"
 #include "adspace.h"
+#include "adaudiovisual.h"
 #include <QComboBox>
+#include <QSpinBox>
+#include <QRegExpValidator>
+#include <QMessageBox>
 
 /**
 @author Hector Fabio Cruz Mosquera,0329876
-*/
+ */
 
 class ADSpaceForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADSpaceForm(QWidget *parent = 0);
-		ADSpaceForm(const ADSpace& space, QWidget *parent = 0);
+		ADSpaceForm(const QStringList listSpaces, QList<QVariant> ayudas, QWidget *parent = 0);
+		ADSpaceForm(const ADSpace& space, QList<QVariant>  listAudiovisualL, QList<QVariant>  listAudiovisualE, QWidget *parent = 0);
 		~ADSpaceForm();
 		
 	
 	private:
-		ADSpace *adSpace;
+		ADSpace *m_space;
 		QMap<QString, QWidget*> m_inputs;
-		QList< QStringList > m_listAudiovisualL;
-		QList< QStringList > m_listAudiovisualE;
-		QStringList typeSpace;
-		QStringList tipos;
+		QList< ADAudioVisual > m_listAudiovisualL; /// Lista de ayudas libres
+		QList< ADAudioVisual > m_listAudiovisualE; /// Lista de ayudas del Espacio
 		QComboBox *tiposC;
-		void fill();
-		void setup();
 		QCheckBox *acC;
+		QSpinBox *capacity;
 		ADListSelect *listSelect;
 		bool m_inserter;
-		bool m_list;
+		bool m_list;	/// Representacion de la lista que estoy tomando << true = Lista libres || false = Lista Espacios >> 
+		QRegExpValidator *v;
+		
+		void fill();
+		void setup();
 		void checkListsToSave();
 		QStringList takeListKeys(const QString &list);
+		void requestListTypes();
+		bool valite();
 
-	signals:
-		void requestInsertSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
-		
-		void requestUpdateSpace(const QString& codeSpace, const QString& typeSpace,const bool coolAirSpace,const QString& capacitySpace, const QString& nameSpace);
-
-		void updateAudiovisuaList(const QString&, const QString&, const QString&, const QString&, const QString& );
 
 	public slots:
-		void emitInsertSpace();
+		void emitEvent();
 		void listChangedSF(const QString &lista, int pos);
-		void insertListAudiovisual(const QList<XMLResults>& results);
-		void insertListTypes(const QList<XMLResults>& results);
+		void insertListAudiovisual();
+		void insertListTypes(const QStringList results);
 	
 	
 };
