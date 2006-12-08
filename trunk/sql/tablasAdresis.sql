@@ -172,7 +172,7 @@ CREATE TABLE ADReserve
 	beginDate date, -- DD/MM/YY
 	endDate date,	-- DD/MM/YY
 	isActive boolean, -- Este campo es para saber si la reserva esta activa o ha sido cancelada.
-	destinationReserve varchar(120),
+	destinationReserve text,
 	check(beginHour < endHour and beginDate <= endDate)
 );
 
@@ -235,11 +235,20 @@ CREATE TABLE ADCancellation(
 	idUserCancellation varchar(10) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE,
 	hourCancellation time,
 	dateCancellation date,
-	razonCancellation varchar(120)
+	razonCancellation text
 );
 INSERT INTO ADCancellation VALUES ('10','hecfa','08:00','2006-12-03','Por que si');
-	
-	
+
+DROP TABLE ADREPORT;
+CREATE TABLE ADReport(
+	creator varchar(20) REFERENCES ADUser(loginUser),
+	beginDate date,
+	endDate date,
+	created timestamp,
+	content text, 
+	PRIMARY KEY(creator, created)
+);
+
 -- 	tipoRecurso varchar(20),
 -- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
 -- 	idSpace varchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),

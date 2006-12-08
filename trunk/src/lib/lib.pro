@@ -17,7 +17,9 @@ HEADERS += adevent.h \
            adeventfactory.h \
            adreserve.h \
            adcancellation.h \
-           adreport.h 
+           adreport.h \
+           adreportgenerator.h \
+           sresultset.h 
 SOURCES += adevent.cpp \
            adeventhandler.cpp \
            adobject.cpp \
@@ -29,7 +31,9 @@ SOURCES += adevent.cpp \
            adeventfactory.cpp \
            adreserve.cpp \
            adcancellation.cpp \
-           adreport.cpp 
+           adreport.cpp \
+           adreportgenerator.cpp \
+           sresultset.cpp 
 TARGET = adlib
 CONFIG += release \
 warn_on \

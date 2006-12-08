@@ -33,7 +33,7 @@ class ADReport : public ADObject
 	public:
 		enum TypeConsult{ TimeAudio = 0, TimeProfesor, Cancelations };
 		enum TypeReport{ List = 0, Histogram };
-		ADReport(TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate  );
+		ADReport(const QString & creator, TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate   );
 		~ADReport();
 		
 		virtual QDomElement toXml(QDomDocument &doc) const;
@@ -42,16 +42,21 @@ class ADReport : public ADObject
 		
 		QTextDocument *text();
 		
-		QDateTime created();
-		QDate dateBegin();
-		QDate dateEnd();
+		QDateTime created() const;
+		QDate beginDate() const;
+		QDate endDate() const;
+		QString creator() const;
+		QString content() const;
+		
+		void setContent(const QString & content);
 		
 	private:
+		QString m_creator;
 		TypeConsult m_consult;
 		TypeReport m_type;
-		
-		QDateTime m_created, m_beginDate, m_endDate;
-		
+		QDate  m_beginDate, m_endDate;
+		QDateTime m_created;
+		QString m_content;
 };
 
 Q_DECLARE_METATYPE(ADReport *);

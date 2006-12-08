@@ -21,10 +21,10 @@
 #include<QGridLayout>
 #include "adreportfrom.h"
 #include "adreport.h"
+#include <ddebug.h>
 
-
-ADReportFrom::ADReportFrom(QWidget *parent): 
-	ADFormBase("Reportes", parent)
+ADReportForm::ADReportForm(const QString & login, QWidget *parent): 
+	ADFormBase("Reportes", parent), m_user(login)
 {
 	m_inserter = true;
 	m_consultList << "horas utilizadas de las ayudas audiovisuales" << "horas reservadas por un profesor" << "reporte de cancelaciones";
@@ -43,8 +43,8 @@ ADReportFrom::ADReportFrom(QWidget *parent):
 	grid->addWidget(new QLabel( tr("Consulta") ), 1, 0);
 	grid->addWidget(m_consult, 1,1);
 	
-	grid->addWidget(new QLabel( tr("Fecha inicial:") ), 2, 0);
-	grid->addWidget(new QLabel( tr("Fecha final:") ), 2, 1);
+	grid->addWidget(new QLabel( tr("Fecha inicial")+":" ), 2, 0);
+	grid->addWidget(new QLabel( tr("Fecha final")+":" ), 2, 1);
 	
 	m_beginDate = new DDatePicker(container);
 	m_endDate = new DDatePicker(container);
@@ -53,24 +53,20 @@ ADReportFrom::ADReportFrom(QWidget *parent):
 	grid->addWidget(m_endDate, 3,1);
 	
 	setForm(container);
+	connect(this, SIGNAL(requestDone()), this, SLOT(emitEvent()));
+	
 }
 
-ADReportFrom::~ ADReportFrom()
+ADReportForm::~ ADReportForm()
 {
 }
 
-void ADReportFrom::emitEvent()
+void ADReportForm::emitEvent()
 {
-	ADReport report(ADReport::TypeConsult(m_type->currentIndex()), ADReport::TypeReport(m_consult->currentIndex()),m_beginDate->date(), m_endDate->date());
+	D_FUNCINFO;
+	ADReport report(m_user, ADReport::TypeConsult(m_type->currentIndex()), ADReport::TypeReport(m_consult->currentIndex()),m_beginDate->date(), m_endDate->date());
 	Logic::Action action;
-// 	if(m_inserter)
-// 	{
-// 		action = Logic::Add;
-// 	}
-// 	else
-// 	{
-		action = Logic::Update;
-// 	}
+	action = Logic::Add;
 	ADEvent event( ADEvent::Client, Logic::Reports, action, QVariant::fromValue(&report ));
 	emit sendEvent(&event);
 }

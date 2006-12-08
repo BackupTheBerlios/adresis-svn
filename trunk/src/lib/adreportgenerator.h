@@ -24,7 +24,7 @@
 #include <QVariant>
 #include <QTextDocument>
 
-
+#include "sresultset.h"
 /**
 	@author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
@@ -39,7 +39,9 @@ class ADReportGenerator
 		 * @return 
 		 */
 		static QTextDocument *generateSchedule(int week, const QList<QVariant>& reserves  );
-		static QTextDocument *generateListReserves(const QList<QVariant>& reserves, bool isSpace  );
+		static QTextDocument *generateListReserves( const SResultSet & rs  );
+		
+		
 };
 
 #endif

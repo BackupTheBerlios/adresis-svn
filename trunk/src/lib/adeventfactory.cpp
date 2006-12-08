@@ -26,6 +26,7 @@
 #include "adaudiovisual.h"
 #include "adreserve.h"
 #include "adcancellation.h"
+#include "adreport.h"
 
 
 #include <QXmlSimpleReader>
@@ -141,12 +142,15 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	{
 		ADPermission permissions;
 		permissions.setValues(atts);
-		qvariant_cast<ADUser *>(m_data)->assignPermissions(permissions);
 		
-		for(int i=0;i<5;i++)
-		{
-			Logic::Module module = Logic::Module(i);
-		}
+		qvariant_cast<ADUser *>(m_data)->assignPermissions(permissions);
+	}
+	else if(qname == "report")
+	{
+		ADReport *report = new ADReport(atts.value("creator"), ADReport::TypeConsult(atts.value("consult").toInt()), ADReport::TypeReport(atts.value("type").toInt()), QDate::fromString ( atts.value("beginDate"), Qt::ISODate), QDate::fromString ( atts.value("endDate"), Qt::ISODate));
+		report->setContent( atts.value("content"));
+		
+		m_data = QVariant::fromValue(report);
 	}
 	m_qname = qname;
 	

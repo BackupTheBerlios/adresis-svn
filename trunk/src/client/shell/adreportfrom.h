@@ -28,18 +28,19 @@
 /**
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADReportFrom : public ADFormBase
+class ADReportForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADReportFrom(QWidget *parent = 0);
-		~ADReportFrom();
+		ADReportForm(const QString & login , QWidget *parent = 0);
+		~ADReportForm();
 		
 	private:
 		QComboBox *m_type, *m_consult;
 		DDatePicker *m_beginDate, *m_endDate;
 		QStringList m_consultList, consultHistogram;
 		bool m_inserter;
+		QString m_user;
 		
 	public slots:
 		void emitEvent();

@@ -39,6 +39,9 @@
 #include "adevent.h"
 #include "adpermission.h"
 #include "adcancellation.h"
+#include "adreport.h"
+
+#include "adreportgenerator.h"
 
 
 ADServer::ADServer(QObject *parent) : QTcpServer(parent)
@@ -160,7 +163,6 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 	{
 		return;
 	}
-// 	dDebug() << "1";
 	ADSelect select(QStringList() << "passwduser", "aduser" );
 	select.setWhere("loginuser="+SQLSTR(login));
 	SResultSet rs = SDBM->execQuery(&select);
@@ -188,6 +190,7 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		SResultSet rs = SDBM->execQuery(&infoUser);
 		
 		QString rol = rs.map()["rol"][0];
+		SHOW_VAR(rol);
 		ADSelect permisos(QStringList() << "action" << "permission", "adrols");
 		permisos.setWhere("rol="+SQLSTR(rol));
 		SResultSet rsP = SDBM->execQuery(&permisos);
@@ -195,8 +198,10 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 		ADPermission permissions;
 		permissions.setValues( rsP.map() );
 		
+		SHOW_VAR(permissions.value(Logic::Users, Logic::Add));
+		
 		dDebug() << rs.map().size();
-		ADUser *user= new  ADUser( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions );
+		ADUser *user= new  ADUser( rs.map()["nameuser"][0], rs.map()["codeuser"][0],rs.map()["loginuser"][0], "", permissions,rs.map()["rol"][0].toInt() );
 		ADEvent event(ADEvent::Server, Logic::Users, Logic::Authenticate, QVariant::fromValue (user));
 
 		cnx->sendToClient( event.toString() );
@@ -339,7 +344,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								ADPermission permissions;
 								permissions.setValues( rsP.map() );
 								
-								ADUser *user = new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions);
+								ADUser *user = new  ADUser( rs.map()["nameuser"][pos], rs.map()["codeuser"][pos],rs.map()["loginuser"][pos], "", permissions, rol.toInt());
 								
 								listUsers.append(QVariant::fromValue (user));
 							}
@@ -790,7 +795,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						case Logic::Update:
 						{
 							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
-							ADUpdate updateReserve("adreserve",	QStringList() << "beginhour" << "endhour" << "begindate" << "enddate",  QStringList() << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")));
+							ADUpdate updateReserve("adreserve",	QStringList() << "beginhour" << "endhour" << "begindate" << "enddate",  QStringList() << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString( "yyyy-MM-dd")));
 							
 							updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
 							SDBM->execQuery(&updateReserve);
@@ -888,9 +893,29 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Add:
 						{
+							ADReport *report = qvariant_cast<ADReport *>(event->data());
+							ADSelect infoReserves(QStringList() << "*", "aduser");
+							SResultSet rs = SDBM->execQuery(&infoReserves);
+							QTextDocument *content = ADReportGenerator::generateListReserves(rs);
 							
+							ADInsert insert("adreport", QStringList() << "creator" << "begindate" << "enddate" << "created" << "content", QStringList() <<
+									SQLSTR(report->creator() ) <<
+									SQLSTR(report->beginDate().toString(Qt::ISODate) ) <<
+									SQLSTR(report->endDate().toString(Qt::ISODate) )<<
+									SQLSTR(report->created().toString(Qt::ISODate) )<<
+									SQLSTR(content->toHtml()))  ;
+							SDBM->execQuery(&insert);
 							
-							
+							report->setContent(content->toHtml());
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent event(ADEvent::Server, Logic::Reports, Logic::Add, QVariant::fromValue ( report ));
+								cnx->sendToClient(event.toString());
+							}
 						}
 					}
 					break;

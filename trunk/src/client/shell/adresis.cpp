@@ -18,9 +18,16 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 #include "adresis.h"
+
 #include <ddebug.h>
+
+#include <QTextBrowser>
+#include <QTextDocument>
+
 #include "dconfig.h"
 #include "adcancellationform.h"
+
+
 
 Adresis::Adresis(QObject * parent)
 	: QObject(parent)
@@ -126,6 +133,27 @@ void Adresis::handleEvent(ADEvent * event)
 								else
 								{
 									dFatal() << "error";
+								}
+							}
+							break;
+						}
+					}
+					break;
+					
+					case Logic::Reports:
+					{
+						switch(event->action())
+						{
+							case Logic::Add:
+							{
+								ADReport *report = qvariant_cast<ADReport *>(event->data());
+								if(m_user->login() == report->creator())
+								{
+									emit requestShowReport(report);
+								}
+								else
+								{
+									
 								}
 							}
 							break;
@@ -324,7 +352,14 @@ void Adresis::handleEvent(ADEvent * event)
 						}
 					}
 					break;
-					
+					case Logic::Reports:
+					{
+						if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+						{
+							m_connector->sendToServer(event->toString());
+						}
+					}
+					break;
 					case Logic::Spaces:
 					{
 						if( event->action() == Logic::GetTypes )
@@ -888,5 +923,10 @@ QStringList Adresis::getTypes( Logic::Module module)
 QList<QVariant> Adresis::getList( Logic::Module module )
 {
 	return m_infoModules[module];
+}
+
+ADUser *Adresis::user()
+{
+	return m_user;
 }
 

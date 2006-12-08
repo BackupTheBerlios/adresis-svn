@@ -54,14 +54,14 @@ void ADPermission::setValues(QMap<QString, QStringList> vP)
 		
 	while(it1 != acciones.end())
 	{
-		m_permisos.insert((*it1),(*it2));
+		m_permisos.insert((*it1), (*it2));
 		it1++;
 		it2++;
 	}
 	
 	
-	QStringList a = m_permisos.keys();
-	QStringList v = m_permisos.values();
+// 	QStringList a = m_permisos.keys();
+// 	QStringList v = m_permisos.values();
 // 	for(int i=0;i < a.size();i++)
 // 	{
 // 		dDebug() << "a => "<< a.at(i) <<"  v=>"<< v.at(i);

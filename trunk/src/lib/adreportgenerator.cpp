@@ -40,6 +40,15 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 	QTextDocument * document =new QTextDocument();
 	QTextCursor cursor( document );
 	
+	QTextBlockFormat format = cursor.blockFormat();
+	format.setAlignment ( Qt::AlignHCenter );
+	cursor.setBlockFormat ( format );
+	
+	QTextCharFormat headerFromat = cursor.blockCharFormat ()  ;
+	headerFromat.setForeground ( Qt::red );
+	headerFromat.setFontWeight(QFont::Bold);
+	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación", headerFromat);
+	
 	QTextTableFormat tableFormat;
 	tableFormat.setAlignment(Qt::AlignHCenter);
 	tableFormat.setBackground(QColor("#e0e0e0"));
@@ -62,9 +71,9 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 	frameFormat.setBorder(1);
 	frame->setFrameFormat(frameFormat);
 
-	QTextCharFormat format = cursor.charFormat();
+	QTextCharFormat format1 = cursor.charFormat();
 
-	QTextCharFormat boldFormat = format;
+	QTextCharFormat boldFormat = format1;
 	boldFormat.setFontWeight(QFont::Bold);
 
 	QTextCharFormat highlightedFormat = boldFormat;
@@ -126,9 +135,63 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 }
 
 
-QTextDocument *ADReportGenerator::generateListReserves(const QList<QVariant>& reserves, bool isSpace  )
+/*QTextDocument *ADReportGenerator::generateListReserves(const QList<QVariant>& reserves, bool isSpace  )
 {
 	QTextDocument * document =new QTextDocument();
 	QTextCursor cursor( document );
 	return document;
+}*/
+
+QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs  )
+{
+	QTextDocument * document = new QTextDocument();
+	QTextCursor cursor( document );
+	QTextBlockFormat format = cursor.blockFormat();
+	format.setAlignment ( Qt::AlignHCenter );
+	cursor.setBlockFormat ( format );
+	
+	QTextCharFormat headerFromat = cursor.blockCharFormat ()  ;
+	headerFromat.setForeground ( Qt::red );
+	headerFromat.setFontWeight(QFont::Bold);
+	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación", headerFromat);
+	
+	
+	QMap<QString, QStringList> map = rs.map();
+	QMap<QString, QStringList>::const_iterator it = map.begin();
+	
+	QTextTableFormat tableFormat;
+	tableFormat.setAlignment(Qt::AlignHCenter);
+	tableFormat.setBackground(QColor("#e0e0e0"));
+	tableFormat.setCellPadding(2);
+	tableFormat.setCellSpacing(4);
+	QVector<QTextLength> constraints;
+	for(int i = 0; i < map.count(); i++)
+	{
+		constraints << QTextLength(QTextLength::PercentageLength, 100/map.count());
+	}
+	tableFormat.setColumnWidthConstraints(constraints);
+
+	QTextTable *table = cursor.insertTable( (map.begin()).value().count() , map.count(), tableFormat);
+	QTextFrame *frame = cursor.currentFrame();
+	QTextFrameFormat frameFormat = frame->frameFormat();
+	frameFormat.setBorder(1);
+	frame->setFrameFormat(frameFormat);
+	
+	int i = 0; 
+	while(it != map.end())
+	{
+		int j = 0;
+		foreach(QString text, it.value())
+		{
+			QTextTableCell cell = table->cellAt(j, i);
+			QTextCursor cellCursor = cell.firstCursorPosition();
+			cellCursor.insertText(text);
+			j++;
+		}
+		i++;
+		++it;
+	}
+	return document;
 }
+
+

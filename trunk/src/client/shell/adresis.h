@@ -33,6 +33,7 @@
 #include "adreservefform.h"
 #include "adreservetform.h"
 #include "adcancellation.h"
+#include "adreport.h"
 
 /**
 * @author Jorge Cuadrado <kuadrosxx@gmail.com>
@@ -53,6 +54,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		QStringList getTypes( Logic::Module module );
 		QList<QVariant> getList( Logic::Module module );
 		
+		ADUser *user();
+		
 	private:
 		ADConnector *m_connector;
 		ADUser *m_user;
@@ -67,6 +70,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void requestRemoveDataToModule( Logic::Module module, const QString & );
 		void requestUpdateDataToModule( Logic::Module module, const QVariant & );
 		void sendEventToForm(ADEvent *);
+		void requestShowReport(ADReport *report );
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

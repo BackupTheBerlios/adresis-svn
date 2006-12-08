@@ -61,7 +61,7 @@ ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 	connect(m_adresis, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
 	
 	connect(m_adresis, SIGNAL(requestShowModule( Logic::Module, const QList<QVariant> &)), this, SLOT(showModule( Logic::Module, const QList<QVariant> & )));
-	
+	connect(m_adresis, SIGNAL(requestShowReport(ADReport *)), this, SLOT(showReport(ADReport *)));
 	DCONFIG->beginGroup("TipOfDay");
 	bool showTips = qvariant_cast<bool>(DCONFIG->value("ShowOnStart", true ));
 	
@@ -409,8 +409,8 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 		case Logic::Reports:
 		{
-// 			form = new ADReportFrom();
-// 			title = tr("Create Report");
+			form = new ADReportForm(m_adresis->user()->login());
+			title = tr("Create Report");
 		}
 		break;
 	}
@@ -474,6 +474,18 @@ void ADMainWindow::handleEvent(ADEvent * event)
 			}
 			break;
 		}
+	}
+}
+
+void ADMainWindow::showReport(ADReport * report)
+{
+	if(report)
+	{
+		QTextBrowser *browser = new QTextBrowser();
+		browser->insertHtml ( report->content() );
+		browser->setWindowTitle(tr("Report"));
+		browser->show();
+		addWidget(browser);
 	}
 }
 

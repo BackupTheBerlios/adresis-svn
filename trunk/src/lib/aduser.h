@@ -34,7 +34,7 @@ class ADUser : public ADObject
 {
 	public:
 		ADUser();
-		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions, int rol = -1);
+		ADUser(const QString & name, const QString & code,const QString &login,const QString& passwd, ADPermission permissions, int rol);
 		ADUser(const ADUser & copy);
 		~ADUser();
 		

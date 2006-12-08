@@ -19,7 +19,7 @@
  ***************************************************************************/
 #include "adreport.h"
 
-ADReport::ADReport(TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate  ) : m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate)
+ADReport::ADReport( const QString & creator, TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate ) : m_creator(creator), m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate)
 {
 	m_created = QDateTime::currentDateTime();
 	
@@ -33,11 +33,13 @@ ADReport::~ADReport()
 QDomElement ADReport::toXml(QDomDocument &doc) const
 {
 	QDomElement root = doc.createElement("report");
+	root.setAttribute( "creator", m_creator);
 	root.setAttribute( "type", m_type );
 	root.setAttribute( "consult", m_consult );
 	root.setAttribute( "beginDate",m_beginDate.toString(Qt::ISODate)  );
 	root.setAttribute( "endDate", m_endDate.toString(Qt::ISODate));
 	root.setAttribute( "createdDate", m_created.toString(Qt::ISODate) );
+	root.setAttribute( "content", m_content );
 	return root;
 }
 
@@ -48,4 +50,36 @@ void ADReport::setValues(XMLResults values)
 bool ADReport::isValid()  const
 {
 	return true;
+}
+
+
+QDateTime ADReport::created() const
+{
+	return m_created;
+}
+
+QDate ADReport::beginDate() const
+{
+	return  m_beginDate;
+}
+
+QDate ADReport::endDate() const
+{
+	return m_endDate;
+}
+
+QString ADReport::creator() const
+{
+	return m_creator;
+}
+
+
+QString ADReport::content() const
+{
+	return m_content;
+}
+
+void ADReport::setContent(const QString & content)
+{
+	m_content = content;
 }
