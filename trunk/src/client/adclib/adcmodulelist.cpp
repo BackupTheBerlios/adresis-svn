@@ -29,13 +29,11 @@
 #include "adaudiovisual.h"
 #include "adspace.h"
 #include "adreserve.h"
-
 #include <dtreewidgetsearchline.h>
-
 #include "global.h"
 #include <ddebug.h>
-
 #include "adevent.h"
+#include "adcancellation.h"
 
 ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	:QWidget(parent), m_pModule(module)
@@ -56,42 +54,42 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	{
 		case Logic::Users:
 		{
-			titles << tr("Code")  <<  tr("Name") << tr("Login");
-			setWindowTitle ( "Users");
+			titles << tr("Codigo")  <<  tr("Nombre") << tr("Login");
+			setWindowTitle ( "Usuarios");
 		}
 		break;
 		case Logic::Audiovisuals:
 		{
-			titles << tr("Inventory") << tr("State") << tr("Type") << tr("Mark")   << tr("Space");
-			setWindowTitle ( "Audiovisuals");
+			titles << tr("No Inventario") << tr("Estado") << tr("Tipo") << tr("Marca")   << tr("Espacio");
+			setWindowTitle ( "Audiovisuales");
 		}
 		break;
 		case Logic::ReservesF:
 		{
 // typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
 			
-			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("day");
-			setWindowTitle ( "Reserves Semestral");
+			titles << tr("Id") << tr("Tipo Reserva") << tr("Usuario Reserva") << tr("Usuario Responsable ") << tr("Id Recurso") << tr("dia");
+			setWindowTitle ( "Reservas Semestrales");
 		}
 		break;
 		case Logic::ReservesT:
 		{
 // typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
 			
-			titles << tr("Id") << tr("Type Reserve") << tr("User reserver") << tr("User responsable ") << tr("Id Resource") << tr("day");
-			setWindowTitle ( "Reserves Temporal");
+			titles << tr("Id") << tr("Tipo Reserva") << tr("Usuario Reserva") << tr("Usuario Responsable ") << tr("Id Recurso") << tr("dia");
+			setWindowTitle ( "Reservas Temporales");
 		}
 		break;
 		case Logic::Spaces:
 		{
-			titles << tr("Code") << tr("Type") << tr("Cool Air") << tr("Capacity") << tr("Name");
-			setWindowTitle ( "Spaces");
+			titles << tr("Codigo") << tr("Tipo") << tr("Aire Acondicionado") << tr("Capacidad") << tr("Nombre");
+			setWindowTitle ( "Espacios");
 		}
 		break;
 		case Logic::Reports:
 		{
-			setWindowTitle ( "Reports");
-			titles << tr("Date time") << tr("Title");
+			setWindowTitle ( "Reportes");
+			titles << tr("Fecha") << tr("Titulo");
 		}
 		break;
 	}
@@ -328,6 +326,25 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 				
 			}
 			break;
+			case Logic::Cancellation:
+			{
+// 				idReserveCancellation(); idUserCancellation(); dateTimeCancellation(); razonCancellation();
+				ADCancellation *cancel = qVariantValue<ADCancellation *>(data);
+				QList<QString> strs;
+				strs << cancel->idReserveCancellation();
+				strs << cancel->idUserCancellation();
+				strs << cancel->dateTimeCancellation().date().toString("dd/MM/yyyy");
+				strs << cancel->dateTimeCancellation().time().toString("hh:mm");
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
+				
+			}
+			break;
 		}
 	}
 }
@@ -369,6 +386,33 @@ void ADCModuleList::updateData(Logic::Module module, const QVariant & data )
 			if (a)
 			{
 				removeData(module, a->numberInventory() );
+			}
+		}
+		break;
+		case Logic::Spaces:
+		{
+			ADSpace * s = qvariant_cast<ADSpace *>(data);
+			if (s)
+			{
+				removeData(module, s->codeSpace() );
+			}
+		}
+		break;
+		case Logic::ReservesF:
+		{
+			ADReserve * r = qvariant_cast<ADReserve *>(data);
+			if (r)
+			{
+				removeData(module, r->idReserve() );
+			}
+		}
+		break;
+		case Logic::ReservesT:
+		{
+			ADReserve * r = qvariant_cast<ADReserve *>(data);
+			if (r)
+			{
+				removeData(module, r->idReserve() );
 			}
 		}
 		break;
