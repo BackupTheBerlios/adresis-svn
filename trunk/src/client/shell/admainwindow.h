@@ -72,7 +72,6 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		QMenu *fileMenu;
 		QMenu *netMenu;
 		QMenu *preferencesMenu;
-		QMenu *configureMenu;
 		QMenu *helpMenu;
 		
 		QToolBar *toolBar;
@@ -81,7 +80,6 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		QAction *theme;
 		QAction *aboutAct;
 		QAction *conect;
-		QAction *configSchoollAct;
 		QAction *configResourceAct;
 		
 		void setupActions();

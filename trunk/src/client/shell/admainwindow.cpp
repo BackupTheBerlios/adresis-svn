@@ -79,40 +79,35 @@ ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 
 void ADMainWindow::setupActions()
 {
-	exitAct = new QAction(tr("&Exit"), this);
+	exitAct = new QAction(tr("&Salir"), this);
 	exitAct->setShortcut(tr("Ctrl+Q"));
-	exitAct->setStatusTip(tr("Exit the application"));
+	exitAct->setStatusTip(tr("Salir de la aplicacion"));
 	connect(exitAct, SIGNAL(triggered()), this, SLOT(close()));
 
-	conect = new QAction(QPixmap(THEME_DIR+"/icons/connect.png"),tr("Connect"), this);
-	conect->setStatusTip(tr("Connect to the Data Base"));
+	conect = new QAction(QPixmap(THEME_DIR+"/icons/connect.png"),tr("Conectar"), this);
+	conect->setStatusTip(tr("Conectar a la base de datos"));
 	connect(conect, SIGNAL(triggered()), this, SLOT(connectToHost()));
 	connect(this, SIGNAL(disabledConnect(bool)), conect, SLOT(setEnabled(bool)));
 
-	configSchoollAct = new QAction(tr("Configure Schooll"), this);
-	configSchoollAct->setStatusTip("Configure the information about the schooll");
-	configSchoollAct->setEnabled(false);
-	connect(configSchoollAct, SIGNAL(triggered()), this, SLOT(configSchooll()));
-
-	configResourceAct = new QAction(tr("Add/Del Resources"), this);
-	configResourceAct->setStatusTip("Add or del resource from schooll");
+	configResourceAct = new QAction(tr("Agregar/Eliminar Recursos"), this);
+	configResourceAct->setStatusTip("Agragar o Eliminar Recursos de la Escuela");
 	configResourceAct->setEnabled(false);
 	connect( configResourceAct, SIGNAL( triggered() ), this, SLOT( configResource() ));
 
-	theme = new QAction(tr("Theme"), this);
-	theme->setStatusTip(tr("Change your window theme"));
+	theme = new QAction(tr("Tema"), this);
+	theme->setStatusTip(tr("Cambiar el tema de la ventana"));
 	connect(theme, SIGNAL(triggered()), this, SLOT(changeTheme()));
 
-	aboutAct = new QAction(tr("&About"), this);
-	aboutAct->setStatusTip(tr("Show the application's About box"));
+	aboutAct = new QAction(tr("&Acerca"), this);
+	aboutAct->setStatusTip(tr("Acerca de ADRESIS"));
 	connect(aboutAct, SIGNAL(triggered()), this, SLOT(about()));
 
 }
 
 void ADMainWindow::about()
 {
-	QMessageBox::about(this, tr("About Application"),
-	tr("ADRESIS \n"));
+	QMessageBox::about(this, tr("Acerca de ADRESIS"),
+			   tr("ADRESIS\nDesarrolladores:\nJorge Humberto Cuadrado\t\"EL TOPO\"\tDirector de Proyecto\nHector Fabio Cruz\t\"HECTORCAZ\"\tProgramador\nCharly Aguirre\t\"LA MARIMONDA\"\tAsegurador de la Calidad\nJuan Carlos Borrero\t\"EL ABUELO\"\tJefe de Documentacion\nSebastian Henao\t\"FRESITA\"\tDocumentador/Bases de datos"));
 }
 
 void ADMainWindow::changeTheme()
@@ -147,23 +142,18 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 
 void ADMainWindow::setupMenu()
 {
-	fileMenu = menuBar()->addMenu(tr("&File"));
+	fileMenu = menuBar()->addMenu(tr("&Archivo"));
 	fileMenu->addAction(exitAct);
-	fileMenu->addAction(conect);
-
-	netMenu = menuBar()->addMenu(tr("&Net"));
+	
+	netMenu = menuBar()->addMenu(tr("&Red"));
 	netMenu->addAction(conect);
 	
-	preferencesMenu = menuBar()->addMenu(tr("&Preferences"));
+	preferencesMenu = menuBar()->addMenu(tr("&Preferencias"));
 	preferencesMenu->addAction(theme);
 	
-	configureMenu = menuBar()->addMenu(tr("&Configure"));
-	configureMenu->addAction(configSchoollAct);
-	configureMenu->addAction(configResourceAct);
-
 	menuBar()->addSeparator();
 	
-        helpMenu = menuBar()->addMenu(tr("&Help"));
+        helpMenu = menuBar()->addMenu(tr("&Ayuda"));
         helpMenu->addAction(aboutAct);
 }
 
@@ -206,7 +196,7 @@ void ADMainWindow::showDialog(Msg::Type type, const QString& message)
 	{
 		default:
 		{
-			QMessageBox::information ( 0 , "Message", message, 0);
+			QMessageBox::information ( 0 , "Mensaje", message, 0);
 		}
 	}
 }
@@ -243,13 +233,13 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADUserForm;
-				title = tr("Add user");
+				title = tr("Agregar Usuario");
 			}
 			else
 			{
 				form = new ADUserForm(static_cast<ADUser *>(m_adresis->getObject(Logic::Users, key )));
 				
-				title = tr("Modify user");
+				title = tr("Modificar Usuario");
 			}
 		}
 		break;
@@ -269,7 +259,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 					}
 				}
 				form = new ADSpaceForm(m_adresis->getTypes(Logic::Spaces), ayudasLibres);
-				title = tr("Add space");
+				title = tr("Agregar Espacio");
 			}
 			else
 			{
@@ -293,7 +283,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				}
 				ADSpace space = (*static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces, key )));
 				form = new ADSpaceForm(space, ayudasLibres, ayudasAsignadas);
-				title = tr("Modify space");
+				title = tr("Modificar Espacio");
 			}
 		}
 		break;
@@ -302,12 +292,12 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADAudiovisualForm(m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
-				title = tr("Add audiovisual");
+				title = tr("Agregar Ayuda Audiovisual");
 			}
 			else
 			{
 				form = new ADAudiovisualForm(static_cast<ADAudioVisual *>(m_adresis->getObject(Logic::Audiovisuals, key )), m_adresis->getList(Logic::Spaces), m_adresis->getTypes(Logic::Audiovisuals));
-				title = tr("Add audiovisual");
+				title = tr("Modificar Ayuda Audiovisual");
 			}
 		}
 		break;
@@ -316,7 +306,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADReserveTForm();
-				title = tr("Add Reserve Temporal");
+				title = tr("Agregar Reserva Temporal");
 			}
 			else
 			{
@@ -352,7 +342,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				
 				
 				form = new ADReserveTForm( m_reserve, infoResource, listReserves );
-				title = tr("Modify Reserve Temporal");
+				title = tr("Modificar Reserva Temporal");
 			}
 			
 		}
@@ -362,7 +352,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 			if(key.isNull())
 			{
 				form = new ADReserveFForm();
-				title = tr("Add Reserve Semestral");
+				title = tr("Agregar Reserva Semestral");
 			}
 			else
 			{
@@ -396,7 +386,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				}
 				
 				form = new ADReserveFForm( m_reserve, infoResource, listReserves );
-				title = tr("Modify Reserve Semestral");
+				title = tr("Modificar Reserva Semestral");
 			}
 		}
 		break;
