@@ -21,10 +21,7 @@
 
 ADReport::ADReport( const QString & creator, TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate, const QDateTime & created ) : m_creator(creator), m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate), m_created(created)
 {
-	
-	
 }
-
 
 ADReport::~ADReport()
 {

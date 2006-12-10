@@ -222,6 +222,7 @@ ADEvent *ADEventFactory::build(const QString &document)
 	{
 		return m_event;
 	}
-	
 	return 0;
 }
+
+

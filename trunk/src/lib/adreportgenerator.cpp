@@ -25,6 +25,8 @@
 
 #include "adreserve.h"
 #include "ddebug.h"
+#include "histogram.h"
+#include <QTemporaryFile>
 
 ADReportGenerator::ADReportGenerator()
 {
@@ -135,14 +137,14 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 }
 
 
-/*QTextDocument *ADReportGenerator::generateListReserves(const QList<QVariant>& reserves, bool isSpace  )
+/*QTextDocument *ADReportGenerator::generateListReport(const QList<QVariant>& reserves, bool isSpace  )
 {
 	QTextDocument * document =new QTextDocument();
 	QTextCursor cursor( document );
 	return document;
 }*/
 
-QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, const QStringList & headers  )
+QTextDocument *ADReportGenerator::generateListReport( const SResultSet & rs, const QStringList & headers  )
 {
 	QTextDocument * document = new QTextDocument();
 	QTextCursor cursor( document );
@@ -238,4 +240,44 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, c
 	return document;
 }
 
+QTextDocument *ADReportGenerator::generateGraphicReport(const QString & strGraphic)
+{
+	QTextDocument * document = new QTextDocument();
+	QTextCursor cursor( document );
+	QTextBlockFormat format = cursor.blockFormat();
+	format.setAlignment ( Qt::AlignHCenter );
+	cursor.setBlockFormat ( format );
+	
+	QTextCharFormat headerFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::red );
+	headerFormat.setFontWeight(QFont::Bold);
+	cursor.insertText("Universidad del Valle\n", headerFormat);
+	cursor.insertText("Escuela de Ingeniería de Sistemas y Computación\n");
+	
+	HistogramFactory factory;
+	Histogram *histogram = factory.build(strGraphic);
+	
+	QImage image(QSize(500,500), QImage::Format_ARGB32_Premultiplied);
+	image.fill(qRgb(244,244,244));
+	QPainter p(&image);
+	histogram->draw(&p);
+	static int number = 0;
+	
+	QTemporaryFile *tmpFile = new QTemporaryFile();
+	number++;
+	if(tmpFile->open())
+	{
+		image.save(tmpFile, "PNG");
+	}
+	cursor.insertImage(tmpFile->fileName());
+	
+	cursor.movePosition ( QTextCursor::Down);
+	QTextCharFormat footFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::black );
+	headerFormat.setFontItalic ( true);
+	headerFormat.setFontPointSize ( 8 );
+	cursor.insertText(QString("\nReporte generado " + QDate::currentDate().toString(Qt::TextDate)), headerFormat);
+	
+	return document;
+}
 

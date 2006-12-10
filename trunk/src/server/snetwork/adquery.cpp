@@ -112,7 +112,7 @@ ADSelect::~ ADSelect()
 
 QString ADSelect::toString() const
 {
-	return m_query + m_from + m_join + m_cwhere + m_subquery + m_filter + m_orderby;
+	return m_query + m_from + m_join + m_cwhere + m_subquery + m_filter + m_orderby + m_groupBy;
 }
 
 QStringList ADSelect::fields()
@@ -123,6 +123,11 @@ QStringList ADSelect::fields()
 void ADSelect::addSubConsult(QString connector, const ADSelect &subconsult)
 {
 	m_subquery += " " + connector + " ( " + subconsult.toString() + " ) ";
+}
+
+void ADSelect::groupBy( const QString & field )
+{
+	m_groupBy = " GROUP BY " + field;
 }
 
 void ADSelect::addFilter( const QString& filter, QStringList fields )

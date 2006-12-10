@@ -41,6 +41,8 @@
 #include "adcancellation.h"
 #include "adreport.h"
 
+#include "histogram.h"
+
 #include "adreportgenerator.h"
 
 
@@ -923,13 +925,48 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								}
 								break;
 							}
-							QTextDocument *content = ADReportGenerator::generateListReserves(rs, headers);
 							
-							ADInsert insert("adreport", QStringList() << "creator" << "typeReport" << "consult" << "begindate" << "enddate" << "created" << "content", QStringList() << SQLSTR(report->creator() ) << QString::number(report->type()) << QString::number(report->consult()) << SQLSTR(report->beginDate().toString(Qt::ISODate) ) << SQLSTR(report->endDate().toString(Qt::ISODate) ) << SQLSTR(report->created().toString(Qt::ISODate) ) << SQLSTR(content->toHtml()));
+							if(report->type() == ADReport::List)
+							{
+								QTextDocument *content = ADReportGenerator::generateListReport(rs, headers);
+								
+								
+								report->setContent(content->toHtml());
+							}
+							else if(report->type() == ADReport::Histogram)
+							{
+								//simulacion de la consulta de audiovisuales versus tiempo
+								ADSelect select( QStringList() << "idaudiovisual as ref" << "sum(horas)", QStringList() << "(SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo");
+								
+								select.groupBy("ref");
+// 								select.addSubConsult(QString connector, const ADSelect &subconsult);
+								QMap<QString, QStringList> map = SDBM->execQuery(&select).map();
+								QStringList ref = map["ref"];
+								QStringList time = map["sum"];
+								
+								QMap<QString, int> hoursAv;
+								
+								for(int i =0; i < ref.count() && i < time.count() ; i++)
+								{
+									dDebug() << time[i];
+									hoursAv.insert(ref[i], QTime::fromString( time[i], Qt::ISODate ).hour() );
+								}
+								
+								
+								
+// 							SELECT numberinventoryav as ref, sum(horas) from (SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo, adaudiovisual where(foo.idaudiovisual = adaudiovisual.numberinventoryav) group by ref;
+								
+								Histogram histogram(QRect(QPoint(0,0), QSize(500,500)));
+								histogram.setValues(hoursAv);
+								report->setContent(histogram.toString());
+								
+							}
+							
+							ADInsert insert("adreport", QStringList() << "creator" << "typeReport" << "consult" << "begindate" << "enddate" << "created" << "content", QStringList() << SQLSTR(report->creator() ) << QString::number(report->type()) << QString::number(report->consult()) << SQLSTR(report->beginDate().toString(Qt::ISODate) ) << SQLSTR(report->endDate().toString(Qt::ISODate) ) << SQLSTR(report->created().toString(Qt::ISODate) ) << SQLSTR(report->content()));
+							
 							
 							SDBM->execQuery(&insert);
 							
-							report->setContent(content->toHtml());
 							if ( SDBM->lastError().isValid() )
 							{
 								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );

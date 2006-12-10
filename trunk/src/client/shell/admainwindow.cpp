@@ -419,7 +419,6 @@ void ADMainWindow::showElement(Logic::Module module,const QString & key)
 	if(module == Logic::Reports)
 	{
 		showReport(static_cast<ADReport *>(m_adresis->getObject(Logic::Reports, key )));
-		
 	}
 	else
 	{
@@ -492,10 +491,20 @@ void ADMainWindow::showReport(ADReport * report)
 	if(report)
 	{
 		QTextBrowser *browser = new QTextBrowser();
-		browser->insertHtml ( report->content() );
 		browser->setWindowTitle(tr("Report"));
-		browser->show();
 		addWidget(browser);
+		
+		if(report->type() == ADReport::List)
+		{
+			browser->insertHtml ( report->content() );
+			
+		}
+		else if(report->type() == ADReport::Histogram)
+		{
+			QString html = ADReportGenerator::generateGraphicReport( report->content() )->toHtml();
+			browser->insertHtml (html);
+		}
+		browser->show();
 	}
 }
 

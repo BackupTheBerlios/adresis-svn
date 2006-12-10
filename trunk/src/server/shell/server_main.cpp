@@ -19,7 +19,8 @@
  ***************************************************************************/
 
 
-#include <QCoreApplication>
+// #include <QCoreApplication>
+#include <QApplication>
 #include <QHostInfo>
 
 #include "adserver.h"
@@ -36,7 +37,8 @@ void write_test_config();
 int main(int argc, char **argv)
 {
 	DDebug::setForceDisableGUI();
-	QCoreApplication app(argc, argv);
+	QApplication app(argc, argv);
+// 	QCoreApplication app(argc, argv);
 	app.setApplicationName("adserver");
 
 	// Uncomment if you want initial config

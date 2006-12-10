@@ -134,6 +134,7 @@ class ADSelect : public ADQuery
 		QString toString() const;
 		
 		void addFilter( const QString& filter, QStringList fields = QStringList() );
+		void groupBy( const QString & field );
 		
 		void setOrderBy(const QString &field, Order o);
 		void setOrderBy(int field, Order o);
@@ -147,6 +148,7 @@ class ADSelect : public ADQuery
 		QString m_filter;
 		QString m_orderby;
 		QString m_join;
+		QString m_groupBy;
 };
 
 /**
