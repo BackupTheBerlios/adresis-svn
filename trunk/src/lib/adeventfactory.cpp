@@ -147,7 +147,7 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "report")
 	{
-		ADReport *report = new ADReport(atts.value("creator"), ADReport::TypeConsult(atts.value("consult").toInt()), ADReport::TypeReport(atts.value("type").toInt()), QDate::fromString ( atts.value("beginDate"), Qt::ISODate), QDate::fromString ( atts.value("endDate"), Qt::ISODate));
+		ADReport *report = new ADReport(atts.value("creator"), ADReport::TypeConsult(atts.value("consult").toInt()), ADReport::TypeReport(atts.value("type").toInt()), QDate::fromString ( atts.value("beginDate"), Qt::ISODate), QDate::fromString ( atts.value("endDate"), Qt::ISODate), QDateTime::fromString ( atts.value("createdDate"), Qt::ISODate));
 		report->setContent( atts.value("content"));
 		
 		m_data = QVariant::fromValue(report);

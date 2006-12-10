@@ -77,8 +77,6 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		break;
 		case Logic::ReservesT:
 		{
-// typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
-			
 			titles << tr("Id") << tr("Tipo Reserva") << tr("Usuario Reserva") << tr("Usuario Responsable ") << tr("Id Recurso") << tr("dia");
 			setWindowTitle ( "Reservas Temporales");
 		}
@@ -110,7 +108,15 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	layout->addWidget(m_pTree);
 	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
-	ADModuleButtonBar *buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify );
+	ADModuleButtonBar *buttonBar;
+	if(m_pModule == Logic::Reports)
+	{
+		buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Query );
+	}
+	else
+	{
+		buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify );
+	}
 	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
 }
 
@@ -167,9 +173,39 @@ void ADCModuleList::requestAction(int action)
 			QTreeWidgetItem *current = m_pTree->currentItem();
 			if(current)
 			{
-				QString key = current-> text ( 0 );
+				QString key = "";
+				if(m_pModule == Logic::Reports)
+				{
+					key = current->text(0) + "." + current->text(1) ;
+				}
+				else
+				{
+					key = current-> text ( 0 );
+				}
 				ADEvent event(ADEvent::Client, m_pModule, Logic::Del, key );
 				emit sendEvent(&event);
+			}
+			else
+			{
+				emit requestShowMessage( Msg::Info, tr("Seleccione un elemento de la lista" ));
+			}
+		}
+		break;
+		case ADModuleButtonBar::Query:
+		{
+			QTreeWidgetItem *current = m_pTree->currentItem();
+			if(current)
+			{
+				QString key = "";
+				if(m_pModule == Logic::Reports)
+				{
+					key = current->text(0) + "." + current->text(1) ;
+				}
+				else
+				{
+					key = current-> text ( 0 );
+				}
+				emit requestShowElement(m_pModule, key);
 			}
 		}
 		break;
@@ -183,6 +219,7 @@ void ADCModuleList::requestAction(int action)
 			}
 		}
 		break;
+		
 	};
 }
 
@@ -371,7 +408,16 @@ void ADCModuleList::removeData(Logic::Module module, const QString & key )
 		QTreeWidgetItemIterator it(m_pTree);
 		while( (*it) )
 		{
-			if( key == (*it)->text(0) )
+			if(m_pModule == Logic::Reports)
+			{
+				QStringList keys = key.split(".");
+				if( keys[0] == (*it)->text(0) and keys[1] == (*it)->text(1))
+				{
+					delete (*it);
+					break;
+				}
+			}
+			else if( key == (*it)->text(0) )
 			{
 				delete (*it);
 				break;

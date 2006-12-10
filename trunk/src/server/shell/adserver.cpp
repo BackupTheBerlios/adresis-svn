@@ -915,7 +915,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								case ADReport::Cancelations:
 								{
 									dDebug() << "Consultatando lista de cancelaciones";
-									headers << "id" << "usuario" << "Hora" << "Fecha" << "Razón";
+									headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razón";
 									
 									ADSelect consult(QStringList() << "*", "ADCancellation");
 									consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );
@@ -946,11 +946,11 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						{
 							ADDelete deleteReport("adreport");
 							QStringList keys = event->data().toString().split( '.' );
-							deleteReport.setWhere("creator = " + SQLSTR(keys[0]) + "and" + SQLSTR(keys[0]) );
+							deleteReport.setWhere("creator = " + SQLSTR(keys[0]) + " and " + "created = " + SQLSTR(keys[1]) );
 							SDBM->execQuery(&deleteReport);
 							if ( SDBM->lastError().isValid() )
 							{
-								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError()));
 							}
 							else
 							{

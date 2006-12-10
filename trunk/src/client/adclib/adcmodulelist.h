@@ -60,7 +60,9 @@ class ADCModuleList: public QWidget
 		
 	signals:
 		void requestShowForm(Logic::Module module, const QString & key = QString::null);
+		void requestShowElement(Logic::Module module, const QString & key = QString::null);
 		void sendEvent(ADEvent * event);
+		void requestShowMessage(Msg::Type, const QString&);
 		
 	protected:
 		QTreeWidget *m_pTree;

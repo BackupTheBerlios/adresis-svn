@@ -167,7 +167,7 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, c
 	}
 	else
 	{
-		rows = map.begin().value().count();
+		rows = map.begin().value().count()+1;
 	}
 	
 	if(columns == 0)
@@ -194,11 +194,20 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, c
 	QTextFrameFormat frameFormat = frame->frameFormat();
 	frameFormat.setBorder(1);
 	frame->setFrameFormat(frameFormat);
+	int count = 0;
+	headerFormat.setForeground ( Qt::black );
+	foreach(QString head, headers)
+	{
+		QTextTableCell cell = table->cellAt(0, count);
+		QTextCursor cellCursor = cell.firstCursorPosition();
+		cellCursor.insertText(head, headerFormat );
+		count++;
+	}
 	
 	int i = 0; 
 	while(it != map.end())
 	{
-		int j = 0;
+		int j = 1;
 		foreach(QString text, it.value())
 		{
 			QTextTableCell cell = table->cellAt(j, i);
@@ -210,10 +219,12 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, c
 		++it;
 	}
 	
-	cursor = table->rowEnd (  cursor );
-	cursor.movePosition ( QTextCursor::Down);
+	cursor = table->rowEnd(cursor);
+	for(int i = 0; i < table->rows(); i++)
+	{
+		cursor.movePosition ( QTextCursor::Down);
+	}
 	cursor.insertBlock ();
-	
 	format.setAlignment ( Qt::AlignRight );
 	cursor.setBlockFormat ( format );
 	

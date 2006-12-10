@@ -130,13 +130,19 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
 	m_modules.insert( module, list );
+	
+	connect(list, SIGNAL(requestShowMessage( Msg::Type, const QString&)), this, SLOT(showDialog( Msg::Type, const QString& )));
+	
 	connect(list, SIGNAL(requestShowForm( Logic::Module , const  QString & )), this, SLOT(showForm( Logic::Module, const QString & )));
+	
+	connect(list, SIGNAL(requestShowElement( Logic::Module , const  QString & )), this, SLOT(showElement( Logic::Module, const QString & )));
 	
 	connect(list, SIGNAL(sendEvent(ADEvent * )), m_adresis, SLOT( handleEvent( ADEvent * )));
 	
 	connect(m_adresis, SIGNAL(requestAddDataToModule(Logic::Module, const QVariant & )), list, SLOT(addData( Logic::Module, const QVariant & )));
 	connect(m_adresis, SIGNAL(requestRemoveDataToModule(Logic::Module, const QString & )), list, SLOT(removeData( Logic::Module, const QString & )));
 	connect(m_adresis, SIGNAL(requestUpdateDataToModule(Logic::Module, const QVariant & )), list, SLOT(updateData( Logic::Module, const QVariant & )));
+	
 	setUpdatesEnabled(true);
 }
 
@@ -405,6 +411,20 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 	}
 	addForm( form, title );
+}
+
+
+void ADMainWindow::showElement(Logic::Module module,const QString & key)
+{
+	if(module == Logic::Reports)
+	{
+		showReport(static_cast<ADReport *>(m_adresis->getObject(Logic::Reports, key )));
+		
+	}
+	else
+	{
+		dWarning() << "no se puede consultar el elemento";
+	}
 }
 
 /**

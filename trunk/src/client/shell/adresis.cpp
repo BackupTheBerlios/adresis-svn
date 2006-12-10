@@ -158,6 +158,12 @@ void Adresis::handleEvent(ADEvent * event)
 								emit requestAddDataToModule(Logic::Reports, event->data());
 							}
 							break;
+							case Logic::Del:
+							{
+								removeObject( Logic::Reports, event->data().toString()   );
+								emit requestRemoveDataToModule(Logic::Reports, event->data().toString());
+							}
+							break;
 						}
 					}
 					break;
@@ -822,6 +828,17 @@ ADObject * Adresis::getObject( Logic::Module module,const QString key )
 				}
 			}
 			break;
+			case Logic::Reports:
+			{
+				ADReport *r = qvariant_cast<ADReport *>(*it);
+				QStringList keys = key.split(".");
+				
+				if(r->creator() == keys[0] && r->created().toString(Qt::ISODate) == keys[1])
+				{
+					return r;
+				}
+			}
+			break;
 		}
 		++it;
 	}
@@ -922,9 +939,29 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 				}
 			}
 			break;
+			case Logic::Reports :
+			{
+				if(qVariantCanConvert<ADReport *>( (*it) ))
+				{
+					ADReport *r = qvariant_cast<ADReport *>(*it);
+					
+					if(r)
+					{
+						QStringList keys = key.split(".");
+						if(r->creator() == keys[0] && r->created().toString(Qt::ISODate) == keys[1])
+						{
+							m_infoModules[Logic::Reports].erase(it);
+							delete r;
+							return;
+						}
+					}
+				}
+			}
+			break;
 		}
 		++it;
 	}
+	
 }
 
 QStringList Adresis::getTypes( Logic::Module module)
