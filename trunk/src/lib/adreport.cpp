@@ -19,9 +19,9 @@
  ***************************************************************************/
 #include "adreport.h"
 
-ADReport::ADReport( const QString & creator, TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate ) : m_creator(creator), m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate)
+ADReport::ADReport( const QString & creator, TypeConsult consult, TypeReport type, const QDate &beginDate, const QDate &endDate, const QDateTime & created ) : m_creator(creator), m_consult(consult), m_type(type), m_beginDate(beginDate), m_endDate(endDate), m_created(created)
 {
-	m_created = QDateTime::currentDateTime();
+	
 	
 }
 
@@ -83,3 +83,47 @@ void ADReport::setContent(const QString & content)
 {
 	m_content = content;
 }
+
+int ADReport::type()
+{
+	return m_type;
+}
+
+
+QString ADReport::typeStr() const
+{
+	QString str;
+	if(m_type == List)
+	{
+		str = "Listado";
+	}
+	else if(m_type == Histogram)
+	{
+		str = "Grafica";
+	}
+	return str;
+}
+
+int ADReport::consult()
+{
+	return m_consult;
+}
+
+QString ADReport::consultStr() const
+{
+	QString str;
+	if(m_consult == TimeAudio)
+	{
+		str = "Tiempos de ayudas audiovisuales";
+	}
+	else if(m_consult == TimeProfesor)
+	{
+		str = "Tiempos de reservas por profesor";
+	}
+	else if(m_consult == Cancelations)
+	{
+		str = "Cancelaciones";
+	}
+	return str;
+}
+

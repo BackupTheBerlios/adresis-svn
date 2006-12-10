@@ -45,6 +45,9 @@ Adresis::~Adresis()
 	DEND;
 }
 
+/**
+ * Esta funcion ejecuta las operaciones descritas en el evento
+ */
 void Adresis::handleEvent(ADEvent * event)
 {
 	D_FUNCINFO;
@@ -52,12 +55,14 @@ void Adresis::handleEvent(ADEvent * event)
 	if(event)
 	{
 		/** ***************************************** S  E  R  V  I  D  O  R ********************************************** */
+		
+		dDebug() << "Manejando ;" << event->toString();
 		if(event->source() == ADEvent::Server)
 		{
-			dDebug() << event->toString();
 			
 			if(event->action() == Logic::Find)
 			{
+				dDebug() << event->module();
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
 				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
 			}
@@ -73,7 +78,7 @@ void Adresis::handleEvent(ADEvent * event)
 							{
 								dDebug() << "Info";
 								m_user = qvariant_cast<ADUser *> (event->data());
-								//TODO: enviar el evento de encontrar todos los elementos de los modulos en los cuales se tenga permisos
+								
 								for(int i=0; i < 7; i++)
 								{
 									Logic::Module module = Logic::Module(i);
@@ -98,12 +103,11 @@ void Adresis::handleEvent(ADEvent * event)
 										handleEvent(&dates);
 									}
 									
-									if(Logic::Module(i) == Logic::Reports  )
-									{
-										emit requestShowModule( Logic::Module(i), QList<QVariant>() );
-										//cargar de la configuracion los la info de los reportes generados por el cliente y que estan grabados localmente
+// 									if(Logic::Module(i) == Logic::Reports  )
+// 									{
 										
-									}
+										
+// 									}
 									
 								}
 							}
@@ -151,10 +155,7 @@ void Adresis::handleEvent(ADEvent * event)
 								{
 									emit requestShowReport(report);
 								}
-								else
-								{
-									
-								}
+								emit requestAddDataToModule(Logic::Reports, event->data());
 							}
 							break;
 						}
@@ -331,6 +332,7 @@ void Adresis::handleEvent(ADEvent * event)
 		/** ************************ C  L  I  E  N  T  E ************************** */
 		else
 		{
+			
 			if( event->action() == Logic::Find)
 			{
 				//CLiente 
@@ -338,6 +340,11 @@ void Adresis::handleEvent(ADEvent * event)
 				if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 				{
 					m_connector->sendToServer(event->toString());
+					
+				}
+				else
+				{
+					emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
 				}
 			}
 			else
@@ -350,6 +357,10 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							m_connector->sendToServer(event->toString());
 						}
+						else
+						{
+							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+						}
 					}
 					break;
 					case Logic::Reports:
@@ -357,6 +368,10 @@ void Adresis::handleEvent(ADEvent * event)
 						if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
 							m_connector->sendToServer(event->toString());
+						}
+						else
+						{
+							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
 						}
 					}
 					break;
@@ -374,6 +389,10 @@ void Adresis::handleEvent(ADEvent * event)
 							dDebug() << "YA LO ENVIEEE";
 							
 						}
+						else
+						{
+							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+						}
 						
 					}
 					break;
@@ -387,6 +406,10 @@ void Adresis::handleEvent(ADEvent * event)
 						else if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
 							m_connector->sendToServer(event->toString());
+						}
+						else
+						{
+							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
 						}
 					}
 					break;
@@ -439,6 +462,10 @@ void Adresis::handleEvent(ADEvent * event)
 								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
 									m_connector->sendToServer(event->toString());
+								}
+								else
+								{
+									emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
 								}
 							}
 							break;
@@ -616,6 +643,10 @@ void Adresis::handleEvent(ADEvent * event)
 								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
 									m_connector->sendToServer(event->toString());
+								}
+								else
+								{
+									emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
 								}
 							}
 							break;

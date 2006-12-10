@@ -176,6 +176,12 @@ QString ADEvent::toString() const
 								listE.appendChild( qvariant_cast<ADSpace *>( var )->toXml(doc) );
 							}
 							break;
+							case Logic::Reports:
+							{
+								dDebug() << "here";
+								listE.appendChild( qvariant_cast<ADReport *>( var )->toXml(doc) );
+							}
+							break;
 							case Logic::Cancellation:
 							{
 								listE.appendChild( qvariant_cast<ADCancellation *>( var )->toXml(doc) );

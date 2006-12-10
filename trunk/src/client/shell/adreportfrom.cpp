@@ -47,8 +47,9 @@ ADReportForm::ADReportForm(const QString & login, QWidget *parent):
 	grid->addWidget(new QLabel( tr("Fecha final")+":" ), 2, 1);
 	
 	m_beginDate = new DDatePicker(container);
+	m_beginDate->setToolTip("Seleccione la fecha minima");
 	m_endDate = new DDatePicker(container);
-	
+	m_beginDate->setToolTip("Seleccione la fecha maxima");
 	grid->addWidget(m_beginDate, 3,0);
 	grid->addWidget(m_endDate, 3,1);
 	
@@ -64,9 +65,11 @@ ADReportForm::~ ADReportForm()
 void ADReportForm::emitEvent()
 {
 	D_FUNCINFO;
-	ADReport report(m_user, ADReport::TypeConsult(m_type->currentIndex()), ADReport::TypeReport(m_consult->currentIndex()),m_beginDate->date(), m_endDate->date());
+	ADReport report(m_user, ADReport::TypeConsult(m_consult->currentIndex()), ADReport::TypeReport(m_type->currentIndex()),m_beginDate->date(), m_endDate->date());
 	Logic::Action action;
 	action = Logic::Add;
 	ADEvent event( ADEvent::Client, Logic::Reports, action, QVariant::fromValue(&report ));
 	emit sendEvent(&event);
+	
+	
 }

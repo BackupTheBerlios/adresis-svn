@@ -163,7 +163,7 @@ bool ADEventFactory::endElement( const QString& ns, const QString& localname, co
 	{
 		m_event->setData(m_data);
 	}
-	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve" || qname == "cancellation")
+	else if(qname == "user" || qname == "space"||qname == "audiovisual" || qname == "reserve" || qname == "cancellation" || qname == "report"  )
 	{
 		if(m_event->action() == Logic::Find)
 		{

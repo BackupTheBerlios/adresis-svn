@@ -25,15 +25,18 @@
 #include <QHeaderView>
 #include <QTimer>
 
+#include <ddebug.h>
+#include <dtreewidgetsearchline.h>
+
 #include "aduser.h"
 #include "adaudiovisual.h"
 #include "adspace.h"
 #include "adreserve.h"
-#include <dtreewidgetsearchline.h>
 #include "global.h"
-#include <ddebug.h>
 #include "adevent.h"
 #include "adcancellation.h"
+#include "adreport.h"
+
 
 ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	:QWidget(parent), m_pModule(module)
@@ -88,21 +91,22 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		break;
 		case Logic::Reports:
 		{
-			setWindowTitle ( "Reportes");
-			titles << tr("Fecha") << tr("Titulo");
+			setWindowTitle ( "Reportes" );
+			titles << tr("Creador") << tr("Creado") <<tr("Tipo") << tr("Consulta");
 		}
 		break;
 	}
 	
 	
-	m_pTree->setHeaderLabels ( titles );
+	m_pTree->setHeaderLabels ( titles );	
+	for(int i = 0; i < m_pTree->columnCount (); i++)
+	{
+		m_pTree->resizeColumnToContents ( i );
+	}
 	m_pTree->header()->show();
 	m_pSearch = new DTreeWidgetSearchLine(this, m_pTree);
 	search->addWidget( m_pSearch );
-	
-	
 	layout->addLayout(search);
-	
 	layout->addWidget(m_pTree);
 	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
@@ -190,12 +194,6 @@ void ADCModuleList::clean()
 void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 {
 	D_FUNCINFO << module;
-	
-	for(int i = 0; i < m_pTree->columnCount (); i++)
-	{
-		m_pTree->resizeColumnToContents ( i );
-	}
-	
 	if(module == m_pModule)
 	{
 		switch(module)
@@ -295,7 +293,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			case Logic::Spaces:
 			{
 				ADSpace *space = qVariantValue<ADSpace *>(data);
-				if( (space->codeSpace()) != "null" )	
+				if( (space->codeSpace()) != "null" )
 				{
 					QList<QString> strs;	
 					strs << space->codeSpace(); 
@@ -323,6 +321,19 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			break;
 			case Logic::Reports:
 			{
+				ADReport *report = qVariantValue<ADReport *>(data);
+				QList<QString> strs;
+				
+				
+				strs << report->creator() << report->created().toString(Qt::ISODate) << report->typeStr() << report->consultStr();
+				
+				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+				int count = 0;
+				foreach(QString str, strs)
+				{
+					item->setText(count, str);
+					count++;
+				}
 				
 			}
 			break;
@@ -347,6 +358,10 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			break;
 		}
 	}
+	for(int i = 0; i < m_pTree->columnCount (); i++)
+	{
+		m_pTree->resizeColumnToContents ( i );
+	}
 }
 
 void ADCModuleList::removeData(Logic::Module module, const QString & key )
@@ -362,6 +377,10 @@ void ADCModuleList::removeData(Logic::Module module, const QString & key )
 				break;
 			}
 			++it;
+		}
+		for(int i = 0; i < m_pTree->columnCount (); i++)
+		{
+			m_pTree->resizeColumnToContents ( i );
 		}
 	}
 }

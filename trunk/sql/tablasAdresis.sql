@@ -239,13 +239,15 @@ CREATE TABLE ADCancellation(
 );
 INSERT INTO ADCancellation VALUES ('10','hecfa','08:00','2006-12-03','Por que si');
 
-DROP TABLE ADREPORT;
+DROP TABLE ADREPORT CASCADE;
 CREATE TABLE ADReport(
 	creator varchar(20) REFERENCES ADUser(loginUser),
+	typeReport int,
+	consult int,
 	beginDate date,
 	endDate date,
 	created timestamp,
-	content text, 
+	content text,
 	PRIMARY KEY(creator, created)
 );
 

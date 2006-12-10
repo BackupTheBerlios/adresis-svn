@@ -271,8 +271,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					{
 						case Logic::Add:
 						{
-							
-							
 							ADUser *user = qvariant_cast<ADUser *>(event->data());
 							ADInsert insert("aduser", QStringList()<< "rol" << "nameuser" << "codeuser" << "loginuser" << "passwduser", QStringList() <<QString::number(user->rol() ) <<  SQLSTR(user->name()) <<  SQLSTR(user->code()) << SQLSTR(user->login()) << SQLSTR(user->passwd()));
 							SDBM->execQuery(&insert);
@@ -361,6 +359,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					}
 					break;
 				}
+				break;
 				case Logic::Spaces:
 				{
 					switch(event->action())
@@ -602,8 +601,10 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					}
 					break;
 				}
+				break;
 				case Logic::ReservesF:
 				{
+					
 					switch(event->action())
 					{
 						case Logic::Add:
@@ -748,6 +749,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 					}
 					break;
 				}
+				break;
 				case Logic::ReservesT:
 				{
 					switch(event->action())
@@ -894,16 +896,37 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						case Logic::Add:
 						{
 							ADReport *report = qvariant_cast<ADReport *>(event->data());
-							ADSelect infoReserves(QStringList() << "*", "aduser");
-							SResultSet rs = SDBM->execQuery(&infoReserves);
-							QTextDocument *content = ADReportGenerator::generateListReserves(rs);
 							
-							ADInsert insert("adreport", QStringList() << "creator" << "begindate" << "enddate" << "created" << "content", QStringList() <<
-									SQLSTR(report->creator() ) <<
-									SQLSTR(report->beginDate().toString(Qt::ISODate) ) <<
-									SQLSTR(report->endDate().toString(Qt::ISODate) )<<
-									SQLSTR(report->created().toString(Qt::ISODate) )<<
-									SQLSTR(content->toHtml()))  ;
+							//FIXME: AQUI ES DONDE SE DEBEN HACER LAS CONSULTAS PARA LLENAR EL REPORTE
+							QStringList headers;
+							SResultSet rs;
+							switch(report->consult())
+							{
+								case ADReport::TimeAudio:
+								{
+									dDebug() << "Consultando lista de tiempos de uso ayudas audiovisuales";
+								}
+								break;
+								case ADReport::TimeProfesor:
+								{
+									dDebug() << "Consultando lista de tiempos de reservas por profesor";
+								}
+								break;
+								case ADReport::Cancelations:
+								{
+									dDebug() << "Consultatando lista de cancelaciones";
+									headers << "id" << "usuario" << "Hora" << "Fecha" << "Razón";
+									
+									ADSelect consult(QStringList() << "*", "ADCancellation");
+									consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );
+									rs =  SDBM->execQuery(&consult);
+								}
+								break;
+							}
+							QTextDocument *content = ADReportGenerator::generateListReserves(rs, headers);
+							
+							ADInsert insert("adreport", QStringList() << "creator" << "typeReport" << "consult" << "begindate" << "enddate" << "created" << "content", QStringList() << SQLSTR(report->creator() ) << QString::number(report->type()) << QString::number(report->consult()) << SQLSTR(report->beginDate().toString(Qt::ISODate) ) << SQLSTR(report->endDate().toString(Qt::ISODate) ) << SQLSTR(report->created().toString(Qt::ISODate) ) << SQLSTR(content->toHtml()));
+							
 							SDBM->execQuery(&insert);
 							
 							report->setContent(content->toHtml());
@@ -916,10 +939,55 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								ADEvent event(ADEvent::Server, Logic::Reports, Logic::Add, QVariant::fromValue ( report ));
 								cnx->sendToClient(event.toString());
 							}
+						
+						}
+						break;
+						case Logic::Del:
+						{
+							ADDelete deleteReport("adreport");
+							QStringList keys = event->data().toString().split( '.' );
+							deleteReport.setWhere("creator = " + SQLSTR(keys[0]) + "and" + SQLSTR(keys[0]) );
+							SDBM->execQuery(&deleteReport);
+							if ( SDBM->lastError().isValid() )
+							{
+								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+							}
+							else
+							{
+								ADEvent e( ADEvent::Server, Logic::Reports, Logic::Del, event->data());
+								sendToAll(e.toString());
+							}
+						}
+						break;
+						case Logic::Find:
+						{
+							if( event->data().toString() == "all"  )
+							{
+								ADSelect infoReport(QStringList() << "*" , "adreport");
+								
+								SResultSet rs = SDBM->execQuery(&infoReport);
+								QList<QVariant> list;
+								
+								for(int pos =0; pos < rs.map()["creator"].count(); pos++)
+								{
+									ADReport *report = new  ADReport( rs.map()["creator"][pos],
+											ADReport::TypeConsult(rs.map()["consult"][pos].toInt()),
+											ADReport::TypeReport(rs.map()["typereport"][pos].toInt()),
+											QDate::fromString(rs.map()["begindate"][pos], Qt::ISODate),
+											QDate::fromString(rs.map()["enddate"][pos], Qt::ISODate),
+											QDateTime::fromString(rs.map()["created"][pos], Qt::ISODate));
+									
+									report->setContent(rs.map()["content"][pos]);
+									list.append(QVariant::fromValue(report));
+								}
+								ADEvent event(ADEvent::Server, Logic::Reports, Logic::Find, list);
+								cnx->sendToClient(event.toString());
+							}
 						}
 					}
 					break;
 				}
+				break;
 			}
 		}
 	}

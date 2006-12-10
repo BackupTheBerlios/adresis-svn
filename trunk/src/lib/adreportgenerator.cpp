@@ -142,7 +142,7 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 	return document;
 }*/
 
-QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs  )
+QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs, const QStringList & headers  )
 {
 	QTextDocument * document = new QTextDocument();
 	QTextCursor cursor( document );
@@ -150,28 +150,46 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs  )
 	format.setAlignment ( Qt::AlignHCenter );
 	cursor.setBlockFormat ( format );
 	
-	QTextCharFormat headerFromat = cursor.blockCharFormat ()  ;
-	headerFromat.setForeground ( Qt::red );
-	headerFromat.setFontWeight(QFont::Bold);
-	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación", headerFromat);
-	
+	QTextCharFormat headerFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::red );
+	headerFormat.setFontWeight(QFont::Bold);
+	cursor.insertText("Universidad del Valle", headerFormat);
+	cursor.insertText("\nEscuela de Ingeniería de Sistemas y Computación");
 	
 	QMap<QString, QStringList> map = rs.map();
 	QMap<QString, QStringList>::const_iterator it = map.begin();
 	
+	int columns = rs.map().count();
+	int rows = 1;
+	if(columns == 0)
+	{
+		columns = headers.count();
+	}
+	else
+	{
+		rows = map.begin().value().count();
+	}
+	
+	if(columns == 0)
+	{
+		dFatal() << "Parametros invalidos para generar el reporte";
+		return new QTextDocument;
+	}
+	
 	QTextTableFormat tableFormat;
 	tableFormat.setAlignment(Qt::AlignHCenter);
 	tableFormat.setBackground(QColor("#e0e0e0"));
-	tableFormat.setCellPadding(2);
+	tableFormat.setCellPadding(1);
 	tableFormat.setCellSpacing(4);
 	QVector<QTextLength> constraints;
-	for(int i = 0; i < map.count(); i++)
+
+	for(int i = 0; i < columns; i++)
 	{
-		constraints << QTextLength(QTextLength::PercentageLength, 100/map.count());
+		constraints << QTextLength(QTextLength::PercentageLength, 100/columns);
 	}
 	tableFormat.setColumnWidthConstraints(constraints);
-
-	QTextTable *table = cursor.insertTable( (map.begin()).value().count() , map.count(), tableFormat);
+	
+	QTextTable *table = cursor.insertTable( rows, columns, tableFormat);
 	QTextFrame *frame = cursor.currentFrame();
 	QTextFrameFormat frameFormat = frame->frameFormat();
 	frameFormat.setBorder(1);
@@ -191,6 +209,21 @@ QTextDocument *ADReportGenerator::generateListReserves( const SResultSet & rs  )
 		i++;
 		++it;
 	}
+	
+	cursor = table->rowEnd (  cursor );
+	cursor.movePosition ( QTextCursor::Down);
+	cursor.insertBlock ();
+	
+	format.setAlignment ( Qt::AlignRight );
+	cursor.setBlockFormat ( format );
+	
+	QTextCharFormat footFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::black );
+	headerFormat.setFontItalic ( true);
+	headerFormat.setFontPointSize ( 8 );
+	cursor.insertText(QString("\nReporte generado " + QDate::currentDate().toString(Qt::TextDate)), headerFormat);
+	
+	
 	return document;
 }
 
