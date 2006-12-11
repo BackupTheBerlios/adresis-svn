@@ -38,7 +38,6 @@
 #include <QVariant>
 #include "adresis.h"
 
-
 #include "aduserform.h"
 #include "adaudiovisualform.h"
 #include "adspaceform.h"
@@ -47,20 +46,18 @@
 #include "adcancellationform.h"
 #include "ddockwindow.h"
 
-
 #include "adeventhandler.h"
 #include "dtoolview.h"
 
 /**
  * @author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
+class ADMainWindow : public DTabbedMainWindow
 {
 	Q_OBJECT;
 	public:
 		ADMainWindow();
 		~ADMainWindow();
-		void handleEvent(ADEvent * event = 0);
 		
 	private:
 		Adresis *m_adresis;
@@ -81,6 +78,7 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		QAction *aboutAct;
 		QAction *conect;
 		QAction *configResourceAct;
+		QAction *consultSchedule;
 		
 		void setupActions();
 		void setupMenu();
@@ -102,6 +100,10 @@ class ADMainWindow : public DTabbedMainWindow, public ADAbstractEventHandler
 		void showForm(Logic::Module module,const QString & key);
 		void showElement(Logic::Module module,const QString & key);
 		void showReport(ADReport *);
+		void showConsultSchedule();
+		
+		void showHtml(const QString& html, const QString& title );
+		
 };
 
 #endif

@@ -70,6 +70,4 @@ void ADReportForm::emitEvent()
 	action = Logic::Add;
 	ADEvent event( ADEvent::Client, Logic::Reports, action, QVariant::fromValue(&report ));
 	emit sendEvent(&event);
-	
-	
 }

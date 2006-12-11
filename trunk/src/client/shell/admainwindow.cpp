@@ -43,6 +43,7 @@
 
 //adresisLib
 #include "cconnectiondialog.h"
+#include "adconsultschedule.h"
 #include "adreportgenerator.h"
 #include "adreportfrom.h"
 
@@ -79,6 +80,11 @@ ADMainWindow::ADMainWindow() : DTabbedMainWindow()
 
 void ADMainWindow::setupActions()
 {
+	consultSchedule = new QAction(tr("&Consultar Horarios"), this);
+	consultSchedule->setStatusTip(tr("Muestra un dialogo para hacer la consulta de los horarios"));
+	connect(consultSchedule, SIGNAL(triggered()), this, SLOT(showConsultSchedule()));
+
+	
 	exitAct = new QAction(tr("&Salir"), this);
 	exitAct->setShortcut(tr("Ctrl+Q"));
 	exitAct->setStatusTip(tr("Salir de la aplicacion"));
@@ -149,6 +155,7 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 void ADMainWindow::setupMenu()
 {
 	fileMenu = menuBar()->addMenu(tr("&Archivo"));
+	fileMenu->addAction(consultSchedule);
 	fileMenu->addAction(exitAct);
 	
 	netMenu = menuBar()->addMenu(tr("&Red"));
@@ -159,8 +166,8 @@ void ADMainWindow::setupMenu()
 	
 	menuBar()->addSeparator();
 	
-        helpMenu = menuBar()->addMenu(tr("&Ayuda"));
-        helpMenu->addAction(aboutAct);
+	helpMenu = menuBar()->addMenu(tr("&Ayuda"));
+	helpMenu->addAction(aboutAct);
 }
 
 ADMainWindow::~ADMainWindow()
@@ -426,85 +433,79 @@ void ADMainWindow::showElement(Logic::Module module,const QString & key)
 	}
 }
 
-/**
- * Realiza acciones para modificar la informacion que llega del servidor
- * Por ejemplo eliminar de la lista de usuarios si llega un evento de borrado del modulo Usuario
- */
-void ADMainWindow::handleEvent(ADEvent * event)
-{
-	if(event->source() == ADEvent::Client)
-	{
-		switch(event->module())
-		{
-			case Logic::Users:
-			{
-			}
-			break;
-			case Logic::Audiovisuals:
-			{
-			}
-			break;
-			case Logic::ReservesF:
-			{
-			}
-			break;
-			case Logic::ReservesT:
-			{
-			}
-			break;
-			case Logic::Spaces:
-			{
-			}
-			break;
-		}
-	}
-	else
-	{
-		switch(event->module())
-		{
-			case Logic::Users:
-			{
-			}
-			break;
-			case Logic::Audiovisuals:
-			{
-			}
-			break;
-			case Logic::ReservesF:
-			{
-			}
-			break;
-			case Logic::ReservesT:
-			{
-			}
-			break;
-			case Logic::Spaces:
-			{
-			}
-			break;
-		}
-	}
-}
-
 void ADMainWindow::showReport(ADReport * report)
 {
 	if(report)
 	{
-		QTextBrowser *browser = new QTextBrowser();
-		browser->setWindowTitle(tr("Report"));
-		addWidget(browser);
-		
+		QString html;
 		if(report->type() == ADReport::List)
 		{
-			browser->insertHtml ( report->content() );
-			
+			html = report->content();
 		}
 		else if(report->type() == ADReport::Histogram)
 		{
-			QString html = ADReportGenerator::generateGraphicReport( report->content() )->toHtml();
-			browser->insertHtml (html);
+			html = ADReportGenerator::generateGraphicReport( report->content() )->toHtml();
 		}
-		browser->show();
+		showHtml(html , "Report ");
+		
+		
 	}
 }
 
+void ADMainWindow::showConsultSchedule()
+{
+	ADConsultSchedule dialog(m_adresis->getList(Logic::Audiovisuals ), m_adresis->getList(Logic::Spaces ));
+	if( dialog.exec() != QDialog::Rejected )
+	{
+		QString key = dialog.currentElemet();
+		QList<QVariant> reservesF = m_adresis->getList( Logic::ReservesF );
+		//Encontramos todas las reservas de el elemento seleccionado
+		QList<ADReserve *> reservesOfElement;
+		bool ok = false;
+		foreach(QVariant rf, reservesF)
+		{
+			//primero las reservas fijas
+			ADReserve *rfR = qvariant_cast<ADReserve *>(rf);
+			if(rfR)
+			{
+				if( dialog.type() == "Ayuda audiovisual" )
+				{
+					ok = true;
+					dDebug() << rfR->idaudiovisual() + "=="+  key;
+					if(rfR->idaudiovisual() == key)
+					{
+						reservesOfElement << rfR;
+					}
+				}
+				else
+				{
+					if(rfR->idspace() == key)
+					{
+						reservesOfElement << rfR;
+					}	
+				}
+			}
+		}
+		QString title = "Horario semestral ";
+		if(ok)
+		{
+			title += "de la ayuda audiovisual ";
+		}
+		else
+		{
+			title += "del espacio";
+		}
+		QString html = ADReportGenerator::generateSchedule( reservesOfElement, title )->toHtml();
+		showHtml(html, title+ key );
+	}
+}
+
+
+void ADMainWindow::showHtml(const QString& html, const QString & title )
+{
+	QTextBrowser *browser = new QTextBrowser();
+	browser->setWindowTitle(title);
+	browser->insertHtml (html);
+	addWidget(browser);
+	
+}

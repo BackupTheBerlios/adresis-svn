@@ -128,7 +128,6 @@ QString ADEvent::toString() const
 					if(m_module == Logic::ReservesF || m_module == Logic::ReservesT)
 					{
 						dataE.appendChild( qvariant_cast<ADCancellation *>( m_data )->toXml(doc) );
-						
 					}
 					else
 					{

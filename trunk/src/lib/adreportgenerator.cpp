@@ -23,7 +23,6 @@
 #include <QObject>
 
 
-#include "adreserve.h"
 #include "ddebug.h"
 #include "histogram.h"
 #include <QTemporaryFile>
@@ -37,7 +36,7 @@ ADReportGenerator::~ADReportGenerator()
 {
 }
 
-QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVariant>& reserves  )
+QTextDocument * ADReportGenerator::generateSchedule(const QList<ADReserve*>& reserves, const QString & title)
 {
 	QTextDocument * document =new QTextDocument();
 	QTextCursor cursor( document );
@@ -49,8 +48,18 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 	QTextCharFormat headerFromat = cursor.blockCharFormat ()  ;
 	headerFromat.setForeground ( Qt::red );
 	headerFromat.setFontWeight(QFont::Bold);
-	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación", headerFromat);
-	
+	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación\n", headerFromat);
+	headerFromat.setForeground ( Qt::black );
+	if(!reserves.isEmpty())
+	{
+		ADReserve * reserve = reserves[0];
+		cursor.insertText( title, headerFromat);
+		
+	}
+	else
+	{
+		dFatal() << "no hay reservas de este recurso";
+	}
 	QTextTableFormat tableFormat;
 	tableFormat.setAlignment(Qt::AlignHCenter);
 	tableFormat.setBackground(QColor("#e0e0e0"));
@@ -80,7 +89,6 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 
 	QTextCharFormat highlightedFormat = boldFormat;
 	QTime time( 7, 0);
-
 	
 	for (int weekDay = 1; weekDay <= 8; ++weekDay) 
 	{
@@ -106,9 +114,8 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 	}
 	
 	
-	foreach(QVariant r,  reserves)
+	foreach(ADReserve *reserve,  reserves)
 	{
-		ADReserve *reserve = qvariant_cast<ADReserve *>(r);
 		if(reserve)
 		{
 			QDateTime begin = reserve->beginDateTime();
@@ -122,14 +129,12 @@ QTextDocument * ADReportGenerator::generateSchedule(int week, const QList<QVaria
 			{
 				days << QDate::longDayName(i);
 			}
-			if( begin.date().weekNumber( &year ) == week )
+			
+			for(int i = (((begin.time().hour()+(begin.time().minute()/60)-7)*2)+1);i < (((end.time().hour()+(end.time().minute()/60)-7)*2)+1); i++)
 			{
-				for(int i = (((begin.time().hour()+(begin.time().minute()/60)-7)*2)+1);i < (((end.time().hour()+(end.time().minute()/60)-7)*2)+1); i++)
-				{
-					QTextTableCell cell = table->cellAt(i , days.indexOf( reserve->day() )+1);
-					QTextCursor cellCursor = cell.firstCursorPosition();
-					cellCursor.insertText( "reservado" );
-				}
+				QTextTableCell cell = table->cellAt(i , days.indexOf( reserve->day() )+2);
+				QTextCursor cellCursor = cell.firstCursorPosition();
+				cellCursor.insertText( "reservado" );
 			}
 		}
 	}

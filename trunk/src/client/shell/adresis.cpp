@@ -56,13 +56,12 @@ void Adresis::handleEvent(ADEvent * event)
 	{
 		/** ***************************************** S  E  R  V  I  D  O  R ********************************************** */
 		
-		dDebug() << "Manejando ;" << event->toString();
+// 		dDebug() << "Manejando ;" << event->toString();
 		if(event->source() == ADEvent::Server)
 		{
 			
 			if(event->action() == Logic::Find)
 			{
-				dDebug() << event->module();
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
 				emit requestShowModule( Logic::Module(event->module()),event->data().toList() );
 			}
@@ -76,7 +75,6 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::Authenticate:
 							{
-								dDebug() << "Info";
 								m_user = qvariant_cast<ADUser *> (event->data());
 								
 								for(int i=0; i < 7; i++)
@@ -419,6 +417,7 @@ void Adresis::handleEvent(ADEvent * event)
 						}
 					}
 					break;
+					
 					case Logic::ReservesF:
 					{
 						switch(event->action())
@@ -512,7 +511,7 @@ void Adresis::handleEvent(ADEvent * event)
 										ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
 										if(space->typeSpace() == datos.at(3).toString())
 										{
-										nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
+											nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
 										}
 										}
 									}
@@ -640,7 +639,7 @@ void Adresis::handleEvent(ADEvent * event)
 									cancelForm->resize(200,300);
 									cancelForm->show();
 								
-										
+									
 								}
 							}
 							break;
@@ -997,4 +996,3 @@ ADUser *Adresis::user()
 {
 	return m_user;
 }
-
