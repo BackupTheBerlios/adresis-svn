@@ -342,6 +342,7 @@ void ADReserveFForm::emitEvent()
 			QDateTime beginDateTime = QDateTime( di, hi );
 			QDateTime endDateTime = QDateTime( df, hf );
 		
+			dDebug() << "FECHAS SON " << beginDateTime.toString("yyyy/MM/dd hh:mm") << " "<<endDateTime.toString("yyyy/MM/dd hh:mm");
 			
 			if(m_inserter)
 			{
@@ -380,7 +381,7 @@ void ADReserveFForm::emitEvent()
 				);
 				
 				
-				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Update , QVariant::fromValue(m_reserve));
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Update, QVariant::fromValue(m_reserve));
 				emit sendEvent(&insertReserve);	
 			}
 			it++;

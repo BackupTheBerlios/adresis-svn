@@ -179,7 +179,7 @@ CREATE TABLE ConfigurationSchooll(
 	endDateSem date		--DD/MM/YY
 );
 
-INSERT INTO configurationschooll VALUES ('09/01/2006','12/15/2006');
+INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 
 
 

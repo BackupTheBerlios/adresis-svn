@@ -82,7 +82,7 @@ void ADUserForm::setup()
 	layout->addWidget(edits, 1, 1);
 	m_inputs.insert(titles[1].toLower () , edits);
 	
-	rx.setPattern("\\w{8}");
+	rx.setPattern("\\w{4,8}");
 	v = new QRegExpValidator(rx, this);
 	validator = v;
 	
@@ -136,7 +136,7 @@ void ADUserForm::emitEvent()
 		}
 		ADEvent event( ADEvent::Client, Logic::Users, action, QVariant::fromValue(&user));
 		emit sendEvent(&event);
-		emit requestClose();
+		clearFields();
 	}
 	
 }
@@ -156,10 +156,18 @@ bool ADUserForm::valite()
 	
 	if(name.isEmpty() || code.isEmpty() || login.isEmpty() || pass.isEmpty() || (namev->validate(name, pos) != QValidator::Acceptable) || (codev->validate(code, pos) != QValidator::Acceptable) || (loginv->validate(login, pos) != QValidator::Acceptable) )
 	{
-		QMessageBox::information ( 0 , "ERROR", "Revise que alguno de los campos no sea incorrecto, por ejemplo:\nNo se encuentra en blanco algun campo\nEl codigo es de 7 numeros\nEl login es de 8 caracteres alfabeticos y no tiene espacios en blanco", 0);
+		QMessageBox::information ( 0 , "ERROR", "Revise que alguno de los campos no sea incorrecto, por ejemplo:\nNo se encuentra en blanco algun campo\nEl codigo es de 7 numeros\nEl login debe tener entre 4 y 8 caracteres alfabeticos y no tiene espacios en blanco", 0);
 		isValid=false;
 	}
 	
 	return isValid;
 }
 
+void ADUserForm::clearFields()
+{
+	static_cast<QLineEdit*>(m_inputs[tr("nombre")])->clear();
+	static_cast<QLineEdit*>(m_inputs[tr("codigo")])->clear();
+	static_cast<QLineEdit*>(m_inputs[tr("login")])->clear();
+	static_cast<QLineEdit*>(m_inputs[tr("password")])->clear();
+	m_permission->setCurrentIndex(0);
+}

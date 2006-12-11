@@ -29,6 +29,7 @@ class ADUserForm : public ADFormBase
 		bool m_inserter;
 		QRegExpValidator *v;
 		bool valite();
+		void clearFields();
 		
 	public slots:
 		void emitEvent();

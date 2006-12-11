@@ -181,3 +181,14 @@ bool ADAudiovisualForm::valite()
 	
 	return isValid;
 }
+
+void ADAudiovisualForm::clearFields()
+{
+	m_numberInventory->clear();
+	m_marks->clear();
+	m_state->setCurrentIndex(0);
+	m_typesC->setCurrentIndex( 0 );
+	m_codeSpace->setCurrentIndex( 0 );
+}
+
+

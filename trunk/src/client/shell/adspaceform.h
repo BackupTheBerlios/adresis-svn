@@ -64,6 +64,7 @@
 		QStringList takeListKeys(const QString &list);
 		void requestListTypes();
 		bool valite();
+		void clearFields();
 
 
 	public slots:

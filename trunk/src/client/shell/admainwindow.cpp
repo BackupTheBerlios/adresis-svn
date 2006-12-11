@@ -414,8 +414,10 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 		case Logic::Reports:
 		{
+
 			form = new ADReportForm(m_adresis->user()->login());
 			title = tr("Create Report");
+
 		}
 		break;
 	}

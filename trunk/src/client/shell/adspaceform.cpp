@@ -309,7 +309,7 @@ void ADSpaceForm::emitEvent()
 		ADEvent event( ADEvent::Client, Logic::Spaces, action, QVariant::fromValue(&space));
 		emit sendEvent(&event);
 		checkListsToSave();	/// Se hace la actualizacion de las ayudas, tanto libres como asignadas.
-		emit requestClose();
+		clearFields();
 	}
 }
 
@@ -332,5 +332,15 @@ bool ADSpaceForm::valite()
 	}
 	
 	return isValid;
+}
+
+
+void ADSpaceForm::clearFields()
+{
+	static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->clear();
+	static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->clear();
+	acC->setCheckState ( Qt::Unchecked );
+	tiposC->setCurrentIndex(0);
+	capacity->setValue ( 0 );
 }
 

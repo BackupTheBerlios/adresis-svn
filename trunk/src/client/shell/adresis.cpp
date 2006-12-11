@@ -140,12 +140,6 @@ void Adresis::handleEvent(ADEvent * event)
 										handleEvent(&dates);
 									}
 									
-									if(Logic::Module(i) == Logic::ReservesF)
-									{
-										ADEvent dates(ADEvent::Client, Logic::ReservesF, Logic::Dates , "");
-										handleEvent(&dates);
-									}
-									
 // 									if(Logic::Module(i) == Logic::Reports  )
 // 									{
 										
@@ -493,6 +487,7 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::Add:
 							{
+								dDebug() << "ADRESIS AGREGAR LA RESERVA";
 								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
 									m_connector->sendToServer(event->toString());

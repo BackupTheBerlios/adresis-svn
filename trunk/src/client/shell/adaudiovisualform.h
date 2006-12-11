@@ -50,6 +50,7 @@ class ADAudiovisualForm : public ADFormBase
 		void setup();
 		bool valite();
 		QRegExpValidator *v;
+		void clearFields();
 		
 	public slots:
 		void emitEvent();
