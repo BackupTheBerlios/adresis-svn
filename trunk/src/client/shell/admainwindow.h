@@ -57,7 +57,7 @@ class ADMainWindow : public DTabbedMainWindow
 	Q_OBJECT;
 	public:
 		ADMainWindow();
-		~ADMainWindow();
+		virtual ~ADMainWindow();
 		
 	private:
 		Adresis *m_adresis;

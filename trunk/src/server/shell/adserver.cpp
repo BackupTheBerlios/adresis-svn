@@ -303,7 +303,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						case Logic::Update:
 						{
 							ADUser *user = qvariant_cast<ADUser *>(event->data());
-							ADUpdate updateUser("aduser" ,QStringList()<< "nameuser" << "loginuser" << "passwduser", QStringList() << SQLSTR(user->name()) <<  SQLSTR(user->login()) << SQLSTR(user->passwd()) );
+							ADUpdate updateUser("aduser" ,QStringList()<< "rol" << "nameuser" << "loginuser" << "passwduser", QStringList() << QString::number(user->rol()) << SQLSTR(user->name()) <<  SQLSTR(user->login()) << SQLSTR(user->passwd()) );
 							updateUser.setWhere( "codeUser = " + SQLSTR(user->code()));
 							SDBM->execQuery(&updateUser);
 							if ( SDBM->lastError().isValid() )

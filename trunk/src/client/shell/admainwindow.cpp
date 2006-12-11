@@ -172,6 +172,8 @@ void ADMainWindow::setupMenu()
 
 ADMainWindow::~ADMainWindow()
 {
+	DEND;
+	delete m_adresis;
 }
 
 void ADMainWindow::setupToolbar()

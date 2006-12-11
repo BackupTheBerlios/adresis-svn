@@ -42,8 +42,6 @@ int main(int argc, char **argv)
 	
 	ADMainWindow mainWindow;
 	mainWindow.show();
-// 	mainWindow.showMaximized();
-	
 	return app.exec();
 }
 

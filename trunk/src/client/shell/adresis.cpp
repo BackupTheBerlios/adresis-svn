@@ -42,6 +42,52 @@ Adresis::Adresis(QObject * parent)
 
 Adresis::~Adresis()
 {
+	delete m_user;
+	
+	
+	QHash<Logic::Module, QList<QVariant> >::iterator it =  m_infoModules.begin();
+	while(it != m_infoModules.end())
+	{
+		foreach(QVariant v, it.value())
+		{
+			switch(it.key())
+			{
+				case Logic::Audiovisuals:
+				{
+					delete qvariant_cast<ADAudioVisual *>(v);
+				}
+				break;
+				case Logic::Reports:
+				{
+					delete qvariant_cast<ADReport *>(v);
+				}
+				break;
+				case Logic::ReservesF:
+				case Logic::ReservesT:	
+				{
+					delete qvariant_cast<ADReserve *>(v);
+				}
+				break;
+				case Logic::Spaces:
+				{
+					delete qvariant_cast<ADSpace *>(v);
+				}
+				break;
+				case Logic::Users:
+				{
+					delete qvariant_cast<ADUser *>(v);
+				}
+				break;
+				case Logic::Cancellation:
+				{
+					delete qvariant_cast<ADCancellation *>(v);
+				}
+				break;
+			}
+			
+		}
+		++it;
+	}
 	DEND;
 }
 
