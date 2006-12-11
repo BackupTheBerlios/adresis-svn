@@ -1,3 +1,4 @@
+
 #include "aduserform.h"
 #include <QLineEdit>
 #include <QLabel>
@@ -11,8 +12,6 @@
 #include <ddebug.h>
 
 #include "adevent.h"
-
-
 
 ADUserForm::ADUserForm(QWidget *parent)
 	: ADFormBase("<h1><b>Usuario</b><h1>" , parent)
@@ -102,19 +101,19 @@ void ADUserForm::setup()
 	layout->addWidget(edits, 3, 1);
 	m_inputs.insert(titles[3].toLower () , edits);
 	
-	
-	
 	static_cast<QLineEdit*>( m_inputs[tr("password")])->setEchoMode( QLineEdit::Password );
 	
-	m_permission  =new QComboBox(this);
+	m_permission  = new QComboBox(this);
 	QMap<QString, int> rols = ADUser::rols();
 	QMap<QString, int>::iterator it = rols.begin();
 	while(it != rols.end())
 	{
-		m_permission-> insertItem (it.value(), it.key());
+		m_permission->insertItem (it.value(), it.key());
 		++it;
 	}
-	vBLayout->addWidget(m_permission);
+	layout->addWidget(new QLabel(tr("Rol")), titles.count(), 0);
+	layout->addWidget(m_permission, titles.count(), 1);
+	
 	setForm(base);
 	connect(this, SIGNAL(requestDone()),this, SLOT(emitEvent()));
 }

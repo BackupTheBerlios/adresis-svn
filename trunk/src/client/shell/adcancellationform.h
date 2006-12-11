@@ -43,6 +43,7 @@
 		
 	signals:
 		void sendEvent( ADEvent *);	
+		void requestClose();
 		
 	private slots:
 		void valite();

@@ -1,6 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2006 by Jorge Cuadrado                                  *
- *   kuadrosxx@gmail.com                                                    *
+ *   kuadrosx@gmail.com                                                    *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,43 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef ADAUDIOVISUALFORM_H
-#define ADAUDIOVISUALFORM_H
-
-#include "adformbase.h"
-#include <QMap>
-#include "global.h"
-#include <QComboBox>
-#include <QPushButton>
-#include <QRegExpValidator>
-#include "adaudiovisual.h"
+#ifndef ADCONSULTSCHEDULE_H
+#define ADCONSULTSCHEDULE_H
 
 /**
- * @author Jorge Cuadrado <kuadrosxx@gmail.com>
+	@author Jorge Cuadrado <kuadrosxx@gmail.com>
 */
-class ADAudiovisualForm : public ADFormBase
+#include "adaudiovisual.h"
+#include "adspace.h"
+
+#include <dtabdialog.h>
+
+#include <QDialog>
+#include <QComboBox>
+
+
+class ADConsultSchedule : public DTabDialog
 {
 	Q_OBJECT
 	public:
-		ADAudiovisualForm(const QList<QVariant>& spaces, const QStringList& types, QWidget *parent = 0);
-		ADAudiovisualForm(const ADAudioVisual *audiovisual, const QList<QVariant>& spaces, const QStringList& types, QWidget *parent = 0);
-		~ADAudiovisualForm();
+		ADConsultSchedule( const QList<QVariant> &audiovisuals, const QList<QVariant> &spaces, QWidget *parent = 0 );
+		~ADConsultSchedule();
 		
+		QString type() const;
+		QString currentElemet() const;
 		
 	private:
-		QComboBox *m_state, *m_typesC, *m_codeSpace;
-		bool m_inserter;
-		QStringList tipos;
-		ADAudioVisual *adAudiovisual;
-		QLineEdit *m_marks, *m_numberInventory;
-		QStringList m_types, m_codesSpaces;
-		void setup();
-		bool valite();
-		QRegExpValidator *v;
+		QComboBox *m_type, *m_listAudiovisual, *m_listSpaces;
 		
-	public slots:
-		void emitEvent();
+	private slots:
+		void changeType(int type);
 };
 
 #endif
-

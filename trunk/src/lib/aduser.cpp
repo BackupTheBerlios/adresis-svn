@@ -127,9 +127,9 @@ QString  ADUser::passwd() const
 QMap<QString, int> ADUser::rols()
 {
 	QMap<QString, int> dict;
-	dict.insert(QObject::tr("Admin"), 0);
+	dict.insert(QObject::tr("Administrador"), 0);
 	dict.insert(QObject::tr("Profesor"), 1);
-	dict.insert(QObject::tr("Student"), 2);
+	dict.insert(QObject::tr("Estudiante"), 2);
 	return dict;
 }
 

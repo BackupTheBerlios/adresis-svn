@@ -14,7 +14,8 @@ HEADERS += adcfirstrundialog.h \
            adpermissionsview.h \
            ktthemeselector.h \
            ktpreferences.h \
-           adconsultschedule.h 
+           adconsultschedule.h \
+           adviewhtml.h 
 SOURCES += adcfirstrundialog.cpp \
            adcmodulelist.cpp \
            adconnectorbase.cpp \
@@ -24,7 +25,8 @@ SOURCES += adcfirstrundialog.cpp \
            adpermissionsview.cpp \
            ktthemeselector.cpp \
            ktpreferences.cpp \
-           adconsultschedule.cpp 
+           adconsultschedule.cpp \
+           adviewhtml.cpp 
 KDEV_QTVER = 4
 TARGET = adclib
 CONFIG += release \

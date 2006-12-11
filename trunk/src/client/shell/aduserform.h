@@ -1,3 +1,4 @@
+
 #ifndef ADUSERFORM_H
 #define ADUSERFORM_H
 
@@ -10,7 +11,7 @@
 #include "adpermissionsview.h"
 #include "aduser.h"
 /**
- * @author Charly Aguirre Manzano,033091
+ * @author Jorge Cuadrado
 */
 class ADUserForm : public ADFormBase
 {

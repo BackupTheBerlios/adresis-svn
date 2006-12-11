@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include<QGridLayout>
-#include "adreportfrom.h"
+#include "adreportform.h"
 #include "adreport.h"
 #include <ddebug.h>
 

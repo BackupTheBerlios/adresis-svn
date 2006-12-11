@@ -45,15 +45,15 @@ QTextDocument * ADReportGenerator::generateSchedule(const QList<ADReserve*>& res
 	format.setAlignment ( Qt::AlignHCenter );
 	cursor.setBlockFormat ( format );
 	
-	QTextCharFormat headerFromat = cursor.blockCharFormat ()  ;
-	headerFromat.setForeground ( Qt::red );
-	headerFromat.setFontWeight(QFont::Bold);
-	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación\n", headerFromat);
-	headerFromat.setForeground ( Qt::black );
+	QTextCharFormat headerFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::red );
+	headerFormat.setFontWeight(QFont::Bold);
+	cursor.insertText("Universidad del Valle\nEscuela de Ingeniería de Sistemas y Computación\n", headerFormat);
+	headerFormat.setForeground ( Qt::black );
 	if(!reserves.isEmpty())
 	{
 		ADReserve * reserve = reserves[0];
-		cursor.insertText( title, headerFromat);
+		cursor.insertText( title, headerFormat);
 		
 	}
 	else
@@ -134,10 +134,26 @@ QTextDocument * ADReportGenerator::generateSchedule(const QList<ADReserve*>& res
 			{
 				QTextTableCell cell = table->cellAt(i , days.indexOf( reserve->day() )+2);
 				QTextCursor cellCursor = cell.firstCursorPosition();
-				cellCursor.insertText( "reservado" );
+				cellCursor.insertText( " RESERVADO " );
 			}
 		}
 	}
+	
+	cursor = table->rowEnd(cursor);
+	for(int i = 0; i < table->rows(); i++)
+	{
+		cursor.movePosition ( QTextCursor::Down);
+	}
+	cursor.insertBlock ();
+	format.setAlignment ( Qt::AlignRight );
+	cursor.setBlockFormat ( format );
+	
+	QTextCharFormat footFormat = cursor.blockCharFormat ()  ;
+	headerFormat.setForeground ( Qt::black );
+	headerFormat.setFontItalic ( true);
+	headerFormat.setFontPointSize ( 8 );
+	cursor.insertText(QString("\nHorario generado " + QDate::currentDate().toString(Qt::TextDate)), headerFormat);
+	
 	return document;
 }
 
@@ -275,6 +291,11 @@ QTextDocument *ADReportGenerator::generateGraphicReport(const QString & strGraph
 		image.save(tmpFile, "PNG");
 	}
 	cursor.insertImage(tmpFile->fileName());
+	
+	
+	cursor.insertBlock ();
+	format.setAlignment ( Qt::AlignRight );
+	cursor.setBlockFormat ( format );
 	
 	cursor.movePosition ( QTextCursor::Down);
 	QTextCharFormat footFormat = cursor.blockCharFormat ()  ;

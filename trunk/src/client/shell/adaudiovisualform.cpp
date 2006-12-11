@@ -37,7 +37,10 @@ ADAudiovisualForm::ADAudiovisualForm(const QList<QVariant> & spaces, const QStri
 	foreach(QVariant s, spaces)
 	{
 		QString code = qvariant_cast<ADSpace *>(s)->codeSpace();
-		m_codesSpaces << code;
+		if(code != "null")
+		{
+			m_codesSpaces << code;
+		}
 	}
 	setup();
 }
@@ -79,8 +82,6 @@ ADAudiovisualForm::ADAudiovisualForm(const ADAudioVisual * audiovisual, const QL
 }
 
 
-
-
 void ADAudiovisualForm::setup()
 {
 	QWidget * base = new QWidget();
@@ -93,6 +94,7 @@ void ADAudiovisualForm::setup()
 	container->setLayout(layout);
 	m_typesC = new QComboBox;
 	m_typesC->addItems(m_types);
+	
 	
 	estados << tr("bueno") << tr("malo");
 	m_state = new QComboBox;
@@ -108,6 +110,7 @@ void ADAudiovisualForm::setup()
 	layout->addWidget(new QLabel(tr("Numero de inventario"),0,0));
 	layout->addWidget(m_numberInventory,0,1);
 	
+
 	layout->addWidget(new QLabel(tr("Tipo")),1,0);
 	m_typesC->setToolTip(tr("Escoja el tipo de ayuda audiovisual"));
 	layout->addWidget(m_typesC,1,1);
@@ -120,7 +123,7 @@ void ADAudiovisualForm::setup()
 	m_marks->setMaxLength(20);
 	layout->addWidget(new QLabel(tr("Marca")), 3, 0);
 	layout->addWidget(m_marks, 3,1);
-	m_marks->setToolTip(tr("Ingrese marca de la ayuda audiovisual"));
+	m_marks->setToolTip(tr("Ingrese la marca de la ayuda audiovisual"));
 	
 	m_codeSpace = new QComboBox();
 	layout->addWidget(new QLabel(tr("Asignar Espacio")),4,0);

@@ -39,13 +39,13 @@
 #include <QMessageBox>
 #include <QScrollArea>
 
-#include <QTextBrowser>
+#include "adviewhtml.h"
 
 //adresisLib
 #include "cconnectiondialog.h"
 #include "adconsultschedule.h"
 #include "adreportgenerator.h"
-#include "adreportfrom.h"
+#include "adreportform.h"
 
 
 ADMainWindow::ADMainWindow() : DTabbedMainWindow()
@@ -495,17 +495,16 @@ void ADMainWindow::showConsultSchedule()
 		{
 			title += "del espacio";
 		}
-		QString html = ADReportGenerator::generateSchedule( reservesOfElement, title )->toHtml();
-		showHtml(html, title+ key );
+		QString html = ADReportGenerator::generateSchedule( reservesOfElement, title+key )->toHtml();
+		showHtml(html, title + key );
 	}
 }
 
 
 void ADMainWindow::showHtml(const QString& html, const QString & title )
 {
-	QTextBrowser *browser = new QTextBrowser();
+	ADViewHtml *browser = new ADViewHtml();
 	browser->setWindowTitle(title);
-	browser->insertHtml (html);
+	browser->setHtml (html);
 	addWidget(browser);
-	
 }

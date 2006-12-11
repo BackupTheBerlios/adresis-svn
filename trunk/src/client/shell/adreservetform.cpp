@@ -282,7 +282,6 @@ void ADReserveTForm::setup()
 	
 	layout->addWidget(new QLabel(titles[4]),4,0);
 	areaTexto = new QTextEdit;
-	areaTexto->document()->setMaximumBlockCount(80);
 	layout->addWidget(areaTexto,4,1);
 	
 	setForm(base);
