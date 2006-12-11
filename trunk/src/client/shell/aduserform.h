@@ -3,6 +3,7 @@
 
 #include <QMap>
 #include <QComboBox>
+#include <QRegExpValidator>
 
 #include "adformbase.h"
 #include "global.h"
@@ -25,6 +26,8 @@ class ADUserForm : public ADFormBase
 		QMap<QString, QWidget*> m_inputs;
 		QComboBox *m_permission;
 		bool m_inserter;
+		QRegExpValidator *v;
+		bool valite();
 		
 	public slots:
 		void emitEvent();

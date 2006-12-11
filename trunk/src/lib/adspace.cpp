@@ -20,6 +20,7 @@
 #include "adspace.h"
 #include <ddebug.h>
 
+
 ADSpace::ADSpace() : ADObject()
 {
 	m_valid = false;
@@ -40,7 +41,6 @@ QDomElement ADSpace::toXml(QDomDocument &doc) const
 	QDomElement root = doc.createElement("space");
 	
 	QString cool;
-	dDebug() << "MY COOL_AIR_SPACE ==>> " << m_coolAirSpace;
 	if(m_coolAirSpace)
 	{
 		cool = "true";
@@ -49,7 +49,6 @@ QDomElement ADSpace::toXml(QDomDocument &doc) const
 	{
 		cool = "false";
 	}
-	dDebug() << "COOL QUEDO  ==>> " << m_coolAirSpace;
 	root.setAttribute( "codespace", m_codeSpace );
 	root.setAttribute( "typespace", m_typeSpace );
 	root.setAttribute( "coolairspace", cool);
@@ -67,7 +66,6 @@ void ADSpace::setValues(XMLResults)
 
 void ADSpace::setValues(const QXmlAttributes& values)
 {
-	dDebug() << "here adspace";
 	m_codeSpace = values.value("codespace");
 	m_typeSpace = values.value("typespace");
 	if(values.value("coolairspace") == "true")
@@ -78,9 +76,6 @@ void ADSpace::setValues(const QXmlAttributes& values)
 	{
 		m_coolAirSpace = false;
 	}
-	dDebug() << "*******************///////////////////";
-	dDebug() << "ADSpace::setValues(XMLResults values)";
-	dDebug() << "*******************///////////////////";
 	m_capacitySpace = values.value("capacityspace");
 	m_nameSpace = values.value("namespace");
 	m_valid = true;

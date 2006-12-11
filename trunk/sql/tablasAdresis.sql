@@ -11,23 +11,23 @@ DROP TABLE ADCancellation CASCADE;
 
 CREATE TABLE AdUser(
 	rol integer,
-	nameUser varchar(30),
+	nameUser varchar(50),
 	codeUser varchar(20) unique,
 	loginUser varchar(20) unique,
 	passwdUser varchar(20),
 	PRIMARY KEY(loginUser, codeUser)
 );
 
-INSERT INTO AdUser VALUES(0,'charly','0330911','charagmz','charagmz');
-INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
-INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
-INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
-INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
-INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
-INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
-INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
-INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
-INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
+INSERT INTO AdUser VALUES(0,'root','root','root','root');
+-- INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
+-- INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
+-- INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
+-- INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
+-- INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
+-- INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
+-- INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
+-- INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
+-- INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 
 
@@ -62,7 +62,7 @@ INSERT INTO AdRols VALUES(1,'gestionarTemporal',1);
 INSERT INTO AdRols VALUES(1,'consultarReservas',1);
 INSERT INTO AdRols VALUES(1,'gestionarReportes',0);
 INSERT INTO AdRols VALUES(1,'consultarReportes',1);
-INSERT INTO AdRols VALUES(1,'consultarCancelaciones',0);
+INSERT INTO AdRols VALUES(1,'consultarCancelaciones',1);
 
 INSERT INTO AdRols VALUES(2,'gestionarUsuario',0);
 INSERT INTO AdRols VALUES(2,'consultarUsuario',0);
@@ -75,7 +75,7 @@ INSERT INTO AdRols VALUES(2,'gestionarTemporal',0);
 INSERT INTO AdRols VALUES(2,'consultarReservas',1);
 INSERT INTO AdRols VALUES(2,'gestionarReportes',0);
 INSERT INTO AdRols VALUES(2,'consultarReportes',1);
-INSERT INTO AdRols VALUES(2,'consultarCancelaciones',0);
+INSERT INTO AdRols VALUES(2,'consultarCancelaciones',1);
 
 
 
@@ -88,17 +88,17 @@ CREATE TABLE AdSpace(
 	nameSpace varchar(30)
 );
 
-INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
-INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
-INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
-INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
-INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
-INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
-INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
-INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
-INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
-INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
-INSERT INTO AdSpace VALUES('null','null');
+-- INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
+-- INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
+-- INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
+-- INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
+-- INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
+-- INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
+-- INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
+-- INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
+-- INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
+-- INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
+-- INSERT INTO AdSpace VALUES('null','null');
 
 
 
@@ -117,23 +117,23 @@ INSERT INTO ADSpaceType VALUES('salon');
 CREATE TABLE AdAudioVisual(
 	typeAV varchar(20),
 	marksEquipmentAV varchar(20),
-	estateAV varchar(50) check(estateAv in ('bueno', 'malo')),
+	estateAV varchar(5) check(estateAv in ('bueno', 'malo')),
 	numberinventoryAV varchar(20) PRIMARY KEY,
 	codeSpace varchar(20) DEFAULT 'null' REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE SET DEFAULT
 	--Si la ayuda no tiene espacio es Null
 	--este codigo se utiliza para determinar que ayudas tiene un espacio
 );
 
-INSERT INTO AdAudioVisual VALUES('video beam','sony','bueno', '1122', '211');
-INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','bueno', '1133', '212');
-INSERT INTO AdAudioVisual VALUES('proyector acetatos','hp','bueno', '1144', '213');
-INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','malo', '1155', '214');
-INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1166', '211');
-INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1177', '216');
-INSERT INTO AdAudioVisual VALUES('reproductor VHS','sony','bueno', '1188', '217');
-INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
-INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', 'null');
-INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', 'null');
+-- INSERT INTO AdAudioVisual VALUES('video beam','sony','bueno', '1122', '211');
+-- INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','bueno', '1133', '212');
+-- INSERT INTO AdAudioVisual VALUES('proyector acetatos','hp','bueno', '1144', '213');
+-- INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','malo', '1155', '214');
+-- INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1166', '211');
+-- INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1177', '216');
+-- INSERT INTO AdAudioVisual VALUES('reproductor VHS','sony','bueno', '1188', '217');
+-- INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
+-- INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', 'null');
+-- INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', 'null');
 
 
 
@@ -151,9 +151,6 @@ INSERT INTO ADAudioVisualType VALUES('video beam');
 
 
 
-
-
-
 --////////////////////////////// NOTA IMPORTANTISIMA \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  nill.
 DROP SEQUENCE adreserve_idreserve_seq;
@@ -164,7 +161,7 @@ CREATE TABLE ADReserve
 	typeReserve varchar(20),
 	idUserReserve varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
 	idUserResponsable varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
-	idAudiovisual varchar(20), --FOREIGN KEY (idAudiovisual) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
+	idAudiovisual varchar(20), --REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
 	idSpace varchar(20),-- REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
 	beginHour time,
@@ -176,58 +173,14 @@ CREATE TABLE ADReserve
 	check(beginHour < endHour and beginDate <= endDate)
 );
 
--- DROP TRIGGER check_dates_Adreserve
--- CREATE TRIGGER check_dates_Adreserve
--- BEFORE INSERT OR UPDATE ON ADReserve
--- FOR EACH ROW
--- EXECUTE PROCEDURE
--- BEGIN
--- 	IF (select count(idreserve) from ADReserve where (idAudiovisual = NEW.idAudiovisual or idspace = NEW.idspace) and beginDate = NEW.beginDate and endDate = NEW.endDate and day = NEW.day and ( SELECT (TIME NEW.beginHour, TIME NEW.endHour) overlaps (beginHour, endHour))) != 0 THEN
--- 		RAISE EXCEPTION ''EL HORARIO DE ESTA RESERVA SE CRUZA CON UNA YA HECHA'';
--- 	END IF
--- END
-
-
-
-
-
-
--- CREATE OR REPLACE TRIGGER check_dates_Adreserve BEFORE INSERT OR UPDATE ON ADReserve FOR EACH ROW 
--- BEGIN 
--- IF  (select count(idreserve) from ADReserve where (idAudiovisual = NEW.idAudiovisual or idspace = NEW.idspace) and beginDate = NEW.beginDate and endDate = NEW.endDate and day = NEW.day and ( SELECT (TIME NEW.beginHour, TIME NEW.endHour) overlaps (beginHour, endHour))) != 0 THEN 
--- 	RAISE EXCEPTION 'EL HORARIO DE ESTA RESERVA SE CRUZA CON UNA YA HECHA';
--- END;
-
-	
---   -- Comprueba que se proporcionan nombre_empleado y salario
---   IF NEW.nombre_empleado ISNULL THEN 
---      RAISE EXCEPTION ''El nombre del empleado no puede ser un valor NULO''; 
---   END IF; 
--- 
---   IF NEW.salario ISNULL THEN 
---      RAISE EXCEPTION ''% no puede tener un salario NULO'', NEW.nombre_empleado; 
---   END IF;
--- 
---   -- Qui� trabaja gratis?
---   IF NEW.salario < 0 THEN 
---      RAISE EXCEPTION ''% no puede tener un salario negativo'', NEW.nombre_empleado; 
---   END IF;
--- 
---   -- Recuerda qui� y cu�do hizo el cambio
---   NEW.ultima_fecha   := ''now''; 
---   NEW.ultimo_usuario := current_user; 
---   RETURN NEW; 
--- END; 
-
--- INSERT INTO adreserve (typereserve,iduserReserve,iduserresponsable, idspace,day,beginhour,endhour,begindate,enddate,isactive,destinationreserve) VALUES ('Semestral', 'hecfa','hecfa', '211', 'lunes', '8:00','10:00','01/09/2006','15/12/2006','true','Metodos Numericos'); 
-
 
 CREATE TABLE ConfigurationSchooll(
 	beginDateSem date,	--DD/MM/YY
-	endDateSem date	--DD/MM/YY
+	endDateSem date		--DD/MM/YY
 );
 
 INSERT INTO configurationschooll VALUES ('09/01/2006','12/15/2006');
+
 
 
 CREATE TABLE ADCancellation(
@@ -237,7 +190,7 @@ CREATE TABLE ADCancellation(
 	dateCancellation date,
 	razonCancellation text
 );
-INSERT INTO ADCancellation VALUES ('10','hecfa','08:00','2006-12-03','Por que si');
+
 
 DROP TABLE ADREPORT CASCADE;
 CREATE TABLE ADReport(
@@ -250,25 +203,3 @@ CREATE TABLE ADReport(
 	content text,
 	PRIMARY KEY(creator, created)
 );
-
--- 	tipoRecurso varchar(20),
--- 	idUser varchar(10), FOREIGN KEY (idUser) REFERENCES AdUser(loginUser),
--- 	idSpace varchar(10), FOREIGN KEY (idSpace) REFERENCES AdSpace(codeSpace),
--- 	idScheduleSpace varchar(10), FOREIGN KEY (idScheduleSpace) REFERENCES AdScheduleSpace(idScheduleSpace), 
--- 	cancelationDetails varchar(50),
--- -- 	PRIMARY KEY(idUser, idSpace, idScheduleSpace)
--- );
-
-
-
-
-
-
-
-
-
-
-
-
-
-

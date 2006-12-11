@@ -208,7 +208,6 @@ QString ADEvent::toString() const
 							{
 								QDomElement root = doc.createElement("dates");
 								root.setAttribute( "date", qvariant_cast<QString>( var ) );
-								
 								listE.appendChild(root);
 								n++;
 							}
@@ -230,7 +229,6 @@ QString ADEvent::toString() const
 							{
 								QDomElement root = doc.createElement("types");
 								root.setAttribute( "type", qvariant_cast<QString>( var ) );
-								
 								listE.appendChild(root);
 							}
 							break;
@@ -238,7 +236,6 @@ QString ADEvent::toString() const
 							{
 								QDomElement root = doc.createElement("types");
 								root.setAttribute( "type", qvariant_cast<QString>( var ) );
-								
 								listE.appendChild(root);
 							}
 							break;

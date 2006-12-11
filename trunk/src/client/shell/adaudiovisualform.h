@@ -25,6 +25,7 @@
 #include "global.h"
 #include <QComboBox>
 #include <QPushButton>
+#include <QRegExpValidator>
 #include "adaudiovisual.h"
 
 /**
@@ -46,12 +47,12 @@ class ADAudiovisualForm : public ADFormBase
 		ADAudioVisual *adAudiovisual;
 		QLineEdit *m_marks, *m_numberInventory;
 		QStringList m_types, m_codesSpaces;
-		void fill();
 		void setup();
+		bool valite();
+		QRegExpValidator *v;
 		
 	public slots:
 		void emitEvent();
-		void insertListTypes(const QList<XMLResults>& results);
 };
 
 #endif

@@ -32,6 +32,7 @@ ADPermission::ADPermission(): ADObject()
 	m_permisos.insert("consultarReservas", "0");
 	m_permisos.insert("gestionarReportes", "0");
 	m_permisos.insert("consultarReportes", "0");
+	m_permisos.insert("consultarCancelaciones", "0");
 }
 
 
@@ -84,6 +85,8 @@ void ADPermission::setValues(const QXmlAttributes& atts)
 	m_permisos.insert("consultarReservas", atts.value("consultarReservas"));
 	m_permisos.insert("gestionarReportes", atts.value("gestionarReportes"));
 	m_permisos.insert("consultarReportes", atts.value("consultarReportes"));
+	m_permisos.insert("consultarCancelaciones", atts.value("consultarCancelaciones"));
+	
 }
 
 
@@ -204,11 +207,18 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 			m_value=true;
 		}
 	}
+	else if( module == Logic::Cancellation && (action == Logic::Find))
+	{
+		if(m_permisos.value("consultarCancelaciones") == "1")
+		{
+			m_value=true;
+		}
+	}
+	
 	else
 	{
 // 		dDebug() << "NO ENCONTRE BAJO EL PERMISO Modulo=> " << module << "   Accion => " << action;
 	}
-// 	dDebug() << "Termina " << m_value;
 	return m_value;
 }
 
@@ -228,14 +238,16 @@ void ADPermission::setValue(const QString & action, bool enable )
 QStringList ADPermission::actionList()
 {
 	return QStringList() << "gestionarUsuario"
-		 << "consultarUsuario"
-		 << "gestionarEspacio"
-		 << "consultarEspacio"
-		 << "gestionarAudiovisual"
-		 << "consultarAudiovisual"
-		 << "gestionarSemestral"
-		 << "gestionarTemporal"
-		 << "consultarReservas"
-		 << "gestionarReportes"
-		 << "consultarReportes";
+		<< "consultarUsuario"
+		<< "gestionarEspacio"
+		<< "consultarEspacio"
+		<< "gestionarAudiovisual"
+		<< "consultarAudiovisual"
+		<< "gestionarSemestral"
+		<< "gestionarTemporal"
+		<< "consultarReservas"
+		<< "gestionarReportes"
+		<< "consultarReportes"
+		<< "consultarCancelaciones";
+	
 }

@@ -46,6 +46,7 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		Adresis(QObject * parent=0);
 		~Adresis();
 		
+		
 	public slots:
 		void connectToHost( const QString & hostName, quint16 port);
 		void login(const QString &user, const QString &passwd);
@@ -53,7 +54,6 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void removeObject(Logic::Module module,const QString key );
 		QStringList getTypes( Logic::Module module );
 		QList<QVariant> getList( Logic::Module module );
-		
 		ADUser *user();
 		
 	private:
@@ -62,6 +62,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		QHash<Logic::Module, QList<QVariant> > m_infoModules;
 		QHash<Logic::Module, QList<QVariant> > m_listTypes;
 		QHash<QString, QList<QVariant> > m_dates;
+		void messagePermissions(Logic::Module, Logic::Action);
+		
 		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);

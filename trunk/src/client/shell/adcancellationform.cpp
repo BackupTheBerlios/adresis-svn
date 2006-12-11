@@ -20,9 +20,12 @@
 #include "adcancellationform.h"
 #include <QGridLayout> 
 
-ADCancellationForm::ADCancellationForm(QWidget * parent) :ADFormBase("<h1><b>Cancellations</b><h1>" , parent)
+
+ADCancellationForm::ADCancellationForm(QWidget * parent)
+	:ADFormBase("<h1><b>Cancellations</b><h1>" , parent)
+
 {
-	setWindowTitle("Ingrese el motivo de la cancelación");
+	setWindowTitle("Ingrese el motivo de la cancelaciï¿½");
 	setup();
 }
 

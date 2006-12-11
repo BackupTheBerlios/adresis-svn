@@ -20,9 +20,9 @@
 #include "adresis.h"
 
 #include <ddebug.h>
-
 #include <QTextBrowser>
 #include <QTextDocument>
+#include <doptionaldialog.h>
 
 #include "dconfig.h"
 #include "adcancellationform.h"
@@ -56,7 +56,6 @@ void Adresis::handleEvent(ADEvent * event)
 	{
 		/** ***************************************** S  E  R  V  I  D  O  R ********************************************** */
 		
-// 		dDebug() << "Manejando ;" << event->toString();
 		if(event->source() == ADEvent::Server)
 		{
 			
@@ -177,8 +176,6 @@ void Adresis::handleEvent(ADEvent * event)
 							break;
 							case Logic::Update:
 							{
-								dDebug() << "**************************************************";
-								dDebug() << "REGREESSEEE";
 								ADSpace *s = qvariant_cast<ADSpace *>(event->data()) ;
 								if(s)
 								{
@@ -200,7 +197,6 @@ void Adresis::handleEvent(ADEvent * event)
 							break;
 							case Logic::GetTypes:
 							{
-								dDebug() << "GGGEEETTT TTYYYPPPEEESS de SPACES";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
@@ -241,7 +237,6 @@ void Adresis::handleEvent(ADEvent * event)
 						
 							case Logic::GetTypes:
 							{
-								dDebug() << "GGGEEETTT TTYYYPPPEEESS de AUDIOVISUAL";
 								m_listTypes.insert( Logic::Module(event->module()), event->data().toList() );
 							}
 							break;
@@ -344,11 +339,10 @@ void Adresis::handleEvent(ADEvent * event)
 				if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 				{
 					m_connector->sendToServer(event->toString());
-					
 				}
 				else
 				{
-					emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+					messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 				}
 			}
 			else
@@ -359,11 +353,19 @@ void Adresis::handleEvent(ADEvent * event)
 					{
 						if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
+							if( Logic::Action(event->action()) == Logic::Del )
+							{
+								DOptionalDialog dialog(tr("usted realmente quiere borrar este usuario?"),tr("borrar?"), 0);
+								if( dialog.exec() == QDialog::Rejected )
+								{
+									return;
+								}
+							}
 							m_connector->sendToServer(event->toString());
 						}
 						else
 						{
-							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+							messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 						}
 					}
 					break;
@@ -371,11 +373,19 @@ void Adresis::handleEvent(ADEvent * event)
 					{
 						if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
+							if( Logic::Action(event->action()) == Logic::Del )
+							{
+								DOptionalDialog dialog(tr("usted realmente quiere borrar este reporte?"),tr("borrar?"), 0);
+								if( dialog.exec() == QDialog::Rejected )
+								{
+									return;
+								}
+							}
 							m_connector->sendToServer(event->toString());
 						}
 						else
 						{
-							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+							messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 						}
 					}
 					break;
@@ -387,15 +397,20 @@ void Adresis::handleEvent(ADEvent * event)
 						}
 						else if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
-							dDebug() << "m_connector->sendToServer(event->toString());";
-							m_connector->sendToServer(event->toString());
-							dDebug() << "**************************************************";
-							dDebug() << "YA LO ENVIEEE";
+							if( Logic::Action(event->action()) == Logic::Del )
+							{
+								DOptionalDialog dialog(tr("usted realmente quiere borrar este espacio?"),tr("borrar?"), 0);
+								if( dialog.exec() == QDialog::Rejected )
+								{
+									return;
+								}
+							}
 							
+							m_connector->sendToServer(event->toString());
 						}
 						else
 						{
-							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+							messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 						}
 						
 					}
@@ -409,11 +424,19 @@ void Adresis::handleEvent(ADEvent * event)
 						}
 						else if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 						{
+							if( Logic::Action(event->action()) == Logic::Del )
+							{
+								DOptionalDialog dialog(tr("usted realmente quiere borrar esta ayuda audiovisual?"),tr("borrar?"), 0);
+								if( dialog.exec() == QDialog::Rejected )
+								{
+									return;
+								}
+							}
 							m_connector->sendToServer(event->toString());
 						}
 						else
 						{
-							emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+							messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 						}
 					}
 					break;
@@ -424,41 +447,47 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::Add:
 							{
-								m_connector->sendToServer(event->toString());
+								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+								{
+									m_connector->sendToServer(event->toString());
+								}
 							}
 							break;
 							case Logic::Del:
 							{
-								ADCancellation *c = qvariant_cast<ADCancellation *>(event->data()) ;
-								
-								if(c)
+								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
-									dDebug() << "ME LLEGO LA CANCELACION PARA MANDARLA AL SERVER";
-									dDebug() << c->idReserveCancellation() << " " << c->idUserCancellation() << " "<< c->dateTimeCancellation().toString("dd/MM/yyyy hh:mm") << " "<< c->razonCancellation();
+									ADCancellation *c = qvariant_cast<ADCancellation *>(event->data()) ;
 									
-									
-									if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+									if(c)
 									{
-										event->setData( QVariant::fromValue(c));
-										m_connector->sendToServer(event->toString());
+										if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+										{
+											event->setData( QVariant::fromValue(c));
+											m_connector->sendToServer(event->toString());
+										}
 									}
-								}
-								else
-								{
-									
-	// 							QString idCancellation, QDateTime dateCancellation, QString razonCancellation
-									dDebug() << "VOY A INGRESAR EL MOTIVO DE CANCELACION";
-									QDateTime dt(QDate::currentDate(), QTime::currentTime());
-									ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
-									ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
-									cancelForm->setTitle( "Cancelacion");
-									cancelForm->setReadOnly( false );
-									connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
-
-									cancelForm->resize(200,300);
-									cancelForm->show();
-								
+									else
+									{
+										if( Logic::Action(event->action()) == Logic::Del )
+										{
+											DOptionalDialog dialog(tr("usted realmente quiere borrar esta reserva semestral?"),tr("borrar?"), 0);
+											if( dialog.exec() == QDialog::Rejected )
+											{
+											return;
+											}
+										}
 										
+										QDateTime dt(QDate::currentDate(), QTime::currentTime());
+										ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
+										ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
+										cancelForm->setTitle( "Cancelacion");
+										cancelForm->setReadOnly( false );
+										connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
+	
+										cancelForm->resize(200,300);
+										cancelForm->show();
+									}
 								}
 							}
 							break;
@@ -470,7 +499,7 @@ void Adresis::handleEvent(ADEvent * event)
 								}
 								else
 								{
-									emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+									messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 								}
 							}
 							break;
@@ -481,7 +510,6 @@ void Adresis::handleEvent(ADEvent * event)
 								types.insert(1, QVariant(m_listTypes.values(Logic::Audiovisuals)[0]));
 								
 								ADEvent listTypes(ADEvent::Client, Logic::ReservesF, Logic::GetTypes, types);
-								
 								(qvariant_cast<ADReserveFForm *>(event->data()))->receiveEvent(&listTypes);
 								
 							}
@@ -495,8 +523,6 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Info:
 							{
 								QList<QVariant> datos = (event->data()).toList();
-								dDebug() << "////////////////////////////////////////////////////////";
-								dDebug() << "LLego solicitud de " << (datos.at(0).toString());
 								
 								if((datos.at(0).toString()) == "nameResources")
 								{
@@ -505,28 +531,28 @@ void Adresis::handleEvent(ADEvent * event)
 									
 									if((datos.at(2).toString()) == "space") //NAMES SPACES
 									{
-										list = m_infoModules.values(Logic::Spaces)[0];
+										list = getList(Logic::Spaces);
 										for(int i=0; i < list.count();i++)
 										{
-										ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
-										if(space->typeSpace() == datos.at(3).toString())
-										{
-											nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
-										}
+											ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
+											if(space->typeSpace() == datos.at(3).toString())
+											{
+												nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
+											}
 										}
 									}
 									else // NAMES AUDIOVISUAL
 									{
-										list = m_infoModules.values(Logic::Audiovisuals)[0];
+										list = getList(Logic::Audiovisuals);
 										int n = 1;
 										for(int i=0; i < list.count();i++)
 										{
-										ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
-										if(audiovisual->type() == datos.at(3).toString())
-										{
-										nameResource.insert(audiovisual->numberInventory(), QVariant(audiovisual->type()+" "+QString::number(n)));
-										n++;
-										}
+											ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
+											if(audiovisual->type() == datos.at(3).toString())
+											{
+												nameResource.insert(audiovisual->numberInventory(),QVariant(audiovisual->type()+" "+ QString::number (n)));
+												n++;
+											}
 										}
 									}
 									QList<QVariant> listResult;
@@ -538,17 +564,16 @@ void Adresis::handleEvent(ADEvent * event)
 								
 								else if((datos.at(0).toString()) == "reservesResource")
 								{
-									dDebug() << "ADRESIS LLego ReserveResource";
 									QList<QVariant> listReserves;
-									QList<QVariant> list = m_infoModules.values(Logic::ReservesF)[0];
-									list << m_infoModules.values(Logic::ReservesT)[0];
+									QList<QVariant> list = getList(Logic::ReservesF);
+									list << getList(Logic::ReservesT);
 									
 									for(int i=0; i < list.count();i++)
 									{
 										ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
 										if(reserve->idspace() == datos.at(2).toString() || reserve->idaudiovisual() == datos.at(2).toString())
 										{
-										listReserves << list.at(i);
+											listReserves << list.at(i);
 										}
 									}
 									
@@ -575,9 +600,8 @@ void Adresis::handleEvent(ADEvent * event)
 								
 								else if((datos.at(0).toString()) == "loginUsers")
 								{
-									dDebug() << "ADRESIS LLego loginUsers";
 									QList<QVariant> listUsers;
-									QList<QVariant> list = m_infoModules.values(Logic::Users)[0];
+									QList<QVariant> list = getList(Logic::Users);
 									
 									for(int i=0; i < list.count();i++)
 									{
@@ -605,41 +629,48 @@ void Adresis::handleEvent(ADEvent * event)
 						{
 							case Logic::Add:
 							{
-								m_connector->sendToServer(event->toString());
+								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+								{
+									m_connector->sendToServer(event->toString());
+								}
 							}
 							break;
 							case Logic::Del:
 							{
-								ADCancellation *c = qvariant_cast<ADCancellation *>(event->data()) ;
-								
-								if(c)
+								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
-									dDebug() << "ME LLEGO LA CANCELACION PARA MANDARLA AL SERVER";
-									dDebug() << c->idReserveCancellation() << " " << c->idUserCancellation() << " "<< c->dateTimeCancellation().toString("dd/MM/yyyy hh:mm") << " "<< c->razonCancellation();
+									ADCancellation *c = qvariant_cast<ADCancellation *>(event->data()) ;
 									
-									
-									if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+									if(c)
 									{
-										event->setData( QVariant::fromValue(c));
-										m_connector->sendToServer(event->toString());
+										if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
+										{
+											event->setData( QVariant::fromValue(c));
+											m_connector->sendToServer(event->toString());
+										}
 									}
-								}
-								else
-								{
+									else
+									{
 									
-	// 							QString idCancellation, QDateTime dateCancellation, QString razonCancellation
-									dDebug() << "VOY A INGRESAR EL MOTIVO DE CANCELACION";
-									QDateTime dt(QDate::currentDate(), QTime::currentTime());
-									ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
-									ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
-									cancelForm->setTitle( "Cancelacion");
-									cancelForm->setReadOnly( false );
-									connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
-
-									cancelForm->resize(200,300);
-									cancelForm->show();
-								
-									
+										if( Logic::Action(event->action()) == Logic::Del )
+										{
+											DOptionalDialog dialog(tr("usted realmente quiere borrar esta reserva temporal?"),tr("borrar?"), 0);
+											if( dialog.exec() == QDialog::Rejected )
+											{
+											return;
+											}
+										}
+										
+										QDateTime dt(QDate::currentDate(), QTime::currentTime());
+										ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
+										ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
+										cancelForm->setTitle( "Cancelacion");
+										cancelForm->setReadOnly( false );
+										connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
+	
+										cancelForm->resize(200,300);
+										cancelForm->show();
+									}
 								}
 							}
 							break;
@@ -651,7 +682,7 @@ void Adresis::handleEvent(ADEvent * event)
 								}
 								else
 								{
-									emit requestShowMessage( Msg::Info , "No tienes permisos para realizar esta accion");
+									messagePermissions(Logic::Module(event->module()), Logic::Action(event->action()));
 								}
 							}
 							break;
@@ -669,9 +700,6 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Info:
 							{
 								QList<QVariant> datos = (event->data()).toList();
-								dDebug() << "////////////////////////////////////////////////////////";
-								dDebug() << "LLego solicitud de " << (datos.at(0).toString());
-								
 								if((datos.at(0).toString()) == "nameResources")
 								{
 									QMap<QString, QVariant> nameResource;
@@ -682,11 +710,11 @@ void Adresis::handleEvent(ADEvent * event)
 										list = getList( Logic::Spaces );
 										for(int i=0; i < list.count();i++)
 										{
-										ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
-										if(space->typeSpace() == datos.at(3).toString())
-										{
-										nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
-										}
+											ADSpace *space = qVariantValue<ADSpace *>(list.at(i));
+											if(space->typeSpace() == datos.at(3).toString())
+											{
+												nameResource.insert(space->codeSpace(), QVariant(space->nameSpace()));
+											}
 										}
 									}
 									else // NAMES AUDIOVISUAL
@@ -695,24 +723,22 @@ void Adresis::handleEvent(ADEvent * event)
 										int n = 1;
 										for(int i=0; i < list.count();i++)
 										{
-										ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
-										if(audiovisual->type() == datos.at(3).toString())
-										{
-										nameResource.insert(audiovisual->numberInventory(), QVariant(audiovisual->type()+" "+QString::number(n)));
-										n++;
-										}
+											ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(list.at(i));
+											if(audiovisual->type() == datos.at(3).toString())
+											{
+												nameResource.insert(audiovisual->numberInventory(),QVariant(audiovisual->type()+" "+QString::number (n) ));
+												n++;
+											}
 										}
 									}
 									QList<QVariant> listResult;
 									listResult << QVariant("nameResources") << QVariant(nameResource);
 									ADEvent names(ADEvent::Client, Logic::ReservesT, Logic::Info, listResult);
-									
 									(qvariant_cast<ADReserveTForm *>(datos.at(1)))->receiveEvent(&names);
 								}
 								
 								else if((datos.at(0).toString()) == "reservesResource")
 								{
-									dDebug() << "ADRESIS LLego ReserveResource";
 									QList<QVariant> listReserves;
 									QList<QVariant> list = getList(Logic::ReservesF);
 									list << getList(Logic::ReservesT);
@@ -722,7 +748,7 @@ void Adresis::handleEvent(ADEvent * event)
 										ADReserve *reserve = qVariantValue<ADReserve *>(list.at(i));
 										if(reserve->idspace() == datos.at(2).toString() || reserve->idaudiovisual() == datos.at(2).toString())
 										{
-										listReserves << list.at(i);
+											listReserves << list.at(i);
 										}
 									}
 									
@@ -737,15 +763,11 @@ void Adresis::handleEvent(ADEvent * event)
 									ADEvent infoUser (ADEvent::Client, Logic::ReservesF, Logic::Info, QList<QVariant>() << QVariant("infoUser") << QVariant(m_user->login()));
 									(qvariant_cast<ADReserveTForm *> (datos.at(1)))->receiveEvent(&infoUser);
 								}
-								
-								
 							}
 							break;
 						}
-					
 					}
 					break;
-					
 				}
 			}
 		}
@@ -991,6 +1013,71 @@ QList<QVariant> Adresis::getList( Logic::Module module )
 {
 	return m_infoModules[module];
 }
+
+void Adresis::messagePermissions(Logic::Module module, Logic::Action accion)
+{
+	QString a, m;
+	switch(accion)
+	{
+		case Logic::Find:
+		{
+			a="consultar";
+		}
+		break;
+		case Logic::Add:
+		{
+			a="añadir";
+		}
+		break;
+		case Logic::Del:
+		{
+			a="eliminar";
+		}
+		break;
+		case Logic::Update:
+		{
+			a="modificar";
+		}
+		break;
+	}
+	
+	switch(module)
+	{
+		case Logic::Users:
+		{
+			m="Usuarios";
+		}
+		break;
+		case Logic::Spaces:
+		{
+			m="Espacios";
+		}
+		break;
+		case Logic::Audiovisuals:
+		{
+			m="Ayudas audiovisuales";
+		}
+		break;
+		case Logic::ReservesF:
+		{
+			m="Reservas semestrales";
+			break;
+		}
+		case Logic::ReservesT:
+		{
+			m="Reservas temporales";
+		}
+		break;
+		case Logic::Cancellation:
+		{
+			m="Cancelaciones";
+		}
+		break;
+	}	
+		
+	emit requestShowMessage( Msg::Info , "No tiene permisos de "+ a +" sobre el modulo "+ m);
+}
+
 
 ADUser *Adresis::user()
 {

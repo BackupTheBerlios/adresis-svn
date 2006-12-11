@@ -158,9 +158,6 @@ void ADServer::authenticate(ADServerConnection *cnx, const QString &login, const
 	// TODO: Hacer una blacklist!
 	// TODO: encriptar el password
 	
-	dDebug() << "Request auth!";
-	dDebug() << "Login: " << login << " Password: " << password;
-	
 	if ( cnx->isLogged())
 	{
 		return;
@@ -260,7 +257,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 		SHOW_VAR(event->toString());
 		if(event->source() == ADEvent::Server)
 		{
-			
 		}
 		else
 		{
@@ -420,14 +416,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							
 							for(int pos =0; pos < rs.map()["numberinventoryav"].count(); pos++)
 							{
-								
 								ADAudioVisual *av = new ADAudioVisual(rs.map()["typeav"][pos], rs.map()["marksequipmentav"][pos], rs.map()["estateav"][pos], rs.map()["numberinventoryav"][pos], "null");
 								
 								ADEvent event(ADEvent::Server,Logic::Audiovisuals, Logic::Update, QVariant::fromValue (av));
 								sendToAll(event.toString());
 							}
-							
-							
+
 							ADDelete qdelete("adspace");
 							qdelete.setWhere( "codespace = " + SQLSTR(event->data().toString()));
 							SDBM->execQuery(&qdelete);
@@ -453,7 +447,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 							
 							SResultSet rs = SDBM->execQuery(&infoSpaces);
-// 							dDebug() << rs.toString();
 							QList<QVariant> listSpaces;
 							for(int pos =0; pos < rs.map()["codespace"].count(); pos++)
 							{	
@@ -467,10 +460,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 									ac=false;	
 								}
 								
-								
 								ADSpace *space = new ADSpace( rs.map()["codespace"][pos], rs.map()["typespace"][pos], ac, rs.map()["capacityspace"][pos], rs.map()["namespace"][pos]);
-								
-								
 								listSpaces.append(QVariant::fromValue (space));
 							}
 							
@@ -523,7 +513,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						break;
 						case Logic::Del:
 						{
-							dDebug() << "borrando";
 							ADDelete qdelete("adaudiovisual");
 							qdelete.setWhere( "numberinventoryav = " + SQLSTR(event->data().toString()));
 							SDBM->execQuery(&qdelete);
@@ -543,7 +532,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							event->toString();
 							
 							ADAudioVisual *audiovisual = qvariant_cast<ADAudioVisual *>(event->data());
-							
 							ADUpdate update("adaudiovisual", QStringList()<< "typeav" << "marksequipmentav" << "estateav" << "numberinventoryav" << "codespace", QStringList() <<  SQLSTR(audiovisual->type()) <<  SQLSTR(audiovisual->marksEquipment()) <<  SQLSTR(audiovisual->state()) << SQLSTR(audiovisual->numberInventory()) << SQLSTR(audiovisual->codeSpace()));
 							update.setWhere( "numberinventoryav = " + SQLSTR(audiovisual->numberInventory()));
 							SDBM->execQuery(&update);
@@ -570,7 +558,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							
 							SResultSet rs = SDBM->execQuery(&infoAv);
 							QList<QVariant> listAvs;
-							
 							
 							for(int pos =0; pos < rs.map()["numberinventoryav"].count(); pos++)
 							{
@@ -642,7 +629,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								SResultSet rs = SDBM->execQuery(&idReserve);
 								reserve->setIdReserve(rs.map()["idreserve"][0]);
 								
-								
 								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Add, QVariant::fromValue(reserve));
 								sendToAll(e.toString());
 							}
@@ -650,7 +636,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						break;
 						case Logic::Del:
 						{
-// 							idReserveCancellation(); idUserCancellation(); dateTimeCancellation(); razonCancellation();
 							ADCancellation *cancel = qvariant_cast <ADCancellation *>(event->data());
 							ADInsert insertCancel("adcancellation", QStringList()<< "idcancellation" << "idUserCancellation" << "hourCancellation" << "dateCancellation" << "razonCancellation", QStringList() << SQLSTR(cancel->idReserveCancellation()) << SQLSTR(cancel->idUserCancellation()) << SQLSTR(cancel->dateTimeCancellation().time().toString("hh:mm")) << SQLSTR(cancel->dateTimeCancellation().date().toString("yyyy-MM-dd")) << SQLSTR(cancel->razonCancellation()));
 						
@@ -666,7 +651,6 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								updateReserve.setWhere( "idreserve = " + SQLSTR(cancel->idReserveCancellation()));
 								
 								SResultSet rs = SDBM->execQuery(&updateReserve);
-								
 								
 								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Del,  QVariant::fromValue(cancel));
 								sendToAll(e.toString());
@@ -715,11 +699,8 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								{
 									active=false;	
 								}
-
-// idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
-// 								dDebug() << "RESERVAS SEMESTRALES BEGINDATE " << rs.map()["begindate"][pos];
-								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], QDateTime( QDate::fromString( rs.map()["begindate"][pos], "yyyy-MM-dd"), QTime::fromString( rs.map()["beginhour"][pos], "hh:mm:ss")) ,QDateTime( QDate::fromString( rs.map()["enddate"][pos],"yyyy-MM-dd"), QTime::fromString( rs.map()["endhour"][pos], "hh:mm:ss") ), active, rs.map()["destinationreserve"][pos]);
 								
+								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], QDateTime( QDate::fromString( rs.map()["begindate"][pos], "yyyy-MM-dd"), QTime::fromString( rs.map()["beginhour"][pos], "hh:mm:ss")) ,QDateTime( QDate::fromString( rs.map()["enddate"][pos],"yyyy-MM-dd"), QTime::fromString( rs.map()["endhour"][pos], "hh:mm:ss") ), active, rs.map()["destinationreserve"][pos]);
 								
 								listReservesF.append(QVariant::fromValue (avReserve));
 							}
@@ -734,15 +715,12 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							ADSelect infoDatesSemestral(QStringList() << "begindateSem" << "enddatesem", "ConfigurationSchooll");
 							
 							SResultSet rs = SDBM->execQuery(&infoDatesSemestral);
-							dDebug() << "YA COMSULTE " << rs.map()["begindatesem"].count() << " " << rs.map()["enddatesem"].count();
 							if(!rs.map().isEmpty())
 							{
 								QList<QVariant> listDatesSem;
 								listDatesSem.append(QVariant(rs.map()["begindatesem"][0]));
 								listDatesSem.append(QVariant(rs.map()["enddatesem"][0]));
 							
-								dDebug() << "YA CONSULTE";
-								
 								ADEvent event(ADEvent::Server,Logic::ReservesF, Logic::Dates, listDatesSem);
 								cnx->sendToClient(event.toString());
 							}
@@ -840,8 +818,16 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 									active=false;	
 								}
 
-// idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve 
-								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos], rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos], rs.map()["iduserresponsable"][pos], rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos], rs.map()["day"][pos], QDateTime( QDate::fromString( rs.map()["begindate"][pos],"yyyy-MM-dd" ), QTime::fromString( rs.map()["beginhour"][pos],"hh:mm:ss")),QDateTime( QDate::fromString( rs.map()["enddate"][pos], "yyyy-MM-dd"), QTime::fromString( rs.map()["endhour"][pos],"hh:mm:ss")), active, rs.map()["destinationreserve"][pos]);
+								ADReserve *avReserve = new ADReserve(rs.map()["idreserve"][pos],
+										rs.map()["typereserve"][pos], rs.map()["iduserreserve"][pos],
+										rs.map()["iduserresponsable"][pos],
+										rs.map()["idaudiovisual"][pos], rs.map()["idspace"][pos],
+										rs.map()["day"][pos], QDateTime( QDate::fromString(
+										rs.map()["begindate"][pos],"yyyy-MM-dd" ), QTime::fromString(
+										rs.map()["beginhour"][pos],"hh:mm:ss")),
+										QDateTime(QDate::fromString( rs.map()["enddate"][pos], "yyyy-MM-dd"),
+										QTime::fromString( rs.map()["endhour"][pos],"hh:mm:ss")),
+										active, rs.map()["destinationreserve"][pos]);
 								
 								
 								listReservesT.append(QVariant::fromValue (avReserve));
@@ -874,15 +860,15 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							for(int pos =0; pos < rs.map()["idcancellation"].count(); pos++)
 							{
 								ADCancellation *cancel = new ADCancellation(
-										rs.map()["idcancellation"][pos],
-								rs.map()["idusercancellation"][pos],
-								QDateTime( QDate::fromString( rs.map()["datecancellation"][pos],"yyyy-MM-dd" ), QTime::fromString( rs.map()["hourcancellation"][pos],"hh:mm:ss")),
-								rs.map()["razoncancellation"][pos]);
+									rs.map()["idcancellation"][pos],
+									rs.map()["idusercancellation"][pos],
+									QDateTime( QDate::fromString(rs.map()["datecancellation"][pos], "yyyy-MM-dd" ), 
+									QTime::fromString( rs.map()["hourcancellation"][pos],"hh:mm:ss")),
+									rs.map()["razoncancellation"][pos]);
 								
 								
 								listCancellations.append(QVariant::fromValue (cancel));
 							}
-							
 							ADEvent event(ADEvent::Server, Logic::Cancellation, Logic::Find, listCancellations);
 							cnx->sendToClient(event.toString());
 							
@@ -917,7 +903,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								case ADReport::Cancelations:
 								{
 									dDebug() << "Consultatando lista de cancelaciones";
-									headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razón";
+									headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razï¿½";
 									
 									ADSelect consult(QStringList() << "*", "ADCancellation");
 									consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );
@@ -1008,11 +994,11 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								for(int pos =0; pos < rs.map()["creator"].count(); pos++)
 								{
 									ADReport *report = new  ADReport( rs.map()["creator"][pos],
-											ADReport::TypeConsult(rs.map()["consult"][pos].toInt()),
-											ADReport::TypeReport(rs.map()["typereport"][pos].toInt()),
-											QDate::fromString(rs.map()["begindate"][pos], Qt::ISODate),
-											QDate::fromString(rs.map()["enddate"][pos], Qt::ISODate),
-											QDateTime::fromString(rs.map()["created"][pos], Qt::ISODate));
+										ADReport::TypeConsult(rs.map()["consult"][pos].toInt()),
+										ADReport::TypeReport(rs.map()["typereport"][pos].toInt()),
+										QDate::fromString(rs.map()["begindate"][pos], Qt::ISODate),
+										QDate::fromString(rs.map()["enddate"][pos],Qt::ISODate),
+										QDateTime::fromString(rs.map()["created"][pos], Qt::ISODate));
 									
 									report->setContent(rs.map()["content"][pos]);
 									list.append(QVariant::fromValue(report));

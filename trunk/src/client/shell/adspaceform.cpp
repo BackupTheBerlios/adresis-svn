@@ -30,12 +30,11 @@
 
 
 
-		ADSpaceForm::ADSpaceForm(const QStringList listSpaces, QList<QVariant>  listAudiovisual ,QWidget *parent)
+ADSpaceForm::ADSpaceForm(const QStringList listSpaces, QList<QVariant>  listAudiovisual ,QWidget *parent)
 	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
 {
 	m_inserter = true;
 	setup();
-	dDebug() << "EL tamño de la lita de ayudas audiovisuales es ==> " << listAudiovisual.count();
 	foreach(QVariant a, listAudiovisual)
 	{
 		ADAudioVisual ayuda = *(qvariant_cast<ADAudioVisual *>(a));
@@ -66,8 +65,6 @@ ADSpaceForm::ADSpaceForm(const ADSpace& space, QList<QVariant>  listAudiovisualL
 		m_listAudiovisualE << ayuda;
 	}
 	
-	dDebug() << "EL tamño de la lita de ayudas audiovisuales es ==> " << m_listAudiovisualL.count();
-	dDebug() << "EL tamño de la lita de ayudas audiovisuales Asignadas es ==> " << m_listAudiovisualE.count();
 	m_space = new ADSpace(space.codeSpace() ,space.typeSpace(), space.coolAirSpace(), space.capacitySpace(), space.nameSpace());
 	insertListAudiovisual();
 	fill();
@@ -90,7 +87,6 @@ void  ADSpaceForm::fill()
 	{
 		acC->setCheckState( Qt::Unchecked );
 	}
-	
 	static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->setText(m_space->codeSpace());
 	static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->setReadOnly(true);
 	tiposC->addItem( m_space->typeSpace() );
@@ -111,9 +107,6 @@ void ADSpaceForm::checkListsToSave()
 			QString code = static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text();
 			ADAudioVisual audiovisual( a.type(), a.marksEquipment(), a.state(), a.numberInventory(), code);
 			ADEvent event( ADEvent::Client, Logic::Audiovisuals, Logic::Update, QVariant::fromValue(&audiovisual));
-			
-			dDebug() << a.type()<<" "<< a.marksEquipment()<<" "<< a.state()<<" "<< a.numberInventory()<<" "<< code;
-			dDebug() << "EVENTO ANTES DE MANDARLO " << event.toString();
 			emit sendEvent( &event);
 		}
 	}
@@ -125,7 +118,6 @@ void ADSpaceForm::checkListsToSave()
 			QString code = "null";
 			ADAudioVisual audiovisual( a.type(), a.marksEquipment(), a.state(), a.numberInventory(), code);
 			ADEvent event( ADEvent::Client, Logic::Audiovisuals, Logic::Update, QVariant::fromValue(&audiovisual));
-			dDebug() << "EVENTO ANTES DE MANDARLO " << event.toString();
 			emit sendEvent( &event);
 		}
 	}
@@ -147,14 +139,11 @@ void ADSpaceForm::listChangedSF(const QString & lista, int pos)
 }
 
 
-
 void ADSpaceForm::insertListTypes(const QStringList typesSpaces)
 {
 	tiposC->addItems(typesSpaces);
 
 }
-
-
 
 
 void ADSpaceForm::insertListAudiovisual()
@@ -164,7 +153,6 @@ void ADSpaceForm::insertListAudiovisual()
 
 	if(m_inserter)
 	{
-		dDebug() << "m_inserter " << m_inserter;
 		QStringList lista = takeListKeys("libres");
 		listSelect->addListToLeft(lista);
 	}
@@ -172,7 +160,6 @@ void ADSpaceForm::insertListAudiovisual()
 
 	else
 	{
-		dDebug() << "m_inserter " << m_inserter << " m_list " << m_list;
 		QStringList lista = takeListKeys("libres");
 		listSelect->addListToLeft(lista);
 		
@@ -307,22 +294,18 @@ void ADSpaceForm::emitEvent()
 			       tiposC->currentText(),
 			       opcion, 
 			       QString::number(capacity->value()), 
-			       static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()
-			     );
+			       static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text());
 		
 		
 		Logic::Action action;
 		if(m_inserter)
 		{
-			dDebug() << "INSERTAR == INSERTAR";
 			action = Logic::Add;
 		}
 		else
 		{
-			dDebug() << "ACTUALIAR == ACTUALIZAR";
 			action = Logic::Update;
 		}
-		dDebug() << "OPCION ===>>> " << opcion;
 		ADEvent event( ADEvent::Client, Logic::Spaces, action, QVariant::fromValue(&space));
 		emit sendEvent(&event);
 		checkListsToSave();	/// Se hace la actualizacion de las ayudas, tanto libres como asignadas.
@@ -336,18 +319,16 @@ bool ADSpaceForm::valite()
 	bool isValid = true;
 	QString s = (static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text());
 	int pos=0;
-	if( s.isEmpty())// || (v->validate(s, pos) != QValidator::Acceptable))
+	if( s.isEmpty() || (v->validate(s, pos) != QValidator::Acceptable))
 	{
-		QMessageBox::information ( 0 , "ERROR", "El codigo de espacio es incorrecto\nEste debe ser no_Edificio(guion)no_Espacio donde\nno_Edificio = 3 digitos\nno_Espacio = 4 digitos", 0);
+		QMessageBox::information ( 0 , "ERROR", "El codigo de espacio es incorrecto\nEste debe ser no_Edificio(guion)no_Espacio,  donde\nno_Edificio = 3 digitos\nno_Espacio = 4 digitos", 0);
 		isValid=false;
 	}
 	
 	if( (static_cast<QLineEdit*>(m_inputs[tr("nombre de espacio")])->text()).isEmpty() )
 	{
-		
 		QMessageBox::information ( 0 , "ERROR", "El nombre del espacio\nes incorrecto", 0);
 		isValid=false;
-		
 	}
 	
 	return isValid;

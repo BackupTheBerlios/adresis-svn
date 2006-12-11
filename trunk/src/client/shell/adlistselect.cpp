@@ -26,8 +26,7 @@
 #include <QMessageBox>
 #include <QLabel>
 
-		ADListSelect::ADListSelect(QWidget *parent)
-	: QWidget(parent)
+ADListSelect::ADListSelect(QWidget *parent): QWidget(parent)
 {
 	QGridLayout *hBLayout = new QGridLayout;
 	QVBoxLayout *vBLayout = new QVBoxLayout;
@@ -82,8 +81,7 @@ void ADListSelect::addItemToLeft()
 
 }
 
-/// En el momento en que se ingresa una ayuda a la lista de las ayudas asignadas el va a revisar si el tipo de ayuda a asignar no esta en el espacio. 
-/// En el caso que no se encuentre Tomara la ayuda de la izquierda a la derecha. En caso contrario Sacara un mensaje de error.
+/// En el momento en que se ingresa una ayuda a la lista de las ayudas asignadas el va a revisar si el tipo de ayuda a asignar no esta en el espacio. En el caso que no se encuentre Tomara la ayuda de la izquierda a la derecha. En caso contrario Sacara un mensaje de error.
 void ADListSelect::addItemToRight()
 {
 	int pos = listWidgetLeft->currentRow();
@@ -105,31 +103,14 @@ void ADListSelect::addItemToRight()
 }
 
 
-/// Cuando se va aser una insercion a la lista de ayudas asignadas se necesita mirar que el tipo de la ayuda no este asignado ya, este metodo se encarga de verificar eso, que el tipo no se encuentre repetido en la lista de ayudas asignadas.
+/// Cuando se va a hacer una insercion a la lista de ayudas asignadas se necesita mirar que el tipo de la ayuda no este asignado ya, este metodo se encarga de verificar eso, que el tipo no se encuentre repetido en la lista de ayudas asignadas.
 bool ADListSelect::check(const QString& lista, const QListWidgetItem *item)
 {
 	bool find=false;
 	QStringList stringlist;
 
-// 	if(lista ==("derecha"))
-// 	{
 	stringlist = takeList("derecha");
 	find = stringlist.contains(item->text());
-	/*}
-	else
-	{
-	stringlist = takeList("izquierda");
-}
-	
-	*/
-// 	while(pos < stringlist.count() && !find)
-// 	{
-// 		if( (item->text()) ==(stringlist.at(pos)) )
-// 		{
-// 			find=true;
-// 		}
-// 		pos++;
-// 	}
 
 	return find;
 }
@@ -149,7 +130,7 @@ void ADListSelect::addListToRight(const QStringList &list)
 	listWidgetRight->addItems(list);
 }
 
-/// TakeList devulve una lista de strings de los tipos de ayudas que hay en una lista.
+/// TakeList devuelve una lista de strings de los tipos de ayudas que hay en una lista.
 QStringList ADListSelect::takeList(const QString &listWidget)
 {
 	QStringList lista;
@@ -168,11 +149,6 @@ QStringList ADListSelect::takeList(const QString &listWidget)
 		}
 	}
 
-
-// 	for(int i=0; i< lista.count();i++)
-// 	{
-// 		dDebug() << "El elemento " << lista.at(i);
-// 	}
 	return lista;
 }
 

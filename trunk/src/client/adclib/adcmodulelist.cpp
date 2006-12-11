@@ -51,7 +51,6 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	
 	search->addWidget(button);
 	m_pTree = new  QTreeWidget;
-// 	m_pTree = new DTreeListWidget;
 	QStringList titles;
 	switch(m_pModule)
 	{
@@ -69,16 +68,14 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 		break;
 		case Logic::ReservesF:
 		{
-// typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
-			
-			titles << tr("Id") << tr("Tipo Reserva") << tr("Usuario Reserva") << tr("Usuario Responsable ") << tr("Id Recurso") << tr("dia");
-			setWindowTitle ( "Reservas Semestrales");
+			titles<< tr("Id")<< tr("Tipo Reserva")<< tr("Usuario Reserva")<< tr("Usuario Responsable")<< tr("Id Recurso")<< tr("dia");
+			setWindowTitle ("Reservas Semestrales");
 		}
 		break;
 		case Logic::ReservesT:
 		{
-			titles << tr("Id") << tr("Tipo Reserva") << tr("Usuario Reserva") << tr("Usuario Responsable ") << tr("Id Recurso") << tr("dia");
-			setWindowTitle ( "Reservas Temporales");
+			titles<< tr("Id")<< tr("Tipo Reserva")<< tr("Usuario Reserva")<< tr("Usuario Responsable ")<< tr("Id Recurso")<< tr("dia");
+setWindowTitle ( "Reservas Temporales");
 		}
 		break;
 		case Logic::Spaces:
@@ -87,12 +84,19 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 			setWindowTitle ( "Espacios");
 		}
 		break;
+		case Logic::Cancellation:
+		{
+			titles << tr("id cancelacion") << tr("usuario") << tr("fecha") << tr("hora");
+			setWindowTitle ( "Cancelaciones");
+		}
+		break;
 		case Logic::Reports:
 		{
 			setWindowTitle ( "Reportes" );
 			titles << tr("Creador") << tr("Creado") <<tr("Tipo") << tr("Consulta");
 		}
 		break;
+		
 	}
 	
 	
@@ -164,14 +168,16 @@ void ADCModuleList::requestAction(int action)
 	{
 		case ADModuleButtonBar::Add:
 		{
-			emit requestShowForm(m_pModule);
+			if(m_pModule != Logic::Cancellation)
+			{
+				emit requestShowForm(m_pModule);
+			}
 		}
 		break;
 		case ADModuleButtonBar::Del:
 		{
-			//Confirmar si desea borrar
 			QTreeWidgetItem *current = m_pTree->currentItem();
-			if(current)
+			if(current && (m_pModule != Logic::Cancellation))
 			{
 				QString key = "";
 				if(m_pModule == Logic::Reports)
@@ -259,7 +265,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 				QString code =  audiovisual->codeSpace();
 				if(code == "null")
 				{
-					code = tr("No signado");
+					code = tr("No asignado");
 				}
 				
 				strs << audiovisual->numberInventory()  << audiovisual->state() <<  audiovisual->type() << audiovisual->marksEquipment() << code;
@@ -376,7 +382,6 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			break;
 			case Logic::Cancellation:
 			{
-// 				idReserveCancellation(); idUserCancellation(); dateTimeCancellation(); razonCancellation();
 				ADCancellation *cancel = qVariantValue<ADCancellation *>(data);
 				QList<QString> strs;
 				strs << cancel->idReserveCancellation();
