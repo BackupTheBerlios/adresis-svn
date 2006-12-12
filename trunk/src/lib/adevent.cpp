@@ -264,7 +264,7 @@ QString ADEvent::toString() const
 		}
 	}
 	root.appendChild(dataE);
-	SHOW_VAR(doc.toString());
+// 	SHOW_VAR(doc.toString());
 	return doc.toString();
 }
 

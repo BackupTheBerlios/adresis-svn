@@ -31,6 +31,7 @@ ADUserForm::ADUserForm(const ADUser * user, QWidget *parent) : ADFormBase("<h1><
 		static_cast<QLineEdit*>(m_inputs[tr("codigo")])->setText(user->code());
 		static_cast<QLineEdit*>(m_inputs[tr("codigo")])->setEnabled(false);
 		static_cast<QLineEdit*>(m_inputs[tr("login")])->setText(user->login());
+		static_cast<QLineEdit*>(m_inputs[tr("login")])->setEnabled(false);
 		m_permission->setCurrentIndex(user->rol());
 	}
 }
@@ -162,6 +163,7 @@ bool ADUserForm::valite()
 	
 	return isValid;
 }
+
 
 void ADUserForm::clearFields()
 {

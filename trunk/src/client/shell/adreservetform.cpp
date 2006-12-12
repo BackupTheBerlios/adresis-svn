@@ -298,11 +298,11 @@ void ADReserveTForm::emitEvent()
 	if(typeResourceC->currentText() == "Espacios")
 	{
 		space = nameResources.key(resourcesNameC->currentText());
-		audiovisual = "";
+		audiovisual = "null";
 	}
 	else
 	{
-		space = "";
+		space = "null";
 		audiovisual = nameResources.key(resourcesNameC->currentText());
 	}
 	

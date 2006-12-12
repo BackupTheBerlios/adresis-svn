@@ -167,8 +167,6 @@ bool ADPermission::value(Logic::Module module, Logic::Action action)
 		}
 	}
 	
-	//COLOCO SOLAMENTE LA ACCION RSEMESTRAL YA QUE SE TOMARA QUE CUANDO SE QUIERA HACER UNA ACCION COMO INSERTA O CUALQUIER OTRA COSA CON UNA RESERVA SEMESTRAL LO QUE SE TIENE QUE VERIFICAR ES SI SE TIENE PERMSOS SOBRE LAS RESERVAS TEMPORALES
-	
 	else if( module==Logic::ReservesF && (action == Logic::Add || action == Logic::Del || action == Logic::Update ))
 	{
 		if(m_permisos.value("gestionarSemestral") == "1")

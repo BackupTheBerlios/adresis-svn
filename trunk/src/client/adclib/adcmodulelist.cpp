@@ -26,6 +26,7 @@
 #include <QTimer>
 
 #include <ddebug.h>
+#include <qdebug.h>
 #include <dtreewidgetsearchline.h>
 
 #include "aduser.h"
@@ -38,9 +39,10 @@
 #include "adreport.h"
 
 
-ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
+ADCModuleList::ADCModuleList(ADUser * user, Logic::Module module, QWidget *parent )
 	:QWidget(parent), m_pModule(module)
 {
+	dDebug() << "ADCModuleList::ADCModuleList(ADUser * user, Logic::Module module, QWidget *parent )";
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	setLayout(layout);
 	QHBoxLayout *search = new QHBoxLayout;
@@ -48,6 +50,17 @@ ADCModuleList::ADCModuleList(Logic::Module module, QWidget *parent )
 	QToolButton *button = new QToolButton;
 	button->setIcon( QIcon(THEME_DIR+"/icons/clear_right.png"));
 	
+	m_user = user;
+	dDebug() << "HOLA HIIIIIIIJJJJUUUEEEPPPUUUTTTTTAAA";
+	Q_CHECK_PTR ( m_user);
+	if(m_user)
+	{
+		dDebug() << "ADCMODULELIST EL USUARIO EXISTE";
+	}
+	else
+	{
+		dDebug() << "ADCMODULELIST EL USUARIO NO EXISTE";
+	}
 	
 	search->addWidget(button);
 	m_pTree = new  QTreeWidget;
@@ -113,15 +126,32 @@ setWindowTitle ( "Reservas Temporales");
 	
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
 	ADModuleButtonBar *buttonBar;
+	
+	dDebug() << "****************//////////////////////////*****************************///////////////////////////////////";
+	dDebug() << "Modulo " << m_pModule <<"  Permiso => " << m_user->permission(m_pModule, Logic::Add) ; 
 	if(m_pModule == Logic::Reports)
 	{
-		buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Query );
+		if(m_user->permission(m_pModule, Logic::Add))
+		{
+			buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Query );
+			connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+		}
+		else if(m_user->permission(m_pModule, Logic::Find))
+		{
+			buttonBar = addButtonBar( ADModuleButtonBar::Query );
+			connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+		}
 	}
 	else
 	{
-		buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify );
+		
+		if(m_user->permission(m_pModule, Logic::Add))
+		{
+			buttonBar = addButtonBar( ADModuleButtonBar::Add | ADModuleButtonBar::Del | ADModuleButtonBar::Modify );
+			connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+		}
 	}
-	connect(buttonBar, SIGNAL(buttonClicked( int )), this, SLOT(requestAction(int)));
+	
 }
 
 ADCModuleList::~ADCModuleList()

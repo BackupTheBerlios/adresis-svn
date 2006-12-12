@@ -29,6 +29,7 @@
 #include "global.h"
 
 #include "adevent.h"
+#include "aduser.h"
 
 
 class DTreeWidgetSearchLine;
@@ -41,8 +42,7 @@ class ADCModuleList: public QWidget
 {
 	Q_OBJECT
 	public:
-		ADCModuleList(Logic::Module module,  QWidget *parent 
-		= 0 );
+		ADCModuleList(ADUser * user, Logic::Module module,  QWidget *parent = 0 );
 		virtual ~ADCModuleList();
 		virtual void fill( const QList<QVariant> );
 		virtual void clean();
@@ -50,6 +50,8 @@ class ADCModuleList: public QWidget
 		QBoxLayout *boxLayout();
 		void addItem(const QStringList &cols);
 		
+	private:
+		ADUser *m_user;
 	public slots:
 		void addData(Logic::Module module, const QVariant & data );
 		void removeData(Logic::Module module, const QString & key );

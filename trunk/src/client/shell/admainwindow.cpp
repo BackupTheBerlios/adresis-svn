@@ -132,7 +132,15 @@ void ADMainWindow::showModule(Logic::Module module,const QList<QVariant> &values
 {
 	D_FUNCINFO;
 	setUpdatesEnabled(false);
-	ADCModuleList *list = new ADCModuleList(module);
+	if(m_adresis->user())
+	{
+		dDebug() << "EL USUARIO EXISTE";
+	}
+	else
+	{
+		dDebug() << "EL USUARIO NO EXISTE";
+	}
+	ADCModuleList *list = new ADCModuleList(m_adresis->user(), module);
 	list->fill( values );
 	addToolView(list, Qt::LeftDockWidgetArea)->setDescription("titulo");
 	m_modules.insert( module, list );

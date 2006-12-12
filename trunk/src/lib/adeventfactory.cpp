@@ -208,7 +208,7 @@ bool ADEventFactory::fatalError ( const QXmlParseException & exception )
 
 ADEvent *ADEventFactory::build(const QString &document)
 {
-	dDebug() << "Builds from: " << document;
+// 	dDebug() << "Builds from: " << document;
 	
 	QXmlSimpleReader m_reader;
 	m_reader.setContentHandler(this);

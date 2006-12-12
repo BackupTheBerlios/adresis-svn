@@ -87,18 +87,7 @@ CREATE TABLE AdSpace(
 	capacitySpace integer,
 	nameSpace varchar(30)
 );
-
--- INSERT INTO AdSpace VALUES('211','salon', false, 36, 'salon ingenieria 1');
--- INSERT INTO AdSpace VALUES('212','salon', false, 36, 'salon ingenieria 2');
--- INSERT INTO AdSpace VALUES('213','salon', false, 36, 'salon ingenieria 3');
--- INSERT INTO AdSpace VALUES('214','auditorio', true, 120, 'auditorio ingenieria 1');
--- INSERT INTO AdSpace VALUES('215','auditorio', true, 120, 'auditorio ingenieria 2');
--- INSERT INTO AdSpace VALUES('216','auditorio', true, 120, 'auditorio ingenieria 3');
--- INSERT INTO AdSpace VALUES('217','salon', true, 26, 'salon ingenieria 4');
--- INSERT INTO AdSpace VALUES('218','salon', true, 26, 'salon ingenieria 5');
--- INSERT INTO AdSpace VALUES('219','salon', true, 26, 'salon ingenieria 6');
--- INSERT INTO AdSpace VALUES('220','salon', true, 26, 'salon ingenieria 7');
--- INSERT INTO AdSpace VALUES('null','null');
+INSERT INTO AdSpace VALUES('null','null');
 
 
 
@@ -124,16 +113,6 @@ CREATE TABLE AdAudioVisual(
 	--este codigo se utiliza para determinar que ayudas tiene un espacio
 );
 
--- INSERT INTO AdAudioVisual VALUES('video beam','sony','bueno', '1122', '211');
--- INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','bueno', '1133', '212');
--- INSERT INTO AdAudioVisual VALUES('proyector acetatos','hp','bueno', '1144', '213');
--- INSERT INTO AdAudioVisual VALUES('proyector acetatos','epson','malo', '1155', '214');
--- INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1166', '211');
--- INSERT INTO AdAudioVisual VALUES('cpu','dell','bueno', '1177', '216');
--- INSERT INTO AdAudioVisual VALUES('reproductor VHS','sony','bueno', '1188', '217');
--- INSERT INTO AdAudioVisual VALUES('televisor','sony','bueno', '1199', '217');
--- INSERT INTO AdAudioVisual VALUES('computador portatil','dell','bueno', '1100', 'null');
--- INSERT INTO AdAudioVisual VALUES('computador portatil','dell','malo', '1222', 'null');
 
 
 
@@ -152,17 +131,17 @@ INSERT INTO ADAudioVisualType VALUES('video beam');
 
 
 --////////////////////////////// NOTA IMPORTANTISIMA \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
--- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  nill.
+-- Las reservas se manejaran en una sola tabla en la cual, para diferencia si es una reserva de un espacio se colocara en idspace el idresource de el espacio y en idaudiovisual se colocara nill, en caso contrario,de que sea una reserva audiovisual, se colocara en idaudiovisual el idresource de la ayuda y en idSpace se colocara  "null".
 DROP SEQUENCE adreserve_idreserve_seq;
 CREATE SEQUENCE adReserve_idReserve_seq;
 CREATE TABLE ADReserve
 (
 	idReserve integer default nextval('adReserve_idReserve_seq') not null,
 	typeReserve varchar(20),
-	idUserReserve varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
-	idUserResponsable varchar(20),-- REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
-	idAudiovisual varchar(20), --REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE CASCADE,
-	idSpace varchar(20),-- REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE CASCADE,
+	idUserReserve varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
+	idUserResponsable varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
+	idAudiovisual varchar(20) DEFAULT 'Asignacion Pendiente' REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE SET DEFAULT,
+	idSpace varchar(20) DEFAULT 'Asignacion Pendiente' REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE SET DEFAULT,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
 	beginHour time,
 	endHour time, 
@@ -184,7 +163,7 @@ INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 
 
 CREATE TABLE ADCancellation(
-	idcancellation integer,
+	idcancellation integer REFERENCES ADReserve(idReserve) ON DELETE CASCADE ON UPDATE CASCADE,
 	idUserCancellation varchar(10) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE,
 	hourCancellation time,
 	dateCancellation date,
@@ -194,7 +173,7 @@ CREATE TABLE ADCancellation(
 
 DROP TABLE ADREPORT CASCADE;
 CREATE TABLE ADReport(
-	creator varchar(20) REFERENCES ADUser(loginUser),
+	creator varchar(20) REFERENCES ADUser(loginUser) ON UPDATE CASCADE ON DELETE CASCADE,
 	typeReport int,
 	consult int,
 	beginDate date,
