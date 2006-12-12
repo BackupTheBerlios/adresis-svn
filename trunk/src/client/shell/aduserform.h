@@ -8,7 +8,6 @@
 
 #include "adformbase.h"
 #include "global.h"
-#include "adpermissionsview.h"
 #include "aduser.h"
 /**
  * @author Jorge Cuadrado

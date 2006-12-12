@@ -47,7 +47,7 @@ ADSpaceForm::ADSpaceForm(const QStringList listSpaces, QList<QVariant>  listAudi
 
 
 ADSpaceForm::ADSpaceForm(const ADSpace& space, QList<QVariant>  listAudiovisualL, QList<QVariant>  listAudiovisualE, QWidget *parent) 
-	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
+	: ADFormBase("<h1><b>Espacios</b><h1>" , parent)
 {
 	D_FUNCINFO;
 	m_inserter = false;
@@ -352,7 +352,31 @@ void ADSpaceForm::clearFields()
 	listSelect->clearLists();
 }
 
-void ADSpaceForm::modifyContend( Logic::Module, const QList< QVariant >&)
+void ADSpaceForm::modifyContend( Logic::Module module, const QList< QVariant >& list )
 {
-	
+	if(Logic::Audiovisuals == module)
+	{
+		m_listAudiovisualL.clear();
+		foreach(QVariant v, list)
+		{
+			ADAudioVisual *audio = qvariant_cast<ADAudioVisual *>(v);
+			if(audio)
+			{
+				if(audio->codeSpace() == "null")
+				{
+					m_listAudiovisualL << *audio;
+				}
+				else if(audio->codeSpace() == static_cast<QLineEdit*>(m_inputs[tr("codigo espacio")])->text() && !m_inserter)
+				{
+					m_listAudiovisualE << *audio;
+				}
+			}
+		}
+		listSelect->clearLists();
+		QStringList lista = takeListKeys("libres");
+		listSelect->addListToLeft(lista);
+		
+		lista = takeListKeys("espacio");
+		listSelect->addListToRight(lista);
+	}
 }

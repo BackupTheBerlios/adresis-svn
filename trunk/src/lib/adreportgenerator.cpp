@@ -165,7 +165,7 @@ QTextDocument * ADReportGenerator::generateSchedule(const QList<ADReserve*>& res
 	return document;
 }*/
 
-QTextDocument *ADReportGenerator::generateListReport( const SResultSet & rs, const QStringList & headers  )
+QTextDocument *ADReportGenerator::generateListReport(const QDate & beginDate, const QDate & endDate, const SResultSet & rs, const QStringList & headers  )
 {
 	QTextDocument * document = new QTextDocument();
 	QTextCursor cursor( document );
@@ -177,8 +177,11 @@ QTextDocument *ADReportGenerator::generateListReport( const SResultSet & rs, con
 	headerFormat.setForeground ( Qt::red );
 	headerFormat.setFontWeight(QFont::Bold);
 	cursor.insertText("Universidad del Valle", headerFormat);
-	cursor.insertText("\nEscuela de Ingeniería de Sistemas y Computación");
 	
+	headerFormat.setForeground ( Qt::black );
+	headerFormat.setFontWeight( QFont::Normal );
+	cursor.insertText("\nEscuela de Ingeniería de Sistemas y Computación");
+	cursor.insertText("Los valores utilizados para este reporte fueron tomados entre el dia " +  beginDate.toString("dd/MM/yyyy") + " y " + endDate.toString("dd/MM/yyyy"), headerFormat );
 	QMap<QString, QStringList> map = rs.map();
 	QMap<QString, QStringList>::const_iterator it = map.begin();
 	
@@ -261,7 +264,7 @@ QTextDocument *ADReportGenerator::generateListReport( const SResultSet & rs, con
 	return document;
 }
 
-QTextDocument *ADReportGenerator::generateGraphicReport(const QString & strGraphic)
+QTextDocument *ADReportGenerator::generateGraphicReport(const QDate & beginDate, const QDate & endDate, const QString & strGraphic)
 {
 	QTextDocument * document = new QTextDocument();
 	QTextCursor cursor( document );
@@ -274,7 +277,7 @@ QTextDocument *ADReportGenerator::generateGraphicReport(const QString & strGraph
 	headerFormat.setFontWeight(QFont::Bold);
 	cursor.insertText("Universidad del Valle\n", headerFormat);
 	cursor.insertText("Escuela de Ingeniería de Sistemas y Computación\n");
-	
+	cursor.insertText("Los valores utilizados para este reporte fueron tomados entre el dia " +  beginDate.toString("dd/MM*yyyy") + " y " + endDate.toString("dd/MM*yyyy") );
 	HistogramFactory factory;
 	Histogram *histogram = factory.build(strGraphic);
 	
@@ -302,6 +305,9 @@ QTextDocument *ADReportGenerator::generateGraphicReport(const QString & strGraph
 	headerFormat.setForeground ( Qt::black );
 	headerFormat.setFontItalic ( true);
 	headerFormat.setFontPointSize ( 8 );
+	
+	
+	
 	cursor.insertText(QString("\nReporte generado " + QDate::currentDate().toString(Qt::TextDate)), headerFormat);
 	
 	return document;

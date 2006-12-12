@@ -1120,7 +1120,7 @@ void ADServer::addReport(ADServerConnection *cnx, ADReport *report)
 		
 	if(report->type() == ADReport::List)
 	{
-		QTextDocument *content = ADReportGenerator::generateListReport(rs, headers);
+		QTextDocument *content = ADReportGenerator::generateListReport(report->beginDate(), report->endDate(), rs, headers);
 		
 		
 		report->setContent(content->toHtml());

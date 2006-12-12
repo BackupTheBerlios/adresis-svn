@@ -24,6 +24,7 @@
 #include <QPrinter>
 #include <QFileDialog>
 #include <QPrintDialog>
+#include "global.h"
 
 ADViewHtml::ADViewHtml(QWidget *parent)
  : QFrame(parent)
@@ -35,16 +36,16 @@ ADViewHtml::ADViewHtml(QWidget *parent)
 	
 	m_panel = new QGroupBox(this);
 	QHBoxLayout *panelLayout = new QHBoxLayout(m_panel);
-	QPushButton *printButton = new QPushButton(tr("Imprimir"));
+	QPushButton *printButton = new QPushButton(QIcon(THEME_DIR+"/icons/printer.png"), tr("Imprimir"));
 	connect(printButton,SIGNAL(clicked()), this, SLOT(print()));
 	panelLayout->addWidget(printButton);
 	
-	QPushButton *pdfButton = new QPushButton(tr("Exportar a pdf"));
+	QPushButton *pdfButton = new QPushButton(QIcon(THEME_DIR+"/icons/exportpdf.png"), tr("Exportar a pdf"));
 	connect(pdfButton,SIGNAL(clicked()), this, SLOT(exportToPdf()));
 	panelLayout->addWidget(pdfButton);
 	
 	QPushButton *closeButton = new QPushButton(tr("Cerrar"));
-	connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+	connect(closeButton, SIGNAL(clicked()), this, SIGNAL(requestClose()));
 	m_panel->show();
 	panelLayout->addWidget(closeButton);
 	layout->addWidget(m_panel);

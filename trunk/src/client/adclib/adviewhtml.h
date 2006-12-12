@@ -43,6 +43,9 @@ class ADViewHtml : public QFrame
 	public slots:
 		void print();
 		void exportToPdf();
+	
+	signals:
+		void requestClose();
 };
 
 #endif

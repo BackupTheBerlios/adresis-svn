@@ -28,6 +28,7 @@
 #include <ktpreferences.h>
 
 
+#include "dbuttonbar.h"
 
 //QT
 #include <QLabel>
@@ -422,10 +423,8 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 		break;
 		case Logic::Reports:
 		{
-
 			form = new ADReportForm(m_adresis->user()->login());
-			title = tr("Create Report");
-
+			title = tr("Crear Reporte");
 		}
 		break;
 	}
@@ -456,7 +455,7 @@ void ADMainWindow::showReport(ADReport * report)
 		}
 		else if(report->type() == ADReport::Histogram)
 		{
-			html = ADReportGenerator::generateGraphicReport( report->content() )->toHtml();
+			html = ADReportGenerator::generateGraphicReport( report->beginDate(), report->endDate(), report->content() )->toHtml();
 		}
 		showHtml(html , "Report ");
 		
@@ -515,6 +514,7 @@ void ADMainWindow::showConsultSchedule()
 void ADMainWindow::showHtml(const QString& html, const QString & title )
 {
 	ADViewHtml *browser = new ADViewHtml();
+	connect(browser, SIGNAL(requestClose()), SLOT(closeTab()));
 	browser->setWindowTitle(title);
 	browser->setHtml (html);
 	addWidget(browser);

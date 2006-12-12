@@ -26,7 +26,7 @@
 #include <QCheckBox>
 #include <ddebug.h>
 #include <QMessageBox>
-
+#include "aduser.h"
 
 ADReserveFForm::ADReserveFForm(QWidget *parent)
 	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
@@ -416,8 +416,20 @@ bool ADReserveFForm::valite()
 }
 
 
-void ADReserveFForm::modifyContend( Logic::Module, const QList< QVariant >&)
+void ADReserveFForm::modifyContend( Logic::Module module, const QList< QVariant >& list)
 {
-	
+	if(module == Logic::Users)
+	{
+		QStringList logins;
+		loginC->clear();
+		foreach(QVariant v, list)
+		{
+			QString login = qvariant_cast<ADUser *>(v)->login();
+			
+			logins << login;
+			
+		}
+		loginC->addItems(logins);
+	}
 }
 

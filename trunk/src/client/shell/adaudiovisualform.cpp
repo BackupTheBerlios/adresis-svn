@@ -213,10 +213,12 @@ void ADAudiovisualForm::modifyContend( Logic::Module module, const QList< QVaria
 	if(Logic::Spaces == module)
 	{
 		m_codeSpace->clear();
+		
+		m_codesSpaces.clear();
+		m_codesSpaces <<tr("Ninguno");
+		
 		foreach(QVariant v, list)
 		{
-			m_codesSpaces.clear();
-			m_codesSpaces <<tr("Ninguno");
 			
 			QString code = qvariant_cast<ADSpace *>(v)->codeSpace();
 			if(code != "null")

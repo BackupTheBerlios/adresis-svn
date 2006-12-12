@@ -52,6 +52,9 @@ class D_IDEAL_EXPORT DMainWindow : public QMainWindow
 		~DMainWindow();
 		
 		DToolView *addToolView(QWidget *widget, Qt::DockWidgetArea area, int perspective = DefaultPerspective);
+		
+// 		void removeToolView();
+		
 		void moveToolView(DToolView *view, Qt::DockWidgetArea newPlace);
 		
 		void addToPerspective(QWidget *widget, int perspective = DefaultPerspective);

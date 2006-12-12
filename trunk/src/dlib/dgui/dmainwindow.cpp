@@ -279,6 +279,11 @@ DToolView *DMainWindow::addToolView(QWidget *widget, Qt::DockWidgetArea area, in
 	return toolView;
 }
 
+// void DMainWindow::removeToolView()
+// {
+// 	
+// }
+
 /**
  * Moves a tool view to newPlace
  * @param view 

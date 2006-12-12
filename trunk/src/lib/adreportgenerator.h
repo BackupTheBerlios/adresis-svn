@@ -40,8 +40,9 @@ class ADReportGenerator
 		 * @return 
 		 */
 		static QTextDocument *generateSchedule(const QList<ADReserve *>& reserves, const QString & title);
-		static QTextDocument *generateListReport( const SResultSet & rs , const QStringList & headers );
-		static QTextDocument *generateGraphicReport(const QString & strGraphic);
+		static QTextDocument *generateListReport(const QDate & beginDate, const QDate & endDate, const SResultSet & rs , const QStringList & headers );
+		static QTextDocument *generateGraphicReport(const QDate & beginDate, const QDate & endDate, const QString & strGraphic);
+		
 };
 
 #endif

@@ -49,7 +49,7 @@ class ADFormBase : public QFrame
 		void sendEvent( ADEvent *event );
 		
 	public slots:
-		void receiveEvent( ADEvent *event);
+		virtual void receiveEvent( ADEvent *event);
 		virtual void modifyContend(  Logic::Module, const QList< QVariant >&) = 0;
 		
 };
