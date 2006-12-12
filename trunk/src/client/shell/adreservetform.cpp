@@ -30,7 +30,7 @@
 
 
 ADReserveTForm::ADReserveTForm(QWidget *parent)
-	: ADFormBase("<h1><b>Audiovisuals</b><h1>" , parent)
+	: ADFormBase("<h1><b>Audiovisuales</b><h1>" , parent)
 {
 	m_inserter = true;
 	setup();
@@ -45,11 +45,11 @@ ADReserveTForm::ADReserveTForm( ADReserve * reserve, QList<QString> infoResource
 {
 	D_FUNCINFO;
 	m_inserter = false;
-	m_reserve = reserve;
+	m_reserve = new ADReserve(reserve->idReserve(), reserve->typeReserve(), reserve->iduserreserve(), reserve->iduserresponsable(), reserve->idaudiovisual(), reserve->idspace(), reserve->day(), reserve->beginDateTime(), reserve->endDateTime(), reserve->isActive(), reserve->destinationreserve());
 	setup();
 	
 	QString modulo, key;
-	if( m_reserve->idspace() != "" )
+	if( m_reserve->idspace() != "null" )
 	{
 		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
 		modulo = "space";
@@ -336,6 +336,7 @@ void ADReserveTForm::emitEvent()
 				
 				ADEvent insertReserve( ADEvent::Client, Logic::ReservesT, Logic::Add, QVariant::fromValue(m_reserve));
 				emit sendEvent(&insertReserve);	
+				clearFields();
 			}
 			
 			
@@ -357,10 +358,10 @@ void ADReserveTForm::emitEvent()
 					
 				ADEvent insertReserve( ADEvent::Client, Logic::ReservesT, Logic::Update , QVariant::fromValue(m_reserve));
 				emit sendEvent(&insertReserve);	
+				emit requestClose();
 			}
 			it++;
 		}
-		emit requestClose();
 	}	
 }
 
@@ -388,6 +389,17 @@ bool ADReserveTForm::valite()
 	
 	return isValid;
 }
+
+void ADReserveTForm::clearFields()
+{
+	typeResourceC->setCurrentIndex(0);
+	resourceC->clear ();
+	resourcesNameC->clear ();
+	loginC->clear ();
+	areaTexto->clear ();
+	horario->clear();
+}
+
 
 void ADReserveTForm::modifyContend( Logic::Module, const QList< QVariant >&)
 {

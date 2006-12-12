@@ -279,7 +279,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				foreach( QVariant variant, ayudas)
 				{
 					ADAudioVisual a = *(qvariant_cast<ADAudioVisual *>(variant));
-					if(a.codeSpace() == "null")
+					if(a.codeSpace() == "null" && a.numberInventory() != "null")
 					{
 						ayudasLibres << variant;
 					}
@@ -296,11 +296,11 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 				foreach( QVariant variant, ayudas)
 				{
 					ADAudioVisual a = *(qvariant_cast<ADAudioVisual *>(variant));
-					if(a.codeSpace() == "null")
+					if(a.codeSpace() == "null" && a.numberInventory() != "null")
 					{
 						ayudasLibres << variant;
 					}
-					else if(a.codeSpace() == key)
+					else if(a.codeSpace() == key && a.numberInventory() != "null")
 					{
 						ayudasAsignadas << variant;
 					}

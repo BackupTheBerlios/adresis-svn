@@ -334,8 +334,8 @@ void Adresis::handleEvent(ADEvent * event)
 							case Logic::Del:
 							{
 								ADCancellation *cancel = qvariant_cast<ADCancellation *>(event->data());
-								removeObject( Logic::ReservesF, cancel->idReserveCancellation());
-								emit requestRemoveDataToModule(Logic::ReservesF, cancel->idReserveCancellation());
+								removeObject( Logic::ReservesT, cancel->idReserveCancellation());
+								emit requestRemoveDataToModule(Logic::ReservesT, cancel->idReserveCancellation());
 								m_infoModules[Logic::Cancellation] << (event->data());
 								emit requestAddDataToModule(Logic::Cancellation , event->data());
 							}
@@ -520,7 +520,7 @@ void Adresis::handleEvent(ADEvent * event)
 										
 										QDateTime dt(QDate::currentDate(), QTime::currentTime());
 										ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
-										ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
+										ADCancellationForm *cancelForm = new ADCancellationForm(cancel);
 										cancelForm->setTitle( "Cancelacion");
 										cancelForm->setReadOnly( false );
 										connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));
@@ -703,7 +703,7 @@ void Adresis::handleEvent(ADEvent * event)
 										
 										QDateTime dt(QDate::currentDate(), QTime::currentTime());
 										ADCancellation * cancel = new ADCancellation(event->data().toString(), m_user->login(), dt,  "");
-										ADCancellationForm *cancelForm = new ADCancellationForm(cancel,0);
+										ADCancellationForm *cancelForm = new ADCancellationForm(cancel, false);
 										cancelForm->setTitle( "Cancelacion");
 										cancelForm->setReadOnly( false );
 										connect(cancelForm, SIGNAL(sendEvent(ADEvent *)), this, SLOT(handleEvent(ADEvent *)));

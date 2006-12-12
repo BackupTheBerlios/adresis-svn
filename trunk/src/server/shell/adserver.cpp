@@ -600,19 +600,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							event->toString();
 							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
 							
-							QString resourceField, resourceId;
-							if(reserve->idspace() != "")
-							{
-								resourceField = "idspace";
-								resourceId = reserve->idspace();
-							}
-							else if(reserve->idaudiovisual() != "")
-							{
-								resourceField = "idaudiovisual";
-								resourceId = reserve->idaudiovisual();
-							}
-							
-							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
+							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << "idspace" << "idaudiovisual" << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(reserve->idspace()) << SQLSTR(reserve->idaudiovisual()) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
 							SDBM->execQuery(&insert);
 							
 							if ( SDBM->lastError().isValid() )
@@ -622,7 +610,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							else
 							{
 								ADSelect idReserve(QStringList() << "idreserve", "adreserve");
-								QString condition = "typereserve = 'semestral' and isactive = true and " + resourceField+" = "+SQLSTR(resourceId)+" and day = "+ SQLSTR(reserve->day()) + " and beginhour = "+SQLSTR(reserve->beginDateTime().time().toString("hh:mm"))+ " and endHour = "+SQLSTR(reserve->endDateTime().time().toString("hh:mm"));
+								QString condition = "typereserve = 'semestral' and isactive = true and  idspace = "+SQLSTR(reserve->idspace())+" and idaudiovisual = "+ SQLSTR(reserve->idaudiovisual()) + " and day = "+ SQLSTR(reserve->day()) + " and beginhour = "+SQLSTR(reserve->beginDateTime().time().toString("hh:mm"))+ " and endHour = "+SQLSTR(reserve->endDateTime().time().toString("hh:mm"));
 								idReserve.setWhere(condition);
 								
 								SResultSet rs = SDBM->execQuery(&idReserve);
@@ -658,19 +646,31 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						break;
 						case Logic::Update:
 						{
+							/// En el caso que ya hallan hecho una cancelacion de la reserva no se debe de actualizar
 							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
-							ADUpdate updateReserve("adreserve",	QStringList() << "beginhour" << "endhour" << "begindate" << "enddate",  QStringList() << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")));
+							ADSelect infoCancellation(QStringList() << "idcancellation", "adcancellation");
+							infoCancellation.setWhere("idcancellation = "+SQLSTR(reserve->idReserve()));
 							
-							updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
-							SDBM->execQuery(&updateReserve);
-							if ( SDBM->lastError().isValid() )
+							SResultSet rs = SDBM->execQuery(&infoCancellation);
+							if(rs.map()["idcancellation"].count() < 1)
 							{
-								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+								ADUpdate updateReserve("adreserve", QStringList() << "day" <<"beginhour" << "endhour" << "begindate" << "enddate" << "destinationreserve",  QStringList() << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->destinationreserve()));
+								
+								updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
+								SDBM->execQuery(&updateReserve);
+								if ( SDBM->lastError().isValid() )
+								{
+									cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+								}
+								else
+								{
+									ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Update, event->data());
+									sendToAll(e.toString());
+								}
 							}
 							else
 							{
-								ADEvent e( ADEvent::Server, Logic::ReservesF, Logic::Update, event->data());
-								sendToAll(e.toString());
+								cnx->sendToClient( "No se puede actualizar una reserva que ha sido eliminada anteriormente");
 							}
 						}
 						break;
@@ -738,24 +738,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							event->toString();
 							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
 							
-							QString resourceField, resourceId;
-							if(reserve->idspace() != "")
-							{
-								resourceField = "idspace";
-								resourceId = reserve->idspace();
-							}
-							else if(reserve->idaudiovisual() != "")
-							{
-								resourceField = "idaudiovisual";
-								resourceId = reserve->idaudiovisual();
-							}
-							QString idSpace = reserve->idspace();
-							if( idSpace.isEmpty() )
-							{
-								idSpace = "null";
-							}
-							
-							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
+							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << "idspace" << "idaudiovisual" << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(reserve->idspace()) << SQLSTR(reserve->idaudiovisual()) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
 							SDBM->execQuery(&insert);
 							
 							if ( SDBM->lastError().isValid() )
@@ -765,7 +748,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							else
 							{
 								ADSelect idReserve(QStringList() << "idreserve", "adreserve");
-								QString condition = "typereserve = 'temporal' and isactive = true and " + resourceField+" = "+SQLSTR(resourceId)+" and day = "+ SQLSTR(reserve->day()) + " and beginhour = "+SQLSTR(reserve->beginDateTime().time().toString("hh:mm"))+ " and endHour = "+SQLSTR(reserve->endDateTime().time().toString("hh:mm"));
+								QString condition = "typereserve = 'temporal' and isactive = true and  idspace = "+SQLSTR(reserve->idspace())+" and idaudiovisual = "+ SQLSTR(reserve->idaudiovisual()) + " and day = "+ SQLSTR(reserve->day()) + " and beginhour = "+ SQLSTR(reserve->beginDateTime().time().toString("hh:mm"))+ " and endHour = "+SQLSTR(reserve->endDateTime().time().toString("hh:mm"));
 								idReserve.setWhere(condition);
 								
 								SResultSet rs = SDBM->execQuery(&idReserve);
@@ -777,22 +760,56 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 							}
 						}
 						break;
-						
-						case Logic::Update:
+						case Logic::Del:
 						{
-							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
-							ADUpdate updateReserve("adreserve",	QStringList() << "beginhour" << "endhour" << "begindate" << "enddate",  QStringList() << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString( "yyyy-MM-dd")));
+							ADCancellation *cancel = qvariant_cast <ADCancellation *>(event->data());
+							ADInsert insertCancel("adcancellation", QStringList()<< "idcancellation" << "idUserCancellation" << "hourCancellation" << "dateCancellation" << "razonCancellation", QStringList() << SQLSTR(cancel->idReserveCancellation()) << SQLSTR(cancel->idUserCancellation()) << SQLSTR(cancel->dateTimeCancellation().time().toString("hh:mm")) << SQLSTR(cancel->dateTimeCancellation().date().toString("yyyy-MM-dd")) << SQLSTR(cancel->razonCancellation()));
+						
+							SDBM->execQuery(&insertCancel);
 							
-							updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
-							SDBM->execQuery(&updateReserve);
 							if ( SDBM->lastError().isValid() )
 							{
 								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
 							}
 							else
 							{
-								ADEvent e( ADEvent::Server, Logic::ReservesT, Logic::Update, event->data());
+								ADUpdate updateReserve("adreserve", QStringList() << "isactive",  QStringList() << SQLSTR("false"));
+								updateReserve.setWhere( "idreserve = " + SQLSTR(cancel->idReserveCancellation()));
+								
+								SResultSet rs = SDBM->execQuery(&updateReserve);
+								
+								ADEvent e( ADEvent::Server, Logic::ReservesT, Logic::Del,  QVariant::fromValue(cancel));
 								sendToAll(e.toString());
+							}
+						}
+						break;
+						case Logic::Update:
+						{
+							/// En el caso que ya hallan hecho una cancelacion de la reserva no se debe de actualizar
+							ADReserve *reserve = qvariant_cast<ADReserve *>(event->data());
+							ADSelect infoCancellation(QStringList() << "idcancellation", "adcancellation");
+							infoCancellation.setWhere("idcancellation = "+SQLSTR(reserve->idReserve()));
+							
+							SResultSet rs = SDBM->execQuery(&infoCancellation);
+							if(rs.map()["idcancellation"].count() < 1)
+							{
+								ADUpdate updateReserve("adreserve", QStringList() << "day" <<"beginhour" << "endhour" << "begindate" << "enddate" << "destinationreserve",  QStringList() << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->destinationreserve()));
+								
+								updateReserve.setWhere( "idreserve = " + SQLSTR(reserve->idReserve()));
+								SDBM->execQuery(&updateReserve);
+								if ( SDBM->lastError().isValid() )
+								{
+									cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+								}
+								else
+								{
+									ADEvent e( ADEvent::Server, Logic::ReservesT, Logic::Update, event->data());
+									sendToAll(e.toString());
+								}
+							}
+							else
+							{
+								cnx->sendToClient( "No se puede actualizar una reserva que ha sido eliminada anteriormente");
 							}
 						}
 						break;
@@ -1109,7 +1126,7 @@ void ADServer::addReport(ADServerConnection *cnx, ADReport *report)
 		case ADReport::Cancelations:
 		{
 			dDebug() << "Consultatando lista de cancelaciones";
-			headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razón";
+			headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razï¿½";
 			
 			ADSelect consult(QStringList() << "*", "ADCancellation");
 			consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );

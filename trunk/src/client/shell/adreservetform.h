@@ -64,6 +64,7 @@ class ADReserveTForm : public ADFormBase
 		void valiteUserAndResource(QString, QString);
 		void requestDatesSemestral();
 		void requestLogin();
+		void clearFields();
 		
 	signals:
 		void sendEvent( ADEvent *);

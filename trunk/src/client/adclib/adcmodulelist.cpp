@@ -271,22 +271,25 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 			case Logic::Audiovisuals:
 			{
 				ADAudioVisual *audiovisual = qVariantValue<ADAudioVisual *>(data);
-				QList<QString> strs;
-				
-				QString code =  audiovisual->codeSpace();
-				if(code == "null")
+				if( (audiovisual->numberInventory()) != "null" )
 				{
-					code = tr("No asignado");
-				}
-				
-				strs << audiovisual->numberInventory()  << audiovisual->state() <<  audiovisual->type() << audiovisual->marksEquipment() << code;
-				
-				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-				int count = 0;
-				foreach(QString str, strs)
-				{
-					item->setText(count, str);
-					count++;
+					QList<QString> strs;
+					
+					QString code =  audiovisual->codeSpace();
+					if(code == "null")
+					{
+						code = tr("No asignado");
+					}
+					
+					strs << audiovisual->numberInventory()  << audiovisual->state() <<  audiovisual->type() << audiovisual->marksEquipment() << code;
+					
+					QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
+					int count = 0;
+					foreach(QString str, strs)
+					{
+						item->setText(count, str);
+						count++;
+					}
 				}
 			}
 			break;

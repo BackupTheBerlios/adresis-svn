@@ -66,15 +66,6 @@ CREATE TABLE AdUser(
 
 INSERT INTO AdUser VALUES(0,'root','root','root','root');
 INSERT INTO AdUser VALUES(2,'estudiante','estudiante','estudiante');
--- INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
--- INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
--- INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
--- INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
--- INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
--- INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
--- INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
--- INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
--- INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 
 
@@ -85,7 +76,7 @@ CREATE TABLE AdSpace(
 	capacitySpace integer,
 	nameSpace varchar(30)
 );
-INSERT INTO AdSpace VALUES('null','null');
+INSERT INTO AdSpace VALUES('null');
 
 
 
@@ -111,7 +102,7 @@ CREATE TABLE AdAudioVisual(
 	--este codigo se utiliza para determinar que ayudas tiene un espacio
 );
 
-
+INSERT INTO AdAudiovisual (numberinventoryAV) VALUES('null');
 
 
 CREATE TABLE ADAudioVisualType(

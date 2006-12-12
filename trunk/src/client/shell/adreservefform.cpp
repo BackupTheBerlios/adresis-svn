@@ -45,11 +45,15 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource
 {
 	D_FUNCINFO;
 	m_inserter = false;
-	m_reserve = reserve;
+	
+// 	const QString idReserve, const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QDateTime& beginDateTime, const QDateTime& endDateTime, const bool isActive, const QString& destinationreserve
+	
+	m_reserve = new ADReserve(reserve->idReserve(), reserve->typeReserve(), reserve->iduserreserve(), reserve->iduserresponsable(), reserve->idaudiovisual(), reserve->idspace(), reserve->day(), reserve->beginDateTime(), reserve->endDateTime(), reserve->isActive(), reserve->destinationreserve());
+	
 	setup();
 	
 	QString modulo, key;
-	if( m_reserve->idspace() != "" )
+	if( m_reserve->idspace() != "null" )
 	{
 		typeResourceC->setCurrentIndex(typeResourceC->findText("Espacios"));
 		modulo = "space";
@@ -73,7 +77,6 @@ ADReserveFForm::ADReserveFForm( ADReserve * reserve, QList<QString> infoResource
 	m_userReserve = (m_reserve->iduserreserve());
 	
 	areaTexto-> setDocument( new QTextDocument(m_reserve->destinationreserve()) );
-	areaTexto-> setReadOnly ( true );
 	
 	horario->assignTypeReserve("semestral", m_inserter);
 	horario->receiveReserves( reservas );
@@ -346,7 +349,7 @@ void ADReserveFForm::emitEvent()
 			
 			if(m_inserter)
 			{
-				m_reserve = new ADReserve( 
+				ADReserve * reserveTmp = new ADReserve( 
 					"",
 					(*it)["typereserve"],
 					m_userReserve,
@@ -360,13 +363,18 @@ void ADReserveFForm::emitEvent()
 					(areaTexto->document())->toPlainText()
 				);
 				
-				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Add, QVariant::fromValue(m_reserve));
-				emit sendEvent(&insertReserve);	
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Add, QVariant::fromValue(reserveTmp));
+				dDebug() << "/////////////////////////////////////7";
+				dDebug() << "ANTES DE MANDAR EL EVENTO";
+				insertReserve.toString();
+				dDebug() << "/////////////////////////////////////7";
+				emit sendEvent(&insertReserve);
+				clearFields();
 			}
 			
 			else if(m_inserter == false && valite())
 			{
-				m_reserve = new ADReserve(
+				ADReserve * reserveTmp = new ADReserve(
 					m_reserve->idReserve(),
 					m_reserve->typeReserve(),
 					m_reserve->iduserreserve(),
@@ -377,16 +385,17 @@ void ADReserveFForm::emitEvent()
 					beginDateTime,
 					endDateTime,
 					m_reserve->isActive(),
-					m_reserve->destinationreserve()
+					(areaTexto->document())->toPlainText()
 				);
 				
 				
-				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Update, QVariant::fromValue(m_reserve));
-				emit sendEvent(&insertReserve);	
+				ADEvent insertReserve( ADEvent::Client, Logic::ReservesF, Logic::Update, QVariant::fromValue(reserveTmp));
+				emit sendEvent(&insertReserve);
+				emit requestClose();
 			}
 			it++;
 		}
-		emit requestClose();
+		
 	}	
 }
 
@@ -404,15 +413,25 @@ bool ADReserveFForm::valite()
 	
 	while( it != listSchedules.end())
 	{
-		if( (*it)["typereserve"].isEmpty() || m_userReserve.isEmpty() || (loginC-> currentText()).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty())
+		if( (*it)["typereserve"].isEmpty() || m_userReserve.isEmpty() || (loginC-> currentText()).isEmpty() || ((*it)["day"]).isEmpty() || ((*it)["beginhour"]).isEmpty() || ((*it)["endhour"]).isEmpty() || (areaTexto->document())->toPlainText().isEmpty())
 		{
-			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato\nes incorrecto", 0);
+			QMessageBox::information ( 0 , "ERROR", "Uno de los campos del formato es incorrecto, revise que:\nNo haya un campo sin rellenar", 0);
 			isValid=false;
 		}
 		it++;
 	}
 	
 	return isValid;
+}
+
+void ADReserveFForm::clearFields()
+{
+	typeResourceC->setCurrentIndex(0);
+	resourceC->clear ();
+	resourcesNameC->clear ();
+	loginC->clear ();
+	areaTexto->clear ();
+	horario->clear();
 }
 
 

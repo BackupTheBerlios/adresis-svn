@@ -31,7 +31,7 @@
 
 
 ADSpaceForm::ADSpaceForm(const QStringList listSpaces, QList<QVariant>  listAudiovisual ,QWidget *parent)
-	: ADFormBase("<h1><b>Spaces</b><h1>" , parent)
+	: ADFormBase("<h1><b>Espacios</b><h1>" , parent)
 {
 	m_inserter = true;
 	setup();

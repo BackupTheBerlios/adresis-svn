@@ -32,12 +32,12 @@
 /**
  * @author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
  */
-		class ADCancellationForm : public ADFormBase
+class ADCancellationForm : public ADFormBase
 {
 	Q_OBJECT
 	public:
-		ADCancellationForm( QWidget *parent = 0);
-		ADCancellationForm(ADCancellation *cancellation, QWidget *parent = 0);
+		ADCancellationForm( bool sem=true, QWidget *parent = 0);
+		ADCancellationForm(ADCancellation *cancellation, bool sem=true ,QWidget *parent = 0);
 		~ADCancellationForm();
 		void setReadOnly(bool rOL);
 		
@@ -54,6 +54,7 @@
 		QMap<QString, QWidget*> m_inputs;
 		QTextEdit *areaTexto;
 		ADCancellation *m_cancel;
+		bool semestral;
 };
 
 #endif

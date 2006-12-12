@@ -58,12 +58,14 @@ class ADReserveFForm : public ADFormBase
 		bool m_inserter, userValite, resourceValite;
 		
 		ADReserve *m_reserve;
+		QString idReserve;
 		void setup();
 		bool valite();
 		void valiteUserAndResource(QString, QString);
 		void requestDatesSemestral();
 		void requestLogin();
 		void requestLoginUsers();
+		void clearFields();
 
 	signals:
 		void sendEvent( ADEvent *);

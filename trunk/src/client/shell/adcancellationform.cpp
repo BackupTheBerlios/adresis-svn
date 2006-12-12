@@ -21,17 +21,19 @@
 #include <QGridLayout> 
 
 
-ADCancellationForm::ADCancellationForm(QWidget * parent)
+ADCancellationForm::ADCancellationForm(bool sem, QWidget * parent)
 	:ADFormBase("<h1><b>Cancellations</b><h1>" , parent)
 
 {
+	semestral = sem;
 	setWindowTitle("Ingrese el motivo de la cancelaci�");
 	setup();
 }
 
-ADCancellationForm::ADCancellationForm(ADCancellation * cancellation, QWidget * parent)
+ADCancellationForm::ADCancellationForm(ADCancellation * cancellation, bool sem, QWidget * parent)
 {
 	m_cancel = cancellation;
+	semestral = sem;
 	setup();
 	static_cast<QLineEdit*>(m_inputs[tr("id cancelacion")])->setText( cancellation->idReserveCancellation() );
 	static_cast<QLineEdit*>(m_inputs[tr("usuario")])->setText( cancellation->idUserCancellation() );
@@ -108,8 +110,17 @@ void ADCancellationForm::valite()
 	}
 	else
 	{
+		Logic::Module mod;
+		if(semestral)
+		{
+			mod = Logic::ReservesF;
+		}
+		else
+		{
+			mod = Logic::ReservesT;
+		}	
 		m_cancel->setRazonCancellation( areaTexto->document()->toPlainText() );
-		ADEvent event(ADEvent::Client, Logic::ReservesF, Logic::Del, QVariant::fromValue(m_cancel) );
+		ADEvent event(ADEvent::Client, mod, Logic::Del, QVariant::fromValue(m_cancel) );
 		emit sendEvent( &event );
 		close();
 	}

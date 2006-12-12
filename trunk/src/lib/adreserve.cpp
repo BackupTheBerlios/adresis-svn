@@ -27,13 +27,6 @@ ADReserve::ADReserve()
 }
 
 
-// ADReserve::ADReserve(const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QString& beginHour, const QString& endHour, const QString& beginDate, const QString& endDate, const bool isActive, const QString& destinationreserve)
-// 	: ADObject(), m_typereserve(typeReserve), m_iduserreserve(idUserReserve), m_iduserresponsable(idUserResponsable), m_idaudiovisual (idAudiovisual ), m_idspace( idSpace ) , m_day(day), m_beginhour(beginHour), m_endhour(endHour), m_begindate(beginDate), m_enddate(endDate), m_isactive(isActive), m_destinationreserve(destinationreserve)
-// {
-// 	m_valid = true;
-// }
-
-
 ADReserve::ADReserve(const QString idReserve, const QString& typeReserve, const QString& idUserReserve, const QString& idUserResponsable, const QString& idAudiovisual, const QString& idSpace, const QString& day, const QDateTime& beginDateTime, const QDateTime& endDateTime, const bool isActive, const QString& destinationreserve)
 	: ADObject(), m_idReserve(idReserve), m_typereserve(typeReserve), m_iduserreserve(idUserReserve), m_iduserresponsable(idUserResponsable), m_idaudiovisual (idAudiovisual ), m_idspace( idSpace ), m_day(day), m_beginDateTime(beginDateTime), m_endDateTime(endDateTime) , m_isactive(isActive), m_destinationreserve(destinationreserve)
 {
@@ -48,10 +41,13 @@ ADReserve::~ADReserve()
 
 QDomElement ADReserve::toXml(QDomDocument &doc) const
 {
+	dDebug() << " ////////////////////////////////////////////////////////";
+	dDebug() << "QDomElement ADReserve::toXml(QDomDocument &doc) const";
+	dDebug() << "Dia es ==>> " << m_day;
+	dDebug() << " ////////////////////////////////////////////////////////";
+	
 	QDomElement root = doc.createElement("reserve");
-	/*
-	idreserve | typereserve | iduserreserve | iduserresponsable | idaudiovisual | idspace | day | beginhour | endhour | begindate | enddate | isactive | destinationreserve
-	*/
+	
 	root.setAttribute( "idreserve", m_idReserve );
 	root.setAttribute( "typereserve", m_typereserve );
 	root.setAttribute( "iduserreserve", m_iduserreserve );
@@ -72,9 +68,6 @@ QDomElement ADReserve::toXml(QDomDocument &doc) const
 
 void ADReserve::setValues(XMLResults values)
 {
-	dDebug() << "********************************************************************************";
-	dDebug() << "SETVALUES";
-	dDebug() << "********************************************************************************";
 	m_idReserve = values["idreserve"];
 	m_typereserve = values["typeReserve"];
 	m_iduserreserve = values["iduserreserve"];

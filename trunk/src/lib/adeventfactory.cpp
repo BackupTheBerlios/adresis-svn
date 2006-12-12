@@ -107,6 +107,10 @@ bool ADEventFactory::startElement(const QString& , const QString& , const QStrin
 	}
 	else if(qname == "reserve")
 	{
+		dDebug() << " ////////////////////////////////////////////////////////";
+		dDebug() << "ADEVENTFACTORY";
+		dDebug() << "Dia es ==>> " << atts.value( "day");
+		dDebug() << " ////////////////////////////////////////////////////////";
 		ADReserve *reserve = new ADReserve(
 				atts.value( "idreserve" ),
 				atts.value( "typereserve" ),
