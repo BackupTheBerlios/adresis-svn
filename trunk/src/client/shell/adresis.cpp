@@ -123,7 +123,7 @@ void Adresis::handleEvent(ADEvent * event)
 							{
 								m_user = qvariant_cast<ADUser *> (event->data());
 								
-								for(int i=0; i < 7; i++)
+								for(int i=0; i < 6; i++)
 								{
 									Logic::Module module = Logic::Module(i);
 									ADEvent findAll(ADEvent::Client, module, Logic::Find, "all");
@@ -1095,7 +1095,7 @@ void Adresis::messagePermissions(Logic::Module module, Logic::Action accion)
 		break;
 		case Logic::Add:
 		{
-			a="añadir";
+			a="aï¿½dir";
 		}
 		break;
 		case Logic::Del:

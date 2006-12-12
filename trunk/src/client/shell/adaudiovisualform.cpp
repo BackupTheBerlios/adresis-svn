@@ -67,9 +67,11 @@ ADAudiovisualForm::ADAudiovisualForm(const ADAudioVisual * audiovisual, const QL
 	if(audiovisual)
 	{
 		m_typesC->setCurrentIndex(m_typesC->findText(audiovisual->type()));
+		m_typesC->setEnabled(false);
 		m_marks->setText(audiovisual->marksEquipment());
 		m_state->setCurrentIndex(m_state->findText(audiovisual->state()));
 		m_numberInventory->setText(audiovisual->numberInventory());
+		m_numberInventory->setReadOnly(true);
 		if(audiovisual->codeSpace() == "null")
 		{
 			m_codeSpace->setCurrentIndex(0);
@@ -162,7 +164,15 @@ void ADAudiovisualForm::emitEvent()
 		}
 		ADEvent event( ADEvent::Client, Logic::Audiovisuals, action, QVariant::fromValue(&audiovisual));
 		emit sendEvent(&event);
-		emit requestClose();
+		if(m_inserter)
+		{
+			clearFields();
+		}
+		else
+		{
+			emit requestClose();
+		}
+		
 	}
 }
 

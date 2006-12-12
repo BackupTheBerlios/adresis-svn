@@ -28,7 +28,7 @@
 /**
 		@author Hector Fabio Cruz Mosquera,0329876
  */
-		class ADListSelect : public QWidget
+class ADListSelect : public QWidget
 {
 	Q_OBJECT
 	public:
@@ -45,6 +45,7 @@
 	public slots:
 		void addItemToLeft();
 		void addItemToRight();
+		void clearLists();
 
 		
 	private:

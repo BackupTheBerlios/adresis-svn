@@ -309,7 +309,14 @@ void ADSpaceForm::emitEvent()
 		ADEvent event( ADEvent::Client, Logic::Spaces, action, QVariant::fromValue(&space));
 		emit sendEvent(&event);
 		checkListsToSave();	/// Se hace la actualizacion de las ayudas, tanto libres como asignadas.
-		clearFields();
+		if(m_inserter)
+		{
+			clearFields();
+		}
+		else
+		{
+			emit requestClose();
+		}
 	}
 }
 
@@ -342,5 +349,6 @@ void ADSpaceForm::clearFields()
 	acC->setCheckState ( Qt::Unchecked );
 	tiposC->setCurrentIndex(0);
 	capacity->setValue ( 0 );
+	listSelect->clearLists();
 }
 

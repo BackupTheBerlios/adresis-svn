@@ -42,7 +42,6 @@
 ADCModuleList::ADCModuleList(ADUser * user, Logic::Module module, QWidget *parent )
 	:QWidget(parent), m_pModule(module)
 {
-	dDebug() << "ADCModuleList::ADCModuleList(ADUser * user, Logic::Module module, QWidget *parent )";
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	setLayout(layout);
 	QHBoxLayout *search = new QHBoxLayout;
@@ -51,17 +50,7 @@ ADCModuleList::ADCModuleList(ADUser * user, Logic::Module module, QWidget *paren
 	button->setIcon( QIcon(THEME_DIR+"/icons/clear_right.png"));
 	
 	m_user = user;
-	dDebug() << "HOLA HIIIIIIIJJJJUUUEEEPPPUUUTTTTTAAA";
-	Q_CHECK_PTR ( m_user);
-	if(m_user)
-	{
-		dDebug() << "ADCMODULELIST EL USUARIO EXISTE";
-	}
-	else
-	{
-		dDebug() << "ADCMODULELIST EL USUARIO NO EXISTE";
-	}
-	
+		
 	search->addWidget(button);
 	m_pTree = new  QTreeWidget;
 	QStringList titles;
@@ -97,12 +86,6 @@ setWindowTitle ( "Reservas Temporales");
 			setWindowTitle ( "Espacios");
 		}
 		break;
-		case Logic::Cancellation:
-		{
-			titles << tr("id cancelacion") << tr("usuario") << tr("fecha") << tr("hora");
-			setWindowTitle ( "Cancelaciones");
-		}
-		break;
 		case Logic::Reports:
 		{
 			setWindowTitle ( "Reportes" );
@@ -127,8 +110,6 @@ setWindowTitle ( "Reservas Temporales");
 	connect(button, SIGNAL(clicked()), m_pSearch, SLOT(clear()));
 	ADModuleButtonBar *buttonBar;
 	
-	dDebug() << "****************//////////////////////////*****************************///////////////////////////////////";
-	dDebug() << "Modulo " << m_pModule <<"  Permiso => " << m_user->permission(m_pModule, Logic::Add) ; 
 	if(m_pModule == Logic::Reports)
 	{
 		if(m_user->permission(m_pModule, Logic::Add))
@@ -317,7 +298,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 				strs << reserve->typeReserve();
 				strs << reserve->iduserreserve();
 				strs << reserve->iduserresponsable();
-				if( reserve->idspace() != "" )
+				if( reserve->idspace() != "null" )
 				{
 					strs << reserve->idspace();
 				}
@@ -344,7 +325,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 				strs << reserve->typeReserve();
 				strs << reserve->iduserreserve();
 				strs << reserve->iduserresponsable();
-				if( reserve->idspace() != "" )
+				if( reserve->idspace() != "null" )
 				{
 					strs << reserve->idspace();
 				}
@@ -410,24 +391,7 @@ void ADCModuleList::addData(Logic::Module module, const QVariant & data )
 				
 			}
 			break;
-			case Logic::Cancellation:
-			{
-				ADCancellation *cancel = qVariantValue<ADCancellation *>(data);
-				QList<QString> strs;
-				strs << cancel->idReserveCancellation();
-				strs << cancel->idUserCancellation();
-				strs << cancel->dateTimeCancellation().date().toString("dd/MM/yyyy");
-				strs << cancel->dateTimeCancellation().time().toString("hh:mm");
-				QTreeWidgetItem *item = new QTreeWidgetItem(m_pTree);
-				int count = 0;
-				foreach(QString str, strs)
-				{
-					item->setText(count, str);
-					count++;
-				}
-				
-			}
-			break;
+			
 		}
 	}
 	for(int i = 0; i < m_pTree->columnCount (); i++)

@@ -301,9 +301,7 @@ void ADMainWindow::showForm( Logic::Module module, const QString & key )
 					}
 					else if(a.codeSpace() == key)
 					{
-						dDebug() << "ayuda asignada a " << a.codeSpace() << "  estoy buscando ayudas asignadas a " << key;
 						ayudasAsignadas << variant;
-						dDebug() << "asignadas = " << ayudasAsignadas.count();
 					}
 				}
 				ADSpace space = (*static_cast<ADSpace *>(m_adresis->getObject(Logic::Spaces, key )));
@@ -485,7 +483,6 @@ void ADMainWindow::showConsultSchedule()
 				if( dialog.type() == "Ayuda audiovisual" )
 				{
 					ok = true;
-					dDebug() << rfR->idaudiovisual() + "=="+  key;
 					if(rfR->idaudiovisual() == key)
 					{
 						reservesOfElement << rfR;

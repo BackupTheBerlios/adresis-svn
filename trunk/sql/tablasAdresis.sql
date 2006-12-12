@@ -9,29 +9,6 @@ DROP TABLE ConfigurationSchooll CASCADE;
 DROP TABLE ADCancellation CASCADE;
 
 
-CREATE TABLE AdUser(
-	rol integer,
-	nameUser varchar(50),
-	codeUser varchar(20) unique,
-	loginUser varchar(20) unique,
-	passwdUser varchar(20),
-	PRIMARY KEY(loginUser, codeUser)
-);
-
-INSERT INTO AdUser VALUES(0,'root','root','root','root');
--- INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
--- INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
--- INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
--- INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
--- INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
--- INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
--- INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
--- INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
--- INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
-
-
-
-
 CREATE TABLE AdRols(
 	rol integer,
 	action varchar(22),
@@ -77,6 +54,27 @@ INSERT INTO AdRols VALUES(2,'gestionarReportes',0);
 INSERT INTO AdRols VALUES(2,'consultarReportes',1);
 INSERT INTO AdRols VALUES(2,'consultarCancelaciones',1);
 
+
+CREATE TABLE AdUser(
+	rol integer,
+	nameUser varchar(50),
+	codeUser varchar(20) unique,
+	loginUser varchar(20) unique,
+	passwdUser varchar(20),
+	PRIMARY KEY(loginUser, codeUser)
+);
+
+INSERT INTO AdUser VALUES(0,'root','root','root','root');
+INSERT INTO AdUser VALUES(2,'estudiante','estudiante','estudiante');
+-- INSERT INTO AdUser VALUES(0,'juan','0330912','juank','juank');
+-- INSERT INTO AdUser VALUES(0,'carlos','0330913','carlosbor','carlosbor');
+-- INSERT INTO AdUser VALUES(0,'hector','0330914','hecfa','hecfa');
+-- INSERT INTO AdUser VALUES(0,'jorge','0330915','jorgecua','jorgecua');
+-- INSERT INTO AdUser VALUES(0,'humberto','0330916','humbertocu','humbertocu');
+-- INSERT INTO AdUser VALUES(0,'sebastian','0330917','sebrand','sebrand');
+-- INSERT INTO AdUser VALUES(0,'deisy','0330918','deisych','deisych');
+-- INSERT INTO AdUser VALUES(0,'rafael','0330919','rafaca','rafaca');
+-- INSERT INTO AdUser VALUES(0,'jhon','0330910','jhonmu','jhonmu');
 
 
 
@@ -136,12 +134,12 @@ DROP SEQUENCE adreserve_idreserve_seq;
 CREATE SEQUENCE adReserve_idReserve_seq;
 CREATE TABLE ADReserve
 (
-	idReserve integer default nextval('adReserve_idReserve_seq') not null,
+	idReserve integer default nextval('adReserve_idReserve_seq') not null unique,
 	typeReserve varchar(20),
 	idUserReserve varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, --Este es el usuario que realiza la reserva 
 	idUserResponsable varchar(20) REFERENCES AdUser(loginUser) ON DELETE CASCADE ON UPDATE CASCADE, -- Este es el usuario encargado de la reserva
-	idAudiovisual varchar(20) DEFAULT 'Asignacion Pendiente' REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE ON DELETE SET DEFAULT,
-	idSpace varchar(20) DEFAULT 'Asignacion Pendiente' REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE ON DELETE SET DEFAULT,
+	idAudiovisual varchar(20) REFERENCES AdAudioVisual(numberinventoryAV)ON UPDATE CASCADE,
+	idSpace varchar(20) REFERENCES AdSpace(codeSpace)ON UPDATE CASCADE,
 	day varchar(9), --Este campo es para las reservas semestrales, para saber que dia es(lunes, martes....
 	beginHour time,
 	endHour time, 
@@ -158,6 +156,7 @@ CREATE TABLE ConfigurationSchooll(
 	endDateSem date		--DD/MM/YY
 );
 
+SET DATESTYLE TO dmy;
 INSERT INTO configurationschooll VALUES ('01/09/2006','15/12/2006');
 
 

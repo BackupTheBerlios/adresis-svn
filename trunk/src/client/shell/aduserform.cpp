@@ -137,7 +137,15 @@ void ADUserForm::emitEvent()
 		}
 		ADEvent event( ADEvent::Client, Logic::Users, action, QVariant::fromValue(&user));
 		emit sendEvent(&event);
-		clearFields();
+		if(m_inserter)
+		{
+			clearFields();
+		}
+		else
+		{
+			emit requestClose();
+		}
+		
 	}
 	
 }

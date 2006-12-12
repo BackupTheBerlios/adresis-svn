@@ -130,6 +130,12 @@ void ADListSelect::addListToRight(const QStringList &list)
 	listWidgetRight->addItems(list);
 }
 
+
+void ADListSelect::clearLists()
+{
+	listWidgetRight->clear();
+}
+
 /// TakeList devuelve una lista de strings de los tipos de ayudas que hay en una lista.
 QStringList ADListSelect::takeList(const QString &listWidget)
 {
