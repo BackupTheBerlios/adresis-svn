@@ -30,7 +30,7 @@
 #include <QMessageBox>
 
 /**
-		@author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
+ * @author Hector Fabio Cruz Mosquera,0329876 <hecfacru@s4pc18>
  */
 		class ADCancellationForm : public ADFormBase
 {
@@ -47,6 +47,7 @@
 		
 	private slots:
 		void valite();
+		void modifyContend( Logic::Module, const QList< QVariant >&);
 		
 	private:
 		void setup();

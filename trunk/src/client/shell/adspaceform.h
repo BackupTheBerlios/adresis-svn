@@ -72,7 +72,7 @@
 		void listChangedSF(const QString &lista, int pos);
 		void insertListAudiovisual();
 		void insertListTypes(const QStringList results);
-	
+		void modifyContend( Logic::Module, const QList< QVariant >&);
 	
 };
 

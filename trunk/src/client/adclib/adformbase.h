@@ -50,7 +50,8 @@ class ADFormBase : public QFrame
 		
 	public slots:
 		void receiveEvent( ADEvent *event);
-		virtual void modifyContend( ADEvent *event, Logic::Module, const QList< QVariant >&);
+		virtual void modifyContend(  Logic::Module, const QList< QVariant >&) = 0;
+		
 };
 
 #endif

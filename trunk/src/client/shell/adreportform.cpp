@@ -71,3 +71,8 @@ void ADReportForm::emitEvent()
 	ADEvent event( ADEvent::Client, Logic::Reports, action, QVariant::fromValue(&report ));
 	emit sendEvent(&event);
 }
+
+void ADReportForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}

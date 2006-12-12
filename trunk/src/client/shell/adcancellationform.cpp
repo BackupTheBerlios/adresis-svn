@@ -114,3 +114,9 @@ void ADCancellationForm::valite()
 		close();
 	}
 }
+
+void ADCancellationForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}
+

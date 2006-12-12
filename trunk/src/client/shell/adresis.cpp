@@ -362,8 +362,8 @@ void Adresis::handleEvent(ADEvent * event)
 					break;
 				}
 			}
-			if(event->action() == Logic::Add && event->action() == Logic::Del && event->action() == Logic::Update)
-			{ 
+			if(event->action() == Logic::Add || event->action() == Logic::Del || event->action() == Logic::Update)
+			{
 				emit changedList( Logic::Module( event->module()) , m_infoModules[Logic::Module( event->module())] );
 			}
 		}

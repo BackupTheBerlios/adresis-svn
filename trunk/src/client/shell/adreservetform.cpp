@@ -388,3 +388,8 @@ bool ADReserveTForm::valite()
 	
 	return isValid;
 }
+
+void ADReserveTForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}

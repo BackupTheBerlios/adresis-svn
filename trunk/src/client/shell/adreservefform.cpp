@@ -414,3 +414,10 @@ bool ADReserveFForm::valite()
 	
 	return isValid;
 }
+
+
+void ADReserveFForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}
+

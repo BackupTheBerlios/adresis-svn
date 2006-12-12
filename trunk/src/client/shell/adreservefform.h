@@ -79,6 +79,7 @@ class ADReserveFForm : public ADFormBase
 		void receiveReserves( const QList<ADReserve *>& results );
 		void emitEvent();
 		
+		void modifyContend( Logic::Module, const QList< QVariant >&);
 		
 };
 

@@ -352,3 +352,7 @@ void ADSpaceForm::clearFields()
 	listSelect->clearLists();
 }
 
+void ADSpaceForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}

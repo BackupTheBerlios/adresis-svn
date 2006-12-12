@@ -206,3 +206,24 @@ void ADAudiovisualForm::clearFields()
 }
 
 
+void ADAudiovisualForm::modifyContend( Logic::Module module, const QList< QVariant >& list)
+{
+	dDebug() << "ADAudiovisualForm::modifyContend( Logic::Module module, const QList< QVariant >& list)";
+	
+	if(Logic::Spaces == module)
+	{
+		m_codeSpace->clear();
+		foreach(QVariant v, list)
+		{
+			m_codesSpaces.clear();
+			m_codesSpaces <<tr("Ninguno");
+			
+			QString code = qvariant_cast<ADSpace *>(v)->codeSpace();
+			if(code != "null")
+			{
+				m_codesSpaces << code;
+			}
+		}
+		m_codeSpace->addItems(m_codesSpaces);
+	}
+}

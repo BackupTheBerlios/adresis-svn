@@ -33,7 +33,7 @@ class ADUserForm : public ADFormBase
 		
 	public slots:
 		void emitEvent();
-		
+		void modifyContend( Logic::Module, const QList< QVariant >&);
 };
 
 #endif

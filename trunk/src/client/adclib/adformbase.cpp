@@ -68,7 +68,3 @@ void ADFormBase::receiveEvent( ADEvent *)
 {
 }
 
-void ADFormBase::modifyContend( ADEvent *event, Logic::Module, const QList< QVariant >&)
-{
-	
-}

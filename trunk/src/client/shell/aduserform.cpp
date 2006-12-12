@@ -181,3 +181,8 @@ void ADUserForm::clearFields()
 	static_cast<QLineEdit*>(m_inputs[tr("password")])->clear();
 	m_permission->setCurrentIndex(0);
 }
+
+void ADUserForm::modifyContend( Logic::Module, const QList< QVariant >&)
+{
+	
+}
