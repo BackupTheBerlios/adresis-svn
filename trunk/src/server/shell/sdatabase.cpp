@@ -130,3 +130,37 @@ SResultSet SDatabase::execQuery(const ADQuery *query )
 	return execRawQuery(query->toString());
 }
 
+SResultSet SDatabase::createTable(const QString & name, const QStringList & attrs, const QStringList & type, const QString & primaryKey  )
+{
+	QString sql = "CREATE TABLE " + name + " ( ";
+	for(int i = 0; i < attrs.count(); i++)
+	{
+		if(primaryKey.isEmpty() && i == attrs.count()-1)
+		{
+			sql += attrs[i] + " " + type[i];
+		}
+		else
+		{
+			sql += attrs[i] + " " + type[i] + ",";
+		}
+	}
+	
+	sql += primaryKey +")";
+	
+	return execRawQuery(sql);
+	
+}
+
+SResultSet SDatabase::dropTable(const QString & name)
+{
+	QString sql = "DROP TABLE " + name;
+	return execRawQuery(sql);
+}
+
+SResultSet SDatabase::createView(const QString & name, ADSelect * select)
+{
+	QString sql = "CREATE VIEW "+ name + " AS( " + select->toString() + ")" ;
+	return execRawQuery(sql);
+}
+
+

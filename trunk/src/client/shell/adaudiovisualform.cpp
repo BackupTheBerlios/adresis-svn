@@ -138,8 +138,12 @@ void ADAudiovisualForm::emitEvent()
 {
 	if(valite())
 	{
-		QString code = "null";
-		if(!(m_codeSpace->currentText() == tr("Ninguno")))
+		QString code;
+		if(m_codeSpace->currentText() == tr("Ninguno"))
+		{
+			code = "null";
+		}
+		else
 		{
 			code = m_codeSpace->currentText();
 		}

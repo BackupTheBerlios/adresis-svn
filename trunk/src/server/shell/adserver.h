@@ -35,6 +35,7 @@
  * Esta es la clase controladora, esta clase representa el servidor.
  * @author David Cuadrado <krawek@gmail.com>
  */
+class ADReport;
 class ADServer : public QTcpServer
 {
 	Q_OBJECT;
@@ -52,9 +53,12 @@ class ADServer : public QTcpServer
 		void authenticate(ADServerConnection *cnx,const QString &login, const QString &password);
 		void doOperation(ADServerConnection *cnx, const ADQuery *query);
 		void handleEvent(ADServerConnection *cnx, ADEvent * event = 0);
+		void addReport(ADServerConnection *cnx, ADReport *report);
+		
 		
 	private:
 		void handle(const ADServerConnection *cnx);
+		int calculateTotalDay(const QDate & beginDate, const QDate &endDate, int day);
 		
 	protected:
 		void incomingConnection(int socketDescriptor);

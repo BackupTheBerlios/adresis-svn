@@ -101,6 +101,12 @@ class SDatabase : public QObject, public QSqlDatabase
 		
 		SResultSet execQuery(const ADQuery *query );
 
+		
+		SResultSet createTable(const QString & name, const QStringList & attrs, const QStringList & type, const QString & primaryKey = QString::null  );
+		
+		SResultSet dropTable(const QString & name);
+		
+		SResultSet createView(const QString & name, ADSelect * select);
 	signals:
 		/**
 		 *  Marca el progreso de una consulta

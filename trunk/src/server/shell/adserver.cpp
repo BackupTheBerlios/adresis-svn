@@ -44,8 +44,7 @@
 #include "histogram.h"
 
 #include "adreportgenerator.h"
-
-
+#include <cmath>
 ADServer::ADServer(QObject *parent) : QTcpServer(parent)
 {
 }
@@ -750,6 +749,11 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 								resourceField = "idaudiovisual";
 								resourceId = reserve->idaudiovisual();
 							}
+							QString idSpace = reserve->idspace();
+							if( idSpace.isEmpty() )
+							{
+								idSpace = "null";
+							}
 							
 							ADInsert insert("adreserve", QStringList()<< "typereserve" << "iduserreserve" << "iduserresponsable" << resourceField << "day" << "beginhour" << "endhour" << "begindate" << "enddate" << "isactive" << "destinationreserve", QStringList() << SQLSTR(reserve->typeReserve()) <<  SQLSTR(reserve->iduserreserve()) << SQLSTR(reserve->iduserresponsable()) << SQLSTR(resourceId) << SQLSTR(reserve->day()) << SQLSTR(reserve->beginDateTime().time().toString("hh:mm")) << SQLSTR(reserve->endDateTime().time().toString("hh:mm")) << SQLSTR(reserve->beginDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->endDateTime().date().toString("yyyy-MM-dd")) << SQLSTR(reserve->isActive()) << SQLSTR(reserve->destinationreserve()));
 							SDBM->execQuery(&insert);
@@ -885,83 +889,7 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 						{
 							ADReport *report = qvariant_cast<ADReport *>(event->data());
 							
-							//FIXME: AQUI ES DONDE SE DEBEN HACER LAS CONSULTAS PARA LLENAR EL REPORTE
-							QStringList headers;
-							SResultSet rs;
-							switch(report->consult())
-							{
-								case ADReport::TimeAudio:
-								{
-									dDebug() << "Consultando lista de tiempos de uso ayudas audiovisuales";
-								}
-								break;
-								case ADReport::TimeProfesor:
-								{
-									dDebug() << "Consultando lista de tiempos de reservas por profesor";
-								}
-								break;
-								case ADReport::Cancelations:
-								{
-									dDebug() << "Consultatando lista de cancelaciones";
-									headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razï¿½";
-									
-									ADSelect consult(QStringList() << "*", "ADCancellation");
-									consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );
-									rs =  SDBM->execQuery(&consult);
-								}
-								break;
-							}
-							
-							if(report->type() == ADReport::List)
-							{
-								QTextDocument *content = ADReportGenerator::generateListReport(rs, headers);
-								
-								
-								report->setContent(content->toHtml());
-							}
-							else if(report->type() == ADReport::Histogram)
-							{
-								//simulacion de la consulta de audiovisuales versus tiempo
-								ADSelect select( QStringList() << "idaudiovisual as ref" << "sum(horas)", QStringList() << "(SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo");
-								
-								select.groupBy("ref");
-// 								select.addSubConsult(QString connector, const ADSelect &subconsult);
-								QMap<QString, QStringList> map = SDBM->execQuery(&select).map();
-								QStringList ref = map["ref"];
-								QStringList time = map["sum"];
-								
-								QMap<QString, int> hoursAv;
-								
-								for(int i =0; i < ref.count() && i < time.count() ; i++)
-								{
-									dDebug() << time[i];
-									hoursAv.insert(ref[i], QTime::fromString( time[i], Qt::ISODate ).hour() );
-								}
-								
-								
-								
-// 							SELECT numberinventoryav as ref, sum(horas) from (SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo, adaudiovisual where(foo.idaudiovisual = adaudiovisual.numberinventoryav) group by ref;
-								
-								Histogram histogram(QRect(QPoint(0,0), QSize(500,500)));
-								histogram.setValues(hoursAv);
-								report->setContent(histogram.toString());
-								
-							}
-							
-							ADInsert insert("adreport", QStringList() << "creator" << "typeReport" << "consult" << "begindate" << "enddate" << "created" << "content", QStringList() << SQLSTR(report->creator() ) << QString::number(report->type()) << QString::number(report->consult()) << SQLSTR(report->beginDate().toString(Qt::ISODate) ) << SQLSTR(report->endDate().toString(Qt::ISODate) ) << SQLSTR(report->created().toString(Qt::ISODate) ) << SQLSTR(report->content()));
-							
-							
-							SDBM->execQuery(&insert);
-							
-							if ( SDBM->lastError().isValid() )
-							{
-								cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
-							}
-							else
-							{
-								ADEvent event(ADEvent::Server, Logic::Reports, Logic::Add, QVariant::fromValue ( report ));
-								cnx->sendToClient(event.toString());
-							}
+							addReport(cnx, report);
 						
 						}
 						break;
@@ -1017,6 +945,165 @@ void ADServer::handleEvent(ADServerConnection *cnx, ADEvent * event )
 	else
 	{
 		dFatal() << "no existe el evento";
+	}
+}
+
+void ADServer::addReport(ADServerConnection *cnx, ADReport *report)
+{
+	//FIXME: AQUI ES DONDE SE DEBEN HACER LAS CONSULTAS PARA LLENAR EL REPORTE
+	QStringList headers;
+	SResultSet rs;
+	switch(report->consult())
+	{
+		case ADReport::TimeAudio:
+		{
+			ADSelect select( QStringList() << "idAudioVisual as ref" << "day" << "beginHour"  << "endHour" << "beginDate" << "endDate", QStringList() << "adreserve");
+			QMap<QString, QStringList> query = SDBM->execQuery(&select).map();
+			select.setWhere( "idSpace='null'" );
+			
+// 			DROP TABLE AVTemp;
+// 			CREATE TABLE AVTemp(idAudioVisual varchar(20), horas integer); 
+			SDBM->dropTable("AVTemp");
+			SDBM->createTable( "AVTemp", QStringList() << "idAudioVisual" << "totalDays" << "beginHour" << "endHour", QStringList() <<  "varchar(20)" << "integer"<< "time" << "time");
+			QStringList days;
+			for(int i = 1; i < 8; i++)
+			{
+				days << QDate::longDayName ( i );
+			}
+			
+			if(!query.isEmpty())
+			{
+				for(int i = 0; i < query["ref"].count(); i++)
+				{
+					QString idA = query["ref"][i];
+					int day = days.indexOf(query["day"][i]) + 1;
+					//dDebug() << "dia " << query["day"][i];
+					QTime beginHour = QTime::fromString(query["beginhour"][i], Qt::ISODate);
+					QTime endHour = QTime::fromString(query["endhour"][i], Qt::ISODate);
+					QDate beginDate = QDate::fromString(query["begindate"][i], Qt::ISODate);
+					QDate endDate = QDate::fromString(query["enddate"][i], Qt::ISODate);
+					int total =0 ;
+					if(beginDate>= report->beginDate() && endDate<= report->endDate())
+					{
+						total = calculateTotalDay(beginDate, endDate, day);
+						dDebug() << "111 Begin > INBeg y End < INEnd " << day;
+					}
+					else if(beginDate>=report->beginDate() && endDate>=report->endDate())
+					{
+						
+						total=calculateTotalDay(beginDate, report->endDate(), day);
+						dDebug() << "222 Begin > INBeg y End > INEnd " << day;
+					}
+					else if(beginDate <= report->beginDate() && endDate <= report->endDate())
+					{
+						dDebug() << "333 Begin < INBeg y End < INEnd " << day;
+						total=calculateTotalDay( report->beginDate(), endDate, day);
+						dDebug() << "Total de Dias " << total;
+					}
+					else if(beginDate<=report->beginDate() && endDate >= report->endDate())
+					{
+						total=calculateTotalDay(report->beginDate(), report->endDate(), day);
+						dDebug() << "444 Begin < INBeg y End > INEnd " << day;
+					}
+					else
+					{
+						total=0;
+					}
+					QTime timeReserve( endHour.hour() - beginHour.hour(),  endHour. minute() - beginHour.minute(), endHour.second() - beginHour.second());
+					
+					ADInsert insert("AVTemp", QStringList() << "idAudioVisual" << "totalDays" << "beginHour" << "endHour", QStringList() << SQLSTR( idA ) << QString::number(total) << SQLSTR(beginHour.toString(Qt::ISODate)) << SQLSTR(endHour.toString(Qt::ISODate)));
+					SDBM->execQuery(&insert);
+				}
+			}
+			//rs = SDBM->execQuery(&consult);
+			//SELECT sum(totaldays*(endHour-beginHour)) AS cantHoras, idAudioVisual FROM AVTemp GROUP BY idAudioVisual;
+			ADSelect consult(QStringList() << "idAudioVisual" << "sum(totaldays*(endHour-beginHour)) as cant", QStringList() << "avtemp");
+			consult.groupBy("idAudioVisual");
+			rs = SDBM->execQuery(&consult);
+			headers << "Id" << "horas" ;
+			dDebug() << "Consultando lista de tiempos de uso ayudas audiovisuales";
+		}
+		break;
+		case ADReport::TimeProfesor:
+		{
+			dDebug() << "Consultando lista de tiempos de reservas por profesor";
+		}
+		break;
+		case ADReport::Cancelations:
+		{
+			dDebug() << "Consultatando lista de cancelaciones";
+			headers << "Id" << "Usuario" << "Hora" << "Fecha" << "Razón";
+			
+			ADSelect consult(QStringList() << "*", "ADCancellation");
+			consult.setWhere( "dateCancellation > "+  SQLSTR(report->beginDate().toString(Qt::ISODate) ) + " and " +  "dateCancellation < " + SQLSTR(report->endDate().toString(Qt::ISODate) ) );
+			rs =  SDBM->execQuery(&consult);
+		}
+		break;
+	}
+		
+	if(report->type() == ADReport::List)
+	{
+		QTextDocument *content = ADReportGenerator::generateListReport(rs, headers);
+		
+		
+		report->setContent(content->toHtml());
+	}
+	else if(report->type() == ADReport::Histogram)
+	{
+		//simulacion de la consulta de audiovisuales versus tiempo
+		ADSelect select( QStringList() << "idaudiovisual as ref" << "sum(horas)", QStringList() << "(SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo");
+		
+		select.groupBy("ref");
+// 		select.addSubConsult(QString connector, const ADSelect &subconsult);
+		QMap<QString, QStringList> map = SDBM->execQuery(&select).map();
+		QStringList ref = map["ref"];
+		QStringList time = map["sum"];
+			
+		QMap<QString, int> hoursAv;
+			
+		for(int i =0; i < ref.count() && i < time.count() ; i++)
+		{
+			dDebug() << time[i];
+			hoursAv.insert(ref[i], QTime::fromString( time[i], Qt::ISODate ).hour() );
+		}
+// 			SELECT numberinventoryav as ref, sum(horas) from (SELECT idaudiovisual, (endhour-beginhour) as horas from adreserve) as foo, adaudiovisual where(foo.idaudiovisual = adaudiovisual.numberinventoryav) group by ref;
+								
+		Histogram histogram(QRect(QPoint(0,0), QSize(500,500)));
+		histogram.setValues(hoursAv);
+		report->setContent(histogram.toString());
+		
+	}
+	
+	ADInsert insert("adreport", QStringList() << "creator" << "typeReport" << "consult" << "begindate" << "enddate" << "created" << "content", QStringList() << SQLSTR(report->creator() ) << QString::number(report->type()) << QString::number(report->consult()) << SQLSTR(report->beginDate().toString(Qt::ISODate) ) << SQLSTR(report->endDate().toString(Qt::ISODate) ) << SQLSTR(report->created().toString(Qt::ISODate) ) << SQLSTR(report->content()));
+	
+	
+	SDBM->execQuery(&insert);
+	if ( SDBM->lastError().isValid() )
+	{
+		cnx->sendToClient( PostgresErrorHandler::handle( SDBM->lastError() ) );
+	}
+	else
+	{
+		ADEvent event(ADEvent::Server, Logic::Reports, Logic::Add, QVariant::fromValue ( report ));
+		cnx->sendToClient(event.toString());
+	}
+}
+
+
+int ADServer::calculateTotalDay(const QDate & beginDate, const QDate &endDate, int day)
+{
+	int diasEntreInicioYFin = beginDate.daysTo(endDate) + 1;
+	
+	int inicio = beginDate.dayOfWeek();
+	dDebug() << "diasEntreInicioYFin " << diasEntreInicioYFin << " beginDate " << beginDate << "endDate" << endDate << " inicio " << inicio;
+	
+	if(day < inicio)
+	{
+		return ::floor((diasEntreInicioYFin-(6-inicio+day))/7) + 1;
+	}
+	else
+	{
+		return ::floor((diasEntreInicioYFin-(day-inicio))/7) + 1;
 	}
 }
 
