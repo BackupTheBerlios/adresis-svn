@@ -49,8 +49,8 @@ class ADFormBase : public QFrame
 		void sendEvent( ADEvent *event );
 		
 	public slots:
-		 void receiveEvent( ADEvent *event);
-// 		virtual void modifyContend( ADEvent *event, Logic::Module, const QList< QVariant >&);
+		void receiveEvent( ADEvent *event);
+		virtual void modifyContend( ADEvent *event, Logic::Module, const QList< QVariant >&);
 };
 
 #endif

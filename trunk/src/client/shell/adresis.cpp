@@ -924,35 +924,38 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 						{
 							m_infoModules[Logic::Users].erase(it);
 // 						QVariant reserves = m_infoModules[Logic::ReservesF] + m_infoModules[Logic::ReservesT];
-							delete u;
+							QString login = u->login();
+							
 							foreach(QVariant v, m_infoModules[Logic::ReservesF] )
 							{
 								ADReserve *r = qvariant_cast<ADReserve *>(v);
-								if(r->iduserresponsable() == key)
+								dDebug() << r->iduserresponsable()<< " ==" << login;
+								if(r->iduserresponsable() == login)
 								{
 									m_infoModules[Logic::ReservesF].removeAll( v );
 									if(r)
 									{
-										delete r;
 										emit requestRemoveDataToModule(Logic::ReservesF, r->idReserve());
+										delete r;
 									}
 								}
 							}
 							foreach(QVariant v, m_infoModules[Logic::ReservesT] )
 							{
 								ADReserve *r = qvariant_cast<ADReserve *>(v);
-								if(r->iduserresponsable() == key)
+// 								dDebug() << r->iduserresponsable() << "==" << u->login();
+								if(r->iduserresponsable() == login)
 								{
 									m_infoModules[Logic::ReservesT].removeAll( v );
 									if(r)
 									{
-										delete r;
 										
 										emit requestRemoveDataToModule(Logic::ReservesT, r->idReserve());
+										delete r;
 									}
 								}
 							}
-							
+							delete u;
 							return;
 						}
 					}
@@ -1016,7 +1019,6 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 				if(qVariantCanConvert<ADReserve*>( (*it) ))
 				{
 					ADReserve *r = qvariant_cast<ADReserve *>(*it);
-					
 					if(r)
 					{
 						if(r->idReserve() == key)
@@ -1095,7 +1097,7 @@ void Adresis::messagePermissions(Logic::Module module, Logic::Action accion)
 		break;
 		case Logic::Add:
 		{
-			a="aï¿½dir";
+			a="añadir";
 		}
 		break;
 		case Logic::Del:

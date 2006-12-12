@@ -1026,6 +1026,83 @@ void ADServer::addReport(ADServerConnection *cnx, ADReport *report)
 		break;
 		case ADReport::TimeProfesor:
 		{
+// Reporte en PDF y pantalla de los profesores con mayor número de horas reservadas en un periodo de tiempo.
+			dDebug() << "Consultando lista de tiempos de reservas por profesor";
+			
+		//	SELECT idUserResponsable, beginHour, endHour, beginDate, endDate FROM ADReserve, ADUser 
+		//		WHERE idUserResponsable=loginUser and rol=1;
+			
+//	MIRAR PORQUE EL SELECTWHERRE DEBAJO DLE QMAP
+			ADSelect select( QStringList() << "loginUser as ref" << "nameUser" << "beginHour"  << "endHour" << "beginDate" << "endDate", QStringList() << "adreserve" << "aduser");
+			QMap<QString, QStringList> query = SDBM->execQuery(&select).map();
+			select.setWhere("idUserResponsable = loginUser and rol = 1");
+			
+			
+// 			DROP TABLE AVTemp;
+// 			CREATE TABLE AVTemp(idAudioVisual varchar(20), horas integer); 
+			SDBM->dropTable("AVTemp");
+			SDBM->createTable( "AVTemp", QStringList() << "loginUser" << "nameUser" << "totalDays" << "beginHour" << "endHour", QStringList() << "varchar(20)" << "varchar(50)" << "integer"<< "time" << "time");
+			QStringList days;
+			for(int i = 1; i < 8; i++)
+			{
+				days << QDate::longDayName ( i );
+			}
+			
+			if(!query.isEmpty())
+			{
+				for(int i = 0; i < query["ref"].count(); i++)
+				{
+					QString loginUs = query["ref"][i];
+					int day = days.indexOf(query["day"][i]) + 1;
+					//dDebug() << "dia " << query["day"][i];
+					QString nombre = query["nameUser"][i];
+					QTime beginHour = QTime::fromString(query["beginhour"][i], Qt::ISODate);
+					QTime endHour = QTime::fromString(query["endhour"][i], Qt::ISODate);
+					QDate beginDate = QDate::fromString(query["begindate"][i], Qt::ISODate);
+					QDate endDate = QDate::fromString(query["enddate"][i], Qt::ISODate);
+					int total =0 ;
+					if(beginDate>= report->beginDate() && endDate<= report->endDate())
+					{
+						dDebug() << "111 Begin > INBeg y End < INEnd " << day;
+						total = calculateTotalDay(beginDate, endDate, day);
+						dDebug() << "Total de Dias " << total;
+					}
+					else if(beginDate>=report->beginDate() && endDate>=report->endDate())
+					{
+						dDebug() << "222 Begin > INBeg y End > INEnd " << day;
+						total=calculateTotalDay(beginDate, report->endDate(), day);
+						dDebug() << "Total de Dias " << total;
+					}
+					else if(beginDate <= report->beginDate() && endDate <= report->endDate())
+					{
+						dDebug() << "333 Begin < INBeg y End < INEnd " << day;
+						total=calculateTotalDay( report->beginDate(), endDate, day);
+						dDebug() << "Total de Dias " << total;
+					}
+					else if(beginDate<=report->beginDate() && endDate >= report->endDate())
+					{
+						dDebug() << "444 Begin < INBeg y End > INEnd " << day;
+						total=calculateTotalDay(report->beginDate(), report->endDate(), day);
+						dDebug() << "Total de Dias " << total;
+					}
+					else
+					{
+						total=0;
+					}
+					//QTime timeReserve( endHour.hour() - beginHour.hour(),  endHour. minute() - beginHour.minute(), endHour.second() - beginHour.second());
+					
+					ADInsert insert("AVTemp", QStringList() << "loginUser" << "nameUser" << "totalDays" << "beginHour" << "endHour", QStringList() << SQLSTR( loginUs ) << SQLSTR( nombre ) << QString::number(total) << SQLSTR(beginHour.toString(Qt::ISODate)) << SQLSTR(endHour.toString(Qt::ISODate)));
+					SDBM->execQuery(&insert);
+				}
+			}
+			//rs = SDBM->execQuery(&consult);
+			//SELECT sum(totaldays*(endHour-beginHour)) AS cantHoras, nameUser FROM AVTemp GROUP BY nameUser;
+			ADSelect consult(QStringList() << "nameUser" << "sum(totaldays*(endHour-beginHour)) as cant", QStringList() << "avtemp");
+			consult.groupBy("nameUser");
+			rs = SDBM->execQuery(&consult);
+			headers << "Horas" << "Profesor" ;
+
+			//MIRAR SI PUEDO QUITAR EL LOGIN DE ALGUNAS TABLAS Y CONSULTAS
 			dDebug() << "Consultando lista de tiempos de reservas por profesor";
 		}
 		break;

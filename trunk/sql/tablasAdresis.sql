@@ -119,7 +119,7 @@ CREATE TABLE ADAudioVisualType(
 );
 
 INSERT INTO ADAudioVisualType VALUES('computador portatil');
-INSERT INTO ADAudioVisualType VALUES('cpu');
+INSERT INTO ADAudioVisualType VALUES('computador personal');
 INSERT INTO ADAudioVisualType VALUES('proyector acetatos');
 INSERT INTO ADAudioVisualType VALUES('reproductor VHS');
 INSERT INTO ADAudioVisualType VALUES('televisor');

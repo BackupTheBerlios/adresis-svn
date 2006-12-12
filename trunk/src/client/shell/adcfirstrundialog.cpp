@@ -80,7 +80,7 @@ CWWelcomePage::CWWelcomePage(QWidget *parent) : DWizardPage(tr("Welcome"), paren
 
 	m_message = new QLabel(tr("<h3>ADRESIS</h3><br>"
 			"In this wizard you need set a values for proper application configuration<br><br>"
-			"<em>--The Doms Team</em>"));
+			"<em>--The ADRESIS Team</em>"));
 	
 	setWidget(m_message);
 }
