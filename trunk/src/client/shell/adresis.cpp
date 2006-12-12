@@ -104,7 +104,6 @@ void Adresis::handleEvent(ADEvent * event)
 		
 		if(event->source() == ADEvent::Server)
 		{
-			
 			if(event->action() == Logic::Find)
 			{
 				m_infoModules.insert(Logic::Module(event->module()), event->data().toList());
@@ -116,6 +115,8 @@ void Adresis::handleEvent(ADEvent * event)
 				{
 					case Logic::Users:
 					{
+						
+						
 						switch(event->action())
 						{
 							case Logic::Authenticate:
@@ -139,13 +140,6 @@ void Adresis::handleEvent(ADEvent * event)
 										ADEvent dates(ADEvent::Client, Logic::ReservesF, Logic::Dates , "");
 										handleEvent(&dates);
 									}
-									
-// 									if(Logic::Module(i) == Logic::Reports  )
-// 									{
-										
-										
-// 									}
-									
 								}
 							}
 							break;
@@ -199,6 +193,7 @@ void Adresis::handleEvent(ADEvent * event)
 							{
 								removeObject( Logic::Reports, event->data().toString()   );
 								emit requestRemoveDataToModule(Logic::Reports, event->data().toString());
+								
 							}
 							break;
 						}
@@ -366,6 +361,10 @@ void Adresis::handleEvent(ADEvent * event)
 					}
 					break;
 				}
+			}
+			if(event->action() == Logic::Add && event->action() == Logic::Del && event->action() == Logic::Update)
+			{ 
+				emit changedList( Logic::Module( event->module()) , m_infoModules[Logic::Module( event->module())] );
 			}
 		}
 		/** ************************ C  L  I  E  N  T  E ************************** */
@@ -680,7 +679,7 @@ void Adresis::handleEvent(ADEvent * event)
 							{
 								if(m_user->permission(Logic::Module(event->module()), Logic::Action(event->action())))
 								{
-									ADCancellation *c = qvariant_cast<ADCancellation *>(event->data()) ;
+									ADCancellation *c = qvariant_cast<ADCancellation *>(event->data());
 									
 									if(c)
 									{
@@ -924,7 +923,36 @@ void Adresis::removeObject(Logic::Module module,const QString key )
 						if(u->code() == key)
 						{
 							m_infoModules[Logic::Users].erase(it);
+// 						QVariant reserves = m_infoModules[Logic::ReservesF] + m_infoModules[Logic::ReservesT];
 							delete u;
+							foreach(QVariant v, m_infoModules[Logic::ReservesF] )
+							{
+								ADReserve *r = qvariant_cast<ADReserve *>(v);
+								if(r->iduserresponsable() == key)
+								{
+									m_infoModules[Logic::ReservesF].removeAll( v );
+									if(r)
+									{
+										delete r;
+										emit requestRemoveDataToModule(Logic::ReservesF, r->idReserve());
+									}
+								}
+							}
+							foreach(QVariant v, m_infoModules[Logic::ReservesT] )
+							{
+								ADReserve *r = qvariant_cast<ADReserve *>(v);
+								if(r->iduserresponsable() == key)
+								{
+									m_infoModules[Logic::ReservesT].removeAll( v );
+									if(r)
+									{
+										delete r;
+										
+										emit requestRemoveDataToModule(Logic::ReservesT, r->idReserve());
+									}
+								}
+							}
+							
 							return;
 						}
 					}
@@ -1067,7 +1095,7 @@ void Adresis::messagePermissions(Logic::Module module, Logic::Action accion)
 		break;
 		case Logic::Add:
 		{
-			a="aÃ±adir";
+			a="añadir";
 		}
 		break;
 		case Logic::Del:
@@ -1114,9 +1142,8 @@ void Adresis::messagePermissions(Logic::Module module, Logic::Action accion)
 			m="Cancelaciones";
 		}
 		break;
-	}	
-		
-	emit requestShowMessage( Msg::Info , "No tiene permisos de "+ a +" sobre el modulo "+ m);
+	}
+	emit requestShowMessage( Msg::Info , "No tiene permisos de " + a +" sobre el modulo "+ m);
 }
 
 

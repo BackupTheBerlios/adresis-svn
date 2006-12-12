@@ -4,6 +4,10 @@
 # Author: David Cuarado krawek [at] gmail [dot] com
 # Version: 0.1.0
 
+export QTDIR=/usr/share/qt4/
+export PATH=$QTDIR/bin:$PATH
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$QTDIR/lib
+
 PARAMETERS=""
 
 OPTION_NODEBUG=-1

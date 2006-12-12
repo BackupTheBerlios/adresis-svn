@@ -64,7 +64,6 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		QHash<QString, QList<QVariant> > m_dates;
 		void messagePermissions(Logic::Module, Logic::Action);
 		
-		
 	signals:
 		void requestShowMessage( Msg::Type, const QString&);
 		void requestShowModule( Logic::Module module, const QList<QVariant> &);
@@ -73,6 +72,8 @@ class Adresis : public QObject, public ADAbstractEventHandler
 		void requestUpdateDataToModule( Logic::Module module, const QVariant & );
 		void sendEventToForm(ADEvent *);
 		void requestShowReport(ADReport *report );
+		
+		void changedList( Logic::Module module, const QList<QVariant>& );
 		
 	public slots:
 		void handleEvent(ADEvent * event = 0);

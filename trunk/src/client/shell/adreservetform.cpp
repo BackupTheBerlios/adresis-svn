@@ -247,8 +247,7 @@ void ADReserveTForm::setup()
 	
 	horario = new ADSchedule();
 	vBLayout->addWidget(horario);
-
-	QLineEdit *edits;
+	
 	QStringList titles, tipoRec;
 
 	tipoRec << tr("Espacios") << tr("Audiovisual");

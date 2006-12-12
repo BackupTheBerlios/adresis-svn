@@ -23,7 +23,6 @@
 #include <QFrame>
 #include <QGroupBox>
 #include <QLabel>
-
 #include "adevent.h"
 
 /**
@@ -51,6 +50,7 @@ class ADFormBase : public QFrame
 		
 	public slots:
 		 void receiveEvent( ADEvent *event);
+// 		virtual void modifyContend( ADEvent *event, Logic::Module, const QList< QVariant >&);
 };
 
 #endif

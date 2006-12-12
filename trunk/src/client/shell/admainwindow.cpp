@@ -234,6 +234,8 @@ void ADMainWindow::addForm(ADFormBase * form, const QString & title )
 		form->setWindowTitle(title);
 		connect(form, SIGNAL(requestClose()), this, SLOT(closeTab()));
 		connect(form, SIGNAL(sendEvent(ADEvent *)), m_adresis, SLOT(handleEvent(ADEvent *)));
+// 		connect(m_adresis, SIGNAL(changedList( Logic::Module, const QList< QVariant >& )), form, SLOT(modifyContend( Logic::Module, const QList< QVariant >&)));
+		
 		form->show();
 		addWidget(form);
 	}
